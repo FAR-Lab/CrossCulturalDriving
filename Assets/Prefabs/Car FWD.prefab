@@ -2621,7 +2621,7 @@ MonoBehaviour:
   wheelForceMode: 5
   suspensionForceMode: 5
   towVehicle: {fileID: 0}
-  canCrash: 1
+  canCrash: 0
   crashSnd: {fileID: 82253289901470464}
   crashClips:
   - {fileID: 8300000, guid: 7700179d1ae5613488a0abc3e3d571ca, type: 3}
@@ -3179,12 +3179,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 3
-  m_SendInterval: 0.1
+  m_SendInterval: 0.05263158
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
-  m_SyncSpin: 0
+  m_SyncSpin: 1
   m_MovementTheshold: 0.001
-  m_VelocityThreshold: 0.0001
+  m_VelocityThreshold: 0.001
   m_SnapThreshold: 5
   m_InterpolateRotation: 1
   m_InterpolateMovement: 1

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -18,7 +19,9 @@ public class SceneStateManager : NetworkManager
     public ClientState MyState { get { return myState; } }
     private NetworkManager manager;
 
+    private List <uint> activeConnectedIds=new List<uint>();
 
+    public float spawnHeight = 1;
     NetworkClient client_;
 
     private void Awake()
@@ -84,21 +87,30 @@ public class SceneStateManager : NetworkManager
         var message = msg.ReadMessage<SpawnMessage>();
         uint playerid = message.netId;
 
+        if (activeConnectedIds.Contains(playerid))
+        {
+            msg.conn.Disconnect();
+        }
+        else
+        {
+            activeConnectedIds.Add(playerid);
+        }
         bool success = false;
         Vector3 SpawnPosition = Vector3.zero;
+        Quaternion SpawnOrientation = Quaternion.identity;
         foreach(NetworkStartPosition p in FindObjectsOfType<NetworkStartPosition>())
         {
             if(playerid==uint.Parse(p.transform.name[p.transform.name.Length-1].ToString())){
                 SpawnPosition = p.transform.position;
+                SpawnOrientation = p.transform.rotation; 
                 success = true;
-                Debug.Log("If this works...");
+
             }
         }
         if (success)
         {
-            GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, Quaternion.identity);
-
-           NetworkServer.AddPlayerForConnection(msg.conn, player, 0);
+            GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
+            NetworkServer.AddPlayerForConnection(msg.conn, player, 0);
         }
      }
 

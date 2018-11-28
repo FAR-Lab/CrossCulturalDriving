@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System;
+using RVP;
 
 public class farlab_logger : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class farlab_logger : MonoBehaviour
     private GameObject player;
 
 
-    public static char sep = ';'; //Separator for data values.
+    public static char sep = '\t'; //Separator for data values.
 
     /**The LogVariable class is a blueprint for the variable to be logged.
      * The attributes are :-
@@ -351,7 +352,14 @@ public class farlab_logger : MonoBehaviour
     //Getting the velocity of the object
     Vector3 GetVelocity()
     {
-        return TrackController.Instance.car.transform.GetComponent<Rigidbody>().velocity;
+        foreach (BasicNetworkInput p in FindObjectsOfType<BasicNetworkInput>())
+        {
+            if (p.isLocalPlayer)
+            {
+                return p.GetComponent<Rigidbody>().velocity;
+            }
+        }
+        return Vector3.zero;
     }
 
     //Getting the position of the object
