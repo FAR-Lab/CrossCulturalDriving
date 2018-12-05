@@ -5,11 +5,14 @@ using UnityEngine.Networking;
 
 public class GrabCamera : NetworkBehaviour {
     Camera main;
-	// Use this for initialization
+    // Use this for initializatio
+    Transform CameraPos;
+    bool madeParent = false;
 	void Start () {
         main = Camera.main;
-		
-	}
+        CameraPos = transform.Find("CameraPosition");
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -17,10 +20,12 @@ public class GrabCamera : NetworkBehaviour {
 	}
     private void FixedUpdate()
     {
-        if (isLocalPlayer)
+        if (isLocalPlayer && !madeParent)
         {
-            main.transform.position = transform.position + transform.forward * (-2) + transform.up;
-            main.transform.rotation = transform.rotation;
+            main.transform.position = CameraPos.position;
+            main.transform.rotation = CameraPos.rotation;
+            main.transform.parent = transform;
+            madeParent = true;
         }
     }
 }
