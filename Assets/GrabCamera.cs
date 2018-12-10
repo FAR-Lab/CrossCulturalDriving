@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class GrabCamera : NetworkBehaviour {
-    Camera main;
+    Transform main;
     // Use this for initializatio
     Transform CameraPos;
     bool madeParent = false;
 	void Start () {
-        main = Camera.main;
+        main = Camera.main.transform.parent;
         CameraPos = transform.Find("CameraPosition");
 
     }
@@ -24,7 +24,7 @@ public class GrabCamera : NetworkBehaviour {
         {
             main.transform.position = CameraPos.position;
             main.transform.rotation = CameraPos.rotation;
-            main.transform.parent = transform;
+            main.transform.parent = CameraPos;
             madeParent = true;
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR;
 
 
 public enum ClientState { HOST, CLIENT, DISCONECTED, NONE };
@@ -47,6 +48,10 @@ public class SceneStateManager : NetworkManager
             if(!client.isConnected){
                 myState = ClientState.DISCONECTED;
             }
+        }
+        if(Input.GetKeyUp(KeyCode.Space))
+        {
+            InputTracking.Recenter();
         }
     }
 

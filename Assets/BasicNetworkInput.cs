@@ -23,6 +23,9 @@ namespace RVP
         public string yawAxis;
         public string rollAxis;
 
+
+        //float accel = 0;
+       // float breakVal = 0;
         void Start()
         {
             vp = GetComponent<VehicleParent>();
@@ -58,17 +61,22 @@ namespace RVP
                 //Get constant inputs
                 if (!string.IsNullOrEmpty(accelAxis))
                 {
-                    vp.SetAccel(Input.GetAxis(accelAxis));
-                }
+                    float accel = waypoint.scale(-1, 1, 0, 1, Input.GetAxis(accelAxis));
+                    vp.SetAccel(accel);
 
+                }
                 if (!string.IsNullOrEmpty(brakeAxis))
                 {
-                    vp.SetBrake(Input.GetAxis(brakeAxis));
+                        float br = waypoint.scale(-1, 1, 0, 1, Input.GetAxis(brakeAxis));
+
+                        vp.SetBrake(br);
+                   
                 }
 
                 if (!string.IsNullOrEmpty(steerAxis))
                 {
                     vp.SetSteer(Input.GetAxis(steerAxis));
+                   // Debug.Log("steer: " + Input.GetAxis(steerAxis).ToString());
                 }
 
                 if (!string.IsNullOrEmpty(ebrakeAxis))

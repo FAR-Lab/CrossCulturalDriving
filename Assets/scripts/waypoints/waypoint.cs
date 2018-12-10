@@ -92,7 +92,7 @@ public class waypoint : MonoBehaviour
 
     }
 
-    public float scale(float OldMin, float OldMax, float NewMin, float NewMax, float OldValue)
+    public static float scale(float OldMin, float OldMax, float NewMin, float NewMax, float OldValue)
     {
 
         float OldRange = (OldMax - OldMin);
