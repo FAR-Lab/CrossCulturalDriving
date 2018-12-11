@@ -9,6 +9,7 @@ public class UIScript : MonoBehaviour {
     public Transform hostingUI;
     public Transform connectedUI;
 
+    bool useVROrNot = false;
     //public Transform serverIPField;
     //public Transform participatID;
     // Use this for initialization
@@ -33,6 +34,10 @@ public class UIScript : MonoBehaviour {
             connectedUI.gameObject.SetActive(true);
         }
     }
+    public void toggleVR(Toggle change)
+    {
+        useVROrNot = change.isOn;
+    }
 
     public void HostTheServer(){
        string id= GameObject.Find("ParticipantIDField").GetComponent<InputField>().text;
@@ -41,7 +46,7 @@ public class UIScript : MonoBehaviour {
             partiID = uint.Parse(id);
         }
         Debug.Log(partiID);
-        SceneStateManager.Instance.HostServer(partiID);
+        SceneStateManager.Instance.HostServer(partiID,useVROrNot);
         //
 
     }
@@ -61,7 +66,7 @@ public class UIScript : MonoBehaviour {
         }
 
 
-        SceneStateManager.Instance.ConnectToServerWith(ip, partiID);
+        SceneStateManager.Instance.ConnectToServerWith(ip, partiID, useVROrNot);
 
     }
     public void StartGame(){

@@ -25,6 +25,9 @@ public class SceneStateManager : NetworkManager
     public float spawnHeight = 1;
     NetworkClient client_;
 
+    //private bool useVR = false;
+
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -39,8 +42,10 @@ public class SceneStateManager : NetworkManager
     }
     void Start()
     {
+       // XRSettings.enabled = false;
+    
         manager = FindObjectOfType<NetworkManager>();
-            StartCoroutine(LoadYourAsyncAddScene("Lobby"));
+        StartCoroutine(LoadYourAsyncAddScene("Lobby"));
 
     }
     void Update(){
@@ -51,20 +56,23 @@ public class SceneStateManager : NetworkManager
         }
         if(Input.GetKeyUp(KeyCode.Space))
         {
-            InputTracking.Recenter();
+            FindObjectOfType<seatCallibration>().reCallibrate();
+            
         }
     }
 
-    public void ConnectToServerWith(string ip, uint playerID){
-       
+    public void ConnectToServerWith(string ip, uint playerID,bool useVROrNot)
+    {
+        //useVR = useVROrNot;
         manager.networkAddress = ip;
         myID = playerID;
         client_ = manager.StartClient();
         myState = ClientState.CLIENT;
 
     }
-    public void HostServer(uint playerID)
+    public void HostServer(uint playerID, bool useVROrNot)
     {
+       // useVR = useVROrNot;
         myID = playerID;
         client_ = manager.StartHost();
         myState = ClientState.HOST;
@@ -84,7 +92,12 @@ public class SceneStateManager : NetworkManager
         SpawnMessage newSpawnMessage = new SpawnMessage();
         newSpawnMessage.netId= myID;
         conn.Send(MsgType.AddPlayer, newSpawnMessage);
-        
+       // if (useVR)
+       // {
+      //      XRSettings.enabled = true;
+       // }
+
+
     }
     //---//
     void reportClientID(NetworkMessage msg){

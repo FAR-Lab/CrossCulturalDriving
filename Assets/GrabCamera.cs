@@ -26,6 +26,12 @@ public class GrabCamera : NetworkBehaviour {
             main.transform.rotation = CameraPos.rotation;
             main.transform.parent = CameraPos;
             madeParent = true;
+            seatCallibration s =main.transform.GetComponent<seatCallibration>();
+            if (s != null)
+            {
+                s.findHands();
+                s.reCallibrate();
+            }
         }
     }
 }

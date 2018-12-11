@@ -1415,6 +1415,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4765359629301238}
+  - component: {fileID: 114328157686277454}
+  - component: {fileID: 114316504334037888}
   m_Layer: 9
   m_Name: CameraPosition
   m_TagString: Untagged
@@ -10815,7 +10817,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 950cf8b6abec9974792705495dd652de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  basedOnWheelsGrounded: 1
+  basedOnWheelsGrounded: 0
   driftSpinAssist: 2
   driftSpinSpeed: 3
   driftSpinExponent: 2
@@ -10888,7 +10890,7 @@ MonoBehaviour:
   rollCheckDistance: 1
   rollOverForce: 30
   rollSpeedThreshold: 100
-  angularDragOnJump: 1
+  angularDragOnJump: 0
   fallSpeedLimit: Infinity
   applyFallLimitUpwards: 0
 --- !u!114 &114134863102842906
@@ -11377,6 +11379,61 @@ MonoBehaviour:
   - {fileID: 198171423003668670}
   - {fileID: 198270758020786858}
   sparks: {fileID: 198440285936504922}
+--- !u!114 &114316504334037888
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1374432703274644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 40
+    i1: 235
+    i2: 129
+    i3: 91
+    i4: 151
+    i5: 85
+    i6: 244
+    i7: 60
+    i8: 139
+    i9: 232
+    i10: 37
+    i11: 1
+    i12: 126
+    i13: 67
+    i14: 27
+    i15: 100
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
+--- !u!114 &114328157686277454
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1374432703274644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 986979759c8c19846bc2164560133374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HandModelL: {fileID: 0}
+  HandModelR: {fileID: 0}
+  steeringWheelCenter: {fileID: 4025053596359546}
+  passangerCenter: {fileID: 4025053596359546}
+  handTrackin: 1
+  forPassenger: 0
+  callibrationTimer: 2
+  startCallibrating: 0
+  headPose: {fileID: 0}
+  offset: {x: 0, y: 0, z: 0}
+  rotOld: {x: 0, y: 0, z: 0, w: 0}
+  driftCorrection: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &114372459043260884
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -12075,7 +12132,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1615082229126922}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 87ae995ac5f60be41976cd12bd927962, type: 3}
   m_Name: 
@@ -12355,7 +12412,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   accelAxisIsBrake: 0
-  brakeIsReverse: 1
+  brakeIsReverse: 0
   holdEbrakePark: 1
   burnoutThreshold: 0.9
   burnoutSpin: 5
