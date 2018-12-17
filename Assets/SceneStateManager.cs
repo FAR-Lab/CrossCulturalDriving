@@ -19,11 +19,13 @@ public class SceneStateManager : NetworkManager
     public static SceneStateManager Instance { get { return _instance; } }
     public ClientState MyState { get { return myState; } }
     private NetworkManager manager;
-
+    //private NetworkServer server;
     private List <uint> activeConnectedIds=new List<uint>();
-
+    public string serverIP;
     public float spawnHeight = 1;
     NetworkClient client_;
+    public NetworkClient ThisClient { get { return client_; } }
+    GameObject LocalCamera;
 
     //private bool useVR = false;
 
@@ -42,17 +44,18 @@ public class SceneStateManager : NetworkManager
     }
     void Start()
     {
-       // XRSettings.enabled = false;
-    
+        // XRSettings.enabled = false;
+        LocalCamera = Camera.main.gameObject;
+        DontDestroyOnLoad(LocalCamera);
         manager = FindObjectOfType<NetworkManager>();
         StartCoroutine(LoadYourAsyncAddScene("Lobby"));
 
     }
     void Update(){
         if(myState == ClientState.CLIENT){
-            if(!client.isConnected){
-                myState = ClientState.DISCONECTED;
-            }
+           // Debug.Log(client_.isConnected);
+                
+           
         }
         if(Input.GetKeyUp(KeyCode.Space))
         {
@@ -64,43 +67,56 @@ public class SceneStateManager : NetworkManager
     public void ConnectToServerWith(string ip, uint playerID,bool useVROrNot)
     {
         //useVR = useVROrNot;
+        serverIP = ip;
         manager.networkAddress = ip;
         myID = playerID;
         client_ = manager.StartClient();
         myState = ClientState.CLIENT;
+        
 
     }
     public void HostServer(uint playerID, bool useVROrNot)
     {
-       // useVR = useVROrNot;
-        myID = playerID;
+        // useVR = useVROrNot;
+        serverIP = "127.0.0.1";
+         myID = playerID;
         client_ = manager.StartHost();
         myState = ClientState.HOST;
+        
     }
-
+    void activatehandSending(NetworkClient cl) {
+        RemoteHandManager[] rhm = FindObjectsOfType<RemoteHandManager>();
+        Debug.Log(rhm.Length);
+       
+    }
+    
     //----//
-    public override void OnServerConnect(NetworkConnection conn)
+    public override void OnServerConnect(NetworkConnection conn) //Runs ONLY on the server
     {
-        Debug.Log(myID);
-        Debug.Log("OnPlayerConnected");
+        //Debug.Log(myID);
+       // Debug.Log("OnPlayerConnected");
         conn.RegisterHandler(MsgType.AddPlayer, reportClientID);
+   
     }
-    public override void OnClientConnect(NetworkConnection conn)
+    public override void OnClientConnect(NetworkConnection conn)// Runs ONLY on the client
     {
-        Debug.Log(conn.connectionId + " Connected!");
+        //Debug.Log(conn.connectionId + " Connected!");
         // CmdSpawnMeNow(myID, conn);
         SpawnMessage newSpawnMessage = new SpawnMessage();
         newSpawnMessage.netId= myID;
         conn.Send(MsgType.AddPlayer, newSpawnMessage);
+        LocalCamera.SetActive(false);
+        
+
        // if (useVR)
        // {
-      //      XRSettings.enabled = true;
+       //      XRSettings.enabled = true;
        // }
 
 
     }
     //---//
-    void reportClientID(NetworkMessage msg){
+    void reportClientID(NetworkMessage msg){ 
 
         var message = msg.ReadMessage<SpawnMessage>();
         uint playerid = message.netId;
@@ -127,12 +143,28 @@ public class SceneStateManager : NetworkManager
         }
         if (success)
         {
+            msg.conn.RegisterHandler(RemoteHandManager.MessageType.uploadHand, RecieveHandData);
             GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
             NetworkServer.AddPlayerForConnection(msg.conn, player, 0);
         }
      }
 
+    public void RecieveHandData(NetworkMessage msg)
+    {
+        int ms, ad;
+        msg.conn.GetStatsIn(out ms, out ad);
+        Debug.Log("Receving hand Data" +ms+ "  "+ad);
+        RemoteHandManager.HandMessage hand = msg.ReadMessage<RemoteHandManager.HandMessage>();
+        hand.id = msg.conn.connectionId - hand.id;
+        foreach (NetworkConnection c in NetworkServer.connections)
+        {
+            if (c == msg.conn) {
+                Debug.Log("I already have that information");
+                continue; }
+            c.Send(RemoteHandManager.MessageType.DownloadHand,hand);
 
+        }
+    }
 
     //----//
     IEnumerator LoadYourAsyncAddScene(string newScene)
