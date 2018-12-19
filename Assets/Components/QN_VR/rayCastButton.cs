@@ -5,27 +5,26 @@ using UnityEngine.UI;
 public class rayCastButton : MonoBehaviour {
 
     // Use this for initialization
-    string _Answer;
+   public  string _Answer;
     string _SecretCharacter;
     int _targetIndex;
-    Text txObj;
-	void Start () {
-        txObj= GetComponentInParent<Text>();
+    public Text txObj;
+    void Awake() {
+        txObj = transform.parent.GetComponentInParent<Text>();
     }
 
-    public void initButton(string Answer, string SecretCharacter,int TargetIndex) {
+    public void initButton(string Answer, int TargetIndex) {
         _Answer = Answer;
-        _SecretCharacter = SecretCharacter;
-         _targetIndex=TargetIndex;
 
+        _targetIndex = TargetIndex;
         txObj.text = _Answer;
     }
     // Update is called once per frame
-    void Update () {
-		
-	}
-    public string activateNextQuestions() {
-
+    void Update() {
+        
+    }
+    public string activateNextQuestions(out int nextID) {
+        nextID = _targetIndex;
         return txObj.text;
-            }
+    }
 }

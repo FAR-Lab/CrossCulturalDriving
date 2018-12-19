@@ -8,10 +8,9 @@ using UnityEngine.EventSystems;
 
 public class QNSelectionManager : MonoBehaviour {
     // Some code to send data to the logger
+    public GameObject ButtonPrefab;
 
     Text QustionField;
-    rayCastButton OptionA, OptionB, OptionC;
-
 
 
     private bool Questionloaded = false;
@@ -25,17 +24,25 @@ public class QNSelectionManager : MonoBehaviour {
 
     string _condition;
 
+    int listPointer;
+    string[] ToDolist = new string[20]; /// <summary>
+                                        ///  TODO HARD CODED limmit of 20 questions
+                                        /// </summary>
 
-    public int[] startingIndexForEachRowofQuestions;
-    List<int> listCopy;
-    private int targetIndex = -1;
-    public List<QandASet> questionList = new List<QandASet>();
+    string outputString = "";
+
+    List<RectTransform> childList = new List<RectTransform>();
+    Dictionary<int,QandASet> questionList = new Dictionary<int,QandASet>();
+
     LayerMask _RaycastCollidableLayers;
 
     GraphicRaycaster m_Raycaster;
     PointerEventData m_PointerEventData;
     EventSystem m_EventSystem;
 
+    public string[] QNFiles;
+    Dictionary<string, List<QandASet>> questionaries = new Dictionary<string, List<QandASet>>();
+    private int targetIndex = -1;
 
     public struct QandASet {
         public int id;
@@ -51,34 +58,24 @@ public class QNSelectionManager : MonoBehaviour {
     // Use this for initialization
     void Start() {
 
+        foreach (string s in QNFiles) {
+            questionaries.Add(s, ReadString(s));
 
-
-        foreach (QandASet q in ReadString()) {
-            Debug.Log("Id: " + q.id + "\t question :" + q.question);
-            foreach (OneAnswer a in q.Answers) {
-                Debug.Log("Answer: " + a.Answer + "\t next ID :" + a.NextQuestionID);
-            }
         }
-        
 
-
-
-
-                listCopy = new List<int>();
         QustionField = transform.Find("QuestionField").GetComponent<Text>();
-        
+
 
         sba = GetComponentInChildren<selectionBarAnimation>();
-        totalTime = 0; running = false;
+        totalTime = 0;
+        running = false;
         _RaycastCollidableLayers = LayerMask.GetMask("UI");
         m_Raycaster = GetComponent<GraphicRaycaster>();
         m_EventSystem = GetComponent<EventSystem>();
 
+        startAskingTheQuestionairs(QNFiles, "Test");
     }
-    public void OnServerInitialized(string condition) {
-        _condition = condition;
-        running = true;
-    }
+
     private void updateCursorPositoon(Transform currentHitTarget, RaycastResult rayRes) {
         Vector3 temp = Camera.main.transform.position
                       + Camera.main.ScreenPointToRay(new Vector3(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2, 0), Camera.MonoOrStereoscopicEye.Mono).direction.normalized
@@ -90,46 +87,80 @@ public class QNSelectionManager : MonoBehaviour {
         /// WTF Unity??? this should not be that hard!!
     }
     // Update is called once per frame
-    void startAskingTheQuestionair() {
+    void startAskingTheQuestionairs(string[] list, string Condition) {
+
         if (!running) {
+            _condition = Condition;
+            list.CopyTo(ToDolist, 0);
+            listPointer = 0;
             running = true;
-            foreach (int i in startingIndexForEachRowofQuestions) {
-                listCopy.Add(i);
-            }
+            targetIndex = 0;
+            Questionloaded = false;
+            outputString = "";
         }
     }
 
     void Update() {
         if (running) {
+
             if (!Questionloaded) {
-                if (targetIndex == -1) {
-                    if (listCopy.Count > 0) {
-                        targetIndex = listCopy[0];
-                        listCopy.Remove(0);
-                    } else {
+                if (targetIndex == 0) {
+                   
+                    if (listPointer >= ToDolist.Length || ToDolist[listPointer] == null) {
                         Debug.Log("We are done here continue to the next conditon and stop displaying the questioniar.");
+                        Debug.Log(outputString);
                         running = false;
                         transform.gameObject.SetActive(false);
                         return;
                     }
-                } else {
-                    if (questionList.Count > targetIndex) {
 
-                        QustionField.text = questionList[targetIndex].question;
-                        //  OptionA.initButton(questionList[targetIndex].AnswerA, questionList[targetIndex].SecretCharacterA, questionList[targetIndex].NextIndexA);
-                        // OptionB.initButton(questionList[targetIndex].AnswerB, questionList[targetIndex].SecretCharacterB, questionList[targetIndex].NextIndexB);
-                        // OptionC.initButton(questionList[targetIndex].AnswerC, questionList[targetIndex].SecretCharacterC, questionList[targetIndex].NextIndexC);
-                        Questionloaded = true;
+                    if (questionaries.ContainsKey(ToDolist[listPointer])) {
+                        questionList.Clear();
+                        foreach (QandASet q in questionaries[ToDolist[listPointer]]) {
+                            Debug.Log("Our new questions are: " + q.question);
+                            questionList.Add(q.id, q);
+                        }
+                        listPointer++;
+
                     } else {
-
-                        Debug.Log("Could not jump to the right destination.. stping the questionair");
-                        running = false;
-                        transform.gameObject.SetActive(false);
-                        return;
+                        Debug.LogError("This is bad");
                     }
+                    targetIndex = 1;
+                }
 
+                foreach (RectTransform r in childList) {
+                    Destroy(r.gameObject);
+                }
+                childList.Clear();
+                foreach (int k in questionList.Keys) { Debug.Log("All the keys\t" + k); }
+                
+                if (questionList.ContainsKey(targetIndex)) {
+                    QandASet temp = questionList[targetIndex];
+                   // Debug.Log("the ammount of first answer we retaained" + temp.Answers.Count);
+                   
+                    QustionField.text = temp.question;
+                    //Debug.Log(temp.question);
+                    //Debug.Log(temp.Answers.Count);
+                    int i = 0;
+                    foreach (OneAnswer a in temp.Answers) {
+                        rayCastButton rcb = GameObject.Instantiate(ButtonPrefab, this.transform).transform.GetComponentInChildren<rayCastButton>();
+                        rcb.initButton(a.Answer, a.NextQuestionID);
+
+                        RectTransform rtrans = rcb.transform.parent.GetComponentInParent<RectTransform>();
+                        childList.Add(rtrans);
+                        Vector2 tempVector= new Vector2(rtrans.anchoredPosition.x, ( -i * ( 135 /( temp.Answers.Count+1) ) ) + 50);
+                        rtrans.anchoredPosition = tempVector;
+                        
+                        i++;
+                    }
+                    Questionloaded = true;
+                } else {
+                    Debug.LogError("Could not find the question you pointed me towards");
                 }
             }
+
+
+
 
 
 
@@ -189,10 +220,14 @@ public class QNSelectionManager : MonoBehaviour {
                 }
             }
             if (success && onTarget && totalTime >= targetTime) {
-                Debug.Log(lastHitButton.GetComponent<rayCastButton>().activateNextQuestions());
+                outputString += lastHitButton.activateNextQuestions(out targetIndex);
+                Debug.Log("new target index");
+                totalTime = 0;
+                lastHitButton = null;
+                Questionloaded = false;
             }
             if (totalTime >= 0 && totalTime <= targetTime) {
-                sba.setPercentageSelection(totalTime / targetTime);
+                sba.setPercentageSelection(Mathf.Clamp01(totalTime / targetTime));
             } else {
                 //Debug.Log("This should not happen");
             }
@@ -223,21 +258,23 @@ public class QNSelectionManager : MonoBehaviour {
     }
 
     //// This is For the file reading and interpretation
-     List<QandASet> ReadString() {
-        string path = "Assets/QN/QN.txt";
+    List<QandASet> ReadString(string path_) {
+        string path = "Assets/QN/" + path_ + ".txt";
+        Debug.Log("Trying to open" + path);
         List<QandASet> output = new List<QandASet>();
         //Read the text from directly from the test.txt file
         StreamReader reader = new StreamReader(path);
         bool first = true;
-        QandASet lastSet=new QandASet();
+        QandASet lastSet = new QandASet();
         lastSet.Answers = new List<OneAnswer>();
 
         string line;
         while (( line = reader.ReadLine() ) != null) {
-            
+
             if (line.StartsWith("/")) {
                 //Debug.Log(line);
                 if (!first) {
+                    Debug.Log(lastSet.Answers.Count + "   out last ansawer count");
                     output.Add(lastSet);
                     lastSet = new QandASet();
                     lastSet.Answers = new List<OneAnswer>();
@@ -267,14 +304,14 @@ public class QNSelectionManager : MonoBehaviour {
                 }
                 lastSet.Answers.Add(temp);
             } else {
-               // Debug.Log("Fond an empty line or so");
+                // Debug.Log("Fond an empty line or so");
             }
 
-            
+
         }
         output.Add(lastSet);
         Debug.Log(output.Count);
-        
+
         reader.Close();
         return output;
     }

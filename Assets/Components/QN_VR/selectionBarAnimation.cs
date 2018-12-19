@@ -17,12 +17,16 @@ public class selectionBarAnimation : MonoBehaviour {
         m_RectTransform = GetComponent<RectTransform>();
 
         icon = GetComponent<Image>(); // the main image with the circle loading bar;
+        
     }
 	
 	// Update is called once per frame
 	void Update () {
         if (icon.fillAmount != fillAmount) {
             icon.fillAmount = fillAmount;
+        }
+        if (transform.GetSiblingIndex() < transform.parent.childCount) {
+            transform.SetSiblingIndex(transform.parent.childCount);
         }
 
     }
