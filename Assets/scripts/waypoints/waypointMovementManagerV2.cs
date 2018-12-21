@@ -27,8 +27,8 @@ public class waypointMovementManagerV2 : MonoBehaviour
 
 	public void initialize ()
 	{
-       
-//		Debug.Log ("uninitialized street waypoint target. Automatic init attempted");
+
+    //Debug.Log ("uninitialized street waypoint target. Automatic init attempted");
 		RaycastHit hit;
 
 		//Debug.DrawRay (transform.position , -transform.up);
