@@ -24,11 +24,31 @@ namespace RVP
         public string rollAxis;
 
 
+        SteeringWheelInputController SWIC;
+        ForceFeedback ff;
+
+
+
         //float accel = 0;
-       // float breakVal = 0;
+        // float breakVal = 0;
         void Start()
         {
             vp = GetComponent<VehicleParent>();
+            if (isLocalPlayer) {
+
+                
+                SWIC = gameObject.AddComponent<SteeringWheelInputController>();
+                
+                ff = gameObject.AddComponent<ForceFeedback>();
+
+               // Wheel[] temp = new Wheel[2];
+               // temp[0] = vp.wheels[0];
+              //  temp[1] = vp.wheels[2];
+              //  ff.wheels = temp;
+
+            } else {
+                this.enabled = false;
+            }
         }
 
         void Update()
@@ -58,27 +78,37 @@ namespace RVP
         {
             if (isLocalPlayer)
             {
-                //Get constant inputs
-                if (!string.IsNullOrEmpty(accelAxis))
-                {
-                    float accel = waypoint.scale(-1, 1, 0, 1, Input.GetAxis(accelAxis));
-                    vp.SetAccel(accel);
+                if (SWIC.Running&&false) {
 
-                }
-                if (!string.IsNullOrEmpty(brakeAxis))
-                {
+                    float accel,br;
+                    SWIC.GetAccelBrakeInput(out accel,out br);
+                    
+                    vp.SetAccel(waypoint.scale(-1, 1, 0, 1, accel));
+                    Debug.Log(waypoint.scale(-1, 1, 0, 1, accel));
+
+                    vp.SetBrake(waypoint.scale(-1, 1, 0, 1, br));
+
+                    vp.SetSteer(SWIC.GetSteerInput());
+
+
+                } else {
+                    if (!string.IsNullOrEmpty(accelAxis)) {
+                        float accel = waypoint.scale(-1, 1, 0, 1, Input.GetAxis(accelAxis));
+                        vp.SetAccel(accel);
+
+                    }
+                    if (!string.IsNullOrEmpty(brakeAxis)) {
                         float br = waypoint.scale(-1, 1, 0, 1, Input.GetAxis(brakeAxis));
 
                         vp.SetBrake(br);
-                   
-                }
 
-                if (!string.IsNullOrEmpty(steerAxis))
-                {
-                    vp.SetSteer(Input.GetAxis(steerAxis));
-                   // Debug.Log("steer: " + Input.GetAxis(steerAxis).ToString());
-                }
+                    }
 
+                    if (!string.IsNullOrEmpty(steerAxis)) {
+                        vp.SetSteer(Input.GetAxis(steerAxis));
+                        // Debug.Log("steer: " + Input.GetAxis(steerAxis).ToString());
+                    }
+                }
                 if (!string.IsNullOrEmpty(ebrakeAxis))
                 {
                     vp.SetEbrake(Input.GetAxis(ebrakeAxis));

@@ -75,7 +75,7 @@ public class seatCallibration : MonoBehaviour
 
     public void reCallibrate()
     {
-        if (transform.parent.GetComponent<BasicNetworkInput>().isLocalPlayer)
+        if (transform.parent.GetComponent<VehicleInputControllerNetworked>().isLocalPlayer)
         {
             if (!callibrating)
             {

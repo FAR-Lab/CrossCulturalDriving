@@ -12417,7 +12417,7 @@ MonoBehaviour:
   suspension: {fileID: 114431882069444888}
   isHub: 0
   connectObj: {fileID: 4984958201286850}
-  connectPoint: {x: 0, y: -0.065, z: -0.08}
+  connectPoint: {x: 0.00000005900862, y: -0.065, z: -0.079999916}
   rotate: 1
   stretch: 0
   solidAxle: 0
@@ -13298,6 +13298,7 @@ MonoBehaviour:
     type: 2}
   detachedRimMaterial: {fileID: 13400000, guid: 54a777298baef2c4f9c84ebdc5c57029,
     type: 2}
+  left: 0
 --- !u!114 &114281831158993590
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -14572,8 +14573,8 @@ MonoBehaviour:
   accelAxisIsBrake: 0
   brakeIsReverse: 0
   holdEbrakePark: 1
-  burnoutThreshold: 0.9
-  burnoutSpin: 5
+  burnoutThreshold: 0
+  burnoutSpin: 0
   burnoutSmoothness: 0.5
   engine: {fileID: 114563799982877404}
   wheels:
@@ -14589,7 +14590,7 @@ MonoBehaviour:
   wheelForceMode: 5
   suspensionForceMode: 5
   towVehicle: {fileID: 0}
-  canCrash: 1
+  canCrash: 0
   crashSnd: {fileID: 82207686408685928}
   crashClips:
   - {fileID: 8300000, guid: 7700179d1ae5613488a0abc3e3d571ca, type: 3}
@@ -14948,6 +14949,7 @@ MonoBehaviour:
     type: 2}
   detachedRimMaterial: {fileID: 13400000, guid: 54a777298baef2c4f9c84ebdc5c57029,
     type: 2}
+  left: 1
 --- !u!114 &114846663182236496
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15270,6 +15272,7 @@ MonoBehaviour:
     type: 2}
   detachedRimMaterial: {fileID: 13400000, guid: 54a777298baef2c4f9c84ebdc5c57029,
     type: 2}
+  left: 0
 --- !u!114 &114913620794398854
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -15445,6 +15448,7 @@ MonoBehaviour:
     type: 2}
   detachedRimMaterial: {fileID: 13400000, guid: 54a777298baef2c4f9c84ebdc5c57029,
     type: 2}
+  left: 1
 --- !u!114 &114915820845859900
 MonoBehaviour:
   m_ObjectHideFlags: 1

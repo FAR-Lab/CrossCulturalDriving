@@ -8,8 +8,10 @@ public class NetworkSpawnGizmo : MonoBehaviour {
     void Start()
     {
         RaycastHit hit;
-        if(Physics.Raycast(transform.position,-transform.up,out hit)){
-            transform.position = hit.point + Vector3.up * SceneStateManager.Instance.spawnHeight;
+        if (SceneStateManager.Instance != null) {
+            if (Physics.Raycast(transform.position, -transform.up, out hit)) {
+                transform.position = hit.point + Vector3.up * SceneStateManager.Instance.spawnHeight;
+            }
         }
     }
     void OnDrawGizmos()

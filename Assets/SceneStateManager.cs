@@ -7,17 +7,20 @@ using UnityEngine.XR;
 
 
 public enum ClientState { HOST, CLIENT, DISCONECTED, NONE };
+public enum ActionState { PREDRIVE, DRIVE, QUESTIONS,POSTQUESTIONS };
 
 public class SceneStateManager : NetworkManager
 {
 
     private static SceneStateManager _instance;
     private ClientState myState = ClientState.NONE;
+    private ActionState localActionState=ActionState.PREDRIVE;
     private uint myID = 0;
 
     public uint MyID { get { return myID; } }
     public static SceneStateManager Instance { get { return _instance; } }
     public ClientState MyState { get { return myState; } }
+    public ActionState ActionState { get { return localActionState; } }
     private NetworkManager manager;
     //private NetworkServer server;
     private List <uint> activeConnectedIds=new List<uint>();
@@ -106,7 +109,7 @@ public class SceneStateManager : NetworkManager
         newSpawnMessage.netId= myID;
         conn.Send(MsgType.AddPlayer, newSpawnMessage);
         LocalCamera.SetActive(false);
-        
+        localActionState = ActionState.DRIVE;
 
        // if (useVR)
        // {
