@@ -16,6 +16,9 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     private VehicleController controller;
     private SteeringWheelInputController steeringInput;
 
+    public bool useKeyBoard;
+    float transitionlerp;
+
     public Material Left;
     public Material Right;
     public Color On;
@@ -25,7 +28,7 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     public bool RightActive;
     
     public bool lightOn;
-
+   
     public float indicaterTimer;
     public float interval;
     public int indicaterStage;
@@ -35,6 +38,7 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         
     }
     private void Start() {
+        SceneStateManager.Instance.SetDriving();
         steeringInput = GetComponent<SteeringWheelInputController>();
         indicaterStage = 0;
     }
@@ -98,8 +102,9 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
     }
     void Update () {
-        if (isLocalPlayer) {
-            if (steeringInput == null) {
+        if (isLocalPlayer && SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
+            transitionlerp = 0;
+            if (steeringInput == null || useKeyBoard) {
                 controller.steerInput = Input.GetAxis("Horizontal");
                 controller.accellInput = Input.GetAxis("Vertical");
             } else {
@@ -118,6 +123,14 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
             }
             UpdateIndicator();
 
+        } else if (isLocalPlayer && SceneStateManager.Instance.ActionState == ActionState.QUESTIONS) {
+
+            if (transitionlerp < 1) {
+                transitionlerp += Time.deltaTime * SceneStateManager.slowDownSpeed;
+                controller.steerInput = Mathf.Lerp(controller.steerInput, 0, transitionlerp);
+                controller.accellInput = Mathf.Lerp(0, -1, transitionlerp);
+                Debug.Log("SteeringWheel: " + controller.steerInput + "\tAccel: " + controller.accellInput);
+            }
         }
     }
 }

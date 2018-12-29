@@ -10,7 +10,7 @@ public class NetworkSpawnGizmo : MonoBehaviour {
         RaycastHit hit;
         if (SceneStateManager.Instance != null) {
             if (Physics.Raycast(transform.position, -transform.up, out hit)) {
-                transform.position = hit.point + Vector3.up * SceneStateManager.Instance.spawnHeight;
+                transform.position = hit.point + Vector3.up * SceneStateManager.spawnHeight;
             }
         }
     }

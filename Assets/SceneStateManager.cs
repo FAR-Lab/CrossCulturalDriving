@@ -7,25 +7,46 @@ using UnityEngine.XR;
 
 
 public enum ClientState { HOST, CLIENT, DISCONECTED, NONE };
-public enum ActionState { PREDRIVE, DRIVE, QUESTIONS,POSTQUESTIONS };
+public enum ActionState { LOADING, PREDRIVE, DRIVE, QUESTIONS, WAITING };
+public enum ServerState { NONE,LOADING, WAITING,RUNNING}
+public enum StateMessageType { READY, QUESTIONAIR,SLOWTIME,FINISHED};
 
 public class SceneStateManager : NetworkManager
 {
 
+
+    public class StateupdateMessag : MessageBase {
+        public StateMessageType msgType;
+        public string[] content;
+        public float time;
+    }
+    private List<int> ClientsThatReportedReady = new List<int>();
+
+
     private static SceneStateManager _instance;
     private ClientState myState = ClientState.NONE;
+    [SerializeField]
     private ActionState localActionState=ActionState.PREDRIVE;
+    public  ServerState serverState = ServerState.NONE;
     private uint myID = 0;
+    
 
     public uint MyID { get { return myID; } }
     public static SceneStateManager Instance { get { return _instance; } }
     public ClientState MyState { get { return myState; } }
+    
     public ActionState ActionState { get { return localActionState; } }
     private NetworkManager manager;
-    //private NetworkServer server;
-    private List <uint> activeConnectedIds=new List<uint>();
+
+    private Dictionary <uint,NetworkConnection> activeConnectedIds= new Dictionary<uint, NetworkConnection>();
     public string serverIP;
-    public float spawnHeight = 1;
+
+    [SerializeField]
+    public static float spawnHeight = 1;
+    [SerializeField]
+    public static float slowDownSpeed = 1f;
+    [SerializeField]
+    public static float slowTargetTime=0.1f;
     NetworkClient client_;
     public NetworkClient ThisClient { get { return client_; } }
     GameObject LocalCamera;
@@ -54,6 +75,42 @@ public class SceneStateManager : NetworkManager
         StartCoroutine(LoadYourAsyncAddScene("Lobby"));
 
     }
+    private void OnGUI() {
+        if (myState == ClientState.HOST) {
+            if (GUI.Button(new Rect(10, 10, 200, 50), "Load a Thing")) {
+                loadNextCondition("Environment#2");
+            }
+        }
+    }
+    private void loadNextCondition(string sc) {
+        ClientsThatReportedReady.Clear();
+        ServerChangeScene(sc);
+        serverState = ServerState.LOADING;
+    }
+    public override void OnServerSceneChanged( string sceneName) {
+
+        Debug.Log("OnServerSceneChanged was caled =>\t" + sceneName);
+
+    }
+
+    public override void OnClientSceneChanged(NetworkConnection conn) {
+        Debug.Log("OnClientSceneChanged was caled =>\t" + conn.connectionId);
+        ClientScene.Ready(conn);
+        
+       
+    }
+    public override void OnServerReady(NetworkConnection conn) {
+        Debug.Log("OnServerReady was caled =>\t" + conn.connectionId);
+        ClientsThatReportedReady.Add(conn.connectionId);
+        Debug.Log("I should probably respawn a player here.");
+
+    }
+
+    public override void OnClientNotReady(NetworkConnection conn) {
+        Debug.Log("OnClientNotReady was caled =>\t" + conn.connectionId);
+    }
+
+
     void Update(){
         if(myState == ClientState.CLIENT){
            // Debug.Log(client_.isConnected);
@@ -64,6 +121,27 @@ public class SceneStateManager : NetworkManager
         {
             FindObjectOfType<seatCallibration>().reCallibrate();
             
+        }
+        if (serverState == ServerState.LOADING) {
+            if (ClientsThatReportedReady.Count == activeConnectedIds.Count) {
+                serverState = ServerState.RUNNING;
+                foreach (uint id in activeConnectedIds.Keys) {
+                    bool success = false;
+                    Vector3 SpawnPosition = Vector3.zero;
+                    Quaternion SpawnOrientation = Quaternion.identity;
+                    foreach (NetworkStartPosition p in FindObjectsOfType<NetworkStartPosition>()) {
+                        if (id == uint.Parse(p.transform.name[p.transform.name.Length - 1].ToString())) {  /// TODO CHANGED CONDITION;
+                            SpawnPosition = p.transform.position;
+                            SpawnOrientation = p.transform.rotation;
+                            success = true;
+                            break;
+                        }
+                    }if (success) {
+                        GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
+                        NetworkServer.AddPlayerForConnection(activeConnectedIds[id], player, 0);
+                    }
+                }
+            }
         }
     }
 
@@ -82,10 +160,12 @@ public class SceneStateManager : NetworkManager
     {
         // useVR = useVROrNot;
         serverIP = "127.0.0.1";
-         myID = playerID;
+        myID = playerID;
         client_ = manager.StartHost();
         myState = ClientState.HOST;
-        
+        serverState = ServerState.WAITING;
+
+
     }
     void activatehandSending(NetworkClient cl) {
         RemoteHandManager[] rhm = FindObjectsOfType<RemoteHandManager>();
@@ -103,34 +183,27 @@ public class SceneStateManager : NetworkManager
     }
     public override void OnClientConnect(NetworkConnection conn)// Runs ONLY on the client
     {
-        //Debug.Log(conn.connectionId + " Connected!");
-        // CmdSpawnMeNow(myID, conn);
         SpawnMessage newSpawnMessage = new SpawnMessage();
         newSpawnMessage.netId= myID;
         conn.Send(MsgType.AddPlayer, newSpawnMessage);
         LocalCamera.SetActive(false);
-        localActionState = ActionState.DRIVE;
-
-       // if (useVR)
-       // {
-       //      XRSettings.enabled = true;
-       // }
-
-
+       localActionState = ActionState.PREDRIVE;
     }
+    
+
     //---//
     void reportClientID(NetworkMessage msg){ 
 
         var message = msg.ReadMessage<SpawnMessage>();
         uint playerid = message.netId;
 
-        if (activeConnectedIds.Contains(playerid))
+        if (activeConnectedIds.ContainsKey(playerid))
         {
             msg.conn.Disconnect();
         }
         else
         {
-            activeConnectedIds.Add(playerid);
+            activeConnectedIds.Add(playerid,msg.conn);
         }
         bool success = false;
         Vector3 SpawnPosition = Vector3.zero;
@@ -146,11 +219,26 @@ public class SceneStateManager : NetworkManager
         }
         if (success)
         {
-            msg.conn.RegisterHandler(RemoteHandManager.MessageType.uploadHand, RecieveHandData);
-            GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
-            NetworkServer.AddPlayerForConnection(msg.conn, player, 0);
+            msg.conn.RegisterHandler(NetworkMessageType.uploadHand, RecieveHandData);
+            //GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
+            //NetworkServer.AddPlayerForConnection(msg.conn, player, 0);
         }
      }
+
+    public override void OnServerDisconnect(NetworkConnection connection) {
+        if (activeConnectedIds.ContainsValue(connection)){
+            foreach (uint i in activeConnectedIds.Keys) {
+                if (activeConnectedIds[i] == connection) {
+                    activeConnectedIds.Remove(i);
+                    Debug.Log("ClientDisconnected removed from list");
+                    break;
+                }
+
+             }
+        }
+    }
+
+
 
     public void RecieveHandData(NetworkMessage msg)
     {
@@ -164,9 +252,18 @@ public class SceneStateManager : NetworkManager
             if (c == msg.conn) {
                 //Debug.Log("I already have that information");
                 continue; }
-            c.Send(RemoteHandManager.MessageType.DownloadHand,hand);
+            c.Send(NetworkMessageType.DownloadHand,hand);
 
         }
+    }
+    public void SetDriving() {
+        //TODO maybe contact the server;
+        localActionState = ActionState.DRIVE;
+    }
+
+    public void SetQuestionair() {
+        //TODO maybe contact the server;
+        localActionState = ActionState.QUESTIONS;
     }
 
     //----//

@@ -13,13 +13,16 @@ using Leap.Unity;
 using UnityEditor;
 #endif
 
+public class NetworkMessageType {
+    public static short uploadHand = MsgType.Highest + 1;
+    public static short DownloadHand = MsgType.Highest + 2;
+    public static short StateUpdate = MsgType.Highest + 3;
+};
+
 public class RemoteHandManager :  MonoBehaviour {
 
     public Transform DebugHand;
-    public class MessageType {
-        public static short uploadHand = MsgType.Highest + 1;
-        public static short DownloadHand = MsgType.Highest + 2;
-    };
+   
     public class HandMessage : MessageBase
     {
         public byte[] serializedHand;
@@ -84,7 +87,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 msg.id = 1;
                 msg.serializedHand = temp;
                 //Debug.Log(SceneStateManager.Instance.ThisClient);
-                SceneStateManager.Instance.ThisClient.Send(MessageType.uploadHand, msg);
+                SceneStateManager.Instance.ThisClient.Send(NetworkMessageType.uploadHand, msg);
                 
             }
             if (rightHand != null)
@@ -96,7 +99,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 msg.id = 0;
                 msg.serializedHand = temp;
                 //Debug.Log(SceneStateManager.Instance.ThisClient);
-                SceneStateManager.Instance.ThisClient.Send(MessageType.uploadHand, msg);
+                SceneStateManager.Instance.ThisClient.Send(NetworkMessageType.uploadHand, msg);
 
             }
 
@@ -174,7 +177,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 if (FindLocalLeap())
                 {
                     Debug.Log("onClinet registering Download Hand");
-                    SceneStateManager.Instance.ThisClient.connection.RegisterHandler(MessageType.DownloadHand, ReciveOtherHands);
+                    SceneStateManager.Instance.ThisClient.connection.RegisterHandler(NetworkMessageType.DownloadHand, ReciveOtherHands);
                 }
             }
         }

@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 public class DeactivateOthers : NetworkBehaviour {
     public List<Behaviour> DeactivateMe = new List<Behaviour>();
+    public List<Transform> AndMe = new List<Transform>();
     Camera MyCam;
 	// Use this for initialization
 	void Start () {
@@ -14,6 +15,9 @@ public class DeactivateOthers : NetworkBehaviour {
             {
                 b.enabled = false;
                 //MyCam.enabled = false;
+            }
+            foreach (Transform t in AndMe) {
+                t.gameObject.SetActive(false);
             }
         }
 // rh = FindObjectOfType<RemoteHandManager>();
