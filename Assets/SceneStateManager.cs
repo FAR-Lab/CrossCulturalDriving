@@ -156,13 +156,13 @@ public class SceneStateManager : NetworkManager
     {
         int ms, ad;
         msg.conn.GetStatsIn(out ms, out ad);
-        Debug.Log("Receving hand Data" +ms+ "  "+ad);
+        //Debug.Log("Receving hand Data" +ms+ "  "+ad);
         RemoteHandManager.HandMessage hand = msg.ReadMessage<RemoteHandManager.HandMessage>();
         hand.id = msg.conn.connectionId - hand.id;
         foreach (NetworkConnection c in NetworkServer.connections)
         {
             if (c == msg.conn) {
-                Debug.Log("I already have that information");
+                //Debug.Log("I already have that information");
                 continue; }
             c.Send(RemoteHandManager.MessageType.DownloadHand,hand);
 

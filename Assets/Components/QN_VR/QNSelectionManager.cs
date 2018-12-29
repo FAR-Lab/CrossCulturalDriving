@@ -237,7 +237,7 @@ public class QNSelectionManager : MonoBehaviour {
 
 
 
-    public class ReadOnlyAttribute : PropertyAttribute { // Copies from https://answers.unity.com/questions/489942/how-to-make-a-readonly-property-in-inspector.html
+   /* public class ReadOnlyAttribute : PropertyAttribute { // Copies from https://answers.unity.com/questions/489942/how-to-make-a-readonly-property-in-inspector.html
 
     }
 
@@ -255,7 +255,7 @@ public class QNSelectionManager : MonoBehaviour {
             EditorGUI.PropertyField(position, property, label, true);
             GUI.enabled = true;
         }
-    }
+    }*/
 
     //// This is For the file reading and interpretation
     List<QandASet> ReadString(string path_) {

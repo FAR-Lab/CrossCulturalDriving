@@ -72,7 +72,7 @@ public class RemoteHandManager :  MonoBehaviour {
         if (frame != null && (SceneStateManager.Instance.MyState==ClientState.CLIENT || SceneStateManager.Instance.MyState == ClientState.HOST))
         {
             //Debug.Log(frame.Id);
-            //Debug.Log(LeftHandArrayPosition);
+            //Debug.Log(frame.Hands.Count);
             Leap.Hand leftHand = frame.Hands.Find(i => i.IsLeft == true);
             Leap.Hand rightHand = frame.Hands.Find(i => i.IsLeft == false);
             VectorHand_32 vHand = new VectorHand_32();
@@ -149,7 +149,7 @@ public class RemoteHandManager :  MonoBehaviour {
     }
     public void  ReciveOtherHands(NetworkMessage msg) {
         HandMessage newHand = msg.ReadMessage<HandMessage>();
-       
+        Debug.Log("got a new remote hand");
         VectorHand_32 vHand = new VectorHand_32();
         Leap.Hand result = new Leap.Hand();
         int offset = 0;

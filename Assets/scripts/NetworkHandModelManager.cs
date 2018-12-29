@@ -63,6 +63,7 @@ namespace Leap.Unity {
                         temp.parent = this.transform;
                         hmb = temp.GetComponent<HandModelBase>();
                     }
+                    hmb.transform.gameObject.SetActive(true);
                     instansiatedModels.Add(key, hmb);
                     
                 }
