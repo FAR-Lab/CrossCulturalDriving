@@ -8,46 +8,47 @@ using UnityEngine.XR;
 
 public enum ClientState { HOST, CLIENT, DISCONECTED, NONE };
 public enum ActionState { LOADING, PREDRIVE, DRIVE, QUESTIONS, WAITING };
-public enum ServerState { NONE,LOADING, WAITING,RUNNING}
+public enum ServerState { NONE, LOADING, WAITING, RUNNING }
 //public enum StateMessageType { READY, QUESTIONAIR,SLOWTIME,FINISHED};
 
-public class SceneStateManager : NetworkManager
-{
+public class SceneStateManager : NetworkManager {
 
 
     public class StateUpdateMessag : MessageBase {
-        public ActionState msgType;
+        public ActionState actionState;
         public string[] content;
         public float time;
     }
     private struct RemoteClientState {
-        public ActionState thrActionState;
-        public NetworkConnection connection;
+        public ActionState TheActionState;
+        public uint participantID;
+        public float timeScale;
+        // public NetworkConnection conn;
     }
     private List<int> ClientsThatReportedReady = new List<int>();
-   
+
     private static SceneStateManager _instance;
     private ClientState myState = ClientState.NONE;
     [SerializeField]
-    private ActionState localActionState=ActionState.PREDRIVE;
-    public  ServerState serverState = ServerState.NONE;
+    private ActionState localActionState = ActionState.PREDRIVE;
+    public ServerState serverState = ServerState.NONE;
     private uint myID = 0;
-    
+
 
     public uint MyID { get { return myID; } }
     public static SceneStateManager Instance { get { return _instance; } }
     public ClientState MyState { get { return myState; } }
-    
+
     public ActionState ActionState { get { return localActionState; } }
     private NetworkManager manager;
 
-    private Dictionary <uint,NetworkConnection> activeConnectedIds= new Dictionary<uint, NetworkConnection>();
+    private Dictionary<NetworkConnection, RemoteClientState> activeConnectedIds = new Dictionary<NetworkConnection, RemoteClientState>();
     public string serverIP;
-    
+
     public static float spawnHeight = 1;
     public static float slowDownSpeed = 1f;
-  
-    public static float slowTargetTime=0.1f;
+
+    public static float slowTargetTime = 0.1f;
 
     [SerializeField]
     public SceneField[] SceneConditions;
@@ -57,23 +58,20 @@ public class SceneStateManager : NetworkManager
     public NetworkClient ThisClient { get { return client_; } }
     GameObject LocalCamera;
 
+    private bool showControlPanel;
+
     //private bool useVR = false;
 
 
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-        {
+    private void Awake() {
+        if (_instance != null && _instance != this) {
             Destroy(this.gameObject);
-        }
-        else
-        {
+        } else {
             _instance = this;
-           // DontDestroyOnLoad(this);
+            // DontDestroyOnLoad(this);
         }
     }
-    void Start()
-    {
+    void Start() {
         // XRSettings.enabled = false;
         LocalCamera = Camera.main.gameObject;
         DontDestroyOnLoad(LocalCamera);
@@ -82,22 +80,37 @@ public class SceneStateManager : NetworkManager
 
     }
     private void OnGUI() {
-        float boxWidth = 200;
-        float boxHeight = 50;
-        GUIStyle s = new GUIStyle();
-        s.fontSize = 24;
-        s.alignment = TextAnchor.MiddleCenter;
+        if (showControlPanel) {
+            float boxWidth = 200;
+            float boxHeight = 50;
+            GUIStyle s = new GUIStyle();
+            s.fontSize = 24;
+            s.alignment = TextAnchor.MiddleCenter;
 
-        if (myState == ClientState.HOST) {
+            if (myState == ClientState.HOST) {
 
-            GUI.Label(new Rect(50,              50, boxWidth, boxHeight), "ConnectedClients: " + activeConnectedIds.Count,s);
-            GUI.Label(new Rect(100+ boxWidth,   50, boxWidth, boxHeight), "Clients Ready: " + ClientsThatReportedReady.Count, s);
+                GUI.Label(new Rect(25, 0, 150, 25), "Cl. Conn: " + activeConnectedIds.Count + "Cl. Ready: " + ClientsThatReportedReady.Count);
 
-            for (int i=0; i< SceneConditions.Length;i++){
-                if (GUI.Button(new Rect(100, 100+i*boxHeight, boxWidth, boxHeight), SceneConditions[i].SceneName))  {
-                    loadNextCondition(SceneConditions[i]);
+                for (int i = 0; i < SceneConditions.Length; i++) {
+                    if (GUI.Button(new Rect(25, 100 + i * boxHeight, boxWidth, boxHeight), SceneConditions[i].SceneName)) {
+                        loadNextCondition(SceneConditions[i]);
+                    }
+                }
+                float x = 250;
+                foreach (RemoteClientState stat in activeConnectedIds.Values) {
+                    GUI.Label(new Rect(x, 50, boxWidth, boxHeight), "Participant ID: " + stat.participantID, s);
+                    GUI.Label(new Rect(x, 100, boxWidth, boxHeight), "state: " + stat.TheActionState.ToString(), s);
+                    GUI.Label(new Rect(x, 150, boxWidth, boxHeight), "TimeScale: " + stat.timeScale, s);
+                    x += boxWidth;
                 }
             }
+        } else {
+            GUI.Label(new Rect(25, 0, 150, 25), "Cl. Conn: " + activeConnectedIds.Count + "Cl. Ready: " + ClientsThatReportedReady.Count);
+           
+            
+        }
+        if (GUI.Button(new Rect(0, 0, 25, 25), "CP")) {
+            showControlPanel = !showControlPanel;
         }
     }
     private void loadNextCondition(string sc) {
@@ -105,7 +118,7 @@ public class SceneStateManager : NetworkManager
         ServerChangeScene(sc);
         serverState = ServerState.LOADING;
     }
-    public override void OnServerSceneChanged( string sceneName) {
+    public override void OnServerSceneChanged(string sceneName) {
 
         Debug.Log("OnServerSceneChanged was caled =>\t" + sceneName);
 
@@ -114,8 +127,8 @@ public class SceneStateManager : NetworkManager
     public override void OnClientSceneChanged(NetworkConnection conn) {
         Debug.Log("OnClientSceneChanged was caled =>\t" + conn.connectionId);
         ClientScene.Ready(conn);
-        
-       
+
+
     }
     public override void OnServerReady(NetworkConnection conn) {
         Debug.Log("OnServerReady was caled =>\t" + conn.connectionId);
@@ -128,31 +141,30 @@ public class SceneStateManager : NetworkManager
         Debug.Log("OnClientNotReady was caled =>\t" + conn.connectionId);
     }
 
-    
 
 
-    void Update(){
-        if(myState == ClientState.CLIENT){
-           // Debug.Log(client_.isConnected);
-                
-           
+
+    void Update() {
+        if (myState == ClientState.CLIENT) {
+            // Debug.Log(client_.isConnected);
+
+
         }
-        if(Input.GetKeyUp(KeyCode.Space))
-        {
-            FindObjectOfType<seatCallibration>().reCallibrate();
-            
+        if (Input.GetKeyUp(KeyCode.Space)) {
+            FindObjectOfType<seatCallibration>().reCallibrate();//TODO ensure this only happens on the local mashine
+
         }
         if (serverState == ServerState.LOADING) {
             if (ClientsThatReportedReady.Count == activeConnectedIds.Count) {
                 LocalCamera.SetActive(false);
                 ClientsThatReportedReady.Clear();
                 serverState = ServerState.RUNNING;
-                foreach (uint id in activeConnectedIds.Keys) {
+                foreach (NetworkConnection id in activeConnectedIds.Keys) {
                     bool success = false;
                     Vector3 SpawnPosition = Vector3.zero;
                     Quaternion SpawnOrientation = Quaternion.identity;
                     foreach (NetworkStartPosition p in FindObjectsOfType<NetworkStartPosition>()) {
-                        if (id == uint.Parse(p.transform.name[p.transform.name.Length - 1].ToString())) {  /// TODO CHANGED CONDITION;
+                        if (activeConnectedIds[id].participantID == uint.Parse(p.transform.name[p.transform.name.Length - 1].ToString())) {  /// TODO CHANGED CONDITION;
                             SpawnPosition = p.transform.position;
                             SpawnOrientation = p.transform.rotation;
                             success = true;
@@ -161,32 +173,31 @@ public class SceneStateManager : NetworkManager
                     }
                     if (success) {
                         GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
-                        NetworkServer.AddPlayerForConnection(activeConnectedIds[id], player, 0);
+                        NetworkServer.AddPlayerForConnection(id, player, 0);
                     }
                 }
+                showControlPanel = false;
             }
         } else if (serverState == ServerState.WAITING) {
             if (ClientsThatReportedReady.Count == activeConnectedIds.Count) {
                 LocalCamera.SetActive(true);
-
+                showControlPanel = true;
 
             }
         }
     }
 
-    public void ConnectToServerWith(string ip, uint playerID,bool useVROrNot)
-    {
+    public void ConnectToServerWith(string ip, uint playerID, bool useVROrNot) {
         //useVR = useVROrNot;
         serverIP = ip;
         manager.networkAddress = ip;
         myID = playerID;
         client_ = manager.StartClient();
         myState = ClientState.CLIENT;
-        
+
 
     }
-    public void HostServer(uint playerID, bool useVROrNot)
-    {
+    public void HostServer(uint playerID, bool useVROrNot) {
         // useVR = useVROrNot;
         serverIP = "127.0.0.1";
         myID = playerID;
@@ -199,75 +210,75 @@ public class SceneStateManager : NetworkManager
     void activatehandSending(NetworkClient cl) {
         RemoteHandManager[] rhm = FindObjectsOfType<RemoteHandManager>();
         Debug.Log(rhm.Length);
-       
+
     }
-    
+
     //----//
     public override void OnServerConnect(NetworkConnection conn) //Runs ONLY on the server
     {
         //Debug.Log(myID);
-       // Debug.Log("OnPlayerConnected");
+        // Debug.Log("OnPlayerConnected");
         conn.RegisterHandler(MsgType.AddPlayer, reportClientID);
-   
+
     }
     public override void OnClientConnect(NetworkConnection conn)// Runs ONLY on the client
     {
         SpawnMessage newSpawnMessage = new SpawnMessage();
-        newSpawnMessage.netId= myID;
+        newSpawnMessage.netId = myID;
         conn.Send(MsgType.AddPlayer, newSpawnMessage);
 
-       
-       localActionState = ActionState.PREDRIVE;
+
+        localActionState = ActionState.PREDRIVE;
     }
-    
+
 
     //---//
-    void reportClientID(NetworkMessage msg){ 
+    void reportClientID(NetworkMessage msg) {
 
         var message = msg.ReadMessage<SpawnMessage>();
         uint playerid = message.netId;
 
-        if (activeConnectedIds.ContainsKey(playerid))
-        {
-            msg.conn.Disconnect();
+
+        foreach (RemoteClientState a in activeConnectedIds.Values) {
+            if (a.participantID == playerid) {
+                msg.conn.Disconnect();
+                return;
+            }
         }
-        else
-        {
-            activeConnectedIds.Add(playerid,msg.conn);
-        }
+        RemoteClientState rcs = new RemoteClientState {
+            participantID = playerid,
+            TheActionState = ActionState.WAITING
+        };
+
+
+        activeConnectedIds.Add(msg.conn, rcs);
+
         bool success = false;
         Vector3 SpawnPosition = Vector3.zero;
         Quaternion SpawnOrientation = Quaternion.identity;
-        foreach(NetworkStartPosition p in FindObjectsOfType<NetworkStartPosition>())
-        {
-            if(playerid==uint.Parse(p.transform.name[p.transform.name.Length-1].ToString())){
+        foreach (NetworkStartPosition p in FindObjectsOfType<NetworkStartPosition>()) {
+            if (playerid == uint.Parse(p.transform.name[p.transform.name.Length - 1].ToString())) {
                 SpawnPosition = p.transform.position;
-                SpawnOrientation = p.transform.rotation; 
+                SpawnOrientation = p.transform.rotation;
                 success = true;
 
             }
         }
-        if (success)
-        {
+        if (success) {
             msg.conn.RegisterHandler(NetworkMessageType.uploadHand, RecieveHandData);
             msg.conn.RegisterHandler(NetworkMessageType.StateUpdate, ReceiveUpdatedState);
             //GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
             //NetworkServer.AddPlayerForConnection(msg.conn, player, 0);
         }
-     }
+    }
 
     public override void OnServerDisconnect(NetworkConnection connection) {
-        if (activeConnectedIds.ContainsValue(connection)){
-            foreach (uint i in activeConnectedIds.Keys) {
-                if (activeConnectedIds[i] == connection) {
-                    activeConnectedIds.Remove(i);
+        if (activeConnectedIds.ContainsKey(connection)) {
+                    activeConnectedIds.Remove(connection);
                     Debug.Log("ClientDisconnected removed from list");
-                    break;
-                }
-
-             }
+            }
         }
-    }
+    
 
 
 
@@ -278,12 +289,12 @@ public class SceneStateManager : NetworkManager
         //Debug.Log("Receving hand Data" +ms+ "  "+ad);
         RemoteHandManager.HandMessage hand = msg.ReadMessage<RemoteHandManager.HandMessage>();
         hand.id = msg.conn.connectionId - hand.id;
-        foreach (NetworkConnection c in NetworkServer.connections)
-        {
+        foreach (NetworkConnection c in NetworkServer.connections) {
             if (c == msg.conn) {
                 //Debug.Log("I already have that information");
-                continue; }
-            c.Send(NetworkMessageType.DownloadHand,hand);
+                continue;
+            }
+            c.Send(NetworkMessageType.DownloadHand, hand);
 
         }
     }
@@ -291,15 +302,22 @@ public class SceneStateManager : NetworkManager
     public void ReceiveUpdatedState(NetworkMessage msg) {
         StateUpdateMessag theMessage = msg.ReadMessage<StateUpdateMessag>();
 
+        RemoteClientState rcs = new RemoteClientState {
+            TheActionState = theMessage.actionState,
+            timeScale = theMessage.time,
+            participantID = activeConnectedIds[msg.conn].participantID
+        };
 
-        Debug.Log(theMessage.msgType.ToString() + " :remote action state for client: " + msg.conn.connectionId);
+        activeConnectedIds[msg.conn] = rcs;
+
+
     }
 
     void ReportCurrentState() {
 
         StateUpdateMessag msg = new StateUpdateMessag();
         msg.content = new string[1];
-        msg.msgType = localActionState;
+        msg.actionState = localActionState;
         msg.time = Time.timeScale;
 
         ThisClient.Send(NetworkMessageType.StateUpdate, msg);
@@ -322,19 +340,15 @@ public class SceneStateManager : NetworkManager
     }
 
     //----//
-    IEnumerator LoadYourAsyncAddScene(string newScene)
-    {
+    IEnumerator LoadYourAsyncAddScene(string newScene) {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(newScene, LoadSceneMode.Additive);
-        while (!asyncLoad.isDone)
-        {
+        while (!asyncLoad.isDone) {
             yield return null;
         }
     }
-    IEnumerator UnloadYourAsyncAddScene(string oldScene)
-    {
+    IEnumerator UnloadYourAsyncAddScene(string oldScene) {
         AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync(oldScene);
-        while (!asyncUnload.isDone)
-        {
+        while (!asyncUnload.isDone) {
             yield return null;
         }
     }
