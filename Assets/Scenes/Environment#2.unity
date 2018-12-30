@@ -2813,6 +2813,7 @@ GameObject:
   - component: {fileID: 1604726275}
   - component: {fileID: 1604726276}
   - component: {fileID: 1604726274}
+  - component: {fileID: 1604726277}
   m_Layer: 0
   m_Name: SpecificSceneManager
   m_TagString: Untagged
@@ -2831,6 +2832,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4afb3dd0708474bd7822f6617f1ccf73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questionairsToAsk:
+  - QN
+  conditionName: Figure8
+  QuestionairPrefab: {fileID: 1853806982428388, guid: bb398da6725f53c4283a5f88c90d86ed,
+    type: 2}
 --- !u!4 &1604726275
 Transform:
   m_ObjectHideFlags: 0
@@ -2854,8 +2860,20 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
+  m_Size: {x: 2, y: 2, z: 4}
+  m_Center: {x: -34.65, y: 0.05, z: -6.36}
+--- !u!65 &1604726277
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1604726273}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
   m_Size: {x: 4, y: 2, z: 2}
-  m_Center: {x: 11.75, y: 0.9, z: 34.65}
+  m_Center: {x: 11.75, y: 0.05, z: 34.65}
 --- !u!1 &1680724936
 GameObject:
   m_ObjectHideFlags: 0

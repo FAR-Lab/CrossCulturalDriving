@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class SpecificSceneManager : MonoBehaviour {
     public string[] questionairsToAsk;
+    public string conditionName;
     // Use this for initialization
-    
+    public GameObject QuestionairPrefab;
     float lerpAdaption=1;
 	void Start () {
         if(Camera.main!=null)Camera.main.clearFlags = CameraClearFlags.Skybox;
@@ -14,10 +15,25 @@ public class SpecificSceneManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (lerpAdaption<1) {
+        if (lerpAdaption < 1) {
             lerpAdaption += Time.deltaTime * SceneStateManager.slowDownSpeed;
-            Debug.Log("slowing DownTime at "+lerpAdaption);
+            Debug.Log("slowing DownTime at " + lerpAdaption);
             Time.timeScale = Mathf.Lerp(1, SceneStateManager.slowTargetTime, lerpAdaption);
+        } else if (lerpAdaption >= 1 && lerpAdaption < 2) {
+            lerpAdaption = 2;
+            foreach (VehicleInputControllerNetworked vn in FindObjectsOfType<VehicleInputControllerNetworked>()) {
+                if (vn.isLocalPlayer) {
+                    QNSelectionManager temp = Instantiate(
+                        QuestionairPrefab,
+                        vn.transform.position +vn.transform.up*1.5f+vn.transform.forward*2.5f,
+                        vn.transform.rotation,
+                        vn.transform).GetComponent<QNSelectionManager>();
+                    temp.startAskingTheQuestionairs(questionairsToAsk, conditionName);
+
+                }
+            }
+            
+
         }
 
 

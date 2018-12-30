@@ -87,7 +87,7 @@ public class QNSelectionManager : MonoBehaviour {
         /// WTF Unity??? this should not be that hard!!
     }
     // Update is called once per frame
-    void startAskingTheQuestionairs(string[] list, string Condition) {
+    public void startAskingTheQuestionairs(string[] list, string Condition) {
 
         if (!running) {
             _condition = Condition;
@@ -102,13 +102,12 @@ public class QNSelectionManager : MonoBehaviour {
 
     void Update() {
         if (running) {
-
             if (!Questionloaded) {
                 if (targetIndex == 0) {
-                   
                     if (listPointer >= ToDolist.Length || ToDolist[listPointer] == null) {
                         Debug.Log("We are done here continue to the next conditon and stop displaying the questioniar.");
-                        Debug.Log(outputString);
+                        Debug.Log(outputString); //TODO: DATALOGGER
+                        SceneStateManager.Instance.SetWaiting();
                         running = false;
                         transform.gameObject.SetActive(false);
                         return;

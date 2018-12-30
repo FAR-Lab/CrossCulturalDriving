@@ -146,7 +146,7 @@ public class SteeringWheelInputController : MonoBehaviour {
 
 
     public void OnGUI() {
-        if (GUI.Button(new Rect(new Vector2(50, 50), new Vector2(50, 50)), "ResetForceFeedBack")) {
+       /* if (GUI.Button(new Rect(new Vector2(50, 50), new Vector2(50, 50)), "ResetForceFeedBack")) {
             Init();
 
         }
@@ -160,7 +160,7 @@ public class SteeringWheelInputController : MonoBehaviour {
                  + "\n spring sat" + springSaturation
                   + "\n damp" + damper
 
-                );
+                );*/
     }
 
     private IEnumerator InitForceFeedback() {

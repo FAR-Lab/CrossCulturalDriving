@@ -9,20 +9,23 @@ using UnityEngine.XR;
 public enum ClientState { HOST, CLIENT, DISCONECTED, NONE };
 public enum ActionState { LOADING, PREDRIVE, DRIVE, QUESTIONS, WAITING };
 public enum ServerState { NONE,LOADING, WAITING,RUNNING}
-public enum StateMessageType { READY, QUESTIONAIR,SLOWTIME,FINISHED};
+//public enum StateMessageType { READY, QUESTIONAIR,SLOWTIME,FINISHED};
 
 public class SceneStateManager : NetworkManager
 {
 
 
-    public class StateupdateMessag : MessageBase {
-        public StateMessageType msgType;
+    public class StateUpdateMessag : MessageBase {
+        public ActionState msgType;
         public string[] content;
         public float time;
     }
+    private struct RemoteClientState {
+        public ActionState thrActionState;
+        public NetworkConnection connection;
+    }
     private List<int> ClientsThatReportedReady = new List<int>();
-
-
+   
     private static SceneStateManager _instance;
     private ClientState myState = ClientState.NONE;
     [SerializeField]
@@ -40,13 +43,16 @@ public class SceneStateManager : NetworkManager
 
     private Dictionary <uint,NetworkConnection> activeConnectedIds= new Dictionary<uint, NetworkConnection>();
     public string serverIP;
+    
+    public static float spawnHeight = 1;
+    public static float slowDownSpeed = 1f;
+  
+    public static float slowTargetTime=0.1f;
 
     [SerializeField]
-    public static float spawnHeight = 1;
-    [SerializeField]
-    public static float slowDownSpeed = 1f;
-    [SerializeField]
-    public static float slowTargetTime=0.1f;
+    public SceneField[] SceneConditions;
+
+
     NetworkClient client_;
     public NetworkClient ThisClient { get { return client_; } }
     GameObject LocalCamera;
@@ -76,9 +82,21 @@ public class SceneStateManager : NetworkManager
 
     }
     private void OnGUI() {
+        float boxWidth = 200;
+        float boxHeight = 50;
+        GUIStyle s = new GUIStyle();
+        s.fontSize = 24;
+        s.alignment = TextAnchor.MiddleCenter;
+
         if (myState == ClientState.HOST) {
-            if (GUI.Button(new Rect(10, 10, 200, 50), "Load a Thing")) {
-                loadNextCondition("Environment#2");
+
+            GUI.Label(new Rect(50,              50, boxWidth, boxHeight), "ConnectedClients: " + activeConnectedIds.Count,s);
+            GUI.Label(new Rect(100+ boxWidth,   50, boxWidth, boxHeight), "Clients Ready: " + ClientsThatReportedReady.Count, s);
+
+            for (int i=0; i< SceneConditions.Length;i++){
+                if (GUI.Button(new Rect(100, 100+i*boxHeight, boxWidth, boxHeight), SceneConditions[i].SceneName))  {
+                    loadNextCondition(SceneConditions[i]);
+                }
             }
         }
     }
@@ -110,6 +128,8 @@ public class SceneStateManager : NetworkManager
         Debug.Log("OnClientNotReady was caled =>\t" + conn.connectionId);
     }
 
+    
+
 
     void Update(){
         if(myState == ClientState.CLIENT){
@@ -124,6 +144,8 @@ public class SceneStateManager : NetworkManager
         }
         if (serverState == ServerState.LOADING) {
             if (ClientsThatReportedReady.Count == activeConnectedIds.Count) {
+                LocalCamera.SetActive(false);
+                ClientsThatReportedReady.Clear();
                 serverState = ServerState.RUNNING;
                 foreach (uint id in activeConnectedIds.Keys) {
                     bool success = false;
@@ -136,11 +158,18 @@ public class SceneStateManager : NetworkManager
                             success = true;
                             break;
                         }
-                    }if (success) {
+                    }
+                    if (success) {
                         GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
                         NetworkServer.AddPlayerForConnection(activeConnectedIds[id], player, 0);
                     }
                 }
+            }
+        } else if (serverState == ServerState.WAITING) {
+            if (ClientsThatReportedReady.Count == activeConnectedIds.Count) {
+                LocalCamera.SetActive(true);
+
+
             }
         }
     }
@@ -186,7 +215,8 @@ public class SceneStateManager : NetworkManager
         SpawnMessage newSpawnMessage = new SpawnMessage();
         newSpawnMessage.netId= myID;
         conn.Send(MsgType.AddPlayer, newSpawnMessage);
-        LocalCamera.SetActive(false);
+
+       
        localActionState = ActionState.PREDRIVE;
     }
     
@@ -220,6 +250,7 @@ public class SceneStateManager : NetworkManager
         if (success)
         {
             msg.conn.RegisterHandler(NetworkMessageType.uploadHand, RecieveHandData);
+            msg.conn.RegisterHandler(NetworkMessageType.StateUpdate, ReceiveUpdatedState);
             //GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
             //NetworkServer.AddPlayerForConnection(msg.conn, player, 0);
         }
@@ -240,10 +271,10 @@ public class SceneStateManager : NetworkManager
 
 
 
-    public void RecieveHandData(NetworkMessage msg)
+    public void RecieveHandData(NetworkMessage msg) //Spell check
     {
-        int ms, ad;
-        msg.conn.GetStatsIn(out ms, out ad);
+        //int ms, ad;
+        //msg.conn.GetStatsIn(out ms, out ad);
         //Debug.Log("Receving hand Data" +ms+ "  "+ad);
         RemoteHandManager.HandMessage hand = msg.ReadMessage<RemoteHandManager.HandMessage>();
         hand.id = msg.conn.connectionId - hand.id;
@@ -256,14 +287,38 @@ public class SceneStateManager : NetworkManager
 
         }
     }
+
+    public void ReceiveUpdatedState(NetworkMessage msg) {
+        StateUpdateMessag theMessage = msg.ReadMessage<StateUpdateMessag>();
+
+
+        Debug.Log(theMessage.msgType.ToString() + " :remote action state for client: " + msg.conn.connectionId);
+    }
+
+    void ReportCurrentState() {
+
+        StateUpdateMessag msg = new StateUpdateMessag();
+        msg.content = new string[1];
+        msg.msgType = localActionState;
+        msg.time = Time.timeScale;
+
+        ThisClient.Send(NetworkMessageType.StateUpdate, msg);
+
+    }
     public void SetDriving() {
         //TODO maybe contact the server;
         localActionState = ActionState.DRIVE;
+        ReportCurrentState();
     }
 
     public void SetQuestionair() {
         //TODO maybe contact the server;
         localActionState = ActionState.QUESTIONS;
+        ReportCurrentState();
+    }
+    public void SetWaiting() {
+        localActionState = ActionState.WAITING;
+        ReportCurrentState();
     }
 
     //----//
