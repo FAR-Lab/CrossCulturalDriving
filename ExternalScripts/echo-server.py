@@ -29,7 +29,7 @@ server_address = (ip_address, port)
 
 # Declaration of variables to be used later in the program
 # Change these as per your need
-max_sim_num = 1 #maximum number of simulataneous simulation clients
+max_sim_num = 5 #maximum number of simulataneous simulation clients
 path = "C:/Users/Public/Documents/FAR-Lab/Networking/Logs/" #folder path for log files
 sep = ';' #Separator for the data values
 
@@ -105,14 +105,14 @@ def client_handler(conn,addr):
         log_files = {}
         while isLogging:
             if not dat_buffer.empty():
-                l = dat_buffer.get().split('\n')
+                l = dat_buffer.get().split('\n\r')
                 for i in l:
                     dat_id = i.split(sep)[0]
                     if dat_id != '':
                         if not (dat_id in log_files):
                             log_files[dat_id] = open(p + dat_id + ".txt" ,"a")
 
-                        log_files[dat_id].write(i+'\n')
+                        log_files[dat_id].write(i+'\n\r')
 
                 for i in log_files:
                     log_files[i].flush()
