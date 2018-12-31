@@ -93,7 +93,7 @@ public class farlab_logger : MonoBehaviour {
             }
             headers.Add(header);
             for (int i = 0; i < headers.Count; i++) {
-                headers[i] = headers[i] + uni.TrimEnd(';') + '\n';
+                headers[i] = headers[i] + uni.TrimEnd(';') + '\n\r';
             }
             return headers;
         }
@@ -121,7 +121,7 @@ public class farlab_logger : MonoBehaviour {
             }
             vals.Add(v);
             for (int i = 0; i < vals.Count; i++) {
-                vals[i] = vals[i] + uni.TrimEnd(';') + '\n';
+                vals[i] = vals[i] + uni.TrimEnd(';') + '\n\r';
             }
             return vals;
         }
