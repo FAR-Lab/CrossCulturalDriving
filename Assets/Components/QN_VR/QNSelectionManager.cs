@@ -59,6 +59,7 @@ public class QNSelectionManager : MonoBehaviour {
     void Start() {
 
         foreach (string s in QNFiles) {
+            
             questionaries.Add(s, ReadString(s));
 
         }
@@ -73,7 +74,7 @@ public class QNSelectionManager : MonoBehaviour {
         m_Raycaster = GetComponent<GraphicRaycaster>();
         m_EventSystem = GetComponent<EventSystem>();
 
-        startAskingTheQuestionairs(QNFiles, "Test");
+      startAskingTheQuestionairs(QNFiles, "Test");
     }
 
     private void updateCursorPositoon(Transform currentHitTarget, RaycastResult rayRes) {
@@ -258,6 +259,9 @@ public class QNSelectionManager : MonoBehaviour {
 
     //// This is For the file reading and interpretation
     List<QandASet> ReadString(string path_) {
+        if (path_.Length <= 0) {
+            return null;
+        }
         string path = "Assets/QN/" + path_ + ".txt";
         Debug.Log("Trying to open" + path);
         List<QandASet> output = new List<QandASet>();
@@ -266,12 +270,12 @@ public class QNSelectionManager : MonoBehaviour {
         bool first = true;
         QandASet lastSet = new QandASet();
         lastSet.Answers = new List<OneAnswer>();
-
+        
         string line;
         while (( line = reader.ReadLine() ) != null) {
 
             if (line.StartsWith("/")) {
-                //Debug.Log(line);
+                Debug.Log(line);
                 if (!first) {
                     Debug.Log(lastSet.Answers.Count + "   out last ansawer count");
                     output.Add(lastSet);
@@ -280,8 +284,9 @@ public class QNSelectionManager : MonoBehaviour {
                 }
                 first = false;
                 string[] elems = line.Split('\t');
-
-                int id = int.Parse(elems[0].TrimStart('/'));
+                Debug.Log(elems[0]+" :from line: "+line);
+                int id = 0;
+                int.TryParse(elems[0].TrimStart('/'), out id);
                 lastSet.id = id;
                 lastSet.question = elems[1];
             } else if (line.StartsWith("\t")) {
