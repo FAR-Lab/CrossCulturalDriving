@@ -4,17 +4,17 @@
 	Unsure	/2
 
 /2	At the intersection, who moved first?
-	Me	/3 
-	The other driver	/4
+	Me						/3 
+	The other driver		/4
 	We moved simultaneously	/5
 	Not sure	
 
 /3	Did you stop again after moving?
-	No	/6
-	Yes	/7
+	No	/10,/6
+	Yes	/10,/7
 	Unsure
 
-/3	Why did you move first?
+/10	Why did you move first?
 	Because I was uncertain about whose turn it was	/9
 	Because I realized that it was my turn	/9
 	Other	/9
@@ -31,7 +31,7 @@
 /7	Why did you stop again?
 	Because I was still uncertain about whose turn it was
 	Because I realized it was the other driver’s turn
-	Because the other driver stole my turn	
+	Because the other driver stole my turn
 	Other
 	Unsure
 
@@ -43,9 +43,10 @@
 
 /5	Did either of you stop again after moving?
 	I stopped again	/10
-	The other driver stopped again /11
+	The other driver stopped again	/11
 	Neither of us stopped again
 	Both of us stopped again
+
 /8	Why didn’t the other driver stop again?
 	Because they were certain that it was their turn
 	Because I realized it was their turn
@@ -53,8 +54,6 @@
 	Because they stole my turn
 	Other
 	Unsure
-
-
 
 /9	Why did the other driver stop again?
 	Because they were still uncertain about whose turn it was

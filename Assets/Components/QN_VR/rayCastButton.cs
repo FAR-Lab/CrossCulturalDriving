@@ -7,24 +7,24 @@ public class rayCastButton : MonoBehaviour {
     // Use this for initialization
    public  string _Answer;
     string _SecretCharacter;
-    int _targetIndex;
+    List<int> _targetIndexes;
     public Text txObj;
     void Awake() {
         txObj = transform.parent.GetComponentInParent<Text>();
     }
 
-    public void initButton(string Answer, int TargetIndex) {
+    public void initButton(string Answer,List <int> TargetIndex) {
         _Answer = Answer;
 
-        _targetIndex = TargetIndex;
+        _targetIndexes = TargetIndex;
         txObj.text = _Answer;
     }
     // Update is called once per frame
     void Update() {
         
     }
-    public string activateNextQuestions(out int nextID) {
-        nextID = _targetIndex;
+    public string activateNextQuestions(out List<int> nextID) {
+        nextID = _targetIndexes;
         return txObj.text;
     }
 }

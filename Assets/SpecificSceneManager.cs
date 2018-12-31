@@ -26,9 +26,9 @@ public class SpecificSceneManager : MonoBehaviour {
                     QNSelectionManager temp = Instantiate(
                         QuestionairPrefab,
                         vn.transform.position +vn.transform.up*1.5f+vn.transform.forward*2.5f,
-                        vn.transform.rotation,
-                        vn.transform).GetComponent<QNSelectionManager>();
+                        vn.transform.rotation).GetComponent<QNSelectionManager>();
                     temp.startAskingTheQuestionairs(questionairsToAsk, conditionName);
+                    temp.setRelativePosition(vn.transform,  1.5f , 2.5f);
 
                 }
             }
