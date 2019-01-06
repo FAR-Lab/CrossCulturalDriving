@@ -150,10 +150,7 @@ public class SceneStateManager : NetworkManager {
 
 
         }
-        if (Input.GetKeyUp(KeyCode.Space)) {
-            FindObjectOfType<seatCallibration>().reCallibrate();//TODO ensure this only happens on the local mashine
-
-        }
+        
         if (serverState == ServerState.LOADING) {
             if (ClientsThatReportedReady.Count == activeConnectedIds.Count) {
                 LocalCamera.SetActive(false);
@@ -194,6 +191,7 @@ public class SceneStateManager : NetworkManager {
         myID = playerID;
         client_ = manager.StartClient();
         myState = ClientState.CLIENT;
+        LocalCamera.SetActive(false);
 
 
     }

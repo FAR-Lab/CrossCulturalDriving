@@ -29,7 +29,6 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     public Color Off;
   
     public bool LeftActive;
-    
     public bool RightActive;
 
 
@@ -164,6 +163,13 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
 
         if (isLocalPlayer && SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
+
+            if (Input.GetKeyUp(KeyCode.Space)) {
+                FindObjectOfType<seatCallibration>().reCallibrate();//TODO ensure this only happens on the local mashine
+
+            }
+
+
             transitionlerp = 0;
             if (steeringInput == null || useKeyBoard) {
                 controller.steerInput = Input.GetAxis("Horizontal");
