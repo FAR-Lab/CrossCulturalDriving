@@ -112,11 +112,9 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         } else if (indicaterStage == 4) {
             indicaterStage = 0;
             ActualLightOn = false;
-            if (ActualLightOn) {
-                CmdUpdateIndicatorLights(LeftIsActuallyOn, RightIsActuallyOn);
-            } else {
+           
                 CmdUpdateIndicatorLights(false, false);
-            }
+            
         }
 
 

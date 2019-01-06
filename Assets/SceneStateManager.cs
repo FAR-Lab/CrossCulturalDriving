@@ -241,8 +241,6 @@ public class SceneStateManager : NetworkManager {
        
         var message = msg.ReadMessage<SpawnMessage>();
         uint playerid = message.netId;
-        msg.conn.RegisterHandler(NetworkMessageType.uploadHand, RecieveHandData);
-        msg.conn.RegisterHandler(NetworkMessageType.StateUpdate, ReceiveUpdatedState);
 
 
 
@@ -272,9 +270,14 @@ public class SceneStateManager : NetworkManager {
 
             }
         }
-        if (!success) {
-            msg.conn.UnregisterHandler(NetworkMessageType.uploadHand);
-            msg.conn.UnregisterHandler(NetworkMessageType.StateUpdate);
+        if (success) {
+
+
+            msg.conn.RegisterHandler(NetworkMessageType.uploadHand, RecieveHandData);
+            msg.conn.RegisterHandler(NetworkMessageType.StateUpdate, ReceiveUpdatedState);
+
+            //msg.conn.UnregisterHandler(NetworkMessageType.uploadHand);
+            //msg.conn.UnregisterHandler(NetworkMessageType.StateUpdate);
             //GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
             //NetworkServer.AddPlayerForConnection(msg.conn, player, 0);
         }
