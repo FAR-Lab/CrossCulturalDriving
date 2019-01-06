@@ -27,9 +27,9 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     public Material materialOff;
     public Color On;
     public Color Off;
-    [SyncVar]
+  
     public bool LeftActive;
-    [SyncVar]
+    
     public bool RightActive;
 
 
