@@ -220,6 +220,9 @@ public class SceneStateManager : NetworkManager {
         // Debug.Log("OnPlayerConnected");
         conn.RegisterHandler(MsgType.AddPlayer, reportClientID);
 
+        
+
+
     }
     public override void OnClientConnect(NetworkConnection conn)// Runs ONLY on the client
     {
@@ -235,13 +238,17 @@ public class SceneStateManager : NetworkManager {
     //---//
     void reportClientID(NetworkMessage msg) {
 
+       
         var message = msg.ReadMessage<SpawnMessage>();
         uint playerid = message.netId;
+        msg.conn.RegisterHandler(NetworkMessageType.uploadHand, RecieveHandData);
+        msg.conn.RegisterHandler(NetworkMessageType.StateUpdate, ReceiveUpdatedState);
+
 
 
         foreach (RemoteClientState a in activeConnectedIds.Values) {
             if (a.participantID == playerid) {
-                msg.conn.Disconnect();
+               msg.conn.Disconnect();
                 return;
             }
         }
@@ -256,6 +263,7 @@ public class SceneStateManager : NetworkManager {
         bool success = false;
         Vector3 SpawnPosition = Vector3.zero;
         Quaternion SpawnOrientation = Quaternion.identity;
+       
         foreach (NetworkStartPosition p in FindObjectsOfType<NetworkStartPosition>()) {
             if (playerid == uint.Parse(p.transform.name[p.transform.name.Length - 1].ToString())) {
                 SpawnPosition = p.transform.position;
@@ -264,9 +272,9 @@ public class SceneStateManager : NetworkManager {
 
             }
         }
-        if (success) {
-            msg.conn.RegisterHandler(NetworkMessageType.uploadHand, RecieveHandData);
-            msg.conn.RegisterHandler(NetworkMessageType.StateUpdate, ReceiveUpdatedState);
+        if (!success) {
+            msg.conn.UnregisterHandler(NetworkMessageType.uploadHand);
+            msg.conn.UnregisterHandler(NetworkMessageType.StateUpdate);
             //GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
             //NetworkServer.AddPlayerForConnection(msg.conn, player, 0);
         }

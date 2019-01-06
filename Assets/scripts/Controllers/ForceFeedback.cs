@@ -93,7 +93,7 @@ public class ForceFeedback : MonoBehaviour
         float forceFeedback = selfAlignmentTorque;
 
         //disable during autodrive mode
-        if ( SceneStateManager.Instance.ActionState!=ActionState.DRIVE)
+        if (SceneStateManager.Instance !=null && SceneStateManager.Instance.ActionState!=ActionState.DRIVE)
         {
             if (logi != null)
             {

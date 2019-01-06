@@ -19,38 +19,63 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     public bool useKeyBoard;
     float transitionlerp;
 
-    public Material Left;
-    public Material Right;
+    public Transform[] Left;
+    public Transform[] Right;
+    public Material baseMaterial;
+
+    public Material materialOn;
+    public Material materialOff;
     public Color On;
     public Color Off;
-
+    [SyncVar]
     public bool LeftActive;
+    [SyncVar]
     public bool RightActive;
-    
-    public bool lightOn;
-   
+
+
+    private bool ActualLightOn;
+    private bool LeftIsActuallyOn;
+    private bool RightIsActuallyOn;
+
+
     public float indicaterTimer;
     public float interval;
     public int indicaterStage;
-    void Awake()
-    {
+    void Awake() {
         controller = GetComponent<VehicleController>();
-        
+
     }
     private void Start() {
-        SceneStateManager.Instance.SetDriving();
+        if (SceneStateManager.Instance != null) {
+            SceneStateManager.Instance.SetDriving();
+        }
         steeringInput = GetComponent<SteeringWheelInputController>();
         indicaterStage = 0;
+
+        //Generating a new material for on/off;
+        materialOn = new Material(baseMaterial);
+        materialOn.SetColor("_Color", On);
+        materialOff = new Material(baseMaterial);
+        materialOff.SetColor("_Color", Off);
+
+
+        foreach (Transform t in Left) {
+            t.GetComponent<MeshRenderer>().material = materialOff;
+        }
+        foreach (Transform t in Right) {
+            t.GetComponent<MeshRenderer>().material = materialOff;
+        }
+
     }
     void startBlinking(bool left) {
         if (indicaterStage == 0) {
             indicaterStage = 1;
             if (left) {
-                LeftActive = true;
-                RightActive = false;
+                LeftIsActuallyOn = true;
+                RightIsActuallyOn = false;
             } else {
-                LeftActive = false;
-                RightActive = true;
+                LeftIsActuallyOn = false;
+                RightIsActuallyOn = true;
             }
         }
 
@@ -66,23 +91,16 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
             if (indicaterTimer > interval) {
                 indicaterTimer = 0;
-                Color c;
-                if (lightOn) {
-                    c = On;
+                ActualLightOn = !ActualLightOn;
+                if (ActualLightOn) {
+                    CmdUpdateIndicatorLights(LeftIsActuallyOn, RightIsActuallyOn);
                 } else {
-                    c = Off;
-                }
-                lightOn = !lightOn;
-                if (LeftActive) {
-                    Left.color = c;
-                }
-                if (RightActive) {
-                    Right.color = c;
+                    CmdUpdateIndicatorLights(false, false);
                 }
             }
             if (indicaterStage == 2) {
-                
-                if (Mathf.Abs(steeringInput.GetSteerInput() * -450f )> 90) {
+
+                if (Mathf.Abs(steeringInput.GetSteerInput() * -450f) > 90) {
                     indicaterStage = 3;
                 }
             } else if (indicaterStage == 3) {
@@ -91,17 +109,62 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
                 }
             }
 
-        } else if(indicaterStage==4) {
+        } else if (indicaterStage == 4) {
             indicaterStage = 0;
-            Left.color =Off;
-            Right.color = Off;
+            ActualLightOn = false;
+            if (ActualLightOn) {
+                CmdUpdateIndicatorLights(LeftIsActuallyOn, RightIsActuallyOn);
+            } else {
+                CmdUpdateIndicatorLights(false, false);
+            }
+        }
+
+
+        
+    }
+
+
+
+    [Command]
+    void CmdUpdateIndicatorLights(bool Left, bool Right) {
+        
+        LeftActive = Left;
+        RightActive = Right;
+
+
+    }
+
+
+
+    void Update() {
+
+
+
+        if (LeftActive) {
+            foreach (Transform t in Left) {
+                t.GetComponent<MeshRenderer>().material = materialOn;
+            }
+        } else {
+            foreach (Transform t in Left) {
+                t.GetComponent<MeshRenderer>().material = materialOff;
+            }
+        }
+
+        if (RightActive) {
+            foreach (Transform t in Right) {
+                t.GetComponent<MeshRenderer>().material = materialOn;
+            }
+        } else {
+            foreach (Transform t in Right) {
+                t.GetComponent<MeshRenderer>().material = materialOff;
+            }
         }
 
 
 
 
-    }
-    void Update () {
+
+
         if (isLocalPlayer && SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
             transitionlerp = 0;
             if (steeringInput == null || useKeyBoard) {

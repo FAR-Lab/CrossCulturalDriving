@@ -124,7 +124,6 @@ GameObject:
   - component: {fileID: 3946340}
   - component: {fileID: 3946342}
   - component: {fileID: 3946341}
-  - component: {fileID: 3946343}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -247,19 +246,6 @@ MonoBehaviour:
   SceneConditions:
   - m_SceneAsset: {fileID: 102900000, guid: 288496f58d2cd48d596d5c9d871c4a4f, type: 3}
     m_SceneName: Environment#2
---- !u!114 &3946343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 3946339}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 872db0d7297024f6f9337ba58403e476, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ip: 192.168.1.2
-  port: 23456
 --- !u!1001 &13151960
 Prefab:
   m_ObjectHideFlags: 0

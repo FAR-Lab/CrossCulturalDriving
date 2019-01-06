@@ -110,118 +110,98 @@ public class seatCallibration : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
-        if (startCallibrating)
-        {
-            startCallibration();
-            Debug.Log("Waiting to start callibrating");
-        }
-        if (handTrackin)
-        {
-            if(HandModelL==null || HandModelR == null)
-            {
-                findHands();
+        if (transform.parent.GetComponent<VehicleInputControllerNetworked>().isLocalPlayer) {
+            if (startCallibrating) {
+                startCallibration();
+                Debug.Log("Waiting to start callibrating");
             }
-        }
-        if (callibrating)
-        {
-            bool setUp = false;
-            if (callibrationTimer > 0)
-            {
-                callibrationTimer -= Time.deltaTime;
-            }
-            else
-            {
-                callibrationState++;
-                setUp = true;
-                Debug.Log(callibrationState);
-            }
-
-            if (forPassenger)
-            {
-                handCenterPosition = passangerCenter.position;
-            }
-            else
-            {
-                handCenterPosition = steeringWheelCenter.position;
-
-            }
-
-            if (callibrationState == 1)
-            {
-                if (setUp)
-                {
-                    callibrationTimer = 0;
+            if (handTrackin) {
+                if (HandModelL == null || HandModelR == null) {
+                    findHands();
                 }
-                transform.position = OriginalPosition;
-                InputTracking.Recenter();
-                XRHeightOffset x = transform.GetComponentInChildren<XRHeightOffset>();
-                if (x != null)
-                {
-                    //Quaternion rotation = Quaternion.(.eulerAngles, headPose.parent.transform.forward); ;
-                    Quaternion rotation = Quaternion.FromToRotation(x.transform.forward, transform.parent.forward);
-
-                   x.transform.Rotate(new Vector3(0, rotation.eulerAngles.y, 0));
-                    //headPose.parent.transform.rotation = transform.parent.rotation;
-                    //transform.rotation = transform.parent.rotation;
+            }
+            if (callibrating) {
+                bool setUp = false;
+                if (callibrationTimer > 0) {
+                    callibrationTimer -= Time.deltaTime;
+                } else {
+                    callibrationState++;
+                    setUp = true;
+                    Debug.Log(callibrationState);
                 }
 
-            }
-            else if (callibrationState == 2)
-            {
-                if (handTrackin)
-                {
-                    if (setUp)
-                    {
-                        callibrationTimer = 10;
-                        
+                if (forPassenger) {
+                    handCenterPosition = passangerCenter.position;
+                } else {
+                    handCenterPosition = steeringWheelCenter.position;
+
+                }
+
+                if (callibrationState == 1) {
+                    if (setUp) {
+                        callibrationTimer = 0;
                     }
-                    if (HandModelL.IsTracked && HandModelR.IsTracked)
-                    {
-                        Vector3 A = HandModelL.GetLeapHand().PalmPosition.ToVector3();
-                        Vector3 B = HandModelR.GetLeapHand().PalmPosition.ToVector3();
-                        Vector3 AtoB = B - A;
-                        Debug.DrawLine(A, B);
-                        if (steeringWheelCenter != null)
-                        {
-                            Vector3 transformDifference = (A + (AtoB * 0.5f)) - handCenterPosition;
-                            Debug.DrawLine(transform.position, handCenterPosition);
-                            offset = transformDifference;
-                            transform.position -= transformDifference;
+                    transform.position = OriginalPosition;
+                    InputTracking.Recenter();
+                    XRHeightOffset x = transform.GetComponentInChildren<XRHeightOffset>(); //ToDO maybe get the normal transform and not XR height offset
+                    Transform cam = x.transform.GetComponentInChildren<Camera>().transform;
+                    // if (x != null) {
+                    //Quaternion rotation = Quaternion.(.eulerAngles, headPose.parent.transform.forward); ;
+                    Quaternion rotation = Quaternion.FromToRotation(cam.forward, transform.parent.forward);
+                    Debug.Log("XR reported rotation"+InputTracking.GetLocalRotation(XRNode.Head).eulerAngles);
+                    Debug.Log("Self reported" + cam.rotation.eulerAngles);
 
-                            //  Quaternion rot = Quaternion.FromToRotation(AtoB, -steeringWheelCenter.right);
-                            // rotOld = rot;
-                            //Debug.Log(rot);
-                            // transform.RotateAround(handCenterPosition, Vector3.up, rot.eulerAngles.y);
+                    Debug.Log("Correction Rotation: " + rotation.eulerAngles.y);
+                    transform.RotateAround(cam.position, transform.up, rotation.eulerAngles.y);
+                        //transform.Rotate(new Vector3(0, rotation.eulerAngles.y, 0));
+                        //headPose.parent.transform.rotation = transform.parent.rotation;
+                        // transform.rotation = transform.parent.rotation;
+                        // }
+
+                } else if (callibrationState == 2) {
+                    if (handTrackin) {
+                        if (setUp) {
+                            callibrationTimer = 10;
 
                         }
+                        if (HandModelL.IsTracked && HandModelR.IsTracked) {
+                            Vector3 A = HandModelL.GetLeapHand().PalmPosition.ToVector3();
+                            Vector3 B = HandModelR.GetLeapHand().PalmPosition.ToVector3();
+                            Vector3 AtoB = B - A;
+                            Debug.DrawLine(A, B);
+                            if (steeringWheelCenter != null) {
+                                Vector3 transformDifference = ( A + ( AtoB * 0.5f ) ) - handCenterPosition;
+                                Debug.DrawLine(transform.position, handCenterPosition);
+                                offset = transformDifference;
+                                transform.position -= transformDifference;
 
+                                //  Quaternion rot = Quaternion.FromToRotation(AtoB, -steeringWheelCenter.right);
+                                // rotOld = rot;
+                                //Debug.Log(rot);
+                                // transform.RotateAround(handCenterPosition, Vector3.up, rot.eulerAngles.y);
+
+                            }
+
+                        } else {
+                            callibrationTimer += Time.deltaTime;
+                        }
                     }
 
-                    else
-                    {
-                        callibrationTimer += Time.deltaTime;
-                    }
+
+                } else {
+                    callibrationTimer = 0;
+                    callibrating = false;
+                    callibrationState = 0;
                 }
-
+            } else {
+                //  driftCorrection = initalARRotation * Quaternion.Inverse(myReceiver.marker * Quaternion.Inverse(headPose.rotation));\
+                ///Adjusing the rotation over time isdifficult with markers as there is a long dela. It would be better to find adifferent solution.
+                ///One approache we could explore is too look at the actual headset motion and have based on that two modes.
+                ///either we are measuring the drifft that happend
+                ///or
+                ///we are corrrecting for the drifft all based on the speed of the motion from the headset. 
 
             }
-            else
-            {
-                callibrationTimer = 0;
-                callibrating = false;
-                callibrationState = 0;
-            }
-        }
-        else
-        {
-            //  driftCorrection = initalARRotation * Quaternion.Inverse(myReceiver.marker * Quaternion.Inverse(headPose.rotation));\
-            ///Adjusing the rotation over time isdifficult with markers as there is a long dela. It would be better to find adifferent solution.
-            ///One approache we could explore is too look at the actual headset motion and have based on that two modes.
-            ///either we are measuring the drifft that happend
-            ///or
-            ///we are corrrecting for the drifft all based on the speed of the motion from the headset. 
-           
         }
     }
 }
