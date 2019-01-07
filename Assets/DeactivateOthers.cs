@@ -7,17 +7,23 @@ public class DeactivateOthers : NetworkBehaviour {
     public List<Behaviour> DeactivateMe = new List<Behaviour>();
     public List<Transform> AndMe = new List<Transform>();
     Camera MyCam;
+    public List<MeshRenderer> DeactivateLocally= new List<MeshRenderer>();
 	// Use this for initialization
 	void Start () {
 
         if (!isLocalPlayer) {
-            foreach (Behaviour b in DeactivateMe)
-            {
+            foreach (Behaviour b in DeactivateMe) {
                 b.enabled = false;
                 //MyCam.enabled = false;
             }
             foreach (Transform t in AndMe) {
                 t.gameObject.SetActive(false);
+            }
+        } else {
+
+            foreach (MeshRenderer b in DeactivateLocally) {
+                b.enabled = false;
+                //MyCam.enabled = false;
             }
         }
 // rh = FindObjectOfType<RemoteHandManager>();

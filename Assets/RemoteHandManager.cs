@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.XR;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Linq;
@@ -17,18 +18,26 @@ public class NetworkMessageType {
     public static short uploadHand = MsgType.Highest + 1;
     public static short DownloadHand = MsgType.Highest + 2;
     public static short StateUpdate = MsgType.Highest + 3;
+
+    public static short uploadVRHead = MsgType.Highest + 4;
+    public static short DownloadVRHead = MsgType.Highest + 5;
 };
 
 public class RemoteHandManager :  MonoBehaviour {
 
     public Transform DebugHand;
-   
-    public class HandMessage : MessageBase
-    {
+    public GameObject headPrefab;
+    public class HandMessage : MessageBase {
         public byte[] serializedHand;
         public int id;
     }
+    public class VRHeadMessage : MessageBase {
+        public Vector3 HeadPos;
+        public Quaternion HeadRot;
+        public int ID;
+    }
     public Dictionary<int, Leap.Hand> networkHands = new Dictionary<int, Leap.Hand>();
+    public Dictionary<int, Transform> heads = new Dictionary<int, Transform>();
     public NetworkClient handClient;
 
     //public event Action<Dictionary<int, Leap.Hand>> UpdateNetworkedHands;
@@ -144,7 +153,6 @@ public class RemoteHandManager :  MonoBehaviour {
 
 
   
-    /** Popuates the ModelPool with the contents of the ModelCollection */
     void Start()
     {
 
@@ -152,7 +160,7 @@ public class RemoteHandManager :  MonoBehaviour {
     }
     public void  ReciveOtherHands(NetworkMessage msg) {
         HandMessage newHand = msg.ReadMessage<HandMessage>();
-        Debug.Log("got a new remote hand");
+       // Debug.Log("got a new remote hand");
         VectorHand_32 vHand = new VectorHand_32();
         Leap.Hand result = new Leap.Hand();
         int offset = 0;
@@ -163,12 +171,38 @@ public class RemoteHandManager :  MonoBehaviour {
 
 
     }
+    public void RecieveOtherVRHead(NetworkMessage msg) {
+        VRHeadMessage newHead = msg.ReadMessage<VRHeadMessage>();
+        Debug.Log("Recieved a headPosition");
+        if (heads.ContainsKey(newHead.ID)) {
+            heads[newHead.ID].position = newHead.HeadPos;
+            heads[newHead.ID].rotation = newHead.HeadRot;
+        } else {
+            Transform tran = Instantiate(headPrefab).transform;
+            heads.Add(newHead.ID, tran);
+
+            heads[newHead.ID].position = newHead.HeadPos;
+            heads[newHead.ID].rotation = newHead.HeadRot;
+
+        }
+
+        }
+
 
 
     private void Update()
     {
+        if (SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
+            Vector3 pos = InputTracking.GetLocalPosition(XRNode.Head);
+            Quaternion rot = InputTracking.GetLocalRotation(XRNode.Head);
+            VRHeadMessage msg = new VRHeadMessage {
+                HeadPos = pos,
+                HeadRot = rot
+            };
+            SceneStateManager.Instance.ThisClient.Send(NetworkMessageType.uploadVRHead, msg);
+            Debug.Log("Send a headPosition");
 
-       
+        }
         if (_leapProvider == null)
         {
            
@@ -178,6 +212,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 {
                     Debug.Log("onClinet registering Download Hand");
                     SceneStateManager.Instance.ThisClient.connection.RegisterHandler(NetworkMessageType.DownloadHand, ReciveOtherHands);
+                   
                 }
             }
         }
@@ -186,6 +221,8 @@ public class RemoteHandManager :  MonoBehaviour {
             DebugHand.GetComponent<DebugHand>().UpdateHand();
             Debug.DrawLine(debugHand.PalmPosition.ToVector3(), Vector3.zero, Color.red);
          }
+
+        
         
     }
 }

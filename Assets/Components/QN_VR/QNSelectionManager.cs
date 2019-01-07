@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.IO;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +17,7 @@ public class QNSelectionManager : MonoBehaviour {
 
     private bool Questionloaded = false;
     public bool running;
+    public bool useAltLanguage;
     bool onTarget;
     rayCastButton lastHitButton;
     public float totalTime;
@@ -24,13 +27,13 @@ public class QNSelectionManager : MonoBehaviour {
 
     string _condition;
 
-   
-   
+
+
 
     string outputString = "";
 
     List<RectTransform> childList = new List<RectTransform>();
-    
+
 
     LayerMask _RaycastCollidableLayers;
 
@@ -39,25 +42,27 @@ public class QNSelectionManager : MonoBehaviour {
     //EventSystem m_EventSystem;
     Queue<QandASet> ToDoQueue = new Queue<QandASet>();
     Queue<string> ToDolist = new Queue<string>();
-    public string[] QNFiles;
+    public List<TextAsset> QNFiles;
     Dictionary<string, List<QandASet>> questionaries = new Dictionary<string, List<QandASet>>();
     Dictionary<int, QandASet> allCurrentQuestions = new Dictionary<int, QandASet>();
     //private int targetIndex = -1;
     //int listPointer;
 
     Transform ParentPosition;
-    float up,forward;
+    float up, forward;
     public struct QandASet {
         public int id;
         public string question;
+        public string question_DiffLang;
         public List<OneAnswer> Answers;
     }
 
     public struct OneAnswer {
         public string Answer;
+        public string Answer_DiffLang;
         public List<int> NextQuestionsIDs;
     }
-    public void setRelativePosition(Transform t,  float up_,float forward_) {
+    public void setRelativePosition(Transform t, float up_, float forward_) {
         ParentPosition = t;
         up = up_;
         forward = forward_;
@@ -65,8 +70,8 @@ public class QNSelectionManager : MonoBehaviour {
     // Use this for initialization
     void Start() {
 
-        foreach (string s in QNFiles) {
-            questionaries.Add(s, ReadString(s));
+        foreach (TextAsset s in QNFiles) {
+            questionaries.Add(s.name, ReadString(s));
 
         }
 
@@ -78,18 +83,23 @@ public class QNSelectionManager : MonoBehaviour {
         running = false;
         _RaycastCollidableLayers = LayerMask.GetMask("UI");
         //m_Raycaster = GetComponent<GraphicRaycaster>();
-       // m_EventSystem = GetComponent<EventSystem>();
-        string[] sarray = { "testfile" };
-      startAskingTheQuestionairs(sarray, "Test"); //TODO
+        // m_EventSystem = GetComponent<EventSystem>();
+        string[] sarray = new string[QNFiles.Count];
+        int i = 0;
+        foreach (TextAsset s in QNFiles) {
+            sarray[i] = s.name;
+            i++;
+        }
+        startAskingTheQuestionairs(sarray, "Test"); //TODO
     }
 
     private void updateCursorPositoon(Transform currentHitTarget, RaycastResult rayRes) {
-        
+
         Vector3 temp = Camera.main.transform.position
                       + Camera.main.ScreenPointToRay(new Vector3(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2, 0), Camera.MonoOrStereoscopicEye.Mono).direction.normalized
                       * rayRes.distance;
         // Debug.Log("Hit the Canvas" + temp);
-         Debug.DrawLine(Camera.main.transform.position, temp,Color.red);
+        Debug.DrawLine(Camera.main.transform.position, temp, Color.red);
         temp -= transform.position;
         sba.updatePosition(transform.worldToLocalMatrix * temp);
         /// WTF Unity??? this should not be that hard!!
@@ -101,9 +111,9 @@ public class QNSelectionManager : MonoBehaviour {
             _condition = Condition;
             foreach (string s in list) {
                 ToDolist.Enqueue(s);
-                
-                    }
-            
+
+            }
+
             running = true;
             Questionloaded = false;
             outputString = "";
@@ -112,24 +122,26 @@ public class QNSelectionManager : MonoBehaviour {
 
     void Update() {
         if (running) {
-            transform.position = ParentPosition.position + ParentPosition.up*up+ParentPosition.forward*forward;
-            if (!Questionloaded && ToDoQueue.Count<=0) {
-                
+            if (ParentPosition != null) {
+                transform.position = ParentPosition.position + ParentPosition.up * up + ParentPosition.forward * forward;
+            }
+            if (!Questionloaded && ToDoQueue.Count <= 0) {
+
                 if (ToDolist.Count <= 0) {
                     Debug.Log("We are done here continue to the next conditon and stop displaying the questioniar.");
                     Debug.Log(outputString); //TODO: DATALOGGER
-                    if (SceneStateManager.Instance != null) {
-                        SceneStateManager.Instance.SetWaiting(); //TODO: DIsplay Wait Now Sign
-                    }
+                                             // if (SceneStateManager.Instance != null) {
+                                             //    SceneStateManager.Instance.SetWaiting(); //TODO: DIsplay Wait Now Sign
+                                             // }
                     running = false;
                     transform.gameObject.SetActive(false);
                     return;
                 }
                 string nextTodo = ToDolist.Dequeue();
-                
+
                 if (questionaries.ContainsKey(nextTodo)) {
                     allCurrentQuestions.Clear();
-                    
+
                     foreach (QandASet q in questionaries[nextTodo]) {
                         Debug.Log("Our new questions are: " + q.question);
                         allCurrentQuestions.Add(q.id, q);
@@ -151,29 +163,40 @@ public class QNSelectionManager : MonoBehaviour {
 
 
                 QandASet temp = ToDoQueue.Dequeue();
-                    // Debug.Log("the ammount of first answer we retaained" + temp.Answers.Count);
-
+                // Debug.Log("the ammount of first answer we retaained" + temp.Answers.Count);
+                if (!useAltLanguage) {
                     QustionField.text = temp.question;
-                    Debug.Log(temp.question);
-                    Debug.Log(temp.Answers.Count);
-                    int i = 0;
-                    foreach (OneAnswer a in temp.Answers) {
-                        rayCastButton rcb = GameObject.Instantiate(ButtonPrefab, this.transform).transform.GetComponentInChildren<rayCastButton>();
-                        rcb.initButton(a.Answer, a.NextQuestionsIDs);
-
-                        RectTransform rtrans = rcb.transform.parent.GetComponentInParent<RectTransform>();
-                        childList.Add(rtrans);
-                        Vector2 tempVector = new Vector2(rtrans.anchoredPosition.x, ( -i * ( 165 / ( temp.Answers.Count  ) ) ) + 55);
-                        rtrans.anchoredPosition = tempVector;
-                        i++;
+                } else {
+                    QustionField.text = Reverse(temp.question_DiffLang);
+                    foreach (char c in temp.question_DiffLang.ToCharArray()) {
+                        Debug.Log(c);
                     }
-                    Questionloaded = true;
+
                 }
-            
+                Debug.Log(temp.question);
+                Debug.Log(temp.Answers.Count);
+                int i = 0;
+                foreach (OneAnswer a in temp.Answers) {
+                    rayCastButton rcb = Instantiate(ButtonPrefab, this.transform).transform.GetComponentInChildren<rayCastButton>();
+                    if (!useAltLanguage) {
+                        rcb.initButton(a.Answer, a.NextQuestionsIDs);
+                    } else {
+                        rcb.initButton(Reverse(a.Answer_DiffLang), a.NextQuestionsIDs);
+
+                    }
+                    RectTransform rtrans = rcb.transform.parent.GetComponentInParent<RectTransform>();
+                    childList.Add(rtrans);
+                    Vector2 tempVector = new Vector2(rtrans.anchoredPosition.x, ( -i * ( 165 / ( temp.Answers.Count ) ) ) + 55);
+                    rtrans.anchoredPosition = tempVector;
+                    i++;
+                }
+                Questionloaded = true;
+            }
+
             //Set up the new Pointer Event
-          //  m_PointerEventData = new PointerEventData(m_EventSystem);
+            //  m_PointerEventData = new PointerEventData(m_EventSystem);
             //Set the Pointer Event Position to that of the mouse position
-           // m_PointerEventData.position = new Vector2(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2);
+            // m_PointerEventData.position = new Vector2(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2);
 
             //Create a list of Raycast Results
             List<RaycastResult> results = new List<RaycastResult>();
@@ -182,15 +205,15 @@ public class QNSelectionManager : MonoBehaviour {
             //m_Raycaster.Raycast(m_PointerEventData, results);
             //EventSystem.current.RaycastAll(m_PointerEventData, results);
             //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
-           
+
 
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2f, Camera.main.pixelHeight / 2f));
             int layerMask = 1 << 5;
             if (Physics.Raycast(ray, out hit, layerMask)) {
-                Debug.Log(hit.transform.name);
+                //Debug.Log(hit.transform.name);
                 Transform objectHit = hit.transform;
-                Debug.DrawLine(Camera.main.transform.position, hit.point, Color.blue);
+                // Debug.DrawLine(Camera.main.transform.position, hit.point, Color.blue);
                 bool success = false;
                 if (hit.transform == transform) {
                     sba.updatePosition(transform.worldToLocalMatrix * ( hit.point - transform.position ));
@@ -307,24 +330,27 @@ public class QNSelectionManager : MonoBehaviour {
 
 
     //// This is For the file reading and interpretation
-    List<QandASet> ReadString(string path_) {
-        if (path_.Length <= 0) {
-            return null;
-        }
-        string path = "Assets/QN/" + path_ + ".txt";
-        Debug.Log("Trying to open" + path);
+    List<QandASet> ReadString(TextAsset asset) {
+        // if (path_.Length <= 0) {
+        //     return null;
+        //}
+        //string path = "Assets/QN/" + path_ + ".txt";
+        //Debug.Log("Trying to open" + path);
         List<QandASet> output = new List<QandASet>();
         //Read the text from directly from the test.txt file
-        StreamReader reader = new StreamReader(path);
+        //StreamReader reader = new StreamReader(path);
+
         bool first = true;
         QandASet lastSet = new QandASet();
         lastSet.Answers = new List<OneAnswer>();
-        
-        string line;
-        while (( line = reader.ReadLine() ) != null) {
 
+        //TextAsset incomingText = Resources.Load<TextAsset>(path_ + ".txt");
+        //Debug.Log(incomingText.text);
+        //while (( line = reader.ReadLine() ) != null) {
+        foreach (string line in asset.text.Split('\n')) {
+            //Debug.Log(line);
             if (line.StartsWith("/")) {// new Question
-                //Debug.Log(line);
+
                 if (!first) {
                     //Debug.Log(lastSet.Answers.Count + "   out last ansawer count");
                     output.Add(lastSet);
@@ -338,6 +364,17 @@ public class QNSelectionManager : MonoBehaviour {
                 int.TryParse(elems[0].TrimStart('/'), out id);
                 lastSet.id = id;
                 lastSet.question = elems[1];
+                if (elems[1].Contains("(")) {
+                    int beginCharacter = elems[1].IndexOf('(');
+                    int endCharacter = elems[1].IndexOf(')');
+                    // Debug.Log(beginCharacter + "and QUE also" + endCharacter);
+                    if (beginCharacter != -1 && endCharacter != -1) {
+                        lastSet.question_DiffLang = elems[1].Substring(beginCharacter + 1, ( endCharacter ) - ( 1 + beginCharacter ));
+                        //Debug.Log(lastSet.question_DiffLang);
+                    } else {
+                        Debug.LogError("This should really not happen not finding a complete alt lang question");
+                    }
+                }
             } else if (line.StartsWith("\t")) {// New Answer    
                 OneAnswer temp = new OneAnswer();
 
@@ -345,12 +382,24 @@ public class QNSelectionManager : MonoBehaviour {
                 temp.Answer = elems[0];
                 string[] PotentialFolllowIDs = elems[elems.Length - 1].Split(',');
                 temp.NextQuestionsIDs = new List<int>();
-                foreach(string s in PotentialFolllowIDs){
-                    if (s.StartsWith("/")){
+                foreach (string s in PotentialFolllowIDs) {
+                    if (s.StartsWith("/")) {
                         int candidate;
                         if (int.TryParse(s.TrimStart('/'), out candidate)) {
                             temp.NextQuestionsIDs.Add(candidate);
                         }
+                    }
+                    if (s.Contains("(")) {
+                        int beginCharacter = s.IndexOf('(');
+                        int endCharacter = s.IndexOf(')');
+                        if (beginCharacter != -1 && endCharacter != -1) {
+                            temp.Answer_DiffLang = s.Substring(beginCharacter + 1, ( endCharacter ) - ( beginCharacter + 1 ));
+                            Debug.Log(temp.Answer_DiffLang);
+                        } else {
+                            Debug.LogError("This should really not happen not finding a complete alt lang Amswer");
+                        }
+                        // Debug.Log(beginCharacter + "and ANS also" + endCharacter);
+
                     }
                 }
                 lastSet.Answers.Add(temp);
@@ -361,9 +410,28 @@ public class QNSelectionManager : MonoBehaviour {
 
         }
         output.Add(lastSet);
-        Debug.Log(output.Count);
+        // Debug.Log(output.Count);
 
-        reader.Close();
+        //reader.Close();
+        return output;
+    }
+
+
+    public static string Reverse(string s) {
+        char[] charArray = s.ToCharArray();
+
+        //foreach (char c in charArray) {
+         //   Debug.Log(c);
+         //   Debug.Log(c.GetHashCode());
+        //}
+        Array.Reverse(charArray);
+
+
+        string output = new string(charArray);
+        output = output.Replace('\u202C'+"", ""); // removing the pop orientation character
+        output = output.Replace('\u202B'+"", "");// and replacing the various Left to right  and Right to left embedings 
+        output = output.Replace('\u200A'+"", "");
+
         return output;
     }
 }

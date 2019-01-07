@@ -51,8 +51,6 @@ GameObject:
   - component: {fileID: 114937810479600590}
   - component: {fileID: 114661234780043396}
   - component: {fileID: 114689223421833372}
-  - component: {fileID: 114651923265164854}
-  - component: {fileID: 114967917730646676}
   - component: {fileID: 114149823518361562}
   - component: {fileID: 114826397324617428}
   - component: {fileID: 114255467213797826}
@@ -9965,7 +9963,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Target: {fileID: 403686}
-  m_ChildIndex: 2
+  m_ChildIndex: 0
   m_SendInterval: 0.06666667
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
@@ -10054,7 +10052,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Target: {fileID: 466092}
-  m_ChildIndex: 4
+  m_ChildIndex: 2
   m_SendInterval: 0.06666667
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
@@ -10319,25 +10317,6 @@ MonoBehaviour:
   - {x: 0.054747183, y: -0.0110294875, z: -0.0058002416}
   - {x: 0.027678946, y: 0.000000028804266, z: 0.0000000623105}
   - {x: 0.030591402, y: -0.000000005796997, z: -0.00000008704517}
---- !u!114 &114651923265164854
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 102736}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1267208747, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 4007584786848956}
-  m_ChildIndex: 0
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_MovementThreshold: 0.001
-  m_InterpolateRotation: 0.5
-  m_InterpolateMovement: 0.5
 --- !u!114 &114661234780043396
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10357,6 +10336,7 @@ MonoBehaviour:
   - {fileID: 114689223421833372}
   AndMe:
   - {fileID: 462786}
+  DeactivateLocally: []
 --- !u!114 &114669385299800326
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -10369,7 +10349,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Target: {fileID: 450442}
-  m_ChildIndex: 5
+  m_ChildIndex: 3
   m_SendInterval: 0.06666667
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
@@ -10503,7 +10483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Target: {fileID: 430788}
-  m_ChildIndex: 3
+  m_ChildIndex: 1
   m_SendInterval: 0.06666667
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 0
@@ -10605,25 +10585,6 @@ MonoBehaviour:
   _temporalWarpingMode: 0
   _customWarpAdjustment: 17
   _updateHandInPrecull: 0
---- !u!114 &114967917730646676
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 102736}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1267208747, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 4266240086720566}
-  m_ChildIndex: 1
-  m_SendInterval: 0.1
-  m_SyncRotationAxis: 7
-  m_RotationSyncCompression: 0
-  m_MovementThreshold: 0.001
-  m_InterpolateRotation: 0.5
-  m_InterpolateMovement: 0.5
 --- !u!137 &137250745037600166
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

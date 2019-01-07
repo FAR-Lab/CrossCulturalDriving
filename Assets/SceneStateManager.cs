@@ -228,7 +228,7 @@ public class SceneStateManager : NetworkManager {
         newSpawnMessage.netId = myID;
         conn.Send(MsgType.AddPlayer, newSpawnMessage);
 
-
+        ThisClient.connection.RegisterHandler(NetworkMessageType.DownloadVRHead, FindObjectOfType<RemoteHandManager>().RecieveOtherVRHead);
         localActionState = ActionState.PREDRIVE;
     }
 
@@ -272,7 +272,10 @@ public class SceneStateManager : NetworkManager {
 
 
             msg.conn.RegisterHandler(NetworkMessageType.uploadHand, RecieveHandData);
+            msg.conn.RegisterHandler(NetworkMessageType.uploadVRHead, RecieveVRHeadData);
             msg.conn.RegisterHandler(NetworkMessageType.StateUpdate, ReceiveUpdatedState);
+
+            
 
             //msg.conn.UnregisterHandler(NetworkMessageType.uploadHand);
             //msg.conn.UnregisterHandler(NetworkMessageType.StateUpdate);
@@ -307,6 +310,28 @@ public class SceneStateManager : NetworkManager {
 
         }
     }
+
+    public void RecieveVRHeadData(NetworkMessage msg) //Spell check
+    {
+        //int ms, ad;
+        //msg.conn.GetStatsIn(out ms, out ad);
+        //Debug.Log("Receving hand Data" +ms+ "  "+ad);
+        RemoteHandManager.VRHeadMessage hand = msg.ReadMessage<RemoteHandManager.VRHeadMessage>();
+        //hand.id = msg.conn.connectionId - hand.id;
+        hand.ID = msg.conn.connectionId;
+        foreach (NetworkConnection c in NetworkServer.connections) {
+            if (c == msg.conn) {
+                //Debug.Log("I already have that information");
+                continue;
+            }
+            c.Send(NetworkMessageType.DownloadVRHead, hand);
+
+        }
+    }
+
+
+
+
 
     public void ReceiveUpdatedState(NetworkMessage msg) {
         StateUpdateMessag theMessage = msg.ReadMessage<StateUpdateMessag>();
