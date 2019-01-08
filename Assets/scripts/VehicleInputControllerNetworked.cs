@@ -27,7 +27,7 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     public Material materialOff;
     public Color On;
     public Color Off;
-  
+
     public bool LeftActive;
     public bool RightActive;
 
@@ -111,20 +111,20 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         } else if (indicaterStage == 4) {
             indicaterStage = 0;
             ActualLightOn = false;
-           
-                CmdUpdateIndicatorLights(false, false);
-            
+
+            CmdUpdateIndicatorLights(false, false);
+
         }
 
 
-        
+
     }
 
 
 
     [Command]
     void CmdUpdateIndicatorLights(bool Left, bool Right) {
-        
+
         LeftActive = Left;
         RightActive = Right;
 
@@ -157,17 +157,19 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
             }
         }
 
-
-
-
+        if (Input.GetKeyUp(KeyCode.Space)) {
+            foreach (seatCallibration sc in FindObjectsOfType<seatCallibration>()) {
+                if (sc.isPartOfLocalPlayer()) {
+                    sc.reCallibrate();
+                    break;
+                }
+            }
+        }
 
 
         if (isLocalPlayer && SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
 
-            if (Input.GetKeyUp(KeyCode.Space)) {
-                FindObjectOfType<seatCallibration>().reCallibrate();//TODO ensure this only happens on the local mashine
 
-            }
 
 
             transitionlerp = 0;

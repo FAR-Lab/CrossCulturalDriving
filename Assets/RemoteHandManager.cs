@@ -41,7 +41,7 @@ public class RemoteHandManager :  MonoBehaviour {
     public NetworkClient handClient;
 
     //public event Action<Dictionary<int, Leap.Hand>> UpdateNetworkedHands;
-
+    private float sendRateCheck;
     public struct vectorHandByte
     {
         public byte[] serializedHand;
@@ -96,7 +96,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 msg.id = 1;
                 msg.serializedHand = temp;
                 //Debug.Log(SceneStateManager.Instance.ThisClient);
-                SceneStateManager.Instance.ThisClient.Send(NetworkMessageType.uploadHand, msg);
+                //SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg); //TODO DAVID
                 
             }
             if (rightHand != null)
@@ -108,7 +108,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 msg.id = 0;
                 msg.serializedHand = temp;
                 //Debug.Log(SceneStateManager.Instance.ThisClient);
-                SceneStateManager.Instance.ThisClient.Send(NetworkMessageType.uploadHand, msg);
+                //SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg);//TODO DAVID
 
             }
 
@@ -118,7 +118,7 @@ public class RemoteHandManager :  MonoBehaviour {
     
     public bool FindLocalLeap()
     {
-        Debug.Log("Looking for the local Leap");
+        //Debug.Log("Looking for the local Leap");
         foreach(LeapProvider lp in FindObjectsOfType<LeapProvider>())
         {
 
@@ -173,7 +173,7 @@ public class RemoteHandManager :  MonoBehaviour {
     }
     public void RecieveOtherVRHead(NetworkMessage msg) {
         VRHeadMessage newHead = msg.ReadMessage<VRHeadMessage>();
-        Debug.Log("Recieved a headPosition");
+       // Debug.Log("Recieved a headPosition");
         if (heads.ContainsKey(newHead.ID)) {
             heads[newHead.ID].position = newHead.HeadPos;
             heads[newHead.ID].rotation = newHead.HeadRot;
@@ -193,14 +193,17 @@ public class RemoteHandManager :  MonoBehaviour {
     private void Update()
     {
         if (SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
-            Vector3 pos = InputTracking.GetLocalPosition(XRNode.Head);
-            Quaternion rot = InputTracking.GetLocalRotation(XRNode.Head);
-            VRHeadMessage msg = new VRHeadMessage {
-                HeadPos = pos,
-                HeadRot = rot
-            };
-            SceneStateManager.Instance.ThisClient.Send(NetworkMessageType.uploadVRHead, msg);
-            Debug.Log("Send a headPosition");
+            if (Camera.main != null) {
+                Vector3 pos = Camera.main.transform.position;// + InputTracking.GetLocalPosition(XRNode.Head);
+                Quaternion rot = Camera.main.transform.rotation;//* InputTracking.GetLocalRotation(XRNode.Head);
+                VRHeadMessage msg = new VRHeadMessage {
+                    HeadPos = pos,
+                    HeadRot = rot
+                };
+                
+                //SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadVRHead, msg);
+               // Debug.Log("Send a headPosition");
+            }
 
         }
         if (_leapProvider == null)

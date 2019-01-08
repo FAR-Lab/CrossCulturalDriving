@@ -98,7 +98,9 @@ public class seatCallibration : MonoBehaviour
         }
 
     }
-
+    public bool isPartOfLocalPlayer() {
+        return transform.parent.GetComponent<VehicleInputControllerNetworked>().isLocalPlayer;
+    }
     void OnGUI()
     {
         GUIStyle gs = new GUIStyle();
@@ -148,8 +150,8 @@ public class seatCallibration : MonoBehaviour
                     // if (x != null) {
                     //Quaternion rotation = Quaternion.(.eulerAngles, headPose.parent.transform.forward); ;
                     Quaternion rotation = Quaternion.FromToRotation(cam.forward, transform.parent.forward);
-                    Debug.Log("XR reported rotation"+InputTracking.GetLocalRotation(XRNode.Head).eulerAngles);
-                    Debug.Log("Self reported" + cam.rotation.eulerAngles);
+                   // Debug.Log("XR reported rotation"+InputTracking.GetLocalRotation(XRNode.Head).eulerAngles);
+                    //Debug.Log("Self reported" + cam.rotation.eulerAngles);
 
                     Debug.Log("Correction Rotation: " + rotation.eulerAngles.y);
                     transform.RotateAround(cam.position, transform.up, rotation.eulerAngles.y);

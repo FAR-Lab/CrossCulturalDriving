@@ -80,6 +80,27 @@ public class SceneStateManager : NetworkManager {
 
     }
     private void OnGUI() {
+
+
+        if (myState == ClientState.HOST) {
+            int inMSG, inByte, outMSG, outBufMSG, outByte, outBufByteS;
+            NetworkServer.GetStatsIn(out inMSG, out inByte);
+            NetworkServer.GetStatsOut(out outMSG, out outBufMSG, out outByte, out outBufByteS);
+            GUI.Label(new Rect(25, 400, 600, 25), "Server\t outmsg: " + outMSG + "\t outBufMSG: " + outBufMSG + "\toutByte: " + outByte + "\t outBufByteS: " + outBufByteS);
+            GUI.Label(new Rect(25, 430, 600, 25), "inMSG: " + inMSG + "\t inByte: " + inByte);
+
+        } else if (myState == ClientState.CLIENT) {
+            int inMSG, inByte, outMSG, outBufMSG, outByte, outBufByteS;
+            ThisClient.GetStatsIn(out inMSG, out inByte);
+            ThisClient.GetStatsOut(out outMSG, out outBufMSG, out outByte, out outBufByteS);
+            GUI.Label(new Rect(25, 400, 600, 25), "Client\t outmsg: " + outMSG + "\t outBufMSG: " + outBufMSG + "\toutByte: " + outByte + "\t outBufByteS: " + outBufByteS);
+            GUI.Label(new Rect(25, 430, 600, 25), "inMSG: " + inMSG + "\t inByte: " + inByte);
+
+
+
+        }
+
+
         if (showControlPanel) {
             float boxWidth = 200;
             float boxHeight = 50;
@@ -306,7 +327,7 @@ public class SceneStateManager : NetworkManager {
                 //Debug.Log("I already have that information");
                 continue;
             }
-            c.Send(NetworkMessageType.DownloadHand, hand);
+            c.SendUnreliable(NetworkMessageType.DownloadHand, hand);
 
         }
     }
@@ -316,15 +337,17 @@ public class SceneStateManager : NetworkManager {
         //int ms, ad;
         //msg.conn.GetStatsIn(out ms, out ad);
         //Debug.Log("Receving hand Data" +ms+ "  "+ad);
-        RemoteHandManager.VRHeadMessage hand = msg.ReadMessage<RemoteHandManager.VRHeadMessage>();
+        RemoteHandManager.VRHeadMessage head = msg.ReadMessage<RemoteHandManager.VRHeadMessage>();
         //hand.id = msg.conn.connectionId - hand.id;
-        hand.ID = msg.conn.connectionId;
+        head.ID = msg.conn.connectionId;
         foreach (NetworkConnection c in NetworkServer.connections) {
-            if (c == msg.conn) {
+            //if (c == msg.conn) {
                 //Debug.Log("I already have that information");
-                continue;
-            }
-            c.Send(NetworkMessageType.DownloadVRHead, hand);
+            //    continue;
+            //s}
+
+
+            c.SendUnreliable(NetworkMessageType.DownloadVRHead, head);
 
         }
     }
