@@ -80,8 +80,12 @@ public class SceneStateManager : NetworkManager {
 
     }
     private void OnGUI() {
+        if (myState == ClientState.CLIENT) {
+            GUI.Label(new Rect(25, 430, 600, 25), (ThisClient.connection.lastMessageTime-Time.time).ToString());
+           
+        }
 
-
+        /*
         if (myState == ClientState.HOST) {
             int inMSG, inByte, outMSG, outBufMSG, outByte, outBufByteS;
             NetworkServer.GetStatsIn(out inMSG, out inByte);
@@ -97,8 +101,8 @@ public class SceneStateManager : NetworkManager {
             GUI.Label(new Rect(25, 430, 600, 25), "inMSG: " + inMSG + "\t inByte: " + inByte);
 
 
-
         }
+        */
 
 
         if (showControlPanel) {
@@ -166,12 +170,14 @@ public class SceneStateManager : NetworkManager {
 
 
     void Update() {
-        if (myState == ClientState.CLIENT) {
-            // Debug.Log(client_.isConnected);
-
-
+        if (ThisClient != null) {
+            Debug.Log(ThisClient.connection.lastError);
         }
-        
+        //foreach (short s in NetworkServer.GetConnectionStats().Keys) {
+        //   Debug.Log("Short: " + s);
+        //    Debug.Log("PacketStat" + NetworkServer.GetConnectionStats()[s]);
+        //  }
+
         if (serverState == ServerState.LOADING) {
             if (ClientsThatReportedReady.Count == activeConnectedIds.Count) {
                 LocalCamera.SetActive(false);
@@ -321,7 +327,8 @@ public class SceneStateManager : NetworkManager {
         //msg.conn.GetStatsIn(out ms, out ad);
         //Debug.Log("Receving hand Data" +ms+ "  "+ad);
         RemoteHandManager.HandMessage hand = msg.ReadMessage<RemoteHandManager.HandMessage>();
-        hand.id = msg.conn.connectionId - hand.id;
+        hand.id = (2*msg.conn.connectionId) - hand.id;
+        hand.netID = msg.conn.connectionId;
         foreach (NetworkConnection c in NetworkServer.connections) {
             if (c == msg.conn) {
                 //Debug.Log("I already have that information");
@@ -344,7 +351,7 @@ public class SceneStateManager : NetworkManager {
             //if (c == msg.conn) {
                 //Debug.Log("I already have that information");
             //    continue;
-            //s}
+            //}
 
 
             c.SendUnreliable(NetworkMessageType.DownloadVRHead, head);

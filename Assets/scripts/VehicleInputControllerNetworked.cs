@@ -67,7 +67,7 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
     }
     void startBlinking(bool left) {
-        if (indicaterStage == 0) {
+        //if (indicaterStage == 0) {
             indicaterStage = 1;
             if (left) {
                 LeftIsActuallyOn = true;
@@ -76,7 +76,7 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
                 LeftIsActuallyOn = false;
                 RightIsActuallyOn = true;
             }
-        }
+        //}
 
     }
 
@@ -84,7 +84,7 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         if (indicaterStage == 1) {
             indicaterStage = 2;
             indicaterTimer = 0;
-
+            ActualLightOn = false;
         } else if (indicaterStage == 2 || indicaterStage == 3) {
             indicaterTimer += Time.deltaTime;
 
@@ -111,23 +111,43 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         } else if (indicaterStage == 4) {
             indicaterStage = 0;
             ActualLightOn = false;
-
+            LeftIsActuallyOn = false;
+            RightIsActuallyOn = false;
             CmdUpdateIndicatorLights(false, false);
 
         }
-
-
-
     }
 
-
-
     [Command]
-    void CmdUpdateIndicatorLights(bool Left, bool Right) {
+    public void CmdUpdateIndicatorLights(bool Left, bool Right) {
+        RpcTurnOnLeft(Left);
+        RpcTurnOnRight(Right);
 
-        LeftActive = Left;
-        RightActive = Right;
+    }
+    [ClientRpc]
+    public void RpcTurnOnLeft(bool Leftl_) {
+        if (Leftl_) {
+            foreach (Transform t in Left) {
+                t.GetComponent<MeshRenderer>().material = materialOn;
+            }
+        } else {
+            foreach (Transform t in Left) {
+                t.GetComponent<MeshRenderer>().material = materialOff;
+            }
+        }
 
+    }
+    [ClientRpc]
+    public void RpcTurnOnRight(bool Rightl_) {
+        if (Rightl_) {
+            foreach (Transform t in Right) {
+                t.GetComponent<MeshRenderer>().material = materialOn;
+            }
+        } else {
+            foreach (Transform t in Right) {
+                t.GetComponent<MeshRenderer>().material = materialOff;
+            }
+        }
 
     }
 
@@ -137,25 +157,9 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
 
 
-        if (LeftActive) {
-            foreach (Transform t in Left) {
-                t.GetComponent<MeshRenderer>().material = materialOn;
-            }
-        } else {
-            foreach (Transform t in Left) {
-                t.GetComponent<MeshRenderer>().material = materialOff;
-            }
-        }
+        
 
-        if (RightActive) {
-            foreach (Transform t in Right) {
-                t.GetComponent<MeshRenderer>().material = materialOn;
-            }
-        } else {
-            foreach (Transform t in Right) {
-                t.GetComponent<MeshRenderer>().material = materialOff;
-            }
-        }
+       
 
         if (Input.GetKeyUp(KeyCode.Space)) {
             foreach (seatCallibration sc in FindObjectsOfType<seatCallibration>()) {

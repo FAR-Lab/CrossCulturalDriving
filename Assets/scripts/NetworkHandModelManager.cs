@@ -41,13 +41,16 @@ namespace Leap.Unity {
         protected Dictionary<int, HandModelBase> instansiatedModels = new Dictionary<int, HandModelBase>();
         protected bool graphicsEnabled = true;
         RemoteHandManager _remoteHandData;
-
+        
         private void Start()
         {
             _remoteHandData = GetComponentInParent<RemoteHandManager>();
         }
         private void Update()
         {
+          
+
+
             foreach (int key in _remoteHandData.networkHands.Keys)
             {
                 if (!instansiatedModels.ContainsKey(key))
@@ -55,12 +58,13 @@ namespace Leap.Unity {
                     HandModelBase hmb;
                     if (_remoteHandData.networkHands[key].IsLeft) {
                         Transform temp = Instantiate(LeftHandPrefab).transform;
-                        temp.parent = this.transform;
+                        
+                       // temp.parent =( PlayerVehicle != null)? PlayerVehicle : this.transform;
                         hmb = temp.GetComponent<HandModelBase>();
                     }
                     else {
                         Transform temp = Instantiate(RightHandPrefab).transform;
-                        temp.parent = this.transform;
+                        
                         hmb = temp.GetComponent<HandModelBase>();
                     }
                     hmb.transform.gameObject.SetActive(true);
@@ -68,11 +72,31 @@ namespace Leap.Unity {
                     
                 }
                 instansiatedModels[key].SetLeapHand(_remoteHandData.networkHands[key]);
+                if (instansiatedModels[key].transform.parent == null) {
+                    int connectionId = key;
+                    if (_remoteHandData.networkHands[key].IsLeft) {
+                        connectionId--;
+                    } 
+                    foreach (VehicleInputControllerNetworked v in FindObjectsOfType<VehicleInputControllerNetworked>()){
+                        if (v.connectionToServer.connectionId == connectionId) {
+                            instansiatedModels[key].transform.parent = v.transform;
+                        }
+                    }
+
+                }
 
             }
             foreach(int key in instansiatedModels.Keys)
             {
-                instansiatedModels[key].UpdateHand();
+
+                if (instansiatedModels[key] != null) {
+                    instansiatedModels[key].UpdateHand();
+                    
+
+
+                } else {
+                    instansiatedModels.Remove(key);
+                }
 
             }
 

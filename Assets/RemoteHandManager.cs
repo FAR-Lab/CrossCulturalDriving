@@ -29,6 +29,7 @@ public class RemoteHandManager :  MonoBehaviour {
     public GameObject headPrefab;
     public class HandMessage : MessageBase {
         public byte[] serializedHand;
+        public int netID;
         public int id;
     }
     public class VRHeadMessage : MessageBase {
@@ -39,9 +40,10 @@ public class RemoteHandManager :  MonoBehaviour {
     public Dictionary<int, Leap.Hand> networkHands = new Dictionary<int, Leap.Hand>();
     public Dictionary<int, Transform> heads = new Dictionary<int, Transform>();
     public NetworkClient handClient;
-
+    
     //public event Action<Dictionary<int, Leap.Hand>> UpdateNetworkedHands;
-    private float sendRateCheck;
+    private float sendRateCheckHead;
+    private float sendTimeLastHand;
     public struct vectorHandByte
     {
         public byte[] serializedHand;
@@ -79,9 +81,14 @@ public class RemoteHandManager :  MonoBehaviour {
 
      public void OnUpdateFrame(Leap.Frame frame)
     {
+        if (!(Time.time - sendTimeLastHand > 0.016f)) {
+            //Debug.Log("Wiating to send hand");
+            return;
+        }
+        sendTimeLastHand = Time.time;
         //Debug.Log("OnUpdateFrame Delegate");
         //Debug.Log(isClient.ToString() + ":Client and Server: " + isServer.ToString()+ "\tis local:"+ isLocalPlayer.ToString());
-        if (frame != null && (SceneStateManager.Instance.MyState==ClientState.CLIENT || SceneStateManager.Instance.MyState == ClientState.HOST))
+            if (frame != null && (SceneStateManager.Instance.MyState==ClientState.CLIENT || SceneStateManager.Instance.MyState == ClientState.HOST))
         {
             //Debug.Log(frame.Id);
             //Debug.Log(frame.Hands.Count);
@@ -96,7 +103,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 msg.id = 1;
                 msg.serializedHand = temp;
                 //Debug.Log(SceneStateManager.Instance.ThisClient);
-                //SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg); //TODO DAVID
+                SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg); //TODO DAVID
                 
             }
             if (rightHand != null)
@@ -108,7 +115,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 msg.id = 0;
                 msg.serializedHand = temp;
                 //Debug.Log(SceneStateManager.Instance.ThisClient);
-                //SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg);//TODO DAVID
+                SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg);//TODO DAVID
 
             }
 
@@ -175,8 +182,20 @@ public class RemoteHandManager :  MonoBehaviour {
         VRHeadMessage newHead = msg.ReadMessage<VRHeadMessage>();
        // Debug.Log("Recieved a headPosition");
         if (heads.ContainsKey(newHead.ID)) {
-            heads[newHead.ID].position = newHead.HeadPos;
-            heads[newHead.ID].rotation = newHead.HeadRot;
+            if (heads[newHead.ID] != null) {
+                heads[newHead.ID].position = newHead.HeadPos;
+                heads[newHead.ID].rotation = newHead.HeadRot;
+                if (heads[newHead.ID].parent == null) {
+                    foreach (VehicleInputControllerNetworked v in FindObjectsOfType<VehicleInputControllerNetworked>()) {
+                        if (v.connectionToServer.connectionId == newHead.ID) {
+                            heads[newHead.ID].parent = v.transform;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                heads.Remove(newHead.ID);
+            }
         } else {
             Transform tran = Instantiate(headPrefab).transform;
             heads.Add(newHead.ID, tran);
@@ -184,6 +203,7 @@ public class RemoteHandManager :  MonoBehaviour {
             heads[newHead.ID].position = newHead.HeadPos;
             heads[newHead.ID].rotation = newHead.HeadRot;
 
+            
         }
 
         }
@@ -192,19 +212,25 @@ public class RemoteHandManager :  MonoBehaviour {
 
     private void Update()
     {
+        
         if (SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
-            if (Camera.main != null) {
-                Vector3 pos = Camera.main.transform.position;// + InputTracking.GetLocalPosition(XRNode.Head);
-                Quaternion rot = Camera.main.transform.rotation;//* InputTracking.GetLocalRotation(XRNode.Head);
-                VRHeadMessage msg = new VRHeadMessage {
-                    HeadPos = pos,
-                    HeadRot = rot
-                };
-                
-                //SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadVRHead, msg);
-               // Debug.Log("Send a headPosition");
-            }
+            sendRateCheckHead += Time.deltaTime;
+            if (sendRateCheckHead > 0.016f) {
+                sendRateCheckHead = 0;
+                if (Camera.main != null) {
+                    Vector3 pos = Camera.main.transform.position;// + InputTracking.GetLocalPosition(XRNode.Head);
+                    Quaternion rot = Camera.main.transform.rotation;//* InputTracking.GetLocalRotation(XRNode.Head);
+                    VRHeadMessage msg = new VRHeadMessage {
+                        HeadPos = pos,
+                        HeadRot = rot
+                    };
 
+                    SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadVRHead, msg);
+                    // Debug.Log("Send a headPosition");
+                }
+            } else {
+               // Debug.Log("Wiating to send head");
+            }
         }
         if (_leapProvider == null)
         {
