@@ -31,6 +31,7 @@ public class RemoteHandManager :  MonoBehaviour {
         public byte[] serializedHand;
         public int netID;
         public int id;
+        public long frameID;
     }
     public class VRHeadMessage : MessageBase {
         public Vector3 HeadPos;
@@ -44,6 +45,8 @@ public class RemoteHandManager :  MonoBehaviour {
     //public event Action<Dictionary<int, Leap.Hand>> UpdateNetworkedHands;
     private float sendRateCheckHead;
     private float sendTimeLastHand;
+    private long leftFrameID = 0;
+    private long rightFrameID = 0;
     public struct vectorHandByte
     {
         public byte[] serializedHand;
@@ -102,6 +105,7 @@ public class RemoteHandManager :  MonoBehaviour {
                     vHand.FillBytes(temp);
                 msg.id = 1;
                 msg.serializedHand = temp;
+                msg.frameID = leftFrameID++;
                 //Debug.Log(SceneStateManager.Instance.ThisClient);
                 SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg); //TODO DAVID
                 
@@ -114,6 +118,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 vHand.FillBytes(temp);
                 msg.id = 0;
                 msg.serializedHand = temp;
+                msg.frameID = rightFrameID++;
                 //Debug.Log(SceneStateManager.Instance.ThisClient);
                 SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg);//TODO DAVID
 
@@ -174,6 +179,7 @@ public class RemoteHandManager :  MonoBehaviour {
         vHand.ReadBytes(newHand.serializedHand,ref offset);
         vHand.Decode(result);
         networkHands[newHand.id] = result;
+        networkHands[newHand.id].FrameId = newHand.frameID;
         debugHand = result;
 
 
@@ -187,7 +193,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 heads[newHead.ID].rotation = newHead.HeadRot;
                 if (heads[newHead.ID].parent == null) {
                     foreach (VehicleInputControllerNetworked v in FindObjectsOfType<VehicleInputControllerNetworked>()) {
-                        if (v.connectionToServer.connectionId == newHead.ID) {
+                        if (v.connectionToServer!=null && v.connectionToServer.connectionId == newHead.ID) {
                             heads[newHead.ID].parent = v.transform;
                             break;
                         }

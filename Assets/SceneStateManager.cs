@@ -80,7 +80,7 @@ public class SceneStateManager : NetworkManager {
 
     }
     private void OnGUI() {
-        if (myState == ClientState.CLIENT) {
+        if (myState == ClientState.CLIENT && ThisClient!=null && ThisClient.connection!=null) {
             GUI.Label(new Rect(25, 430, 600, 25), (ThisClient.connection.lastMessageTime-Time.time).ToString());
            
         }
@@ -170,7 +170,7 @@ public class SceneStateManager : NetworkManager {
 
 
     void Update() {
-        if (ThisClient != null) {
+        if (ThisClient != null && ThisClient.connection!=null) {
             Debug.Log(ThisClient.connection.lastError);
         }
         //foreach (short s in NetworkServer.GetConnectionStats().Keys) {
@@ -348,10 +348,10 @@ public class SceneStateManager : NetworkManager {
         //hand.id = msg.conn.connectionId - hand.id;
         head.ID = msg.conn.connectionId;
         foreach (NetworkConnection c in NetworkServer.connections) {
-            //if (c == msg.conn) {
+            if (c == msg.conn) {
                 //Debug.Log("I already have that information");
-            //    continue;
-            //}
+                continue;
+            }
 
 
             c.SendUnreliable(NetworkMessageType.DownloadVRHead, head);
