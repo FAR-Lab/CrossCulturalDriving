@@ -151,7 +151,16 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
     }
 
+    [Command]
+    public void CmdStartQuestionairGloablly() {
+        RpcRunQuestionairNow();
+    }
 
+    [ClientRpc]
+    public void RpcRunQuestionairNow() {
+        FindObjectOfType<SpecificSceneManager>().runQuestionairNow();
+
+    }
 
     void Update() {
 

@@ -46,9 +46,9 @@ public class SceneStateManager : NetworkManager {
     public string serverIP;
 
     public static float spawnHeight = 1;
-    public static float slowDownSpeed = 1f;
+    public static float slowDownSpeed = 10f;
 
-    public static float slowTargetTime = 0.1f;
+    public static float slowTargetTime = 0.5f;
 
     [SerializeField]
     public SceneField[] SceneConditions;
@@ -214,8 +214,11 @@ public class SceneStateManager : NetworkManager {
     public void ConnectToServerWith(string ip, uint playerID, bool useVROrNot) {
         //useVR = useVROrNot;
         serverIP = ip;
-        manager.networkAddress = ip;
-        myID = playerID;
+       // manager.networkAddress = ip;
+       // myID = playerID;
+       //HARDCODED OVERWRITE
+        manager.networkAddress = "192.168.0.100";
+        myID = 1;
         client_ = manager.StartClient();
         myState = ClientState.CLIENT;
         LocalCamera.SetActive(false);
@@ -225,7 +228,8 @@ public class SceneStateManager : NetworkManager {
     public void HostServer(uint playerID, bool useVROrNot) {
         // useVR = useVROrNot;
         serverIP = "127.0.0.1";
-        myID = playerID;
+        myID = playerID;///HARDCODED OVERWRITE
+        myID = 0;
         client_ = manager.StartHost();
         myState = ClientState.HOST;
         serverState = ServerState.WAITING;

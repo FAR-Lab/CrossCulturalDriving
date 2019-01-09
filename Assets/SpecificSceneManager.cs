@@ -28,16 +28,19 @@ public class SpecificSceneManager : MonoBehaviour {
                         vn.transform.position +vn.transform.up*1.5f+vn.transform.forward*2.5f,
                         vn.transform.rotation).GetComponent<QNSelectionManager>();
                     temp.startAskingTheQuestionairs(questionairsToAsk, conditionName);
-                    temp.setRelativePosition(vn.transform,  1.5f , 2.5f);
+                    temp.setRelativePosition(vn.transform,  1.75f , 3.5f);
 
                 }
             }
             
 
         }
-
-
     }
+    public void runQuestionairNow() {
+        SceneStateManager.Instance.SetQuestionair();
+        lerpAdaption = 0;
+    }
+
     private void OnTriggerEnter(Collider other) {
         
         Debug.Log("OnCollisionEnter"+ other.transform.name);
@@ -45,8 +48,7 @@ public class SpecificSceneManager : MonoBehaviour {
             && other.transform.parent.GetComponent<VehicleInputControllerNetworked>().isLocalPlayer // and Its us
             && SceneStateManager.Instance.ActionState==ActionState.DRIVE) { // and we are driving
             Debug.Log("Found the local Player that was driving slowing down time,loading uquestionair");
-            SceneStateManager.Instance.SetQuestionair();
-            lerpAdaption = 0;
+            other.transform.parent.GetComponent<VehicleInputControllerNetworked>().CmdStartQuestionairGloablly();
         }
     }
    

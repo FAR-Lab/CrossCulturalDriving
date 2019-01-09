@@ -84,7 +84,7 @@ public class RemoteHandManager :  MonoBehaviour {
 
      public void OnUpdateFrame(Leap.Frame frame)
     {
-        if (!(Time.time - sendTimeLastHand > 0.016f)) {
+        if (!(Time.time - sendTimeLastHand > 0.033f)) {
             //Debug.Log("Wiating to send hand");
             return;
         }
@@ -221,7 +221,7 @@ public class RemoteHandManager :  MonoBehaviour {
         
         if (SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
             sendRateCheckHead += Time.deltaTime;
-            if (sendRateCheckHead > 0.016f) {
+            if (sendRateCheckHead > 0.033f) {
                 sendRateCheckHead = 0;
                 if (Camera.main != null) {
                     Vector3 pos = Camera.main.transform.position;// + InputTracking.GetLocalPosition(XRNode.Head);

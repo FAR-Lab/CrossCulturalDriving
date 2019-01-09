@@ -73,7 +73,7 @@ namespace Leap.Unity {
                     frameIDs[key] = _remoteHandData.networkHands[key].FrameId;
                     instansiatedModels[key].SetLeapHand(_remoteHandData.networkHands[key]);
                     instansiatedModels[key].UpdateHand();
-                    Debug.Log(_remoteHandData.networkHands[key].FrameId);
+                   // Debug.Log(_remoteHandData.networkHands[key].FrameId);
                     if (instansiatedModels[key].transform.parent == null) {
                         int connectionId = key;
                         if (_remoteHandData.networkHands[key].IsLeft) {
