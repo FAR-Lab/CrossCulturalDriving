@@ -397,23 +397,23 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4021584587332050, guid: 7c23964718dde42e183fc8ad9ee5eaa9, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 1.875
+      value: -1.875
       objectReference: {fileID: 0}
     - target: {fileID: 4021584587332050, guid: 7c23964718dde42e183fc8ad9ee5eaa9, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -58
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 4021584587332050, guid: 7c23964718dde42e183fc8ad9ee5eaa9, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4021584587332050, guid: 7c23964718dde42e183fc8ad9ee5eaa9, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4021584587332050, guid: 7c23964718dde42e183fc8ad9ee5eaa9, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -180
       objectReference: {fileID: 0}
     - target: {fileID: 4021584587332050, guid: 7c23964718dde42e183fc8ad9ee5eaa9, type: 2}
       propertyPath: m_LocalRotation.x
@@ -3212,7 +3212,7 @@ MonoBehaviour:
   - cutoff
   - brake-check
   - tailgate
-  conditionName: Figure8
+  conditionName: cond1
   QuestionairPrefab: {fileID: 1853806982428388, guid: bb398da6725f53c4283a5f88c90d86ed,
     type: 2}
 --- !u!4 &1604726275
@@ -3222,7 +3222,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1604726273}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -60.2, y: 0, z: 1.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -3238,8 +3238,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 6.4046555}
-  m_Center: {x: -34.65, y: 0.049999952, z: 1.1818428}
+  m_Size: {x: 3.5045204, y: 5, z: 6.1483994}
+  m_Center: {x: -0, y: 0, z: 0}
 --- !u!65 &1604726277
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3247,11 +3247,11 @@ BoxCollider:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1604726273}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
+  m_IsTrigger: 0
+  m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 2.6891403, y: 2, z: 6.372299}
-  m_Center: {x: 33.600063, y: 0.049999952, z: -3.1682816}
+  m_Size: {x: 4, y: 2, z: 2}
+  m_Center: {x: 11.75, y: 0.05, z: 34.65}
 --- !u!1 &1680724936
 GameObject:
   m_ObjectHideFlags: 0
