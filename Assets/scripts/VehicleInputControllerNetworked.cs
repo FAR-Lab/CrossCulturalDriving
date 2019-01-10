@@ -21,15 +21,22 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
     public Transform[] Left;
     public Transform[] Right;
+    public Transform[] BrakeLightObjects;
     public Material baseMaterial;
 
     public Material materialOn;
     public Material materialOff;
+    public Material materialBrake;
+
+
+    public Color BrakeColor;
     public Color On;
     public Color Off;
 
     public bool LeftActive;
     public bool RightActive;
+
+    private bool breakIsOn = false;
 
 
     private bool ActualLightOn;
@@ -40,6 +47,8 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     public float indicaterTimer;
     public float interval;
     public int indicaterStage;
+
+
     void Awake() {
         controller = GetComponent<VehicleController>();
 
@@ -56,6 +65,8 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         materialOn.SetColor("_Color", On);
         materialOff = new Material(baseMaterial);
         materialOff.SetColor("_Color", Off);
+        materialBrake = new Material(baseMaterial);
+        materialBrake.SetColor("_Color", BrakeColor);
 
 
         foreach (Transform t in Left) {
@@ -64,10 +75,12 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         foreach (Transform t in Right) {
             t.GetComponent<MeshRenderer>().material = materialOff;
         }
+        foreach (Transform t in BrakeLightObjects) {
+            t.GetComponent<MeshRenderer>().material = materialOff;
+        }
 
     }
     void startBlinking(bool left) {
-        //if (indicaterStage == 0) {
             indicaterStage = 1;
             if (left) {
                 LeftIsActuallyOn = true;
@@ -76,7 +89,6 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
                 LeftIsActuallyOn = false;
                 RightIsActuallyOn = true;
             }
-        //}
 
     }
 
@@ -162,6 +174,26 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
     }
 
+    [Command]
+    public void CmdSwitchBrakeLight(bool Active) {
+        RpcTurnOnBrakeLight(Active);
+
+    }
+    [ClientRpc]
+    public void RpcTurnOnBrakeLight(bool Active) {
+        if (Active) {
+            foreach (Transform t in BrakeLightObjects) {
+                t.GetComponent<MeshRenderer>().material = materialBrake;
+            }
+        } else {
+            foreach (Transform t in BrakeLightObjects) {
+                t.GetComponent<MeshRenderer>().material = materialOff;
+            }
+        }
+
+    }
+
+
     void Update() {
 
 
@@ -182,7 +214,9 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
         if (isLocalPlayer && SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
 
-
+            if (Input.GetKeyDown(KeyCode.Q)){
+                CmdStartQuestionairGloablly();
+            }
 
 
             transitionlerp = 0;
@@ -204,6 +238,14 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
                 startBlinking(false);
             }
             UpdateIndicator();
+
+            if (controller.accellInput < 0 && !breakIsOn) {
+                breakIsOn = true;
+                CmdSwitchBrakeLight(breakIsOn);
+            } else if (controller.accellInput >= 0 && breakIsOn) {
+                breakIsOn = false;
+                CmdSwitchBrakeLight(breakIsOn);
+            }
 
         } else if (isLocalPlayer && SceneStateManager.Instance.ActionState == ActionState.QUESTIONS) {
 

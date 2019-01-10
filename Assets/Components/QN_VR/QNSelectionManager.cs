@@ -27,8 +27,8 @@ public class QNSelectionManager : MonoBehaviour {
 
     string _condition;
 
-
-
+    QandASet currentActiveQustion;
+    StreamWriter sw;
 
     string outputString = "";
 
@@ -84,13 +84,16 @@ public class QNSelectionManager : MonoBehaviour {
         _RaycastCollidableLayers = LayerMask.GetMask("UI");
         //m_Raycaster = GetComponent<GraphicRaycaster>();
         // m_EventSystem = GetComponent<EventSystem>();
+        /*
         string[] sarray = new string[QNFiles.Count];
         int i = 0;
+
         foreach (TextAsset s in QNFiles) {
             sarray[i] = s.name;
             i++;
         }
-        startAskingTheQuestionairs(sarray, "Test"); //TODO
+        //startAskingTheQuestionairs(sarray, "Test"); //TODO
+        */
     }
 
     private void updateCursorPositoon(Transform currentHitTarget, RaycastResult rayRes) {
@@ -106,17 +109,20 @@ public class QNSelectionManager : MonoBehaviour {
     }
     // Update is called once per frame
     public void startAskingTheQuestionairs(string[] list, string Condition) {
+        int epoch = (int)( System.DateTime.UtcNow - new System.DateTime(1970, 1, 1) ).TotalSeconds; //Epoch Time
 
         if (!running) {
             _condition = Condition;
             foreach (string s in list) {
+                Debug.Log(s);
                 ToDolist.Enqueue(s);
 
             }
-
             running = true;
             Questionloaded = false;
             outputString = "";
+            sw = new StreamWriter(@"D:\Logs\ID_" + SceneStateManager.Instance.MyID.ToString()+" Con_"+Condition + " at_" + epoch.ToString() + ".txt");
+            sw.WriteLine("Initated at inGameTime:"+Time.time+"\t With condition: "+Condition+"\t participantID: "+SceneStateManager.Instance.MyID);
         }
     }
 
@@ -129,6 +135,8 @@ public class QNSelectionManager : MonoBehaviour {
 
                 if (ToDolist.Count <= 0) {
                     Debug.Log("We are done here continue to the next conditon and stop displaying the questioniar.");
+                    sw.Flush();
+                  
                     Debug.Log(outputString); //TODO: DATALOGGER
                                              // if (SceneStateManager.Instance != null) {
                                              //    SceneStateManager.Instance.SetWaiting(); //TODO: DIsplay Wait Now Sign
@@ -138,16 +146,16 @@ public class QNSelectionManager : MonoBehaviour {
                     return;
                 }
                 string nextTodo = ToDolist.Dequeue();
-
+                Debug.Log(nextTodo);
                 if (questionaries.ContainsKey(nextTodo)) {
                     allCurrentQuestions.Clear();
 
                     foreach (QandASet q in questionaries[nextTodo]) {
-                        Debug.Log("Our new questions are: " + q.question);
+                        //Debug.Log("Our new questions are: " + q.question);
                         allCurrentQuestions.Add(q.id, q);
                     }
                     ToDoQueue.Enqueue(allCurrentQuestions[1]);// enque first question
-                    Debug.Log(ToDoQueue.Count);
+                    //Debug.Log(ToDoQueue.Count);
                 } else {
                     Debug.LogError("Could not find the questionair in question => " + nextTodo);
                     return;
@@ -163,27 +171,31 @@ public class QNSelectionManager : MonoBehaviour {
 
 
                 QandASet temp = ToDoQueue.Dequeue();
+                currentActiveQustion = temp;
                 // Debug.Log("the ammount of first answer we retaained" + temp.Answers.Count);
                 if (!useAltLanguage) {
                     QustionField.text = temp.question;
                 } else {
+                   
                     QustionField.text = Reverse(temp.question_DiffLang);
-                    foreach (char c in temp.question_DiffLang.ToCharArray()) {
-                        Debug.Log(c);
-                    }
+                    
 
                 }
-                Debug.Log(temp.question);
-                Debug.Log(temp.Answers.Count);
+                //Debug.Log(temp.question);
+                //Debug.Log(temp.Answers.Count);
                 int i = 0;
                 foreach (OneAnswer a in temp.Answers) {
                     rayCastButton rcb = Instantiate(ButtonPrefab, this.transform).transform.GetComponentInChildren<rayCastButton>();
                     if (!useAltLanguage) {
+                        
                         rcb.initButton(a.Answer, a.NextQuestionsIDs);
                     } else {
+                        
+                            
                         rcb.initButton(Reverse(a.Answer_DiffLang), a.NextQuestionsIDs);
 
                     }
+                    rcb.englAnswer = a.Answer;
                     RectTransform rtrans = rcb.transform.parent.GetComponentInParent<RectTransform>();
                     childList.Add(rtrans);
                     Vector2 tempVector = new Vector2(rtrans.anchoredPosition.x, ( -i * ( 165 / ( temp.Answers.Count ) ) ) + 55);
@@ -253,7 +265,14 @@ public class QNSelectionManager : MonoBehaviour {
                 }
                 if (success && onTarget && totalTime >= targetTime) {
                     List<int> temp;
-                    outputString += lastHitButton.activateNextQuestions(out temp);
+                    string lastAnswer = lastHitButton.activateNextQuestions(out temp);
+                    string newLine = "";
+
+                    newLine += "At Time:,"+Time.time.ToString()+',';
+                    newLine += "Question,"+currentActiveQustion.question + ',';
+                    newLine += "Answer," + lastHitButton.englAnswer;
+                    sw.WriteLine(newLine);
+                    outputString += lastAnswer;
                     foreach (int i in temp) {
                         ToDoQueue.Enqueue(allCurrentQuestions[i]);
                     }
@@ -390,13 +409,24 @@ public class QNSelectionManager : MonoBehaviour {
                         }
                     }
                     if (s.Contains("(")) {
+
+
+                        //Debug.Log("---");
+                   
+
+                        //Debug.Log(s);
                         int beginCharacter = s.IndexOf('(');
                         int endCharacter = s.IndexOf(')');
                         if (beginCharacter != -1 && endCharacter != -1) {
                             temp.Answer_DiffLang = s.Substring(beginCharacter + 1, ( endCharacter ) - ( beginCharacter + 1 ));
-                            Debug.Log(temp.Answer_DiffLang);
+                            //Debug.Log(temp.Answer_DiffLang);
                         } else {
-                            Debug.LogError("This should really not happen not finding a complete alt lang Amswer");
+                            //Debug.Log(temp.Answer);
+
+                            //Debug.Log("------");
+                            //Debug.Log(s);
+                            //Debug.Log("------");
+                            Debug.LogError("This should really not happen not finding a complete alt lang Answer");
                         }
                         // Debug.Log(beginCharacter + "and ANS also" + endCharacter);
 
@@ -415,7 +445,12 @@ public class QNSelectionManager : MonoBehaviour {
         //reader.Close();
         return output;
     }
-
+    private void OnDisable() {
+        if (sw != null) {
+            sw.Flush();
+                sw.Close();
+        }
+    }
 
     public static string Reverse(string s) {
         char[] charArray = s.ToCharArray();

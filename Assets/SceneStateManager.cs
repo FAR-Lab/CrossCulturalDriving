@@ -171,7 +171,7 @@ public class SceneStateManager : NetworkManager {
 
     void Update() {
         if (ThisClient != null && ThisClient.connection!=null) {
-            Debug.Log(ThisClient.connection.lastError);
+           // Debug.Log(ThisClient.connection.lastError);
         }
         //foreach (short s in NetworkServer.GetConnectionStats().Keys) {
         //   Debug.Log("Short: " + s);

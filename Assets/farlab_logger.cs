@@ -188,15 +188,20 @@ public class farlab_logger : MonoBehaviour {
                 break;
             }
         }
+        if (enabled) {
 
-        
-        LogVariable time = new LogVariable("U", "Time", delegate () { return Time.time.ToString(); });
-        LogVariable vel = new LogVariable("D1", "Velocity", delegate () { return player != null ? player.transform.GetComponent<Rigidbody>().velocity.ToString() : " "; });
-        LogVariable sp = new LogVariable("D1", "Position", delegate () { return player != null ? player.transform.position.ToString() : " "; });
-        LogVariable dist = new LogVariable("D1", "Distance", delegate () { return player != null ? player.transform.position.magnitude.ToString() : " "; });
-        LogVariable frame = new LogVariable("U", "Frame", delegate () { return Time.frameCount.ToString(); });
-        LogVariable pos = new LogVariable("D2", "ActionState", delegate () { return SceneStateManager.Instance.ActionState.ToString(); });
-        LogVariable timeScale = new LogVariable("D2", "timeScale", delegate () { return Time.timeScale.ToString(); });
+            LogVariable time = new LogVariable("U", "Time", delegate () { return Time.time.ToString(); });
+            LogVariable frame = new LogVariable("U", "Frame", delegate () { return Time.frameCount.ToString(); });
+            LogVariable vel = new LogVariable("D1", "Velocity", delegate () { return player != null ? player.transform.GetComponent<Rigidbody>().velocity.ToString() : " "; });
+            LogVariable sp = new LogVariable("D1", "Position", delegate () { return player != null ? player.transform.position.ToString() : " "; });
+            LogVariable dist = new LogVariable("D1", "Rotation", delegate () { return player != null ? player.transform.rotation.ToString() : " "; });
+            
+            LogVariable pos = new LogVariable("D2", "ActionState", delegate () { return SceneStateManager.Instance.ActionState.ToString(); });
+            LogVariable timeScale = new LogVariable("D2", "timeScale", delegate () { return Time.timeScale.ToString(); });
+            LogVariable inputSteering = new LogVariable("D2", "Steering", delegate () { return player != null ? player.GetComponent<SteeringWheelInputController>().GetSteerInput().ToString() : " "; });
+            LogVariable inputAccelBrk = new LogVariable("D2", "AccelBrk", delegate () { return player != null ? player.GetComponent<SteeringWheelInputController>().GetAccelInput().ToString() : " "; });
+           
+        }
 
     }
     void Start() {
@@ -328,8 +333,8 @@ public class farlab_logger : MonoBehaviour {
             }
         }
         catch (Exception e) {
-            Debug.Log(e);
-            Debug.Log(data);
+            //Debug.Log(e);
+            //Debug.Log(data);
         }
 
     }

@@ -6,6 +6,7 @@ public class rayCastButton : MonoBehaviour {
 
     // Use this for initialization
    public  string _Answer;
+    public string englAnswer;
     string _SecretCharacter;
     List<int> _targetIndexes;
     public Text txObj;

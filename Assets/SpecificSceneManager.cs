@@ -8,13 +8,20 @@ public class SpecificSceneManager : MonoBehaviour {
     // Use this for initialization
     public GameObject QuestionairPrefab;
     float lerpAdaption=1;
-	void Start () {
+    bool WaitAFrame=false;
+    QNSelectionManager qnmanager;
+    void Start () {
         if(Camera.main!=null)Camera.main.clearFlags = CameraClearFlags.Skybox;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if (WaitAFrame) {
+            WaitAFrame = false;
+            if(qnmanager!=null)
+            qnmanager.startAskingTheQuestionairs(questionairsToAsk, conditionName);
 
+        }
         if (lerpAdaption < 1) {
             lerpAdaption += Time.deltaTime * SceneStateManager.slowDownSpeed;
             Debug.Log("slowing DownTime at " + lerpAdaption);
@@ -23,13 +30,13 @@ public class SpecificSceneManager : MonoBehaviour {
             lerpAdaption = 2;
             foreach (VehicleInputControllerNetworked vn in FindObjectsOfType<VehicleInputControllerNetworked>()) {
                 if (vn.isLocalPlayer) {
-                    QNSelectionManager temp = Instantiate(
+                    qnmanager = Instantiate(
                         QuestionairPrefab,
                         vn.transform.position +vn.transform.up*1.5f+vn.transform.forward*2.5f,
                         vn.transform.rotation).GetComponent<QNSelectionManager>();
-                    temp.startAskingTheQuestionairs(questionairsToAsk, conditionName);
-                    temp.setRelativePosition(vn.transform,  1.75f , 3.5f);
 
+                    qnmanager.setRelativePosition(vn.transform,  1.75f , 3.5f);
+                    WaitAFrame = true;
                 }
             }
             

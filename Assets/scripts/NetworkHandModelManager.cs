@@ -40,6 +40,8 @@ namespace Leap.Unity {
 
         protected Dictionary<int, HandModelBase> instansiatedModels = new Dictionary<int, HandModelBase>();
         private Dictionary<int, long> frameIDs = new Dictionary<int, long>();
+        private Dictionary<int, float> lastUpdate = new Dictionary<int, float>();
+
         protected bool graphicsEnabled = true;
         RemoteHandManager _remoteHandData;
 
@@ -52,6 +54,9 @@ namespace Leap.Unity {
 
             foreach (int key in _remoteHandData.networkHands.Keys) {
                 if (!instansiatedModels.ContainsKey(key)) {
+                    if (!lastUpdate.ContainsKey(key)) {
+                        lastUpdate.Add(key, 0f);
+                    }
                     HandModelBase hmb;
                     if (_remoteHandData.networkHands[key].IsLeft) {
                         Transform temp = Instantiate(LeftHandPrefab).transform;
@@ -63,41 +68,46 @@ namespace Leap.Unity {
 
                         hmb = temp.GetComponent<HandModelBase>();
                     }
-                    frameIDs.Add(key, 0);
+                    if (!frameIDs.ContainsKey(key)) {
+                        frameIDs.Add(key, 0);
+                    }
                     hmb.transform.gameObject.SetActive(true);
                     instansiatedModels.Add(key, hmb);
 
                 }
 
                 if (_remoteHandData.networkHands[key].FrameId > frameIDs[key]) {
+                    if (instansiatedModels[key].transform.gameObject.activeSelf==false) {
+                        instansiatedModels[key].transform.gameObject.SetActive(true);
+                    }
                     frameIDs[key] = _remoteHandData.networkHands[key].FrameId;
                     instansiatedModels[key].SetLeapHand(_remoteHandData.networkHands[key]);
                     instansiatedModels[key].UpdateHand();
-                   // Debug.Log(_remoteHandData.networkHands[key].FrameId);
+                    lastUpdate[key] = Time.time;
+                    // Debug.Log(_remoteHandData.networkHands[key].FrameId);
                     if (instansiatedModels[key].transform.parent == null) {
                         int connectionId = key;
                         if (_remoteHandData.networkHands[key].IsLeft) {
                             connectionId++;
                         }
                         foreach (VehicleInputControllerNetworked v in FindObjectsOfType<VehicleInputControllerNetworked>()) {
-                            if (v.connectionToServer!=null && v.connectionToServer.connectionId == connectionId) {
+                            if (v.connectionToServer != null && v.connectionToServer.connectionId == connectionId) {
                                 instansiatedModels[key].transform.parent = v.transform;
                             }
                         }
                     }
-                    
+
                 }
 
             }
             foreach (int key in instansiatedModels.Keys) {
 
-                if (instansiatedModels[key] != null) {
-                    //instansiatedModels[key].UpdateHand();
-
-
-
-                } else {
+                if (instansiatedModels[key] == null) {
                     instansiatedModels.Remove(key);
+                }
+                
+                if (Time.time - lastUpdate[key] > 0.5f) {
+                    instansiatedModels[key].transform.gameObject.SetActive(false);
                 }
 
             }

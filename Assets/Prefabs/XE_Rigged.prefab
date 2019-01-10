@@ -7444,7 +7444,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1486978001494232}
   m_LocalRotation: {x: -0.5453746, y: 5.820766e-11, z: 2.910383e-11, w: 0.83819246}
-  m_LocalPosition: {x: -0.372, y: 0.8265, z: 0.955}
+  m_LocalPosition: {x: -0.372, y: 0.832, z: 0.943}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_Children:
   - {fileID: 4118818471692194}
@@ -9796,17 +9796,20 @@ MonoBehaviour:
   useKeyBoard: 0
   Left:
   - {fileID: 4234196572143992}
-  - {fileID: 4687071616256480}
-  - {fileID: 4539859283853042}
   - {fileID: 4118818471692194}
+  - {fileID: 4539859283853042}
   Right:
   - {fileID: 4209998301786090}
   - {fileID: 4588777382977856}
-  - {fileID: 4517584874631780}
   - {fileID: 4273479095473004}
+  BrakeLightObjects:
+  - {fileID: 4687071616256480}
+  - {fileID: 4517584874631780}
   baseMaterial: {fileID: 2100000, guid: 18932c5ce280264449e6b23d71a5659c, type: 2}
   materialOn: {fileID: 0}
   materialOff: {fileID: 0}
+  materialBrake: {fileID: 0}
+  BrakeColor: {r: 1, g: 0, b: 0, a: 1}
   On: {r: 1, g: 0.39810425, b: 0, a: 1}
   Off: {r: 0, g: 0, b: 0, a: 1}
   LeftActive: 0

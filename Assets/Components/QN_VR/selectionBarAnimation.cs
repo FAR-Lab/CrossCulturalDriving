@@ -7,7 +7,7 @@ public class selectionBarAnimation : MonoBehaviour {
     float fillAmount;
     Image icon;
     RectTransform m_RectTransform;
-    public float artificalBorder = 50;
+    public float artificalBorder = 100;
 
     // Use this for initialization
     void Start () {

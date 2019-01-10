@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 3946340}
   - component: {fileID: 3946342}
   - component: {fileID: 3946341}
+  - component: {fileID: 3946343}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -178,7 +179,7 @@ MonoBehaviour:
   m_RunInBackground: 1
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
-  m_LogLevel: 0
+  m_LogLevel: 2
   m_PlayerPrefab: {fileID: 102736, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
   m_AutoCreatePlayer: 0
   m_PlayerSpawnMethod: 1
@@ -244,12 +245,41 @@ MonoBehaviour:
   serverState: 0
   serverIP: 
   SceneConditions:
-  - m_SceneAsset: {fileID: 102900000, guid: b83334fbc7dfdd544be2fe56cfc49be4, type: 3}
-    m_SceneName: Environment#Across
+  - m_SceneAsset: {fileID: 102900000, guid: 62da5b1b5bf7801408631cd0e6148745, type: 3}
+    m_SceneName: Vignette#1
+  - m_SceneAsset: {fileID: 102900000, guid: 67c3dd3ce7ab1dd4197b401994f0edb1, type: 3}
+    m_SceneName: Vignette#2
+  - m_SceneAsset: {fileID: 102900000, guid: 80645a187c1b41c43ab52a6246ff7db7, type: 3}
+    m_SceneName: Vignette#3
+  - m_SceneAsset: {fileID: 102900000, guid: d5208f322cd4bac4488907ad541ae364, type: 3}
+    m_SceneName: Vignette#4
+  - m_SceneAsset: {fileID: 102900000, guid: a47e06f65f804b64797d95ba8619ab2b, type: 3}
+    m_SceneName: Vignette#5
+  - m_SceneAsset: {fileID: 102900000, guid: bed00dd8f26424941937cdbecc818822, type: 3}
+    m_SceneName: Vignette#6
+  - m_SceneAsset: {fileID: 102900000, guid: 9c759187d5280fa4a86123b400947094, type: 3}
+    m_SceneName: Vignette#7
+  - m_SceneAsset: {fileID: 102900000, guid: 7ae54c34e579e56429dab5c1164f13fa, type: 3}
+    m_SceneName: Environment#Practice
   - m_SceneAsset: {fileID: 102900000, guid: 429eaa10333c4144983fb33c5dc3785f, type: 3}
     m_SceneName: Environment#Behind
+  - m_SceneAsset: {fileID: 102900000, guid: b83334fbc7dfdd544be2fe56cfc49be4, type: 3}
+    m_SceneName: Environment#Different
   - m_SceneAsset: {fileID: 102900000, guid: 3f10c1801f0b340479600eb9befbbae2, type: 3}
-    m_SceneName: Environment#Facing
+    m_SceneName: Environment#Opposite
+--- !u!114 &3946343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 3946339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 872db0d7297024f6f9337ba58403e476, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ip: 
+  port: 0
 --- !u!1001 &13151960
 Prefab:
   m_ObjectHideFlags: 0
