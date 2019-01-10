@@ -189,8 +189,9 @@ public class RemoteHandManager :  MonoBehaviour {
        // Debug.Log("Recieved a headPosition");
         if (heads.ContainsKey(newHead.ID)) {
             if (heads[newHead.ID] != null) {
-                heads[newHead.ID].position = newHead.HeadPos;
-                heads[newHead.ID].rotation = newHead.HeadRot;
+                heads[newHead.ID].position = Vector3.Lerp( heads[newHead.ID].position,newHead.HeadPos, 0.5f);
+                
+                heads[newHead.ID].rotation =Quaternion.Lerp(heads[newHead.ID].rotation, newHead.HeadRot, 0.5f);
                 if (heads[newHead.ID].parent == null) {
                     foreach (VehicleInputControllerNetworked v in FindObjectsOfType<VehicleInputControllerNetworked>()) {
                         if (v.connectionToServer!=null && v.connectionToServer.connectionId == newHead.ID) {
