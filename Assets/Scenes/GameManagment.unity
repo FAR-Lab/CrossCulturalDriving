@@ -267,6 +267,8 @@ MonoBehaviour:
     m_SceneName: Environment#Different
   - m_SceneAsset: {fileID: 102900000, guid: 3f10c1801f0b340479600eb9befbbae2, type: 3}
     m_SceneName: Environment#Opposite
+  - m_SceneAsset: {fileID: 102900000, guid: 29354ceaeed260c4db7ef9cdb4b026dd, type: 3}
+    m_SceneName: Environment#BlockedLane
 --- !u!114 &3946343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -687,6 +689,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1872183611
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 6.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 3.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 11.949
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0.9999999
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: -0.0004923939
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!1 &2009545241
 GameObject:
   m_ObjectHideFlags: 0
