@@ -310,7 +310,9 @@ public class farlab_logger : MonoBehaviour {
         if (stream != null) {
             stream.Close();
         }
-        client.Close();
+        if (client != null) {
+            client.Close();
+        }
     }
 
     void Flush() {

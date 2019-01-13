@@ -26,7 +26,7 @@ public class SceneStateManager : NetworkManager {
         // public NetworkConnection conn;
     }
     private List<int> ClientsThatReportedReady = new List<int>();
-
+    public VehicleInputControllerNetworked localPlayer;
     private static SceneStateManager _instance;
     private ClientState myState = ClientState.NONE;
     [SerializeField]
@@ -170,6 +170,15 @@ public class SceneStateManager : NetworkManager {
 
 
     void Update() {
+
+        if (localPlayer == null) {
+            foreach (VehicleInputControllerNetworked v in FindObjectsOfType<VehicleInputControllerNetworked>()) {
+                if (v.isLocalPlayer) {
+                    localPlayer = v;
+                    break;
+                }
+            }
+        }
         if (ThisClient != null && ThisClient.connection!=null) {
            // Debug.Log(ThisClient.connection.lastError);
         }
@@ -332,7 +341,6 @@ public class SceneStateManager : NetworkManager {
         //Debug.Log("Receving hand Data" +ms+ "  "+ad);
         RemoteHandManager.HandMessage hand = msg.ReadMessage<RemoteHandManager.HandMessage>();
         hand.id = (2*msg.conn.connectionId) - hand.id;
-        hand.netID = msg.conn.connectionId;
         foreach (NetworkConnection c in NetworkServer.connections) {
             if (c == msg.conn) {
                 //Debug.Log("I already have that information");

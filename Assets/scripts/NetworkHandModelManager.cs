@@ -15,6 +15,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Serialization;
 using System;
+using UnityEngine.Networking;
 using Leap.Unity.Attributes;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -84,16 +85,11 @@ namespace Leap.Unity {
                     instansiatedModels[key].SetLeapHand(_remoteHandData.networkHands[key]);
                     instansiatedModels[key].UpdateHand();
                     lastUpdate[key] = Time.time;
-                    // Debug.Log(_remoteHandData.networkHands[key].FrameId);
+                    
                     if (instansiatedModels[key].transform.parent == null) {
-                        int connectionId = key;
-                        if (_remoteHandData.networkHands[key].IsLeft) {
-                            connectionId++;
-                        }
-                        foreach (VehicleInputControllerNetworked v in FindObjectsOfType<VehicleInputControllerNetworked>()) {
-                            if (v.connectionToServer != null && v.connectionToServer.connectionId == connectionId) {
-                                instansiatedModels[key].transform.parent = v.transform;
-                            }
+                        GameObject go = ClientScene.FindLocalObject(_remoteHandData.networkAssociationDict[key]);
+                        if (go != null) {
+                            instansiatedModels[key].transform.parent = go.transform;
                         }
                     }
 

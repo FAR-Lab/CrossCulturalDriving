@@ -29,7 +29,7 @@ public class RemoteHandManager :  MonoBehaviour {
     public GameObject headPrefab;
     public class HandMessage : MessageBase {
         public byte[] serializedHand;
-        public int netID;
+        public NetworkInstanceId netID;
         public int id;
         public long frameID;
     }
@@ -37,8 +37,11 @@ public class RemoteHandManager :  MonoBehaviour {
         public Vector3 HeadPos;
         public Quaternion HeadRot;
         public int ID;
+        public NetworkInstanceId netId;
     }
     public Dictionary<int, Leap.Hand> networkHands = new Dictionary<int, Leap.Hand>();
+    public Dictionary<int, NetworkInstanceId> networkAssociationDict = new Dictionary<int, NetworkInstanceId>();
+
     public Dictionary<int, Transform> heads = new Dictionary<int, Transform>();
     public NetworkClient handClient;
     
@@ -98,11 +101,16 @@ public class RemoteHandManager :  MonoBehaviour {
             Leap.Hand leftHand = frame.Hands.Find(i => i.IsLeft == true);
             Leap.Hand rightHand = frame.Hands.Find(i => i.IsLeft == false);
             VectorHand_32 vHand = new VectorHand_32();
+            HandMessage msg = new HandMessage();
+            NetworkInstanceId netid_ = NetworkInstanceId.Invalid;
+            if (SceneStateManager.Instance.localPlayer != null) {
+                netid_ = SceneStateManager.Instance.localPlayer.GetComponent<NetworkTransform>().netId;
+            }
+            msg.netID = netid_;
             if (leftHand != null) {
-                HandMessage msg = new HandMessage();
-                    byte[] temp = new byte[vHand.numBytesRequired];
-                    vHand.Encode(leftHand);
-                    vHand.FillBytes(temp);
+                byte[] temp = new byte[vHand.numBytesRequired];
+                vHand.Encode(leftHand);
+                vHand.FillBytes(temp);
                 msg.id = 1;
                 msg.serializedHand = temp;
                 msg.frameID = leftFrameID++;
@@ -112,7 +120,6 @@ public class RemoteHandManager :  MonoBehaviour {
             }
             if (rightHand != null)
             {
-                HandMessage msg = new HandMessage();
                 byte[] temp = new byte[vHand.numBytesRequired];
                 vHand.Encode(rightHand);
                 vHand.FillBytes(temp);
@@ -180,6 +187,7 @@ public class RemoteHandManager :  MonoBehaviour {
         vHand.Decode(result);
         networkHands[newHand.id] = result;
         networkHands[newHand.id].FrameId = newHand.frameID;
+        networkAssociationDict[newHand.id] = newHand.netID;
         debugHand = result;
 
 
@@ -190,15 +198,11 @@ public class RemoteHandManager :  MonoBehaviour {
         if (heads.ContainsKey(newHead.ID)) {
             if (heads[newHead.ID] != null) {
                 heads[newHead.ID].position = Vector3.Lerp( heads[newHead.ID].position,newHead.HeadPos, 0.5f);
-                
                 heads[newHead.ID].rotation =Quaternion.Lerp(heads[newHead.ID].rotation, newHead.HeadRot, 0.5f);
-                if (heads[newHead.ID].parent == null) {
-                    foreach (VehicleInputControllerNetworked v in FindObjectsOfType<VehicleInputControllerNetworked>()) {
-                        if (v.connectionToServer!=null && v.connectionToServer.connectionId == newHead.ID) {
-                            heads[newHead.ID].parent = v.transform;
-                            break;
-                        }
-                    }
+
+                GameObject go = ClientScene.FindLocalObject(newHead.netId);
+                if (go != null){
+                    heads[newHead.ID].parent = go.transform;
                 }
             } else {
                 heads.Remove(newHead.ID);
@@ -227,9 +231,14 @@ public class RemoteHandManager :  MonoBehaviour {
                 if (Camera.main != null) {
                     Vector3 pos = Camera.main.transform.position;// + InputTracking.GetLocalPosition(XRNode.Head);
                     Quaternion rot = Camera.main.transform.rotation;//* InputTracking.GetLocalRotation(XRNode.Head);
+                    NetworkInstanceId netid_ = NetworkInstanceId.Invalid;
+                    if (SceneStateManager.Instance.localPlayer != null) {
+                        netid_ = SceneStateManager.Instance.localPlayer.GetComponent<NetworkTransform>().netId;
+                    }
                     VRHeadMessage msg = new VRHeadMessage {
                         HeadPos = pos,
-                        HeadRot = rot
+                        HeadRot = rot,
+                        netId = netid_
                     };
 
                     SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadVRHead, msg);
