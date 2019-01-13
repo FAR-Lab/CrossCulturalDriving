@@ -198,11 +198,12 @@ public class RemoteHandManager :  MonoBehaviour {
         if (heads.ContainsKey(newHead.ID)) {
             if (heads[newHead.ID] != null) {
                 heads[newHead.ID].position = Vector3.Lerp( heads[newHead.ID].position,newHead.HeadPos, 0.5f);
-                heads[newHead.ID].rotation =Quaternion.Lerp(heads[newHead.ID].rotation, newHead.HeadRot, 0.5f);
-
-                GameObject go = ClientScene.FindLocalObject(newHead.netId);
-                if (go != null){
-                    heads[newHead.ID].parent = go.transform;
+                heads[newHead.ID].rotation = Quaternion.Lerp(heads[newHead.ID].rotation, newHead.HeadRot, 0.5f);
+                if (heads[newHead.ID].parent == null) {
+                    GameObject go = ClientScene.FindLocalObject(newHead.netId);
+                    if (go != null) {
+                        heads[newHead.ID].parent = go.transform;
+                    }
                 }
             } else {
                 heads.Remove(newHead.ID);
@@ -231,6 +232,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 if (Camera.main != null) {
                     Vector3 pos = Camera.main.transform.position;// + InputTracking.GetLocalPosition(XRNode.Head);
                     Quaternion rot = Camera.main.transform.rotation;//* InputTracking.GetLocalRotation(XRNode.Head);
+
                     NetworkInstanceId netid_ = NetworkInstanceId.Invalid;
                     if (SceneStateManager.Instance.localPlayer != null) {
                         netid_ = SceneStateManager.Instance.localPlayer.GetComponent<NetworkTransform>().netId;
