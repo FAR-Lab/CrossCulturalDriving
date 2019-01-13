@@ -314,7 +314,6 @@ public class farlab_logger : MonoBehaviour {
             client.Close();
         }
     }
-
     void Flush() {
         foreach (StreamWriter f in logs) {
             f.Flush();
