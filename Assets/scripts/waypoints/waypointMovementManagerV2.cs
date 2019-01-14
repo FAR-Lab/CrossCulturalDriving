@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using RVP;
+//using RVP;
 
 
 public class waypointMovementManagerV2 : MonoBehaviour
@@ -10,25 +10,31 @@ public class waypointMovementManagerV2 : MonoBehaviour
 	waypoint previousWaypoint;
 	public waypoint nextWaypoint;
 	public bool fullStop=false;
-	void Start ()
+
+
+    private float maxSteer;
+    private VehicleController control;
+
+    void Start ()
 	{
 		if (startWaypoint != null) {
 			nextWaypoint = startWaypoint;
 		} else {
 			//initialize();
 		}
+        control = GetComponent<VehicleController>();
+        maxSteer = control.maxSteeringAngle;
 
-
-	}
+    }
 	public void stop(){
 		fullStop = true;
-		transform.GetComponent<AIInput>().stopTheCar ();
+		//transform.GetComponent<AIInput>().stopTheCar ();
 	}
 
 	public void initialize ()
 	{
-
-    //Debug.Log ("uninitialized street waypoint target. Automatic init attempted");
+       
+//		Debug.Log ("uninitialized street waypoint target. Automatic init attempted");
 		RaycastHit hit;
 
 		//Debug.DrawRay (transform.position , -transform.up);
@@ -44,15 +50,15 @@ public class waypointMovementManagerV2 : MonoBehaviour
 
 				moveToNextWaypoint ();// we need a direction and the clossesd point will not help us with that.
 				if (!fullStop) {
-					transform.GetComponent<AIInput> ().startTheCar ();// tell the car controller to start again
+					//transform.GetComponent<AIInput> ().startTheCar ();// tell the car controller to start again
 				}
-				transform.GetComponent<AIInput> ().Move (nextWaypoint.position); // and then to move
+				//transform.GetComponent<AIInput> ().Move (nextWaypoint.position); // and then to move
 			} else 				{
 				Debug.Log ("I am not standing on a waypoint Street ManagerV2. Automatic Init Failed. Where should I move?"+transform.name);
 			}
 
 		} else {
-			transform.GetComponent<AIInput> ().stopTheCar ();
+			//transform.GetComponent<AIInput> ().stopTheCar ();
 
 			Debug.Log ("I am not standing on anything. Automatic Init Failed. Where should I move?");
 			//Debug.Log ("What we hit was called:" +hit.transform.name);
@@ -72,8 +78,9 @@ public class waypointMovementManagerV2 : MonoBehaviour
 		float previousDistance	= (transform.position - previousWaypoint.position).magnitude;
 		float nextDistance = (transform.position - nextCandidate.position).magnitude;
 		OverrideNextWaypoint (nextCandidate);
-		//Debug.Log (previousDistance + "and" + nextDistance);
-		if (Vector3.Angle (transform.GetComponent<VehicleParent> ().localVelocity, nextCandidate.position-transform.position ) > 20) {
+        //Debug.Log (previousDistance + "and" + nextDistance);
+        /*
+        if (Vector3.Angle (transform.GetComponent<VehicleParent> ().localVelocity, nextCandidate.position-transform.position ) > 20) {
 			Debug.Log("angle:"+Vector3.Angle (transform.GetComponent<VehicleParent>().localVelocity, transform.position - nextCandidate.position));
 			OverrideNextWaypoint (nextCandidate.getNextWaypoint());
 		}
@@ -86,6 +93,7 @@ public class waypointMovementManagerV2 : MonoBehaviour
 				}
 			}
 		}
+        */
 
 
 	}
@@ -102,7 +110,11 @@ public class waypointMovementManagerV2 : MonoBehaviour
 	void Update ()
 	{
 
-
+        if (nextWaypoint == startWaypoint)
+        {
+            moveToNextWaypoint();
+            transform.GetComponent<AIInput>().Move(nextWaypoint.position);
+        }
 
 		if (previousWaypoint != null && nextWaypoint != null) {
 			//we Can set here a host parameter to tell the car that its going in the wrong direction
@@ -130,6 +142,7 @@ public class waypointMovementManagerV2 : MonoBehaviour
 
 			if (1f * nextDistance < previousDistance) {//if we moved 75% towards the next waypoint we jump to the next one
 				if (moveToNextWaypoint ()) {
+
 					transform.GetComponent<AIInput> ().Move (nextWaypoint.position);
 				} else {
 					transform.GetComponent<AIInput> ().stopTheCar ();
@@ -137,18 +150,21 @@ public class waypointMovementManagerV2 : MonoBehaviour
 				}
 			}
 		}
+
+    
 	}
 
 	public void OverrideNextWaypoint (waypoint input)
 	{
 		nextWaypoint = input;
 		if (nextWaypoint != null) {
-			transform.GetComponent<AIInput> ().Move (nextWaypoint.position);
+			//transform.GetComponent<AIInput> ().Move (nextWaypoint.position);
 
 		}
 	}
 
 	bool moveToNextWaypoint (){
+        Debug.Log("Moving On!");
 		previousWaypoint = nextWaypoint;
 		nextWaypoint = previousWaypoint.getNextWaypoint ();
 		if (nextWaypoint == null) {

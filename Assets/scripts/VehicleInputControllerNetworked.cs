@@ -173,6 +173,17 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         FindObjectOfType<SpecificSceneManager>().runQuestionairNow();
 
     }
+    [Command]
+    public void CmdStartWalking() {
+        RpcStartWallking();
+    }
+
+    [ClientRpc]
+    public void RpcStartWallking() {
+        foreach (MaleAvatarController a in FindObjectsOfType<MaleAvatarController>()) {
+            a.ChooseAnimation(1);
+        }
+    }
 
     [Command]
     public void CmdSwitchBrakeLight(bool Active) {
@@ -225,6 +236,10 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
             }
             if (Input.GetKeyDown(KeyCode.W)) {
                 GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Straight);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Y)) {
+                CmdStartWalking();
             }
 
             transitionlerp = 0;
