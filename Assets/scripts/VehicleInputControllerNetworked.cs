@@ -229,14 +229,23 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
                 CmdStartQuestionairGloablly();
             }
             if (Input.GetKeyDown(KeyCode.A)) {
-                GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Right);
+                GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Left);
             }
             if (Input.GetKeyDown(KeyCode.D)) {
-                GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Left);
+                GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Right);
             }
             if (Input.GetKeyDown(KeyCode.W)) {
                 GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Straight);
             }
+            if (Input.GetKeyDown(KeyCode.S)) {
+                GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Stop);
+            }
+
+            if (Input.GetKeyDown(KeyCode.E)) {
+                GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Hurry);
+            }
+
+
 
             if (Input.GetKeyDown(KeyCode.Y)) {
                 CmdStartWalking();

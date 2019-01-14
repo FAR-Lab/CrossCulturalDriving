@@ -3206,15 +3206,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questionairsToAsk:
   - Certainty
-  - TurnSignals
-  - mutualgaze-
   - overtaking
-  - cutoff
-  - brake-check
   - tailgate
-  conditionName: Figure8
+  conditionName: Behind
   QuestionairPrefab: {fileID: 1853806982428388, guid: bb398da6725f53c4283a5f88c90d86ed,
     type: 2}
+  StartpointLaneA: {fileID: 0}
+  StartpointLaneB: {fileID: 0}
+  totalActiveVehiclesLaneA: 0
+  totalActiveVehiclesLaneB: 0
 --- !u!4 &1604726275
 Transform:
   m_ObjectHideFlags: 0
@@ -3236,7 +3236,7 @@ BoxCollider:
   m_GameObject: {fileID: 1604726273}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 2, y: 2, z: 6.4046555}
   m_Center: {x: -34.65, y: 0.049999952, z: 1.1818428}
@@ -3248,7 +3248,7 @@ BoxCollider:
   m_GameObject: {fileID: 1604726273}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 2.6891403, y: 2, z: 6.372299}
   m_Center: {x: 33.600063, y: 0.049999952, z: -3.1682816}

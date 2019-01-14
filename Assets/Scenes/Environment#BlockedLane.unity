@@ -4846,12 +4846,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questionairsToAsk:
   - Certainty
-  - FalseStartsV2
-  - Myturnsignal
-  - othercarturnsignals
-  conditionName: Figure8
+  - overtaking
+  conditionName: BlockedLane
   QuestionairPrefab: {fileID: 1853806982428388, guid: bb398da6725f53c4283a5f88c90d86ed,
     type: 2}
+  StartpointLaneA: {fileID: 0}
+  StartpointLaneB: {fileID: 0}
+  totalActiveVehiclesLaneA: 0
+  totalActiveVehiclesLaneB: 0
 --- !u!4 &1604726275
 Transform:
   m_ObjectHideFlags: 0
@@ -4885,10 +4887,10 @@ BoxCollider:
   m_GameObject: {fileID: 1604726273}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4, y: 2, z: 2}
-  m_Center: {x: 11.75, y: 0.05, z: 34.65}
+  m_Size: {x: 9.94, y: 2, z: 34.15}
+  m_Center: {x: -1.1, y: 0.05, z: -21}
 --- !u!1 &1680724936
 GameObject:
   m_ObjectHideFlags: 0
