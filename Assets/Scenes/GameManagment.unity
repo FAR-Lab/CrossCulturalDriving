@@ -273,6 +273,8 @@ MonoBehaviour:
     m_SceneName: Environment#BlockedLane
   - m_SceneAsset: {fileID: 102900000, guid: a765631e7ff71e4489eb10ef4d4553bc, type: 3}
     m_SceneName: Environment#OppositePersonCars
+  - m_SceneAsset: {fileID: 102900000, guid: 51767b8446eddc14f905012246757ab2, type: 3}
+    m_SceneName: Environment#OppositePerson
 --- !u!114 &3946343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -594,6 +596,48 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bdcebfa96c8bde040bb960321a9623e5, type: 2}
+  m_IsPrefabAsset: 0
+--- !u!1001 &947759362
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 6.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 3.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 11.949
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0.9999999
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: -0.0004923939
+      objectReference: {fileID: 0}
+    - target: {fileID: 495970, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d7ef0873300973e45b32493f26e9a2b7, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1 &966849855 stripped
 GameObject:
