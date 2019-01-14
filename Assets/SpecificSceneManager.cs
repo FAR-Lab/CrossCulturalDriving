@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 using UnityEngine;
 
 public class SpecificSceneManager : MonoBehaviour {
@@ -10,9 +11,18 @@ public class SpecificSceneManager : MonoBehaviour {
     float lerpAdaption=1;
     bool WaitAFrame=false;
     QNSelectionManager qnmanager;
+    
+    waypoint StartpointLaneA;
+    waypoint StartpointLaneB;
+    public int totalActiveVehiclesLaneA = 0;
+    public int totalActiveVehiclesLaneB = 0;
+    List<AIInput> activeCarsLaneA = new List<AIInput>();
+    List<AIInput> activeCarsLaneB = new List<AIInput>();
+
     void Start () {
         if(Camera.main!=null)Camera.main.clearFlags = CameraClearFlags.Skybox;
 	}
+    
 	
 	// Update is called once per frame
 	void Update () {
@@ -39,9 +49,27 @@ public class SpecificSceneManager : MonoBehaviour {
                     WaitAFrame = true;
                 }
             }
-            
-
         }
+        if (SceneStateManager.Instance != null) {
+            if (SceneStateManager.Instance.MyState == ClientState.HOST && SceneStateManager.Instance.ActionState==ActionState.DRIVE) {
+                if (SceneStateManager.Instance.spawnPrefabs[0].GetComponent<AIInput>() != null) {
+                    if (activeCarsLaneA.Count < totalActiveVehiclesLaneA) {
+
+                        AIInput newCar = Instantiate(SceneStateManager.Instance.spawnPrefabs[0], StartpointLaneA.transform.position, StartpointLaneA.transform.rotation).GetComponent<AIInput>();
+                        NetworkServer.Spawn(newCar.gameObject);
+                        activeCarsLaneA.Add(newCar);
+                    }
+                    if (activeCarsLaneB.Count < totalActiveVehiclesLaneB) {
+
+                        AIInput newCar = Instantiate(SceneStateManager.Instance.spawnPrefabs[0], StartpointLaneB.transform.position, StartpointLaneB.transform.rotation).GetComponent<AIInput>();
+                        NetworkServer.Spawn(newCar.gameObject);
+                        activeCarsLaneB.Add(newCar);
+                    }
+                }
+
+            }
+        }
+
     }
     public void runQuestionairNow() {
         SceneStateManager.Instance.SetQuestionair();
