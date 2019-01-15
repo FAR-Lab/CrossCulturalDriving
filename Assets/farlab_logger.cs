@@ -258,12 +258,12 @@ public class farlab_logger : MonoBehaviour {
         CloseStream();
         CloseLogs();
         Debug.Log(" shutdown after " + i.ToString());
-
-        Debug.Log(GetFrame().ToString());
-        Debug.Log(GetTime().ToString());
-        Debug.Log(GetVelocity(player.gameObject).ToString());
-        Debug.Log(GetPos(player.gameObject).ToString());
-
+        if (player != null) {
+            Debug.Log(GetFrame().ToString());
+            Debug.Log(GetTime().ToString());
+            Debug.Log(GetVelocity(player.gameObject).ToString());
+            Debug.Log(GetPos(player.gameObject).ToString());
+        }
     }
 
     void EnqueueData(List<string> data) {

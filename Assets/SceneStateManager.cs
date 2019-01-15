@@ -73,8 +73,8 @@ public class SceneStateManager : NetworkManager {
     }
     void Start() {
         // XRSettings.enabled = false;
-        LocalCamera = Camera.main.gameObject;
-        DontDestroyOnLoad(LocalCamera);
+        //LocalCamera = Camera.main.gameObject;
+        //DontDestroyOnLoad(LocalCamera);
         manager = FindObjectOfType<NetworkManager>();
         StartCoroutine(LoadYourAsyncAddScene("Lobby"));
 
@@ -189,7 +189,7 @@ public class SceneStateManager : NetworkManager {
 
         if (serverState == ServerState.LOADING) {
             if (ClientsThatReportedReady.Count == activeConnectedIds.Count) {
-                LocalCamera.SetActive(false);
+                //LocalCamera.SetActive(false); //TODO CAMERA LOBBY LOADING?
                 ClientsThatReportedReady.Clear();
                 serverState = ServerState.RUNNING;
                 foreach (NetworkConnection id in activeConnectedIds.Keys) {
@@ -213,7 +213,7 @@ public class SceneStateManager : NetworkManager {
             }
         } else if (serverState == ServerState.WAITING) {
             if (ClientsThatReportedReady.Count == activeConnectedIds.Count) {
-                LocalCamera.SetActive(true);
+                //LocalCamera.SetActive(true);//TODO CAMERA LOBBY LOADING?
                 showControlPanel = true;
 
             }
@@ -230,7 +230,7 @@ public class SceneStateManager : NetworkManager {
         myID = 1;
         client_ = manager.StartClient();
         myState = ClientState.CLIENT;
-        LocalCamera.SetActive(false);
+        //LocalCamera.SetActive(false);
 
 
     }
@@ -410,12 +410,42 @@ public class SceneStateManager : NetworkManager {
         localActionState = ActionState.QUESTIONS;
         ReportCurrentState();
     }
-    public void SetWaiting() {
+    public void SetWaiting(bool GoToLobby) {
         localActionState = ActionState.WAITING;
+        if (GoToLobby) {
+           string m_SceneName = SceneManager.GetActiveScene().name;
+            Debug.Log("Finished this scene and going back to the Lobby. Old scene was"+ m_SceneName);
+            //SceneManager.LoadScene("Lobby");
+            StartCoroutine(ReturnToLobbyFromPrevSceneAsync("Lobby", m_SceneName));
+            Time.timeScale = 1.0f;
+        }
+
         ReportCurrentState();
+        
     }
 
     //----//
+    IEnumerator ReturnToLobbyFromPrevSceneAsync(string lobby, string oldScene) {
+
+        
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(lobby, LoadSceneMode.Additive);
+        while (!asyncLoad.isDone) {
+            yield return null;
+        }
+
+        Debug.Log("Finished loading lobby");
+
+        yield return new WaitForSecondsRealtime(1.0f);
+
+
+        AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync(oldScene);
+        
+        while (!asyncUnload.isDone) {
+            yield return null;
+        }
+       
+    }
+
     IEnumerator LoadYourAsyncAddScene(string newScene) {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(newScene, LoadSceneMode.Additive);
         while (!asyncLoad.isDone) {

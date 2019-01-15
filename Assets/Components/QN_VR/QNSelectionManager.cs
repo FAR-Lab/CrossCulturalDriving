@@ -13,7 +13,7 @@ public class QNSelectionManager : MonoBehaviour {
     public GameObject ButtonPrefab;
 
     Text QustionField;
-
+    public bool overWrtieFinishedDebug = false;
 
     private bool Questionloaded = false;
     public bool running;
@@ -127,6 +127,16 @@ public class QNSelectionManager : MonoBehaviour {
     }
 
     void Update() {
+        if (overWrtieFinishedDebug) {
+            ToDolist.Clear();
+            ToDoQueue.Clear();
+            Questionloaded = false;
+        }
+
+
+
+
+
         if (running) {
             if (ParentPosition != null) {
                 transform.position = ParentPosition.position + ParentPosition.up * up + ParentPosition.forward * forward;
@@ -138,9 +148,9 @@ public class QNSelectionManager : MonoBehaviour {
                     sw.Flush();
                   
                     Debug.Log(outputString); //TODO: DATALOGGER
-                                             // if (SceneStateManager.Instance != null) {
-                                             //    SceneStateManager.Instance.SetWaiting(); //TODO: DIsplay Wait Now Sign
-                                             // }
+                    if (SceneStateManager.Instance != null) {
+                        SceneStateManager.Instance.SetWaiting(true); //TODO: DIsplay Wait Now Sign
+                    }
                     running = false;
                     transform.gameObject.SetActive(false);
                     return;

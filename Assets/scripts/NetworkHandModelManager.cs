@@ -102,8 +102,11 @@ namespace Leap.Unity {
                     instansiatedModels.Remove(key);
                 }
                 
-                if (Time.time - lastUpdate[key] > 0.5f) {
-                    instansiatedModels[key].transform.gameObject.SetActive(false);
+                if (lastUpdate.ContainsKey(key) && Time.time - lastUpdate[key] > 0.5f) {
+                    
+                        instansiatedModels[key].transform.gameObject.SetActive(false);
+
+                  
                 }
 
             }

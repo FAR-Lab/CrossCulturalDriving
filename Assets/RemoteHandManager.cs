@@ -140,14 +140,13 @@ public class RemoteHandManager :  MonoBehaviour {
         //Debug.Log("Looking for the local Leap");
         foreach(LeapProvider lp in FindObjectsOfType<LeapProvider>())
         {
+            if (lp.transform.parent.GetComponentInParent<NetworkIdentity>() != null) {
+                if (lp.transform.parent.GetComponentInParent<NetworkIdentity>().isLocalPlayer) {
 
-            if (lp.transform.parent.GetComponentInParent<NetworkIdentity>().isLocalPlayer)
-            {
-
-                _leapProvider = lp;
-                break;
-            }
-            else { _leapProvider = null; }
+                    _leapProvider = lp;
+                    break;
+                }
+            } else { _leapProvider = null; }
         }
         
         if (_leapProvider == null)
