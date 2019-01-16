@@ -190,16 +190,19 @@ public class farlab_logger : MonoBehaviour {
         }
         if (enabled) {
 
-            LogVariable time = new LogVariable("U", "Time", delegate () { return Time.time.ToString(); });
+            LogVariable time = new LogVariable("U", "Time", delegate () { return Time.time.ToString("F4"); });
             LogVariable frame = new LogVariable("U", "Frame", delegate () { return Time.frameCount.ToString(); });
             LogVariable vel = new LogVariable("D1", "Velocity", delegate () { return player != null ? player.transform.GetComponent<Rigidbody>().velocity.ToString() : " "; });
-            LogVariable sp = new LogVariable("D1", "Position", delegate () { return player != null ? player.transform.position.ToString() : " "; });
-            LogVariable dist = new LogVariable("D1", "Rotation", delegate () { return player != null ? player.transform.rotation.ToString() : " "; });
-            
-            LogVariable pos = new LogVariable("D2", "ActionState", delegate () { return SceneStateManager.Instance.ActionState.ToString(); });
-            LogVariable timeScale = new LogVariable("D2", "timeScale", delegate () { return Time.timeScale.ToString(); });
-            LogVariable inputSteering = new LogVariable("D2", "Steering", delegate () { return player != null ? player.GetComponent<SteeringWheelInputController>().GetSteerInput().ToString() : " "; });
-            LogVariable inputAccelBrk = new LogVariable("D2", "AccelBrk", delegate () { return player != null ? player.GetComponent<SteeringWheelInputController>().GetAccelInput().ToString() : " "; });
+            LogVariable sp = new LogVariable("D1", "Position", delegate () { return player != null ? player.transform.position.ToString("F4") : " "; });
+            LogVariable dist = new LogVariable("D1", "Rotation", delegate () { return player != null ? player.transform.rotation.eulerAngles.ToString("F4") : " "; });
+            //Pedestrian Location
+            //Head location
+            //VectorHandDump
+
+            LogVariable pos = new LogVariable("D1", "ActionState", delegate () { return SceneStateManager.Instance.ActionState.ToString(); });
+            LogVariable timeScale = new LogVariable("D1", "timeScale", delegate () { return Time.timeScale.ToString("F4"); });
+            LogVariable inputSteering = new LogVariable("D1", "Steering", delegate () { return player != null ? player.GetComponent<SteeringWheelInputController>().GetSteerInput().ToString("F4") : " "; });
+            LogVariable inputAccelBrk = new LogVariable("D1", "AccelBrk", delegate () { return player != null ? player.GetComponent<SteeringWheelInputController>().GetAccelInput().ToString("F4") : " "; });
            
         }
 

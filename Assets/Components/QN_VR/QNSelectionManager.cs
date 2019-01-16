@@ -230,6 +230,10 @@ public class QNSelectionManager : MonoBehaviour {
 
 
             RaycastHit hit;
+            if (Camera.main == null) {
+                Debug.Log("This is interesting unloading");
+                return;
+            }
             Ray ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2f, Camera.main.pixelHeight / 2f));
             int layerMask = 1 << 5;
             if (Physics.Raycast(ray, out hit, layerMask)) {

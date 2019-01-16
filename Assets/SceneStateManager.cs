@@ -417,6 +417,7 @@ public class SceneStateManager : NetworkManager {
             Debug.Log("Finished this scene and going back to the Lobby. Old scene was"+ m_SceneName);
             //SceneManager.LoadScene("Lobby");
             StartCoroutine(ReturnToLobbyFromPrevSceneAsync("Lobby", m_SceneName));
+            FindObjectOfType<Leap.Unity.NetworkHandModelManager>().init();
             Time.timeScale = 1.0f;
         }
 
@@ -436,7 +437,7 @@ public class SceneStateManager : NetworkManager {
         Debug.Log("Finished loading lobby");
 
         yield return new WaitForSecondsRealtime(1.0f);
-
+        
 
         AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync(oldScene);
         

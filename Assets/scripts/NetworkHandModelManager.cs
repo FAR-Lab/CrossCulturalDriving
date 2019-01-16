@@ -48,12 +48,24 @@ namespace Leap.Unity {
 
         private void Start() {
             _remoteHandData = GetComponentInParent<RemoteHandManager>();
+            init();
         }
+
+        public void init() {
+            instansiatedModels.Clear();
+            frameIDs.Clear();
+            lastUpdate.Clear();
+    }
         private void Update() {
 
+            foreach (int key in instansiatedModels.Keys) {
 
+                if (instansiatedModels.ContainsKey(key) && instansiatedModels[key] == null) {
+                    instansiatedModels.Remove(key);
+                }
+            }
 
-            foreach (int key in _remoteHandData.networkHands.Keys) {
+                foreach (int key in _remoteHandData.networkHands.Keys) {
                 if (!instansiatedModels.ContainsKey(key)) {
                     if (!lastUpdate.ContainsKey(key)) {
                         lastUpdate.Add(key, 0f);
@@ -98,11 +110,13 @@ namespace Leap.Unity {
             }
             foreach (int key in instansiatedModels.Keys) {
 
-                if (instansiatedModels[key] == null) {
-                    instansiatedModels.Remove(key);
-                }
                 
-                if (lastUpdate.ContainsKey(key) && Time.time - lastUpdate[key] > 0.5f) {
+                if (!lastUpdate.ContainsKey(key)) {
+                    lastUpdate.Add(key, 0.0f);
+
+                }
+               
+                if (instansiatedModels.ContainsKey(key) && lastUpdate.ContainsKey(key) && Time.time - lastUpdate[key] > 0.5f) {
                     
                         instansiatedModels[key].transform.gameObject.SetActive(false);
 
