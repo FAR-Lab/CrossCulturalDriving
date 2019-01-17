@@ -58,8 +58,8 @@ namespace Leap.Unity {
     }
         private void Update() {
 
-            foreach (int key in instansiatedModels.Keys) {
 
+            foreach (int key in instansiatedModels.Keys) {
                 if (instansiatedModels.ContainsKey(key) && instansiatedModels[key] == null) {
                     instansiatedModels.Remove(key);
                 }

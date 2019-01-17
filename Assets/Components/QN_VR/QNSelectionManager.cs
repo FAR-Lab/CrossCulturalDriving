@@ -149,7 +149,7 @@ public class QNSelectionManager : MonoBehaviour {
                   
                     Debug.Log(outputString); //TODO: DATALOGGER
                     if (SceneStateManager.Instance != null) {
-                        SceneStateManager.Instance.SetWaiting(true); //TODO: DIsplay Wait Now Sign
+                        SceneStateManager.Instance.SetPostQuestionair(); //TODO: DIsplay Wait Now Sign
                     }
                     running = false;
                     transform.gameObject.SetActive(false);

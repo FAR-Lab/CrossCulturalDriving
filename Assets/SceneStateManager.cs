@@ -7,7 +7,9 @@ using UnityEngine.XR;
 
 
 public enum ClientState { HOST, CLIENT, DISCONECTED, NONE };
-public enum ActionState { LOADING, PREDRIVE, DRIVE, QUESTIONS, WAITING };
+
+public enum ActionState { LOADING, PREDRIVE, READY, DRIVE, QUESTIONS, POSTQUESTIONS, WAITING };
+
 public enum ServerState { NONE, LOADING, WAITING, RUNNING }
 //public enum StateMessageType { READY, QUESTIONAIR,SLOWTIME,FINISHED};
 
@@ -25,6 +27,7 @@ public class SceneStateManager : NetworkManager {
         public float timeScale;
         // public NetworkConnection conn;
     }
+    Queue<StateUpdateMessag> messageQueue = new Queue<StateUpdateMessag>();
     private List<int> ClientsThatReportedReady = new List<int>();
     public VehicleInputControllerNetworked localPlayer;
     private static SceneStateManager _instance;
@@ -80,9 +83,9 @@ public class SceneStateManager : NetworkManager {
 
     }
     private void OnGUI() {
-        if (myState == ClientState.CLIENT && ThisClient!=null && ThisClient.connection!=null) {
-            GUI.Label(new Rect(25, 430, 600, 25), (ThisClient.connection.lastMessageTime-Time.time).ToString());
-           
+        if (myState == ClientState.CLIENT && ThisClient != null && ThisClient.connection != null) {
+            GUI.Label(new Rect(25, 430, 600, 25), ( ThisClient.connection.lastMessageTime - Time.time ).ToString());
+
         }
 
         /*
@@ -111,6 +114,7 @@ public class SceneStateManager : NetworkManager {
             GUIStyle s = new GUIStyle();
             s.fontSize = 24;
             s.alignment = TextAnchor.MiddleCenter;
+            
 
             if (myState == ClientState.HOST) {
 
@@ -131,8 +135,8 @@ public class SceneStateManager : NetworkManager {
             }
         } else {
             GUI.Label(new Rect(25, 0, 150, 25), "Cl. Conn: " + activeConnectedIds.Count + "Cl. Ready: " + ClientsThatReportedReady.Count);
-           
-            
+
+
         }
         if (GUI.Button(new Rect(0, 0, 25, 25), "CP")) {
             showControlPanel = !showControlPanel;
@@ -151,7 +155,13 @@ public class SceneStateManager : NetworkManager {
 
     public override void OnClientSceneChanged(NetworkConnection conn) {
         Debug.Log("OnClientSceneChanged was caled =>\t" + conn.connectionId);
-        ClientScene.Ready(conn);
+        if (!conn.isReady) {
+            ClientScene.Ready(conn);
+        }
+
+            if (SceneManager.GetActiveScene().name != "Lobby") {
+                SetPreDriving();
+            }
 
 
     }
@@ -179,37 +189,66 @@ public class SceneStateManager : NetworkManager {
                 }
             }
         }
-        if (ThisClient != null && ThisClient.connection!=null) {
-           // Debug.Log(ThisClient.connection.lastError);
+       
+        if (ThisClient != null && ThisClient.connection != null) {
+            if (ThisClient.connection.isReady) {
+                
+                if (messageQueue.Count > 0) {
+                    ThisClient.Send(NetworkMessageType.StateUpdate, messageQueue.Dequeue());
+                }
+            }
+            // Debug.Log(ThisClient.connection.lastError);
         }
         //foreach (short s in NetworkServer.GetConnectionStats().Keys) {
         //   Debug.Log("Short: " + s);
         //    Debug.Log("PacketStat" + NetworkServer.GetConnectionStats()[s]);
         //  }
+        if (serverState == ServerState.NONE) {
+            return;
+        }
+        Debug.Log(serverState.ToString() + "as well as" + ActionState.ToString());
+        Debug.Log(clientStateReturn(ActionState.PREDRIVE) + "Count in Predrive");
 
+        foreach (RemoteClientState c in activeConnectedIds.Values) {
+            Debug.Log(c.TheActionState);
+        }
         if (serverState == ServerState.LOADING) {
-            if (ClientsThatReportedReady.Count == activeConnectedIds.Count) {
+            if  (clientStateReturn(ActionState.WAITING) == activeConnectedIds.Count) {
+                showControlPanel = true;
+            }
+            
+            else if (clientStateReturn(ActionState.PREDRIVE) == activeConnectedIds.Count) {
                 //LocalCamera.SetActive(false); //TODO CAMERA LOBBY LOADING?
-                ClientsThatReportedReady.Clear();
-                serverState = ServerState.RUNNING;
-                foreach (NetworkConnection id in activeConnectedIds.Keys) {
-                    bool success = false;
-                    Vector3 SpawnPosition = Vector3.zero;
-                    Quaternion SpawnOrientation = Quaternion.identity;
-                    foreach (NetworkStartPosition p in FindObjectsOfType<NetworkStartPosition>()) {
-                        if (activeConnectedIds[id].participantID == uint.Parse(p.transform.name[p.transform.name.Length - 1].ToString())) {  /// TODO CHANGED CONDITION;
-                            SpawnPosition = p.transform.position;
-                            SpawnOrientation = p.transform.rotation;
-                            success = true;
-                            break;
+                Debug.Log("About to instasiace all kinds of cars here for the players");
+                    ClientsThatReportedReady.Clear();
+                    serverState = ServerState.RUNNING;
+                    foreach (NetworkConnection id in activeConnectedIds.Keys) {
+                        bool success = false;
+                        Vector3 SpawnPosition = Vector3.zero;
+                        Quaternion SpawnOrientation = Quaternion.identity;
+                        foreach (NetworkStartPosition p in FindObjectsOfType<NetworkStartPosition>()) {
+                            if (activeConnectedIds[id].participantID == uint.Parse(p.transform.name[p.transform.name.Length - 1].ToString())) {  /// TODO CHANGED CONDITION;
+                                SpawnPosition = p.transform.position;
+                                SpawnOrientation = p.transform.rotation;
+                                success = true;
+                                break;
+                            }
+                        }
+                        if (success) {
+                            GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
+                            NetworkServer.AddPlayerForConnection(id, player, 0);
                         }
                     }
-                    if (success) {
-                        GameObject player = (GameObject)Instantiate(playerPrefab, SpawnPosition, SpawnOrientation);
-                        NetworkServer.AddPlayerForConnection(id, player, 0);
-                    }
+                    showControlPanel = false;
                 }
-                showControlPanel = false;
+        } else if (serverState == ServerState.RUNNING) {
+            if (clientStateReturn(ActionState.READY) == activeConnectedIds.Count) {
+
+            }
+            else if (clientStateReturn(ActionState.QUESTIONS) == activeConnectedIds.Count) {
+
+            } else if (clientStateReturn(ActionState.POSTQUESTIONS) == activeConnectedIds.Count) {
+                loadNextCondition("Lobby");
             }
         } else if (serverState == ServerState.WAITING) {
             if (ClientsThatReportedReady.Count == activeConnectedIds.Count) {
@@ -219,17 +258,28 @@ public class SceneStateManager : NetworkManager {
             }
         }
     }
+    private int clientStateReturn(ActionState state) {
+        int output = 0;
 
+        foreach (RemoteClientState r in activeConnectedIds.Values) {
+            if (r.TheActionState == state) {
+                output++;
+            }
+        }
+        return output;
+
+    }
     public void ConnectToServerWith(string ip, uint playerID, bool useVROrNot) {
         //useVR = useVROrNot;
         serverIP = ip;
-       // manager.networkAddress = ip;
-       // myID = playerID;
-       //HARDCODED OVERWRITE
+        // manager.networkAddress = ip;
+        // myID = playerID;
+        //HARDCODED OVERWRITE
         manager.networkAddress = "192.168.0.100";
         myID = 1;
         client_ = manager.StartClient();
         myState = ClientState.CLIENT;
+        serverState = ServerState.NONE;
         //LocalCamera.SetActive(false);
 
 
@@ -258,7 +308,7 @@ public class SceneStateManager : NetworkManager {
         // Debug.Log("OnPlayerConnected");
         conn.RegisterHandler(MsgType.AddPlayer, reportClientID);
 
-        
+
 
 
     }
@@ -276,7 +326,7 @@ public class SceneStateManager : NetworkManager {
     //---//
     void reportClientID(NetworkMessage msg) {
 
-       
+
         var message = msg.ReadMessage<SpawnMessage>();
         uint playerid = message.netId;
 
@@ -284,13 +334,13 @@ public class SceneStateManager : NetworkManager {
 
         foreach (RemoteClientState a in activeConnectedIds.Values) {
             if (a.participantID == playerid) {
-               msg.conn.Disconnect();
+                msg.conn.Disconnect();
                 return;
             }
         }
         RemoteClientState rcs = new RemoteClientState {
             participantID = playerid,
-            TheActionState = ActionState.WAITING
+            //TheActionState = ActionState.WAITING
         };
 
 
@@ -299,7 +349,7 @@ public class SceneStateManager : NetworkManager {
         bool success = false;
         Vector3 SpawnPosition = Vector3.zero;
         Quaternion SpawnOrientation = Quaternion.identity;
-       
+
         foreach (NetworkStartPosition p in FindObjectsOfType<NetworkStartPosition>()) {
             if (playerid == uint.Parse(p.transform.name[p.transform.name.Length - 1].ToString())) {
                 SpawnPosition = p.transform.position;
@@ -314,8 +364,8 @@ public class SceneStateManager : NetworkManager {
             msg.conn.RegisterHandler(NetworkMessageType.uploadHand, RecieveHandData);
             msg.conn.RegisterHandler(NetworkMessageType.uploadVRHead, RecieveVRHeadData);
             msg.conn.RegisterHandler(NetworkMessageType.StateUpdate, ReceiveUpdatedState);
+            Debug.Log("Update all handlers");
 
-            
 
             //msg.conn.UnregisterHandler(NetworkMessageType.uploadHand);
             //msg.conn.UnregisterHandler(NetworkMessageType.StateUpdate);
@@ -326,11 +376,11 @@ public class SceneStateManager : NetworkManager {
 
     public override void OnServerDisconnect(NetworkConnection connection) {
         if (activeConnectedIds.ContainsKey(connection)) {
-                    activeConnectedIds.Remove(connection);
-                    Debug.Log("ClientDisconnected removed from list");
-            }
+            activeConnectedIds.Remove(connection);
+            Debug.Log("ClientDisconnected removed from list");
         }
-    
+    }
+
 
 
 
@@ -340,7 +390,7 @@ public class SceneStateManager : NetworkManager {
         //msg.conn.GetStatsIn(out ms, out ad);
         //Debug.Log("Receving hand Data" +ms+ "  "+ad);
         RemoteHandManager.HandMessage hand = msg.ReadMessage<RemoteHandManager.HandMessage>();
-        hand.id = (2*msg.conn.connectionId) - hand.id;
+        hand.id = ( 2 * msg.conn.connectionId ) - hand.id;
         foreach (NetworkConnection c in NetworkServer.connections) {
             if (c == msg.conn) {
                 //Debug.Log("I already have that information");
@@ -390,14 +440,24 @@ public class SceneStateManager : NetworkManager {
     }
 
     void ReportCurrentState() {
-
         StateUpdateMessag msg = new StateUpdateMessag();
         msg.content = new string[1];
         msg.actionState = localActionState;
         msg.time = Time.timeScale;
+        messageQueue.Enqueue(msg);
+        
 
-        ThisClient.Send(NetworkMessageType.StateUpdate, msg);
+    }
+    public void SetPreDriving() {
+        //TODO maybe contact the server;
+        localActionState = ActionState.PREDRIVE;
+        ReportCurrentState();
+    }
 
+    public void SetReady() {
+        //TODO maybe contact the server;
+        localActionState = ActionState.READY;
+        ReportCurrentState();
     }
     public void SetDriving() {
         //TODO maybe contact the server;
@@ -410,25 +470,21 @@ public class SceneStateManager : NetworkManager {
         localActionState = ActionState.QUESTIONS;
         ReportCurrentState();
     }
-    public void SetWaiting(bool GoToLobby) {
-        localActionState = ActionState.WAITING;
-        if (GoToLobby) {
-           string m_SceneName = SceneManager.GetActiveScene().name;
-            Debug.Log("Finished this scene and going back to the Lobby. Old scene was"+ m_SceneName);
-            //SceneManager.LoadScene("Lobby");
-            StartCoroutine(ReturnToLobbyFromPrevSceneAsync("Lobby", m_SceneName));
-            FindObjectOfType<Leap.Unity.NetworkHandModelManager>().init();
-            Time.timeScale = 1.0f;
-        }
-
+    public void SetPostQuestionair() {
+        //TODO maybe contact the server;
+        localActionState = ActionState.POSTQUESTIONS;
         ReportCurrentState();
-        
+    }
+
+    public void SetWaiting() {
+        localActionState = ActionState.WAITING;
+        ReportCurrentState();
     }
 
     //----//
     IEnumerator ReturnToLobbyFromPrevSceneAsync(string lobby, string oldScene) {
 
-        
+
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(lobby, LoadSceneMode.Additive);
         while (!asyncLoad.isDone) {
             yield return null;
@@ -437,14 +493,14 @@ public class SceneStateManager : NetworkManager {
         Debug.Log("Finished loading lobby");
 
         yield return new WaitForSecondsRealtime(1.0f);
-        
+
 
         AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync(oldScene);
-        
+
         while (!asyncUnload.isDone) {
             yield return null;
         }
-       
+
     }
 
     IEnumerator LoadYourAsyncAddScene(string newScene) {

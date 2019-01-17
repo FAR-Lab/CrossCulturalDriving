@@ -44,7 +44,8 @@ public class RemoteHandManager :  MonoBehaviour {
 
     public Dictionary<int, Transform> heads = new Dictionary<int, Transform>();
     public NetworkClient handClient;
-    
+    public VectorHand_32 LeftVectorHand;
+    public VectorHand_32 RightVectorHand;
     //public event Action<Dictionary<int, Leap.Hand>> UpdateNetworkedHands;
     private float sendRateCheckHead;
     private float sendTimeLastHand;
@@ -115,6 +116,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 msg.serializedHand = temp;
                 msg.frameID = leftFrameID++;
                 //Debug.Log(SceneStateManager.Instance.ThisClient);
+                LeftVectorHand = vHand;
                 SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg); //TODO DAVID
                 
             }
@@ -127,7 +129,8 @@ public class RemoteHandManager :  MonoBehaviour {
                 msg.serializedHand = temp;
                 msg.frameID = rightFrameID++;
                 //Debug.Log(SceneStateManager.Instance.ThisClient);
-                SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg);//TODO DAVID
+                RightVectorHand = vHand;
+                SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg); //TODO DAVID
 
             }
 

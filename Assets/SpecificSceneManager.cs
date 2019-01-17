@@ -22,6 +22,13 @@ public class SpecificSceneManager : MonoBehaviour {
     void Start() {
         if (Camera.main != null)
             Camera.main.clearFlags = CameraClearFlags.Skybox;
+       
+        SceneStateManager.Instance.SetPreDriving();//We go to predrive since this is a driving scene... THis will cause the server to load the cars
+
+        lerpAdaption = 2;
+        WaitAFrame = false;
+        qnmanager = null;
+        Time.timeScale = 1.0f;
     }
 
 
@@ -39,15 +46,17 @@ public class SpecificSceneManager : MonoBehaviour {
             Time.timeScale = Mathf.Lerp(1, SceneStateManager.slowTargetTime, lerpAdaption);
         } else if (lerpAdaption >= 1 && lerpAdaption < 2) {
             lerpAdaption = 2;
-            foreach (VehicleInputControllerNetworked vn in FindObjectsOfType<VehicleInputControllerNetworked>()) {
-                if (vn.isLocalPlayer) {
-                    qnmanager = Instantiate(
-                        QuestionairPrefab,
-                        vn.transform.position + vn.transform.up * 1.5f + vn.transform.forward * 2.5f,
-                        vn.transform.rotation).GetComponent<QNSelectionManager>();
+            if (true) {
+                foreach (VehicleInputControllerNetworked vn in FindObjectsOfType<VehicleInputControllerNetworked>()) {
+                    if (vn.isLocalPlayer) {
+                        qnmanager = Instantiate(
+                            QuestionairPrefab,
+                            vn.transform.position + vn.transform.up * 1.5f + vn.transform.forward * 2.5f,
+                            vn.transform.rotation).GetComponent<QNSelectionManager>();
 
-                    qnmanager.setRelativePosition(vn.transform, 1.75f, 3.5f);
-                    WaitAFrame = true;
+                        qnmanager.setRelativePosition(vn.transform, 1.75f, 3.5f);
+                        WaitAFrame = true;
+                    }
                 }
             }
         }
@@ -78,6 +87,7 @@ public class SpecificSceneManager : MonoBehaviour {
 
     }
     public void runQuestionairNow() {
+        Debug.Log("Running questionairNow");
         SceneStateManager.Instance.SetQuestionair();
         lerpAdaption = 0;
     }

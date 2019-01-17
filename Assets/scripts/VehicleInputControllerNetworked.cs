@@ -55,7 +55,7 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     }
     private void Start() {
         if (SceneStateManager.Instance != null) {
-            SceneStateManager.Instance.SetDriving();
+            SceneStateManager.Instance.SetReady();
         }
         steeringInput = GetComponent<SteeringWheelInputController>();
         indicaterStage = 0;
@@ -81,14 +81,14 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
     }
     void startBlinking(bool left) {
-            indicaterStage = 1;
-            if (left) {
-                LeftIsActuallyOn = true;
-                RightIsActuallyOn = false;
-            } else {
-                LeftIsActuallyOn = false;
-                RightIsActuallyOn = true;
-            }
+        indicaterStage = 1;
+        if (left) {
+            LeftIsActuallyOn = true;
+            RightIsActuallyOn = false;
+        } else {
+            LeftIsActuallyOn = false;
+            RightIsActuallyOn = true;
+        }
 
     }
 
@@ -201,18 +201,20 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
                 t.GetComponent<MeshRenderer>().material = materialOff;
             }
         }
+    }
 
+
+    [Command]
+    public void CmdStartDriving() {
+        RpcSetToDrive();
+    }
+    [ClientRpc]
+    public void RpcSetToDrive() {
+        SceneStateManager.Instance.SetDriving();
     }
 
 
     void Update() {
-
-
-
-        
-
-       
-
         if (Input.GetKeyUp(KeyCode.Space)) {
             foreach (seatCallibration sc in FindObjectsOfType<seatCallibration>()) {
                 if (sc.isPartOfLocalPlayer()) {
@@ -223,10 +225,14 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         }
 
 
-        if (isLocalPlayer && SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
+        if (isLocalPlayer) {
+            if (Input.GetKeyDown(KeyCode.Return)){
+                CmdStartDriving();
+            }
 
-            if (Input.GetKeyDown(KeyCode.Q)){
+            if (Input.GetKeyDown(KeyCode.Q)) {
                 CmdStartQuestionairGloablly();
+                
             }
             if (Input.GetKeyDown(KeyCode.A)) {
                 GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Left);
@@ -244,48 +250,48 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
             if (Input.GetKeyDown(KeyCode.E)) {
                 GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Hurry);
             }
-
-
-
             if (Input.GetKeyDown(KeyCode.Y)) {
                 CmdStartWalking();
             }
+            if (SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
 
-            transitionlerp = 0;
-            if (steeringInput == null || useKeyBoard) {
-                controller.steerInput = Input.GetAxis("Horizontal");
-                controller.accellInput = Input.GetAxis("Vertical");
-            } else {
-                controller.steerInput = steeringInput.GetSteerInput();
-                controller.accellInput = steeringInput.GetAccelInput();
 
-                SteeringWheel.RotateAround(SteeringWheel.position, SteeringWheel.up, steeringAngle - steeringInput.GetSteerInput() * -450f);
-                steeringAngle = steeringInput.GetSteerInput() * -450f;
-            }
-            if (Input.GetButtonDown("indicateLeft")) {
-                Debug.Log("PushedIndicator Left");
-                startBlinking(true);
-            } else if (Input.GetButtonDown("indicateRight")) {
-                Debug.Log("PushedIndicator Right");
-                startBlinking(false);
-            }
-            UpdateIndicator();
+                transitionlerp = 0;
+                if (steeringInput == null || useKeyBoard) {
+                    controller.steerInput = Input.GetAxis("Horizontal");
+                    controller.accellInput = Input.GetAxis("Vertical");
+                } else {
+                    controller.steerInput = steeringInput.GetSteerInput();
+                    controller.accellInput = steeringInput.GetAccelInput();
 
-            if (controller.accellInput < 0 && !breakIsOn) {
-                breakIsOn = true;
-                CmdSwitchBrakeLight(breakIsOn);
-            } else if (controller.accellInput >= 0 && breakIsOn) {
-                breakIsOn = false;
-                CmdSwitchBrakeLight(breakIsOn);
-            }
+                    SteeringWheel.RotateAround(SteeringWheel.position, SteeringWheel.up, steeringAngle - steeringInput.GetSteerInput() * -450f);
+                    steeringAngle = steeringInput.GetSteerInput() * -450f;
+                }
+                if (Input.GetButtonDown("indicateLeft")) {
+                    Debug.Log("PushedIndicator Left");
+                    startBlinking(true);
+                } else if (Input.GetButtonDown("indicateRight")) {
+                    Debug.Log("PushedIndicator Right");
+                    startBlinking(false);
+                }
+                UpdateIndicator();
 
-        } else if (isLocalPlayer && SceneStateManager.Instance.ActionState == ActionState.QUESTIONS) {
+                if (controller.accellInput < 0 && !breakIsOn) {
+                    breakIsOn = true;
+                    CmdSwitchBrakeLight(breakIsOn);
+                } else if (controller.accellInput >= 0 && breakIsOn) {
+                    breakIsOn = false;
+                    CmdSwitchBrakeLight(breakIsOn);
+                }
 
-            if (transitionlerp < 1) {
-                transitionlerp += Time.deltaTime * SceneStateManager.slowDownSpeed;
-                controller.steerInput = Mathf.Lerp(controller.steerInput, 0, transitionlerp);
-                controller.accellInput = Mathf.Lerp(0, -1, transitionlerp);
-                Debug.Log("SteeringWheel: " + controller.steerInput + "\tAccel: " + controller.accellInput);
+            } else if (isLocalPlayer && SceneStateManager.Instance.ActionState == ActionState.QUESTIONS) {
+
+                if (transitionlerp < 1) {
+                    transitionlerp += Time.deltaTime * SceneStateManager.slowDownSpeed;
+                    controller.steerInput = Mathf.Lerp(controller.steerInput, 0, transitionlerp);
+                    controller.accellInput = Mathf.Lerp(0, -1, transitionlerp);
+                    Debug.Log("SteeringWheel: " + controller.steerInput + "\tAccel: " + controller.accellInput);
+                }
             }
         }
     }
