@@ -206,11 +206,11 @@ public class SceneStateManager : NetworkManager {
         if (serverState == ServerState.NONE) {
             return;
         }
-        Debug.Log(serverState.ToString() + "as well as" + ActionState.ToString());
-        Debug.Log(clientStateReturn(ActionState.PREDRIVE) + "Count in Predrive");
+        //Debug.Log(serverState.ToString() + "as well as" + ActionState.ToString());
+        //Debug.Log(clientStateReturn(ActionState.PREDRIVE) + "Count in Predrive");
 
         foreach (RemoteClientState c in activeConnectedIds.Values) {
-            Debug.Log(c.TheActionState);
+          //  Debug.Log(c.TheActionState);
         }
         if (serverState == ServerState.LOADING) {
             if  (clientStateReturn(ActionState.WAITING) == activeConnectedIds.Count) {
