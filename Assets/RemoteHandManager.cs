@@ -18,7 +18,6 @@ public class NetworkMessageType {
     public static short uploadHand = MsgType.Highest + 1;
     public static short DownloadHand = MsgType.Highest + 2;
     public static short StateUpdate = MsgType.Highest + 3;
-
     public static short uploadVRHead = MsgType.Highest + 4;
     public static short DownloadVRHead = MsgType.Highest + 5;
 };
@@ -117,7 +116,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 msg.frameID = leftFrameID++;
                 //Debug.Log(SceneStateManager.Instance.ThisClient);
                 LeftVectorHand = vHand;
-                SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg); //TODO DAVID
+                SceneStateManager.Instance.ThisClient.SendByChannel(NetworkMessageType.uploadHand, msg,2); //TODO DAVID
                 
             }
             if (rightHand != null)
@@ -130,7 +129,7 @@ public class RemoteHandManager :  MonoBehaviour {
                 msg.frameID = rightFrameID++;
                 //Debug.Log(SceneStateManager.Instance.ThisClient);
                 RightVectorHand = vHand;
-                SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadHand, msg); //TODO DAVID
+                SceneStateManager.Instance.ThisClient.SendByChannel(NetworkMessageType.uploadHand, msg,2); //TODO DAVID
 
             }
 
@@ -245,7 +244,7 @@ public class RemoteHandManager :  MonoBehaviour {
                         netId = netid_
                     };
 
-                    SceneStateManager.Instance.ThisClient.SendUnreliable(NetworkMessageType.uploadVRHead, msg);
+                    SceneStateManager.Instance.ThisClient.SendByChannel(NetworkMessageType.uploadVRHead, msg,3);
                     // Debug.Log("Send a headPosition");
                 }
             } else {

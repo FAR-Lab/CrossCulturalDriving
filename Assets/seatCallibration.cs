@@ -105,7 +105,25 @@ public class seatCallibration : MonoBehaviour
     {
         GUIStyle gs = new GUIStyle();
         gs.fontSize = 30;
-        GUI.Label(new Rect(610, 10, 600, 300), (accumelatedYError).ToString("F4") + "y Error&Diffy" + (yRotationCorrectio).ToString("F4"), gs);
+        string displayString;
+        switch (callibrationState) {
+            default:
+            case 0:
+                displayString = "NotRunYet";
+                break;
+            case 1:
+                displayString = "First Step Done";
+                break;
+            case 2:
+                displayString = "Callibrating! HOLD STILL!"+ (callibrationTimer).ToString("F1");
+                break;
+            case 3:
+                displayString = "Callibration DONE!";
+                break;
+        
+        }
+
+        GUI.Label(new Rect(610, 10, 600, 300), displayString, gs);
 
     }
 

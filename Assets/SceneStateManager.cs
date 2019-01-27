@@ -4,7 +4,16 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR;
-
+/// <summary>
+/// 5 channels for the communication 
+/// 
+/// 0 - reliable for the transofrms
+/// 1 unrelaible  (not relzyy used
+/// 2 Unrealible sequenced upload hands to server
+/// 3 Unrealible sequenced upload Headpose to server
+/// 4 unreliable download Leap hands to clients
+/// 5 unreliable download VR headx   to clients
+/// </summary>
 
 public enum ClientState { HOST, CLIENT, DISCONECTED, NONE };
 
@@ -396,7 +405,7 @@ public class SceneStateManager : NetworkManager {
                 //Debug.Log("I already have that information");
                 continue;
             }
-            c.SendUnreliable(NetworkMessageType.DownloadHand, hand);
+            c.SendByChannel(NetworkMessageType.DownloadHand, hand,4);
 
         }
     }
@@ -416,7 +425,7 @@ public class SceneStateManager : NetworkManager {
             }
 
 
-            c.SendUnreliable(NetworkMessageType.DownloadVRHead, head);
+            c.SendByChannel(NetworkMessageType.DownloadVRHead, head,5);
 
         }
     }
