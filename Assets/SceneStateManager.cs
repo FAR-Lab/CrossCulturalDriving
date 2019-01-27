@@ -185,7 +185,10 @@ public class SceneStateManager : NetworkManager {
         Debug.Log("OnClientNotReady was caled =>\t" + conn.connectionId);
     }
 
-
+    public uint getParticipantID()
+    {
+        return myID;
+    }
 
 
     void Update() {

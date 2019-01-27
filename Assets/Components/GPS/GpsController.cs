@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class GpsController : MonoBehaviour {
 
-    public enum Direction { Straight, Left, Right, Stop, Hurry };
+    public enum Direction { Straight, Left, Right, Stop, Hurry ,None };
 
     public Sprite straightImage, leftImage, rightImage, StopImage, HurryImage;
 
@@ -41,6 +41,9 @@ public class GpsController : MonoBehaviour {
     }
 
     public void SetDirection(Direction newDirection) {
-        gpsImagePlane.sprite = spriteForDirection(newDirection);
+        if (newDirection != Direction.None)
+        {
+            gpsImagePlane.sprite = spriteForDirection(newDirection);
+        }
     }
 }

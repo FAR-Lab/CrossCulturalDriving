@@ -214,6 +214,12 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     }
 
 
+    [ClientRpc]
+    public void RpcSetGPS(GpsController.Direction[] dir)
+    {
+        GetComponentInChildren<GpsController>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
+    }
+
     void Update() {
         if (Input.GetKeyUp(KeyCode.Space)) {
             foreach (seatCallibration sc in FindObjectsOfType<seatCallibration>()) {
