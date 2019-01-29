@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 using UnityEngine;
 
 public class SpecificSceneManager : MonoBehaviour {
-    public string[] questionairsToAsk;
+    public TextAsset[] QuestionairsToAsk;
     public string conditionName;
     // Use this for initialization
     public GameObject QuestionairPrefab;
@@ -20,6 +20,7 @@ public class SpecificSceneManager : MonoBehaviour {
     List<AIInput> activeCarsLaneB = new List<AIInput>();
 
     void Start() {
+
         if (Camera.main != null)
             Camera.main.clearFlags = CameraClearFlags.Skybox;
        
@@ -31,13 +32,21 @@ public class SpecificSceneManager : MonoBehaviour {
         Time.timeScale = 1.0f;
     }
 
-
-    // Update is called once per frame
+    
     void Update() {
         if (WaitAFrame) {
             WaitAFrame = false;
             if (qnmanager != null)
-                qnmanager.startAskingTheQuestionairs(questionairsToAsk, conditionName);
+            {
+                string[] tempArray=new string[QuestionairsToAsk.Length];
+                int i = 0;
+                foreach (TextAsset t in QuestionairsToAsk)
+                {
+                    tempArray[i]= t.name;
+                    i++;
+                }
+                qnmanager.startAskingTheQuestionairs(tempArray, conditionName);
+            }
 
         }
         if (lerpAdaption < 1) {
