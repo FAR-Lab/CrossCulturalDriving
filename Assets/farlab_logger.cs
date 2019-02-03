@@ -11,7 +11,9 @@ using System;
 public class farlab_logger : MonoBehaviour {
     //Global variables
     private Transform player;
-
+    private RemoteHandManager localHandManager;
+    private MaleAvatarController localPedestrian;
+    private Queue<string> EventLog= new Queue<string>();
 
     public static char sep = ';'; //Separator for data values.
 
@@ -178,9 +180,22 @@ public class farlab_logger : MonoBehaviour {
 
     NetworkStream stream; //To store the stream from the device
 
+    private static farlab_logger _instance;
+    public static farlab_logger Instance { get { return _instance; } }
 
     // Use this for initialization
     private void Awake() {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+            // DontDestroyOnLoad(this);
+        }
+
+
         //Example of logging various different variables.
         foreach (VehicleInputControllerNetworked vi in FindObjectsOfType<VehicleInputControllerNetworked>()) {
             if (vi.isLocalPlayer) {
@@ -188,22 +203,41 @@ public class farlab_logger : MonoBehaviour {
                 break;
             }
         }
+        localHandManager= FindObjectOfType<RemoteHandManager>();
+
+        localPedestrian = FindObjectOfType<MaleAvatarController>();
         if (enabled) {
 
-            LogVariable time = new LogVariable("U", "Time", delegate () { return Time.time.ToString("F4"); });
-            LogVariable frame = new LogVariable("U", "Frame", delegate () { return Time.frameCount.ToString(); });
+            LogVariable LeftHand = new LogVariable("D1", "LeftVectorhand", delegate () { return (localHandManager != null && localHandManager.leftHandTracking) ? Convert.ToBase64String( localHandManager.lastSendLeftHand) : " "; });
+            LogVariable RightHand = new LogVariable("D1", "RightVectorhand", delegate () { return (localHandManager != null && localHandManager.rightHandTracking) ? Convert.ToBase64String(localHandManager.lastSendRightHand) : " "; });
+
             LogVariable vel = new LogVariable("D1", "Velocity", delegate () { return player != null ? player.transform.GetComponent<Rigidbody>().velocity.ToString() : " "; });
             LogVariable sp = new LogVariable("D1", "Position", delegate () { return player != null ? player.transform.position.ToString("F4") : " "; });
             LogVariable dist = new LogVariable("D1", "Rotation", delegate () { return player != null ? player.transform.rotation.eulerAngles.ToString("F4") : " "; });
+           
             //Pedestrian Location
             //Head location
             //VectorHandDump
-
             LogVariable pos = new LogVariable("D1", "ActionState", delegate () { return SceneStateManager.Instance.ActionState.ToString(); });
             LogVariable timeScale = new LogVariable("D1", "timeScale", delegate () { return Time.timeScale.ToString("F4"); });
             LogVariable inputSteering = new LogVariable("D1", "Steering", delegate () { return player != null ? player.GetComponent<SteeringWheelInputController>().GetSteerInput().ToString("F4") : " "; });
             LogVariable inputAccelBrk = new LogVariable("D1", "AccelBrk", delegate () { return player != null ? player.GetComponent<SteeringWheelInputController>().GetAccelInput().ToString("F4") : " "; });
-           
+
+
+             LogVariable HeadPos = new LogVariable("D1", "HeadPosition", delegate () { return localHandManager != null ? localHandManager.lastSendHeadPos.ToString("F4") : " "; });
+            LogVariable HeadRot = new LogVariable("D1", "HeadRot", delegate () { return localHandManager != null ? localHandManager.lastSendHeadRot.eulerAngles.ToString("F4") : " "; });
+
+
+            LogVariable PedestrianPosition = new LogVariable("D1", "Pedestrian Pos", delegate () { return localPedestrian != null ? localPedestrian.transform.position.ToString("F4") : " "; });
+
+
+            LogVariable EventLogVar = new LogVariable("D1", "Event log", delegate () { return EventLog.Count >0 ? EventLog.Dequeue() : " "; });
+
+            LogVariable time = new LogVariable("U", "Time", delegate () { return Time.time.ToString("F4"); });
+            LogVariable frame = new LogVariable("U", "Frame", delegate () { return Time.frameCount.ToString(); });
+
+
+
         }
 
     }
@@ -242,13 +276,27 @@ public class farlab_logger : MonoBehaviour {
                 }
             }
         }
+        if (localHandManager == null)
+        {
+            localHandManager = FindObjectOfType<RemoteHandManager>();
         }
+        if (localPedestrian==null) {
+            localPedestrian = FindObjectOfType<MaleAvatarController>();
+        }
+    }
     private void LateUpdate() {
 
 
         EnqueueData(LogVariable.GetVals());
 
     }
+
+    public void EnqueEventLog(string log)
+    {
+        log += " - " + Time.time.ToString("F4") + " - " + Time.frameCount;
+        EventLog.Enqueue(log);
+    }
+
     void OnApplicationQuit() {
         isSending = false; //Stop data sending from the independent thread
 
@@ -278,7 +326,7 @@ public class farlab_logger : MonoBehaviour {
     void InitLogs() {
         logs = new List<StreamWriter>();
         for (int i = 0; i < LogVariable.GetIDs().Count; i++) {
-            StreamWriter f = File.AppendText(path + LogVariable.GetIDs()[i] + ".txt");
+            StreamWriter f = File.AppendText(path + LogVariable.GetIDs()[i] + ".csv");
             logs.Add(f);
         }
     }

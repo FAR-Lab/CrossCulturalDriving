@@ -7,11 +7,12 @@ public class selectionBarAnimation : MonoBehaviour {
     float fillAmount;
     Image icon;
     RectTransform m_RectTransform;
+    public bool followArtificialBorder;
     public float artificalBorder = 100;
 
     // Use this for initialization
     void Start () {
-
+        followArtificialBorder = false;
         fillAmount = 0;
 
         m_RectTransform = GetComponent<RectTransform>();
@@ -32,9 +33,19 @@ public class selectionBarAnimation : MonoBehaviour {
     }
     public void updatePosition(Vector2 vec) {
         // Debug.Log(vec);
-        if (vec.x < artificalBorder) {
-            vec.x = artificalBorder;
+        if (followArtificialBorder)
+        {
+            if (vec.x < artificalBorder)
+            {
+                vec.x = artificalBorder;
+            }
         }
+        else
+        {
+            vec.x += 5;
+        }
+
+
         m_RectTransform.anchoredPosition = vec;
 
     }

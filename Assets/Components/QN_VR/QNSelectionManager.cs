@@ -282,10 +282,14 @@ public class QNSelectionManager : MonoBehaviour {
                     string lastAnswer = lastHitButton.activateNextQuestions(out temp);
                     string newLine = "";
 
-                    newLine += "At Time:,"+Time.time.ToString()+',';
+                    farlab_logger.Instance.EnqueEventLog(currentActiveQustion.question + " => " + lastHitButton.englAnswer);
+
+
+                    newLine += "At Time:," + Time.time.ToString() + ',';
                     newLine += "Question,"+currentActiveQustion.question + ',';
                     newLine += "Answer," + lastHitButton.englAnswer;
                     sw.WriteLine(newLine);
+
                     outputString += lastAnswer;
                     foreach (int i in temp) {
                         ToDoQueue.Enqueue(allCurrentQuestions[i]);

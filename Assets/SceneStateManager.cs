@@ -45,7 +45,7 @@ public class SceneStateManager : NetworkManager {
     private ActionState localActionState = ActionState.PREDRIVE;
     public ServerState serverState = ServerState.NONE;
     private uint myID = 0;
-
+    public int ParticipantNumber;
 
     public uint MyID { get { return myID; } }
     public static SceneStateManager Instance { get { return _instance; } }
@@ -56,7 +56,7 @@ public class SceneStateManager : NetworkManager {
 
     private Dictionary<NetworkConnection, RemoteClientState> activeConnectedIds = new Dictionary<NetworkConnection, RemoteClientState>();
     public string serverIP;
-
+    
     public static float spawnHeight = 1;
     public static float slowDownSpeed = 10f;
 
@@ -154,6 +154,7 @@ public class SceneStateManager : NetworkManager {
     private void loadNextCondition(string sc) {
         ClientsThatReportedReady.Clear();
         ServerChangeScene(sc);
+        farlab_logger.Instance.EnqueEventLog("Loading next Condition =>"+sc);
         serverState = ServerState.LOADING;
     }
     public override void OnServerSceneChanged(string sceneName) {
@@ -287,24 +288,26 @@ public class SceneStateManager : NetworkManager {
         // manager.networkAddress = ip;
         // myID = playerID;
         //HARDCODED OVERWRITE
+        ParticipantNumber = (int)playerID;
         manager.networkAddress = "192.168.0.100";
         myID = 1;
         client_ = manager.StartClient();
         myState = ClientState.CLIENT;
         serverState = ServerState.NONE;
         //LocalCamera.SetActive(false);
-
+        farlab_logger.Instance.EnqueEventLog("Starting as Client with participant number = " + ParticipantNumber.ToString());
 
     }
     public void HostServer(uint playerID, bool useVROrNot) {
         // useVR = useVROrNot;
+        ParticipantNumber = (int)playerID;
         serverIP = "127.0.0.1";
-        myID = playerID;///HARDCODED OVERWRITE
+       // myID = playerID;///HARDCODED OVERWRITE
         myID = 0;
         client_ = manager.StartHost();
         myState = ClientState.HOST;
         serverState = ServerState.WAITING;
-
+        farlab_logger.Instance.EnqueEventLog("Starting as Host with participant number = " + ParticipantNumber.ToString());
 
     }
     void activatehandSending(NetworkClient cl) {
@@ -457,13 +460,15 @@ public class SceneStateManager : NetworkManager {
         msg.actionState = localActionState;
         msg.time = Time.timeScale;
         messageQueue.Enqueue(msg);
-        
+        farlab_logger.Instance.EnqueEventLog(localActionState.ToString());
+
 
     }
     public void SetPreDriving() {
         //TODO maybe contact the server;
         localActionState = ActionState.PREDRIVE;
         ReportCurrentState();
+        
     }
 
     public void SetReady() {
