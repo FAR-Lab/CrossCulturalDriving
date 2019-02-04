@@ -42,8 +42,8 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     private bool ActualLightOn;
     private bool LeftIsActuallyOn;
     private bool RightIsActuallyOn;
-
-
+    public bool LeftIndicatorLog { get { return LeftIsActuallyOn; } }
+    public bool RightIndicatorLog { get { return RightIsActuallyOn; } }
     public float indicaterTimer;
     public float interval;
     public int indicaterStage;
@@ -83,11 +83,26 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     void startBlinking(bool left) {
         indicaterStage = 1;
         if (left) {
-            LeftIsActuallyOn = true;
-            RightIsActuallyOn = false;
+            if (!LeftIsActuallyOn)
+            {
+                LeftIsActuallyOn = true;
+                RightIsActuallyOn = false;
+            }
+            else
+            {
+                LeftIsActuallyOn = false;
+                RightIsActuallyOn = false;
+            }
         } else {
-            LeftIsActuallyOn = false;
-            RightIsActuallyOn = true;
+            if (!RightIsActuallyOn)
+            {
+                LeftIsActuallyOn = false;
+                RightIsActuallyOn = true;
+            }else{
+                LeftIsActuallyOn = false;
+                RightIsActuallyOn = false;
+            }
+
         }
 
     }

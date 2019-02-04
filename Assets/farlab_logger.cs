@@ -215,6 +215,10 @@ public class farlab_logger : MonoBehaviour {
             LogVariable vely = new LogVariable("D1", "Car VelocityY", delegate () { return player != null ? player.transform.GetComponent<Rigidbody>().velocity.y.ToString("F4") : " "; });
             LogVariable velz = new LogVariable("D1", "Car VelocityZ", delegate () { return player != null ? player.transform.GetComponent<Rigidbody>().velocity.z.ToString("F4") : " "; });
 
+            LogVariable LeftIndicator = new LogVariable("D1", "Left Indicator", delegate () { return (player != null && player.GetComponent<VehicleInputControllerNetworked>().LeftIndicatorLog) ? "ON" : "OFF"; });
+            LogVariable RightIndicator = new LogVariable("D1", "Right Indicator", delegate () { return (player != null && player.GetComponent<VehicleInputControllerNetworked>().RightIndicatorLog) ? "ON" : "OFF"; });
+
+
 
 
             LogVariable spx = new LogVariable("D1", "Car PositionX", delegate () { return player != null ? player.transform.position.x.ToString("F4") : " "; });
