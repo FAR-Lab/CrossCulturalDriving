@@ -14,7 +14,7 @@ public class farlab_logger : MonoBehaviour {
     private RemoteHandManager localHandManager;
     private MaleAvatarController localPedestrian;
     private Queue<string> EventLog= new Queue<string>();
-
+    private int epoch=0;
     public static char sep = ';'; //Separator for data values.
 
     /**The LogVariable class is a blueprint for the variable to be logged.
@@ -208,24 +208,35 @@ public class farlab_logger : MonoBehaviour {
         localPedestrian = FindObjectOfType<MaleAvatarController>();
         if (enabled) {
 
-            LogVariable LeftHand = new LogVariable("D1", "LeftVectorhand", delegate () { return (localHandManager != null && localHandManager.leftHandTracking) ? Convert.ToBase64String( localHandManager.lastSendLeftHand) : " "; });
-            LogVariable RightHand = new LogVariable("D1", "RightVectorhand", delegate () { return (localHandManager != null && localHandManager.rightHandTracking) ? Convert.ToBase64String(localHandManager.lastSendRightHand) : " "; });
+            LogVariable LeftHand = new LogVariable("D1", "Left Vectorhand", delegate () { return (localHandManager != null && localHandManager.leftHandTracking) ? Convert.ToBase64String( localHandManager.lastSendLeftHand) : " "; });
+            LogVariable RightHand = new LogVariable("D1", "Right Vectorhand", delegate () { return (localHandManager != null && localHandManager.rightHandTracking) ? Convert.ToBase64String(localHandManager.lastSendRightHand) : " "; });
 
-            LogVariable vel = new LogVariable("D1", "Velocity", delegate () { return player != null ? player.transform.GetComponent<Rigidbody>().velocity.ToString() : " "; });
-            LogVariable sp = new LogVariable("D1", "Position", delegate () { return player != null ? player.transform.position.ToString("F4") : " "; });
-            LogVariable dist = new LogVariable("D1", "Rotation", delegate () { return player != null ? player.transform.rotation.eulerAngles.ToString("F4") : " "; });
-           
+            LogVariable velx = new LogVariable("D1", "Car VelocityX", delegate () { return player != null ? player.transform.GetComponent<Rigidbody>().velocity.x.ToString("F4") : " "; });
+            LogVariable vely = new LogVariable("D1", "Car VelocityY", delegate () { return player != null ? player.transform.GetComponent<Rigidbody>().velocity.y.ToString("F4") : " "; });
+            LogVariable velz = new LogVariable("D1", "Car VelocityZ", delegate () { return player != null ? player.transform.GetComponent<Rigidbody>().velocity.z.ToString("F4") : " "; });
+
+
+
+            LogVariable spx = new LogVariable("D1", "Car PositionX", delegate () { return player != null ? player.transform.position.x.ToString("F4") : " "; });
+            LogVariable spy = new LogVariable("D1", "Car PositionY", delegate () { return player != null ? player.transform.position.y.ToString("F4") : " "; });
+            LogVariable spz = new LogVariable("D1", "Car PositionZ", delegate () { return player != null ? player.transform.position.z.ToString("F4") : " "; });
+            LogVariable Rotx = new LogVariable("D1", "Car RotationX", delegate () { return player != null ? player.transform.rotation.eulerAngles.x.ToString("F4") : " "; });
+            LogVariable Roty = new LogVariable("D1", "Car RotationY", delegate () { return player != null ? player.transform.rotation.eulerAngles.y.ToString("F4") : " "; });
+            LogVariable Rotz = new LogVariable("D1", "Car RotationZ", delegate () { return player != null ? player.transform.rotation.eulerAngles.z.ToString("F4") : " "; });
             //Pedestrian Location
             //Head location
             //VectorHandDump
-            LogVariable pos = new LogVariable("D1", "ActionState", delegate () { return SceneStateManager.Instance.ActionState.ToString(); });
-            LogVariable timeScale = new LogVariable("D1", "timeScale", delegate () { return Time.timeScale.ToString("F4"); });
-            LogVariable inputSteering = new LogVariable("D1", "Steering", delegate () { return player != null ? player.GetComponent<SteeringWheelInputController>().GetSteerInput().ToString("F4") : " "; });
-            LogVariable inputAccelBrk = new LogVariable("D1", "AccelBrk", delegate () { return player != null ? player.GetComponent<SteeringWheelInputController>().GetAccelInput().ToString("F4") : " "; });
+            LogVariable pos = new LogVariable("D1", "Action State", delegate () { return SceneStateManager.Instance.ActionState.ToString(); });
+            LogVariable timeScale = new LogVariable("D1", "Time Scale", delegate () { return Time.timeScale.ToString("F4"); });
+            LogVariable inputSteering = new LogVariable("D1", "Car Steering", delegate () { return player != null ? player.GetComponent<SteeringWheelInputController>().GetSteerInput().ToString("F4") : " "; });
+            LogVariable inputAccelBrk = new LogVariable("D1", "Car AccelBrk", delegate () { return player != null ? player.GetComponent<SteeringWheelInputController>().GetAccelInput().ToString("F4") : " "; });
 
-
-             LogVariable HeadPos = new LogVariable("D1", "HeadPosition", delegate () { return localHandManager != null ? localHandManager.lastSendHeadPos.ToString("F4") : " "; });
-            LogVariable HeadRot = new LogVariable("D1", "HeadRot", delegate () { return localHandManager != null ? localHandManager.lastSendHeadRot.eulerAngles.ToString("F4") : " "; });
+            LogVariable HeadPosX = new LogVariable("D1", "Head PositionX", delegate () { return localHandManager != null ? localHandManager.lastSendHeadPos.x.ToString("F4") : " "; });
+            LogVariable HeadPosY = new LogVariable("D1", "Head PositionY", delegate () { return localHandManager != null ? localHandManager.lastSendHeadPos.y.ToString("F4") : " "; });
+            LogVariable HeadPosZ = new LogVariable("D1", "Head PositionZ", delegate () { return localHandManager != null ? localHandManager.lastSendHeadPos.z.ToString("F4") : " "; });
+            LogVariable HeadRotX = new LogVariable("D1", "Head RotationX", delegate () { return localHandManager != null ? localHandManager.lastSendHeadRot.eulerAngles.x.ToString("F4") : " "; });
+            LogVariable HeadRotY = new LogVariable("D1", "Head RotationY", delegate () { return localHandManager != null ? localHandManager.lastSendHeadRot.eulerAngles.y.ToString("F4") : " "; });
+            LogVariable HeadRotZ = new LogVariable("D1", "Head RotationZ", delegate () { return localHandManager != null ? localHandManager.lastSendHeadRot.eulerAngles.z.ToString("F4") : " "; });
 
 
             LogVariable PedestrianPosition = new LogVariable("D1", "Pedestrian Pos", delegate () { return localPedestrian != null ? localPedestrian.transform.position.ToString("F4") : " "; });
@@ -233,8 +244,9 @@ public class farlab_logger : MonoBehaviour {
 
             LogVariable EventLogVar = new LogVariable("D1", "Event log", delegate () { return EventLog.Count >0 ? EventLog.Dequeue() : " "; });
 
-            LogVariable time = new LogVariable("U", "Time", delegate () { return Time.time.ToString("F4"); });
-            LogVariable frame = new LogVariable("U", "Frame", delegate () { return Time.frameCount.ToString(); });
+            LogVariable time = new LogVariable("U", "Game Time", delegate () { return Time.time.ToString("F4"); });
+            LogVariable realTime  = new LogVariable("U", "Real Time", delegate () { return epoch>0 ? epoch + Time.time.ToString("F4") : " "; });
+            LogVariable frame = new LogVariable("U", "Frame Number", delegate () { return Time.frameCount.ToString(); });
 
 
 
@@ -244,7 +256,7 @@ public class farlab_logger : MonoBehaviour {
     void Start() {
 
 
-        int epoch = (int)( System.DateTime.UtcNow - new System.DateTime(1970, 1, 1) ).TotalSeconds; //Epoch Time
+         epoch = (int)( System.DateTime.UtcNow - new System.DateTime(1970, 1, 1) ).TotalSeconds; //Epoch Time
 
         path = @"D:\Logs\" + epoch.ToString() + "-"; //Log file path
 
