@@ -40,10 +40,8 @@ public class SteeringWheelInputController : MonoBehaviour {
 
     private GUIStyle debugStyle;
 
-    private int wheelIndex = 0;
-    private int pedalIndex = 1;
+    private int wheelIndex = -1;
 
-    private int masterIndex = 2;
 
     public float FFBGain = 1f;
     public bool Running { get { return running; } }
@@ -62,9 +60,11 @@ public class SteeringWheelInputController : MonoBehaviour {
         }
 
         DirectInputWrapper.Init();
-
-        wheelIndex = 0;
-
+        wheelIndex = getSpecificInputDevice("Logitech");
+        if (wheelIndex == -1)
+        {
+            Debug.LogError("CouldNotFindReqestedSteeringWheel");
+        }
         minBrake = 1;
         maxBrake = -1;
         minGas = -1;
@@ -83,6 +83,29 @@ public class SteeringWheelInputController : MonoBehaviour {
         InitSpringForce(0, 0);
     }
 
+    int getSpecificInputDevice(string wheelName)
+    {
+        int returnVal = -1;
+
+        for (int i = 0; i < DirectInputWrapper.DevicesCount(); i++)
+        {
+            if (DirectInputWrapper.GetProductNameManaged(i).Contains(wheelName))
+            {
+                Debug.Log("We got the inputControllwer with"+ wheelName + " in the name!");
+
+                returnVal = i;
+                break;
+            }
+            else
+            {
+                Debug.Log("Number" + i + "is not fanatec, moving on");
+            }
+        }
+
+
+        return returnVal;
+
+    }
     public void Init() {
         forceFeedbackPlaying = true;
     }
