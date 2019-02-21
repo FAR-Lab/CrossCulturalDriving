@@ -400,7 +400,7 @@ public class QNSelectionManager : MonoBehaviour {
                 int id = 0;
                 int.TryParse(elems[0].TrimStart('/'), out id);
                 lastSet.id = id;
-                lastSet.question = elems[1];
+                lastSet.question = elems[1].Split('(')[0];
                 if (elems[1].Contains("(")) {
                     int beginCharacter = elems[1].IndexOf('(');
                     int endCharacter = elems[1].IndexOf(')');
