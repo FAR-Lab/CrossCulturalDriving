@@ -288,7 +288,7 @@ public class QNSelectionManager : MonoBehaviour {
                     string lastAnswer = lastHitButton.activateNextQuestions(out temp);
                     string newLine = "";
 
-                    farlab_logger.Instance.EnqueEventLog(currentActiveQustion.question + " => " + lastHitButton.englAnswer);
+                    farlab_logger.Instance.EnqueEventLog("QN: "+currentActiveQustion.question + " => " + lastHitButton.englAnswer);
 
 
                     newLine += "At Time:," + Time.time.ToString() + ',';
