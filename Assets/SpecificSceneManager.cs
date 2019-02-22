@@ -51,7 +51,7 @@ public class SpecificSceneManager : MonoBehaviour {
         }
         if (lerpAdaption < 1) {
             lerpAdaption += Time.deltaTime * SceneStateManager.slowDownSpeed;
-            Debug.Log("slowing DownTime at " + lerpAdaption);
+            //Debug.Log("slowing DownTime at " + lerpAdaption);
             Time.timeScale = Mathf.Lerp(1, SceneStateManager.slowTargetTime, lerpAdaption);
         } else if (lerpAdaption >= 1 && lerpAdaption < 2) {
             lerpAdaption = 2;

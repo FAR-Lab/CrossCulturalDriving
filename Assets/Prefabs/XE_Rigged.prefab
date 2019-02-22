@@ -5037,7 +5037,7 @@ MonoBehaviour:
     steering: 0
     brakeBias: 0.5
   cameraPosition: {fileID: 0}
-  maxMotorTorque: 450
+  maxMotorTorque: 250
   maxBrakeTorque: 3000
   maxSteeringAngle: 45
   minRPM: 800
@@ -5067,8 +5067,8 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.105741754
-      value: 0.6593044
+      time: 0.16414477
+      value: 0.66326404
       inSlope: 1.152573
       outSlope: 1.2196704
       tangentMode: 1
@@ -7835,7 +7835,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1059675908994232}
   m_LocalRotation: {x: 0.00000006721434, y: -0.000000046021956, z: 0.56496143, w: 0.8251173}
-  m_LocalPosition: {x: 0.5798282, y: 0.20363088, z: 0.37843043}
+  m_LocalPosition: {x: 0.374, y: 0.232, z: 0.378}
   m_LocalScale: {x: 8.940099, y: 8.940099, z: 8.940099}
   m_Children:
   - {fileID: 4947273423364598}
@@ -11312,7 +11312,10 @@ MonoBehaviour:
   rightImage: {fileID: 21300000, guid: 809fa677957ff4eac87d28289cc550b7, type: 3}
   StopImage: {fileID: 21300000, guid: edc4ee3cfb87cc442a85715419084618, type: 3}
   HurryImage: {fileID: 21300000, guid: ec0ff70dee90f77438226139db8307b5, type: 3}
+  HurryImageEnglish: {fileID: 21300000, guid: 99d312f90b4454e4d85b7c6855b6d96d, type: 3}
+  StopImageEnglish: {fileID: 21300000, guid: bf031e4eabc365e4aa5a1e9d82953353, type: 3}
   gpsImagePlane: {fileID: 114840421943118454}
+  AltLanguge: 0
   defaultDirection: 0
 --- !u!114 &114661234780043396
 MonoBehaviour:

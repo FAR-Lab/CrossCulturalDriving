@@ -14,7 +14,7 @@ public class QNSelectionManager : MonoBehaviour {
 
     Text QustionField;
     public bool overWrtieFinishedDebug = false;
-
+    public bool ExtraQNOutput = false;
     private bool Questionloaded = false;
     public bool running;
     public bool useAltLanguage;
@@ -121,8 +121,11 @@ public class QNSelectionManager : MonoBehaviour {
             running = true;
             Questionloaded = false;
             outputString = "";
-            sw = new StreamWriter(@"D:\Logs\ID_" + SceneStateManager.Instance.MyID.ToString()+" Con_"+Condition + " at_" + epoch.ToString() + ".txt");
-            sw.WriteLine("Initated at inGameTime:"+Time.time+"\t With condition: "+Condition+"\t participantID: "+SceneStateManager.Instance.MyID);
+            if (ExtraQNOutput)
+            {
+                sw = new StreamWriter(@"D:\Logs\ID_" + SceneStateManager.Instance.MyID.ToString() + " Con_" + Condition + " at_" + epoch.ToString() + ".txt");
+                sw.WriteLine("Initated at inGameTime:" + Time.time + "\t With condition: " + Condition + "\t participantID: " + SceneStateManager.Instance.MyID);
+            }
         }
     }
 
@@ -145,7 +148,10 @@ public class QNSelectionManager : MonoBehaviour {
 
                 if (ToDolist.Count <= 0) {
                     Debug.Log("We are done here continue to the next conditon and stop displaying the questioniar.");
-                    sw.Flush();
+                    if (ExtraQNOutput)
+                    {
+                        sw.Flush();
+                    }
                   
                     Debug.Log(outputString); //TODO: DATALOGGER
                     if (SceneStateManager.Instance != null) {
@@ -286,10 +292,12 @@ public class QNSelectionManager : MonoBehaviour {
 
 
                     newLine += "At Time:," + Time.time.ToString() + ',';
-                    newLine += "Question,"+currentActiveQustion.question + ',';
+                    newLine += "Question," + currentActiveQustion.question + ',';
                     newLine += "Answer," + lastHitButton.englAnswer;
-                    sw.WriteLine(newLine);
-
+                    if (ExtraQNOutput)
+                    {
+                        sw.WriteLine(newLine);
+                    }
                     outputString += lastAnswer;
                     foreach (int i in temp) {
                         ToDoQueue.Enqueue(allCurrentQuestions[i]);
@@ -381,11 +389,8 @@ public class QNSelectionManager : MonoBehaviour {
         QandASet lastSet = new QandASet();
         lastSet.Answers = new List<OneAnswer>();
 
-        //TextAsset incomingText = Resources.Load<TextAsset>(path_ + ".txt");
-        //Debug.Log(incomingText.text);
-        //while (( line = reader.ReadLine() ) != null) {
         foreach (string line in asset.text.Split('\n')) {
-            //Debug.Log(line);
+           
             if (line.StartsWith("/")) {// new Question
 
                 if (!first) {
@@ -400,53 +405,54 @@ public class QNSelectionManager : MonoBehaviour {
                 int id = 0;
                 int.TryParse(elems[0].TrimStart('/'), out id);
                 lastSet.id = id;
-                lastSet.question = elems[1].Split('(')[0];
+                lastSet.question = ClearEmbedingCharacter(elems[1].Split('(')[0]);
                 if (elems[1].Contains("(")) {
                     int beginCharacter = elems[1].IndexOf('(');
                     int endCharacter = elems[1].IndexOf(')');
-                    // Debug.Log(beginCharacter + "and QUE also" + endCharacter);
+                    
                     if (beginCharacter != -1 && endCharacter != -1) {
-                        lastSet.question_DiffLang = elems[1].Substring(beginCharacter + 1, ( endCharacter ) - ( 1 + beginCharacter ));
-                        //Debug.Log(lastSet.question_DiffLang);
+                        lastSet.question_DiffLang = ClearEmbedingCharacter(elems[1].Substring(beginCharacter + 1, ( endCharacter ) - ( 1 + beginCharacter )));
+                       
                     } else {
-                        Debug.LogError("This should really not happen not finding a complete alt lang question");
+                        Debug.LogError("This should really not happen not finding a complete alt lang question i.e. missing closing braked");
                     }
                 }
             } else if (line.StartsWith("\t")) {// New Answer    
                 OneAnswer temp = new OneAnswer();
 
                 string[] elems = line.TrimStart('\t').Split('\t');
-                temp.Answer = elems[0];
+                string tempAnswer = elems[0];
+                if (tempAnswer.Contains("("))
+                {
+                    tempAnswer = ClearEmbedingCharacter(tempAnswer.Split('(')[0]);
+                }
+                temp.Answer = tempAnswer;
                 string[] PotentialFolllowIDs = elems[elems.Length - 1].Split(',');
                 temp.NextQuestionsIDs = new List<int>();
                 foreach (string s in PotentialFolllowIDs) {
                     if (s.StartsWith("/")) {
                         int candidate;
-                        if (int.TryParse(s.TrimStart('/'), out candidate)) {
+                        string temporary = ClearEmbedingCharacter(s.TrimStart('/'));
+                        if (temporary.Contains("("))
+                        {
+                            temporary = temporary.Split(' ')[0];
+                        }
+                        Debug.Log(temporary);
+                        if (int.TryParse(temporary, out candidate)) {
                             temp.NextQuestionsIDs.Add(candidate);
                         }
                     }
                     if (s.Contains("(")) {
-
-
-                        //Debug.Log("---");
-                   
-
-                        //Debug.Log(s);
                         int beginCharacter = s.IndexOf('(');
                         int endCharacter = s.IndexOf(')');
                         if (beginCharacter != -1 && endCharacter != -1) {
-                            temp.Answer_DiffLang = s.Substring(beginCharacter + 1, ( endCharacter ) - ( beginCharacter + 1 ));
-                            //Debug.Log(temp.Answer_DiffLang);
+                            temp.Answer_DiffLang = ClearEmbedingCharacter(s.Substring(beginCharacter + 1, ( endCharacter ) - ( beginCharacter + 1 )));
+                           
                         } else {
-                            //Debug.Log(temp.Answer);
-
-                            //Debug.Log("------");
-                            //Debug.Log(s);
-                            //Debug.Log("------");
+                           
                             Debug.LogError("This should really not happen not finding a complete alt lang Answer");
                         }
-                        // Debug.Log(beginCharacter + "and ANS also" + endCharacter);
+                        
 
                     }
                 }
@@ -464,9 +470,13 @@ public class QNSelectionManager : MonoBehaviour {
         return output;
     }
     private void OnDisable() {
-        if (sw != null) {
-            sw.Flush();
+        if (ExtraQNOutput)
+        {
+            if (sw != null)
+            {
+                sw.Flush();
                 sw.Close();
+            }
         }
     }
 
@@ -485,6 +495,13 @@ public class QNSelectionManager : MonoBehaviour {
         output = output.Replace('\u202B'+"", "");// and replacing the various Left to right  and Right to left embedings 
         output = output.Replace('\u200A'+"", "");
 
+        return output;
+    }
+    public static string ClearEmbedingCharacter(string s)
+    {
+        string output = s.Replace('\u202C' + "", ""); // removing the pop orientation character
+        output = output.Replace('\u202B' + "", "");// and replacing the various Left to right  and Right to left embedings 
+        output = output.Replace('\u200A' + "", "");
         return output;
     }
 }

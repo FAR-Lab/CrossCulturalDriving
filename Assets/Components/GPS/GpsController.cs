@@ -9,8 +9,9 @@ public class GpsController : MonoBehaviour {
 
     public Sprite straightImage, leftImage, rightImage, StopImage, HurryImage;
 
+    public Sprite HurryImageEnglish, StopImageEnglish;
     public Image gpsImagePlane;
-
+    public bool AltLanguge = false;
     public Direction defaultDirection;
 
     // Use this for initialization
@@ -32,9 +33,23 @@ public class GpsController : MonoBehaviour {
             case Direction.Right:
                 return rightImage;
             case Direction.Stop:
-                return StopImage;
+                if (AltLanguge)
+                {
+                    return StopImage;
+                }
+                else
+                {
+                    return StopImageEnglish;
+                }
             case Direction.Hurry:
-                return HurryImage;
+                if (AltLanguge)
+                {
+                    return HurryImage;
+                }
+                else
+                {
+                    return HurryImageEnglish;
+                }
             default:
                 return null;
         }

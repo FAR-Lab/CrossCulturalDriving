@@ -261,9 +261,9 @@ public class farlab_logger : MonoBehaviour {
 
 
          epoch = (int)( System.DateTime.UtcNow - new System.DateTime(1970, 1, 1) ).TotalSeconds; //Epoch Time
-
-        path = @"D:\Logs\" + epoch.ToString() + "-"; //Log file path
-
+        DateTime Now = System.DateTime.Now;
+        path = @"D:\Logs\" + Now.Year.ToString() +"-"+Now.Month.ToString() + "-"+Now.Day.ToString() + "-"+Now.Hour.ToString() + "-"+Now.Minute.ToString() + "-"+Now.Second.ToString() + "-"; //Log file path
+        //path = @"D:\Logs\" + epoch.toString()+"-";
         //path_trig = @"C:\Users\Public\Documents\Unity Projects\Roll a Ball\Roll a Ball\Logs\" + epoch.ToString() + "trig.txt"; //Log file of triggers path;
 
         //port = 23456;
