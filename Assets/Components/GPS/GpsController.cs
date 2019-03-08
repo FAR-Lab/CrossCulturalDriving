@@ -5,26 +5,35 @@ using UnityEngine.UI;
 
 public class GpsController : MonoBehaviour {
 
-    public enum Direction { Straight, Left, Right, Stop, Hurry ,None };
+    public enum Direction { Straight, Left, Right, Stop, Hurry ,Loading,None };
 
-    public Sprite straightImage, leftImage, rightImage, StopImage, HurryImage;
+    public Sprite straightImage, leftImage, rightImage, StopImage, HurryImage, LoadingImage;
+    AudioSource GpsAudioPlayer;
 
-    public Sprite HurryImageEnglish, StopImageEnglish;
+    public Sprite HurryImageEnglish, StopImageEnglish, LoadingImageEnglish;
     public Image gpsImagePlane;
-    public bool AltLanguge = false;
+    public bool AltLanguge = false; // should get this from the scene maager
     public Direction defaultDirection;
 
     // Use this for initialization
     void Start() {
         gpsImagePlane.sprite = spriteForDirection(defaultDirection);
+       
     }
 
     // Update is called once per frame
     void Update() {
-
+        if (GpsAudioPlayer == null)
+        {
+            GpsAudioPlayer = GetComponent<AudioSource>();
+        }
     }
 
     Sprite spriteForDirection(Direction d) {
+        if (GpsAudioPlayer != null)
+        {
+            GpsAudioPlayer.Play();
+        }
         switch (d) {
             case Direction.Straight:
                 return straightImage;

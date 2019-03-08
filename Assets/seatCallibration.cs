@@ -46,9 +46,16 @@ public class seatCallibration : MonoBehaviour
     Vector3 gpsOffsest = new Vector3(0, 0, 0);
     void Start()
     {
-        
-        OriginalPosition = transform.position;
-       
+    OriginalPosition = transform.position;
+
+        if(SceneStateManager.Instance.CallibratedValuesAvalible){
+            transform.localPosition = SceneStateManager.Instance.CallibratedLocalCameraPosition;
+            transform.localRotation = SceneStateManager.Instance.CallibratedLocalCameraRotation;
+            callibrationState = 5;
+        }
+
+
+
     }
     public void findHands()
     {
@@ -105,22 +112,32 @@ public class seatCallibration : MonoBehaviour
     {
         GUIStyle gs = new GUIStyle();
         gs.fontSize = 30;
+        gs.normal.textColor = Color.white;
         string displayString;
         switch (callibrationState) {
             default:
             case 0:
                 displayString = "NotRunYet";
+                gs.normal.textColor = Color.red;
                 break;
             case 1:
                 displayString = "First Step Done";
+                gs.normal.textColor = Color.white;
                 break;
             case 2:
                 displayString = "Callibrating! HOLD STILL!"+ (callibrationTimer).ToString("F1");
+                gs.normal.textColor = Color.red;
                 break;
             case 3:
+            case 4:
                 displayString = "Callibration DONE!";
+                gs.normal.textColor = Color.black;
                 break;
-        
+            case 5:
+                displayString = "Callibration Loaded!";
+                gs.normal.textColor = Color.black;
+                break;
+
         }
 
         GUI.Label(new Rect(610, 10, 600, 300), displayString, gs);
@@ -157,8 +174,10 @@ public class seatCallibration : MonoBehaviour
 
                 }
 
-                if (callibrationState == 1) {
-                    if (setUp) {
+                if (callibrationState == 1)
+                {
+                    if (setUp)
+                    {
                         callibrationTimer = 0;
                     }
                     transform.position = OriginalPosition;
@@ -168,29 +187,35 @@ public class seatCallibration : MonoBehaviour
                     // if (x != null) {
                     //Quaternion rotation = Quaternion.(.eulerAngles, headPose.parent.transform.forward); ;
                     Quaternion rotation = Quaternion.FromToRotation(cam.forward, transform.parent.forward);
-                   // Debug.Log("XR reported rotation"+InputTracking.GetLocalRotation(XRNode.Head).eulerAngles);
+                    // Debug.Log("XR reported rotation"+InputTracking.GetLocalRotation(XRNode.Head).eulerAngles);
                     //Debug.Log("Self reported" + cam.rotation.eulerAngles);
 
                     Debug.Log("Correction Rotation: " + rotation.eulerAngles.y);
                     transform.RotateAround(cam.position, transform.up, rotation.eulerAngles.y);
-                        //transform.Rotate(new Vector3(0, rotation.eulerAngles.y, 0));
-                        //headPose.parent.transform.rotation = transform.parent.rotation;
-                        // transform.rotation = transform.parent.rotation;
-                        // }
+                    //transform.Rotate(new Vector3(0, rotation.eulerAngles.y, 0));
+                    //headPose.parent.transform.rotation = transform.parent.rotation;
+                    // transform.rotation = transform.parent.rotation;
+                    // }
 
-                } else if (callibrationState == 2) {
-                    if (handTrackin) {
-                        if (setUp) {
+                }
+                else if (callibrationState == 2)
+                {
+                    if (handTrackin)
+                    {
+                        if (setUp)
+                        {
                             callibrationTimer = 10;
 
                         }
-                        if (HandModelL.IsTracked && HandModelR.IsTracked) {
+                        if (HandModelL.IsTracked && HandModelR.IsTracked)
+                        {
                             Vector3 A = HandModelL.GetLeapHand().PalmPosition.ToVector3();
                             Vector3 B = HandModelR.GetLeapHand().PalmPosition.ToVector3();
                             Vector3 AtoB = B - A;
                             Debug.DrawLine(A, B);
-                            if (steeringWheelCenter != null) {
-                                Vector3 transformDifference = ( A + ( AtoB * 0.5f ) ) - handCenterPosition;
+                            if (steeringWheelCenter != null)
+                            {
+                                Vector3 transformDifference = (A + (AtoB * 0.5f)) - handCenterPosition;
                                 Debug.DrawLine(transform.position, handCenterPosition);
                                 offset = transformDifference;
                                 transform.position -= transformDifference;
@@ -202,13 +227,31 @@ public class seatCallibration : MonoBehaviour
 
                             }
 
-                        } else {
+                        }
+                        else
+                        {
                             callibrationTimer += Time.deltaTime;
                         }
                     }
 
 
-                } else {
+                }
+                else if (callibrationState == 3)
+                {
+                    SceneStateManager.Instance.CallibratedValuesAvalible = true;
+                    SceneStateManager.Instance.CallibratedLocalCameraPosition = transform.localPosition;
+                    SceneStateManager.Instance.CallibratedLocalCameraRotation = transform.localRotation;
+                    
+                }
+                else if (callibrationState == 4)
+                {
+                    callibrating = false;
+                    callibrationTimer = 0;
+                    callibrationState = 4;
+
+                }
+                else
+                {
                     callibrationTimer = 0;
                     callibrating = false;
                     callibrationState = 0;

@@ -73,8 +73,9 @@ public class SceneStateManager : NetworkManager {
     private bool showControlPanel;
 
     //private bool useVR = false;
-
-
+    public bool CallibratedValuesAvalible;
+    public Vector3 CallibratedLocalCameraPosition;
+    public Quaternion CallibratedLocalCameraRotation;
     private void Awake() {
         if (_instance != null && _instance != this) {
             Destroy(this.gameObject);
