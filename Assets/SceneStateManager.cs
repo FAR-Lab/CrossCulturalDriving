@@ -129,7 +129,11 @@ public class SceneStateManager : NetworkManager {
             if (myState == ClientState.HOST) {
 
                 GUI.Label(new Rect(25, 0, 150, 25), "Cl. Conn: " + activeConnectedIds.Count + "Cl. Ready: " + ClientsThatReportedReady.Count);
-
+                if (GUI.Button(new Rect(25,  25, boxWidth, boxHeight),"Lobby"))
+                {
+                    loadNextCondition("Lobby");
+                }
+               
                 for (int i = 0; i < SceneConditions.Length; i++) {
                     if (GUI.Button(new Rect(25, 100 + i * boxHeight, boxWidth, boxHeight), SceneConditions[i].SceneName)) {
                         loadNextCondition(SceneConditions[i]);
@@ -139,7 +143,7 @@ public class SceneStateManager : NetworkManager {
                 foreach (RemoteClientState stat in activeConnectedIds.Values) {
                     GUI.Label(new Rect(x, 50, boxWidth, boxHeight), "Participant ID: " + stat.participantID, s);
                     GUI.Label(new Rect(x, 100, boxWidth, boxHeight), "state: " + stat.TheActionState.ToString(), s);
-                    GUI.Label(new Rect(x, 150, boxWidth, boxHeight), "TimeScale: " + stat.timeScale, s);
+                    //GUI.Label(new Rect(x, 150, boxWidth, boxHeight), "TimeScale: " + stat.timeScale, s);
                     x += boxWidth;
                 }
             }

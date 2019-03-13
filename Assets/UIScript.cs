@@ -26,12 +26,12 @@ public class UIScript : MonoBehaviour {
             connectedUI.gameObject.SetActive(false);
         }else if(SceneStateManager.Instance.MyState == ClientState.HOST){
             notRunningUI.gameObject.SetActive(false);
-            hostingUI.gameObject.SetActive(true);
+            hostingUI.gameObject.SetActive(false);// dirty fix should be true
             connectedUI.gameObject.SetActive(false);
         } else if (SceneStateManager.Instance.MyState == ClientState.CLIENT){
             notRunningUI.gameObject.SetActive(false);
             hostingUI.gameObject.SetActive(false);
-            connectedUI.gameObject.SetActive(true);
+            connectedUI.gameObject.SetActive(false);//  dirty fix should be true
         }
     }
     public void toggleVR(Toggle change)

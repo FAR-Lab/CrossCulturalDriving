@@ -278,7 +278,7 @@ public class QNSelectionManager : MonoBehaviour {
                     lastHitButton = null;
                     onTarget = false;
                     if (totalTime > 0) {
-                        totalTime -= Time.deltaTime * 2 * ( 1 / Time.timeScale );
+                        totalTime -= Time.deltaTime * 0.5f * ( 1 / Time.timeScale );
                     } else {
                         totalTime = 0;
                     }

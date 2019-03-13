@@ -24,7 +24,9 @@ public class ForceFeedback : MonoBehaviour
     public int damperAmount = 3000;
     float selfAlignmentTorque;
     private Rigidbody rb;
-
+    bool changedtoQuestionair = false;
+    float forcelerperQuestionair = -1;
+    ActionState previousACtionstate;
     void Start()
     {
         
@@ -67,7 +69,32 @@ public class ForceFeedback : MonoBehaviour
 
     void Update()
     {
-         selfAlignmentTorque = 0f;
+        if (previousACtionstate != ActionState.QUESTIONS && SceneStateManager.Instance.ActionState == ActionState.QUESTIONS)
+        {
+            changedtoQuestionair = false;
+            forcelerperQuestionair = 2;
+            previousACtionstate = SceneStateManager.Instance.ActionState;
+           
+        }
+        else
+        {
+            previousACtionstate = SceneStateManager.Instance.ActionState;
+        }
+
+        if (forcelerperQuestionair > 0)
+        {
+            forcelerperQuestionair -= (Time.deltaTime*(1 / Time.timeScale) );
+          
+            if (forcelerperQuestionair <= 0)
+            {
+
+                changedtoQuestionair = true;
+                forcelerperQuestionair = -1;
+            }
+        }
+
+
+            selfAlignmentTorque = 0f;
         foreach (var wheel in wheels) {
             if (wheel.isGrounded) {
                 WheelHit hit;
@@ -93,7 +120,7 @@ public class ForceFeedback : MonoBehaviour
         float forceFeedback = selfAlignmentTorque;
 
         //disable during autodrive mode
-        if (SceneStateManager.Instance !=null && SceneStateManager.Instance.ActionState!=ActionState.DRIVE)
+        if (SceneStateManager.Instance !=null && SceneStateManager.Instance.ActionState!=ActionState.DRIVE && SceneStateManager.Instance.ActionState != ActionState.QUESTIONS)
         {
             if (logi != null)
             {
@@ -107,13 +134,42 @@ public class ForceFeedback : MonoBehaviour
         {
             if (logi != null)
             {
-                logi.Init();
-                
-                logi.SetConstantForce((int)(forceFeedback * 10000f));
+
+                if (SceneStateManager.Instance.ActionState == ActionState.QUESTIONS && changedtoQuestionair)
+                {
+                    
+                    if (logi.GetSteerInput() > 0.025f)
+                    {
+                        logi.SetConstantForce((int)(0.25 * 10000f));
+
+                    }
+                    else if (logi.GetSteerInput() < -0.025f)
+                    {
+                        logi.SetConstantForce((int)(-0.25f * 10000f));
+                    }
+                    else
+                    {
+                        logi.SetConstantForce((int)(0));
+                    }
+
+                    
+                    logi.SetSpringForce(Mathf.RoundToInt(springSaturation * Mathf.Abs(0) * 10000f), Mathf.RoundToInt(springCoeff * 10000f));
+                    logi.SetDamperForce((int)damperAmount/2);
+
+
+                }
+                else
+                {
+                    logi.Init();
+
+                    logi.SetConstantForce((int)(forceFeedback * 10000f));
                     logi.SetSpringForce(Mathf.RoundToInt(springSaturation * Mathf.Abs(forceFeedback) * 10000f), Mathf.RoundToInt(springCoeff * 10000f));
                     logi.SetDamperForce(damperAmount);
+                }
                 
-               
+
+
+
             }
         }
 
