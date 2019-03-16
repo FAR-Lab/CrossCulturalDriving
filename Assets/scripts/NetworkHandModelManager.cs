@@ -91,7 +91,7 @@ namespace Leap.Unity
                     Debug.Log("This should not happen. I just added this!");
                     return;
                 }
-                if (localCopy[inData.Key].LHand.FrameId > PlayerModelInstances[inData.Key].FrameIdLeft)
+                if (localCopy[inData.Key].LHand != null  && localCopy[inData.Key].LHand.FrameId > PlayerModelInstances[inData.Key].FrameIdLeft)
                 {
                     PlayerModelInstances[inData.Key].HMBL.transform.gameObject.SetActive(true);
                     PlayerModelInstances[inData.Key].FrameIdLeft = localCopy[inData.Key].LHand.FrameId;
@@ -104,7 +104,7 @@ namespace Leap.Unity
                     PlayerModelInstances[inData.Key].HMBL.transform.gameObject.SetActive(false);
                 }
 
-                if (localCopy[inData.Key].RHand.FrameId > PlayerModelInstances[inData.Key].FrameIdRight)
+                if (localCopy[inData.Key].RHand != null &&  localCopy[inData.Key].RHand.FrameId > PlayerModelInstances[inData.Key].FrameIdRight)
                 {
                     PlayerModelInstances[inData.Key].HMBR.transform.gameObject.SetActive(true);
                     PlayerModelInstances[inData.Key].FrameIdRight = localCopy[inData.Key].RHand.FrameId;
