@@ -65,7 +65,7 @@ public class SceneStateManager : NetworkManager {
     [SerializeField]
     public SceneField[] SceneConditions;
 
-
+    public bool UseHebrewLanguage;
     NetworkClient client_;
     public NetworkClient ThisClient { get { return client_; } }
     GameObject LocalCamera;
@@ -287,12 +287,13 @@ public class SceneStateManager : NetworkManager {
         return output;
 
     }
-    public void ConnectToServerWith(string ip, uint playerID, bool useVROrNot) {
+    public void ConnectToServerWith(string ip, uint playerID, bool usehebrewLanguage_) {
         //useVR = useVROrNot;
         serverIP = ip;
         // manager.networkAddress = ip;
         // myID = playerID;
-        //HARDCODED OVERWRITE
+        //HARDCODED OVERWRITE //TODO
+        UseHebrewLanguage = usehebrewLanguage_;
         ParticipantNumber = (int)playerID;
         manager.networkAddress = "192.168.0.100";
         myID = 1;
@@ -303,11 +304,12 @@ public class SceneStateManager : NetworkManager {
         farlab_logger.Instance.EnqueEventLog("Starting as Client with participant number = " + ParticipantNumber.ToString());
 
     }
-    public void HostServer(uint playerID, bool useVROrNot) {
+    public void HostServer(uint playerID, bool usehebrewLanguage_) {
+        UseHebrewLanguage = usehebrewLanguage_;
         // useVR = useVROrNot;
         ParticipantNumber = (int)playerID;
         serverIP = "127.0.0.1";
-       // myID = playerID;///HARDCODED OVERWRITE
+        // myID = playerID;///HARDCODED OVERWRITE //TODO
         myID = 0;
         client_ = manager.StartHost();
         myState = ClientState.HOST;

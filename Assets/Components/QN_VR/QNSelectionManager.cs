@@ -17,7 +17,7 @@ public class QNSelectionManager : MonoBehaviour {
     public bool ExtraQNOutput = false;
     private bool Questionloaded = false;
     public bool running;
-    public bool useAltLanguage;
+    bool useAltLanguage;
     bool onTarget;
     rayCastButton lastHitButton;
     public float totalTime;
@@ -69,7 +69,7 @@ public class QNSelectionManager : MonoBehaviour {
     }
     // Use this for initialization
     void Start() {
-
+        useAltLanguage = SceneStateManager.Instance.UseHebrewLanguage;
         foreach (TextAsset s in QNFiles) {
             questionaries.Add(s.name, ReadString(s));
 

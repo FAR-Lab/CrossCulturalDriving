@@ -12,13 +12,13 @@ public class GpsController : MonoBehaviour {
 
     public Sprite HurryImageEnglish, StopImageEnglish, LoadingImageEnglish;
     public Image gpsImagePlane;
-    public bool AltLanguge = false; // should get this from the scene maager
+     bool AltLanguge = false; // should get this from the scene maager
     public Direction defaultDirection;
 
     // Use this for initialization
     void Start() {
         gpsImagePlane.sprite = spriteForDirection(defaultDirection);
-       
+        AltLanguge = SceneStateManager.Instance.UseHebrewLanguage;
     }
 
     // Update is called once per frame

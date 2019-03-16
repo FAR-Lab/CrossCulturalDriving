@@ -9,7 +9,7 @@ public class UIScript : MonoBehaviour {
     public Transform hostingUI;
     public Transform connectedUI;
 
-    bool useVROrNot = false;
+    public bool useHebrewLanguage = true;
     //public Transform serverIPField;
     //public Transform participatID;
     // Use this for initialization
@@ -36,7 +36,7 @@ public class UIScript : MonoBehaviour {
     }
     public void toggleVR(Toggle change)
     {
-        useVROrNot = change.isOn;
+        useHebrewLanguage = change.isOn;
     }
 
     public void HostTheServer(){
@@ -46,7 +46,7 @@ public class UIScript : MonoBehaviour {
             partiID = uint.Parse(id);
         }
         Debug.Log(partiID);
-        SceneStateManager.Instance.HostServer(partiID,useVROrNot);
+        SceneStateManager.Instance.HostServer(partiID, useHebrewLanguage);
         //
 
     }
@@ -66,7 +66,7 @@ public class UIScript : MonoBehaviour {
         }
 
 
-        SceneStateManager.Instance.ConnectToServerWith(ip, partiID, useVROrNot);
+        SceneStateManager.Instance.ConnectToServerWith(ip, partiID, useHebrewLanguage);
 
     }
     public void StartGame(){
