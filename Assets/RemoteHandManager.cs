@@ -309,7 +309,7 @@ public class RemoteHandManager : MonoBehaviour
     private void Update()
     {
 
-        if (SceneStateManager.Instance.ActionState == ActionState.DRIVE)
+        if (SceneStateManager.Instance.ActionState == ActionState.DRIVE|| SceneStateManager.Instance.ActionState == ActionState.PREDRIVE || SceneStateManager.Instance.ActionState == ActionState.READY || SceneStateManager.Instance.ActionState == ActionState.QUESTIONS|| SceneStateManager.Instance.ActionState == ActionState.POSTQUESTIONS)
         {
             sendRateCheckHead += Time.deltaTime;
             if (sendRateCheckHead > 0.033f)
@@ -334,7 +334,7 @@ public class RemoteHandManager : MonoBehaviour
                     };
 
                     SceneStateManager.Instance.ThisClient.SendByChannel(NetworkMessageType.uploadVRHead, msg, 3);
-                    // Debug.Log("Send a headPosition");
+                     Debug.Log("Send a headPosition");
                 }
             }
             else

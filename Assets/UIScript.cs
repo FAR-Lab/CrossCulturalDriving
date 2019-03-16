@@ -8,7 +8,7 @@ public class UIScript : MonoBehaviour {
     public Transform notRunningUI;
     public Transform hostingUI;
     public Transform connectedUI;
-
+    public Toggle TheLanguageToggle;
     public bool useHebrewLanguage = true;
     //public Transform serverIPField;
     //public Transform participatID;
@@ -19,7 +19,9 @@ public class UIScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(SceneStateManager.Instance.MyState==ClientState.NONE || SceneStateManager.Instance.MyState == ClientState.DISCONECTED)
+        useHebrewLanguage = TheLanguageToggle.isOn;
+        SceneStateManager.Instance.UseHebrewLanguage = useHebrewLanguage;
+        if (SceneStateManager.Instance.MyState==ClientState.NONE || SceneStateManager.Instance.MyState == ClientState.DISCONECTED)
         {
             notRunningUI.gameObject.SetActive(true);
             hostingUI.gameObject.SetActive(false);
@@ -34,11 +36,7 @@ public class UIScript : MonoBehaviour {
             connectedUI.gameObject.SetActive(false);//  dirty fix should be true
         }
     }
-    public void toggleVR(Toggle change)
-    {
-        useHebrewLanguage = change.isOn;
-    }
-
+   
     public void HostTheServer(){
        string id= GameObject.Find("ParticipantIDField").GetComponent<InputField>().text;
         uint partiID = 0;
