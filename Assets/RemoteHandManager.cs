@@ -42,14 +42,24 @@ public class RemoteHandManager : MonoBehaviour
         public int ID;
         public NetworkInstanceId netId;
     }
-    public Dictionary<int, Leap.Hand> networkHands = new Dictionary<int, Leap.Hand>();
-    public Dictionary<int, NetworkInstanceId> networkAssociationDict = new Dictionary<int, NetworkInstanceId>();
+    public class RemoteObjectSync
+    {
+        public Leap.Hand LHand;
+        public Leap.Hand RHand;
+        public Transform head;
+        public float HeadFrameId;
+    };
+    private Dictionary<NetworkInstanceId, RemoteObjectSync> RemoteSyncedObjectsDict = new Dictionary<NetworkInstanceId, RemoteObjectSync>();
+    public Dictionary<NetworkInstanceId, RemoteObjectSync> PubRemoteSyncedObjectsDict {
+        get {
+            return RemoteSyncedObjectsDict;
+        }
+    }
 
-    public Dictionary<int, Transform> heads = new Dictionary<int, Transform>();
+    //public Dictionary<int, NetworkInstanceId> networkAssociationDict = new Dictionary<int, NetworkInstanceId>();
+    //public Dictionary<int, Transform> heads = new Dictionary<int, Transform>();
     public NetworkClient handClient;
-    // public VectorHand_32 LeftVectorHand;
-    // public VectorHand_32 RightVectorHand;
-    //public event Action<Dictionary<int, Leap.Hand>> UpdateNetworkedHands;
+
     private float sendRateCheckHead;
     private float sendTimeLastHand;
     private long leftFrameID = 0;
@@ -110,7 +120,7 @@ public class RemoteHandManager : MonoBehaviour
 
         if (frame != null && (SceneStateManager.Instance.MyState == ClientState.CLIENT || SceneStateManager.Instance.MyState == ClientState.HOST))
         {
-            
+
             //Debug.Log(frame.Id);
             //Debug.Log(frame.Hands.Count);
             Leap.Hand leftHand = frame.Hands.Find(i => i.IsLeft == true);
@@ -209,57 +219,91 @@ public class RemoteHandManager : MonoBehaviour
     }
     public void ReciveOtherHands(NetworkMessage msg)
     {
+        
         HandMessage newHand = msg.ReadMessage<HandMessage>();
-        // Debug.Log("got a new remote hand");
+        if (NetworkInstanceId.Invalid == newHand.netID)
+        {
+            Debug.Log("Recevied Invalid NetId");
+            return;
+        }
+        if (!RemoteSyncedObjectsDict.ContainsKey(newHand.netID))
+        {
+            AddNewRemoteSyncedObjects(newHand.netID);
+        }
+        if (!RemoteSyncedObjectsDict.ContainsKey(newHand.netID))
+        {
+            return;
+        }
         VectorHand_32 vHand = new VectorHand_32();
         Leap.Hand result = new Leap.Hand();
         int offset = 0;
         vHand.ReadBytes(newHand.serializedHand, ref offset);
         vHand.Decode(result);
-        networkHands[newHand.id] = result;
-        networkHands[newHand.id].FrameId = newHand.frameID;
-        networkAssociationDict[newHand.id] = newHand.netID;
+        if (result.IsLeft)
+        {
+            RemoteSyncedObjectsDict[newHand.netID].LHand = result;
+            RemoteSyncedObjectsDict[newHand.netID].LHand.FrameId = newHand.frameID;
+        }
+        else
+        {
+            RemoteSyncedObjectsDict[newHand.netID].RHand = result;
+            RemoteSyncedObjectsDict[newHand.netID].RHand.FrameId = newHand.frameID;
+        }
         debugHand = result;
-
-
     }
     public void RecieveOtherVRHead(NetworkMessage msg)
     {
+
+        
         VRHeadMessage newHead = msg.ReadMessage<VRHeadMessage>();
-        // Debug.Log("Recieved a headPosition");
-        if (heads.ContainsKey(newHead.ID))
+        if (NetworkInstanceId.Invalid == newHead.netId)
         {
-            if (heads[newHead.ID] != null)
-            {
-                heads[newHead.ID].position = Vector3.Lerp(heads[newHead.ID].position, newHead.HeadPos, 0.5f);
-                heads[newHead.ID].rotation = Quaternion.Lerp(heads[newHead.ID].rotation, newHead.HeadRot, 0.5f);
-                if (heads[newHead.ID].parent == null)
-                {
-                    GameObject go = ClientScene.FindLocalObject(newHead.netId);
-                    if (go != null)
-                    {
-                        heads[newHead.ID].parent = go.transform;
-                    }
-                }
-            }
-            else
-            {
-                heads.Remove(newHead.ID);
-            }
+            Debug.Log("Recevied Invalid NetId");
+            return;
+        }
+        if (!RemoteSyncedObjectsDict.ContainsKey(newHead.netId))
+        {
+            AddNewRemoteSyncedObjects(newHead.netId);
+        }
+        if (!RemoteSyncedObjectsDict.ContainsKey(newHead.netId))
+        {
+            return;
+        }
+        if (RemoteSyncedObjectsDict[newHead.netId].head != null)
+        {
+            RemoteSyncedObjectsDict[newHead.netId].head.position = Vector3.Lerp(RemoteSyncedObjectsDict[newHead.netId].head.position, newHead.HeadPos, 0.5f);
+            RemoteSyncedObjectsDict[newHead.netId].head.rotation = Quaternion.Lerp(RemoteSyncedObjectsDict[newHead.netId].head.rotation, newHead.HeadRot, 0.5f);
         }
         else
         {
             Transform tran = Instantiate(headPrefab).transform;
-            heads.Add(newHead.ID, tran);
-
-            heads[newHead.ID].position = newHead.HeadPos;
-            heads[newHead.ID].rotation = newHead.HeadRot;
-
-
+            RemoteSyncedObjectsDict[newHead.netId].head = tran;
+            RemoteSyncedObjectsDict[newHead.netId].head.position = newHead.HeadPos;
+            RemoteSyncedObjectsDict[newHead.netId].head.rotation = newHead.HeadRot;
         }
-
+        if (RemoteSyncedObjectsDict[newHead.netId].head.parent == null)
+        {
+            GameObject go = ClientScene.FindLocalObject(newHead.netId);
+            if (go != null)
+            {
+                RemoteSyncedObjectsDict[newHead.netId].head.parent = go.transform;
+            }
+        }
     }
 
+    void AddNewRemoteSyncedObjects(NetworkInstanceId netId)
+    {
+        lock (RemoteSyncedObjectsDict)
+        {
+            RemoteObjectSync obj = new RemoteObjectSync();
+            obj.head = null;
+            obj.LHand = null;
+            obj.RHand = null;
+            obj.HeadFrameId = 0;
+            RemoteSyncedObjectsDict.Add(netId, obj);
+
+        }
+    }
 
 
     private void Update()

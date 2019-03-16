@@ -8,7 +8,7 @@ public class ReportToSceneManger : MonoBehaviour {
 	void Start () {
         SceneStateManager.Instance.SetWaiting();
         Time.timeScale = 1.0f;
-        FindObjectOfType<Leap.Unity.NetworkHandModelManager>().init();
+        FindObjectOfType<Leap.Unity.NetworkHandModelManager>().Init();
 
     }
 	

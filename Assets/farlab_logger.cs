@@ -207,6 +207,8 @@ public class farlab_logger : MonoBehaviour {
 
         localPedestrian = FindObjectOfType<MaleAvatarController>();
         if (enabled) {
+#pragma warning disable 0219
+
 
             LogVariable LeftHand = new LogVariable("D1", "Left Vectorhand", delegate () { return (localHandManager != null && localHandManager.leftHandTracking) ? Convert.ToBase64String( localHandManager.lastSendLeftHand) : " "; });
             LogVariable RightHand = new LogVariable("D1", "Right Vectorhand", delegate () { return (localHandManager != null && localHandManager.rightHandTracking) ? Convert.ToBase64String(localHandManager.lastSendRightHand) : " "; });
@@ -254,6 +256,7 @@ public class farlab_logger : MonoBehaviour {
 
 
 
+#pragma warning restore 0219
         }
 
     }
