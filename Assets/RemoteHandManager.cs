@@ -334,7 +334,7 @@ public class RemoteHandManager : MonoBehaviour
                     };
 
                     SceneStateManager.Instance.ThisClient.SendByChannel(NetworkMessageType.uploadVRHead, msg, 3);
-                     Debug.Log("Send a headPosition");
+                     //Debug.Log("Send a headPosition");
                 }
             }
             else

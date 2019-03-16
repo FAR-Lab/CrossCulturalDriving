@@ -75,6 +75,8 @@ namespace Leap.Unity
             }
             foreach (KeyValuePair<NetworkInstanceId, RemoteHandManager.RemoteObjectSync> inData in localCopy)
             {
+
+
                 if (!PlayerModelInstances.ContainsKey(inData.Key))
                 {
                     RenderingHandModel RHMB = new RenderingHandModel();
@@ -91,8 +93,12 @@ namespace Leap.Unity
                     Debug.Log("This should not happen. I just added this!");
                     return;
                 }
-                if (localCopy[inData.Key].LHand != null  && localCopy[inData.Key].LHand.FrameId > PlayerModelInstances[inData.Key].FrameIdLeft)
+                if (localCopy[inData.Key].LHand != null && localCopy[inData.Key].LHand.FrameId > PlayerModelInstances[inData.Key].FrameIdLeft)
                 {
+                    if (PlayerModelInstances[inData.Key].HMBL == null)
+                    {
+                        PlayerModelInstances[inData.Key].HMBL = Instantiate(LeftHandPrefab).transform.GetComponent<HandModelBase>();
+                    }
                     PlayerModelInstances[inData.Key].HMBL.transform.gameObject.SetActive(true);
                     PlayerModelInstances[inData.Key].FrameIdLeft = localCopy[inData.Key].LHand.FrameId;
                     PlayerModelInstances[inData.Key].HMBL.SetLeapHand(inData.Value.LHand);
@@ -104,8 +110,13 @@ namespace Leap.Unity
                     PlayerModelInstances[inData.Key].HMBL.transform.gameObject.SetActive(false);
                 }
 
-                if (localCopy[inData.Key].RHand != null &&  localCopy[inData.Key].RHand.FrameId > PlayerModelInstances[inData.Key].FrameIdRight)
+                if (localCopy[inData.Key].RHand != null && localCopy[inData.Key].RHand.FrameId > PlayerModelInstances[inData.Key].FrameIdRight)
                 {
+
+                    if (PlayerModelInstances[inData.Key].HMBR == null)
+                    {
+                        PlayerModelInstances[inData.Key].HMBR = Instantiate(RightHandPrefab).transform.GetComponent<HandModelBase>();
+                    }
                     PlayerModelInstances[inData.Key].HMBR.transform.gameObject.SetActive(true);
                     PlayerModelInstances[inData.Key].FrameIdRight = localCopy[inData.Key].RHand.FrameId;
                     PlayerModelInstances[inData.Key].HMBR.SetLeapHand(inData.Value.RHand);
