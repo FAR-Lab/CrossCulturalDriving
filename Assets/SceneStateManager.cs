@@ -414,10 +414,10 @@ public class SceneStateManager : NetworkManager {
         RemoteHandManager.HandMessage hand = msg.ReadMessage<RemoteHandManager.HandMessage>();
         hand.id = ( 2 * msg.conn.connectionId ) - hand.id;
         foreach (NetworkConnection c in NetworkServer.connections) {
-           // if (c == msg.conn) {
+            if (c == msg.conn) {
                 //Debug.Log("I already have that information");
-             //   continue;
-            //}
+                continue;
+            }
             c.SendByChannel(NetworkMessageType.DownloadHand, hand,4);
 
         }
@@ -432,10 +432,10 @@ public class SceneStateManager : NetworkManager {
         //hand.id = msg.conn.connectionId - hand.id;
         head.ID = msg.conn.connectionId;
         foreach (NetworkConnection c in NetworkServer.connections) {
-            //if (c == msg.conn) {
+            if (c == msg.conn) {
             //    //Debug.Log("I already have that information");
-            //    continue;
-            //}
+                continue;
+            }
 
 
             c.SendByChannel(NetworkMessageType.DownloadVRHead, head,5);
