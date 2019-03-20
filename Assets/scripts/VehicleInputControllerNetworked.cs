@@ -47,7 +47,7 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     public float indicaterTimer;
     public float interval;
     public int indicaterStage;
-
+    AudioSource HonkSound;
 
     void Awake() {
         controller = GetComponent<VehicleController>();
@@ -69,6 +69,8 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         materialBrake.SetColor("_Color", BrakeColor);
 
 
+        HonkSound = GetComponent<AudioSource>();
+
         foreach (Transform t in Left) {
             t.GetComponent<MeshRenderer>().material = materialOff;
         }
@@ -80,29 +82,46 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         }
 
     }
-    void startBlinking(bool left) {
+    void startBlinking(bool left , bool right) {
         indicaterStage = 1;
+        if (left == right == true)
+        {
+            if (LeftIsActuallyOn != true && RightIsActuallyOn != true)
+            {
+                LeftIsActuallyOn = true;
+                RightIsActuallyOn = true;
+            }
+            else if (LeftIsActuallyOn == RightIsActuallyOn == true)
+            {
+                RightIsActuallyOn = false;
+                LeftIsActuallyOn = false;
+            }
+        }
+        if(left!=right)
+        {
         if (left) {
             if (!LeftIsActuallyOn)
             {
                 LeftIsActuallyOn = true;
-                RightIsActuallyOn = false;
             }
             else
             {
                 LeftIsActuallyOn = false;
-                RightIsActuallyOn = false;
             }
-        } else {
-            if (!RightIsActuallyOn)
+        }
+            if (right)
             {
-                LeftIsActuallyOn = false;
-                RightIsActuallyOn = true;
-            }else{
-                LeftIsActuallyOn = false;
-                RightIsActuallyOn = false;
-            }
+                if (!RightIsActuallyOn)
+                {
+                    LeftIsActuallyOn = false;
+                    RightIsActuallyOn = true;
+                }
+                else
+                {
 
+                    RightIsActuallyOn = false;
+                }
+            }
         }
 
     }
@@ -126,7 +145,7 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
             }
             if (indicaterStage == 2) {
 
-                if (Mathf.Abs(steeringInput.GetSteerInput() * -450f) > 90) {
+                if (Mathf.Abs(steeringInput.GetSteerInput() * -450f) > 90) { // steering wheel angle detection to turn of the indicator
                     indicaterStage = 3;
                 }
             } else if (indicaterStage == 3) {
@@ -162,7 +181,6 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
                 t.GetComponent<MeshRenderer>().material = materialOff;
             }
         }
-
     }
     [ClientRpc]
     public void RpcTurnOnRight(bool Rightl_) {
@@ -229,6 +247,20 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     }
 
 
+    [Command]
+    public void CmdHonkMyCar()
+    {
+        RpcHonkmyCar();
+    }
+
+    [ClientRpc]
+    public void RpcHonkmyCar()
+    {
+        HonkSound.Play();
+    }
+
+
+
     [ClientRpc]
     public void RpcSetGPS(GpsController.Direction[] dir)
     {
@@ -274,6 +306,9 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
             if (Input.GetKeyDown(KeyCode.Y)) {
                 CmdStartWalking();
             }
+            
+
+
             if (SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
 
 
@@ -288,13 +323,15 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
                     SteeringWheel.RotateAround(SteeringWheel.position, SteeringWheel.up, steeringAngle - steeringInput.GetSteerInput() * -450f);
                     steeringAngle = steeringInput.GetSteerInput() * -450f;
                 }
-                if (Input.GetButtonDown("indicateLeft")) {
-                    Debug.Log("PushedIndicator Left");
-                    startBlinking(true);
-                } else if (Input.GetButtonDown("indicateRight")) {
-                    Debug.Log("PushedIndicator Right");
-                    startBlinking(false);
+              
+                if (Input.GetButtonDown("indicateLeft") || Input.GetButtonDown("indicateRight") ) {
+                    startBlinking(Input.GetButtonDown("indicateLeft"), Input.GetButtonDown("indicateRight"));
                 }
+                if (Input.GetButtonDown("Horn")){
+                    Debug.Log("HornSound");
+                    CmdHonkMyCar();
+                }
+
                 UpdateIndicator();
 
                 if (controller.accellInput < 0 && !breakIsOn) {
