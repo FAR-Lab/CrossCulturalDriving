@@ -63,7 +63,8 @@ public class SpecificSceneManager : MonoBehaviour {
                             vn.transform.position + vn.transform.up * 1.5f + vn.transform.forward * 2.5f,
                             vn.transform.rotation).GetComponent<QNSelectionManager>();
 
-                        qnmanager.setRelativePosition(vn.transform, 1.75f, 3.5f);
+                        qnmanager.setRelativePosition(vn.transform, 1.75f, 4f);
+                        
                         WaitAFrame = true;
                     }
                 }

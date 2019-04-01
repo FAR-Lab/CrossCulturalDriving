@@ -142,6 +142,8 @@ public class QNSelectionManager : MonoBehaviour {
 
         if (running) {
             if (ParentPosition != null) {
+                Debug.Log("Updated QN location!");
+                transform.rotation = ParentPosition.rotation;
                 transform.position = ParentPosition.position + ParentPosition.up * up + ParentPosition.forward * forward;
             }
             if (!Questionloaded && ToDoQueue.Count <= 0) {

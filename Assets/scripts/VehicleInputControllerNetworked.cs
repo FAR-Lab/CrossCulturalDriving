@@ -328,7 +328,7 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
                     startBlinking(Input.GetButtonDown("indicateLeft"), Input.GetButtonDown("indicateRight"));
                 }
                 if (Input.GetButtonDown("Horn")){
-                    Debug.Log("HornSound");
+                    //Debug.Log("HornSound");
                     CmdHonkMyCar();
                 }
 
