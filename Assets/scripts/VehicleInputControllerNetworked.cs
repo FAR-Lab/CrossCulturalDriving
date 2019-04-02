@@ -48,6 +48,10 @@ public class VehicleInputControllerNetworked : NetworkBehaviour
     public float indicaterTimer;
     public float interval;
     public int indicaterStage;
+
+    public bool DualButtonDebounceIndicator;
+    public bool LeftIndicatorDebounce;
+    public bool RightIndicatorDebounce;
     AudioSource HonkSound;
 
     void Awake()
@@ -91,6 +95,7 @@ public class VehicleInputControllerNetworked : NetworkBehaviour
     }
     void startBlinking(bool left, bool right)
     {
+       
         indicaterStage = 1;
         if (left == right == true)
         {
@@ -107,6 +112,12 @@ public class VehicleInputControllerNetworked : NetworkBehaviour
         }
         if (left != right)
         {
+
+            if (LeftIsActuallyOn == RightIsActuallyOn == true) // When we are returning from the hazard lights we make sure that not the inverse thing turns on 
+            {
+                LeftIsActuallyOn = false;
+                RightIsActuallyOn = false;
+            }
             if (left)
             {
                 if (!LeftIsActuallyOn)
@@ -392,11 +403,33 @@ public class VehicleInputControllerNetworked : NetworkBehaviour
                     SteeringWheel.RotateAround(SteeringWheel.position, SteeringWheel.up, steeringAngle - steeringInput.GetSteerInput() * -450f);
                     steeringAngle = steeringInput.GetSteerInput() * -450f;
                 }
-
-                if (Input.GetButtonDown("indicateLeft") || Input.GetButtonDown("indicateRight"))
+                bool TempLeft = Input.GetButton("indicateLeft");
+                bool TempRight = Input.GetButton("indicateRight");
+               // Debug.Log(TempLeft.ToString()+ TempRight.ToString());
+                if (TempLeft || TempRight)
                 {
-                    startBlinking(Input.GetButtonDown("indicateLeft"), Input.GetButtonDown("indicateRight"));
+                    DualButtonDebounceIndicator = true;
+                    if (TempLeft)
+                    {
+                        LeftIndicatorDebounce = true;
+                    }
+                    if (TempRight)
+                    {
+                       RightIndicatorDebounce = true;
+                    }
                 }
+                else if (DualButtonDebounceIndicator && !TempLeft && !TempRight) {
+                    startBlinking(LeftIndicatorDebounce, RightIndicatorDebounce);
+                    DualButtonDebounceIndicator = false;
+                    LeftIndicatorDebounce = false;
+                    RightIndicatorDebounce = false;
+                   
+                }
+
+                
+
+
+
                 if (Input.GetButtonDown("Horn"))
                 {
                     //Debug.Log("HornSound");
