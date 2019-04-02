@@ -271,8 +271,8 @@ public class RemoteHandManager : MonoBehaviour
         }
         if (RemoteSyncedObjectsDict[newHead.netId].head != null)
         {
-            RemoteSyncedObjectsDict[newHead.netId].head.position = Vector3.Lerp(RemoteSyncedObjectsDict[newHead.netId].head.position, newHead.HeadPos, 0.5f);
-            RemoteSyncedObjectsDict[newHead.netId].head.rotation = Quaternion.Lerp(RemoteSyncedObjectsDict[newHead.netId].head.rotation, newHead.HeadRot, 0.5f);
+            RemoteSyncedObjectsDict[newHead.netId].head.position = Vector3.Lerp(RemoteSyncedObjectsDict[newHead.netId].head.position, newHead.HeadPos, 0.35f);
+            RemoteSyncedObjectsDict[newHead.netId].head.rotation = Quaternion.Lerp(RemoteSyncedObjectsDict[newHead.netId].head.rotation, newHead.HeadRot, 0.35f);
         }
         else
         {
