@@ -9,7 +9,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 
-public class VehicleInputControllerNetworked : NetworkBehaviour {
+public class VehicleInputControllerNetworked : NetworkBehaviour
+{
 
     public Transform SteeringWheel;
     float steeringAngle;
@@ -49,12 +50,15 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     public int indicaterStage;
     AudioSource HonkSound;
 
-    void Awake() {
+    void Awake()
+    {
         controller = GetComponent<VehicleController>();
 
     }
-    private void Start() {
-        if (SceneStateManager.Instance != null) {
+    private void Start()
+    {
+        if (SceneStateManager.Instance != null)
+        {
             SceneStateManager.Instance.SetReady();
         }
         steeringInput = GetComponent<SteeringWheelInputController>();
@@ -71,22 +75,26 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
         HonkSound = GetComponent<AudioSource>();
 
-        foreach (Transform t in Left) {
+        foreach (Transform t in Left)
+        {
             t.GetComponent<MeshRenderer>().material = materialOff;
         }
-        foreach (Transform t in Right) {
+        foreach (Transform t in Right)
+        {
             t.GetComponent<MeshRenderer>().material = materialOff;
         }
-        foreach (Transform t in BrakeLightObjects) {
+        foreach (Transform t in BrakeLightObjects)
+        {
             t.GetComponent<MeshRenderer>().material = materialOff;
         }
 
     }
-    void startBlinking(bool left , bool right) {
+    void startBlinking(bool left, bool right)
+    {
         indicaterStage = 1;
         if (left == right == true)
         {
-            if (LeftIsActuallyOn != true && RightIsActuallyOn != true)
+            if (LeftIsActuallyOn != true || RightIsActuallyOn != true)
             {
                 LeftIsActuallyOn = true;
                 RightIsActuallyOn = true;
@@ -97,18 +105,20 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
                 LeftIsActuallyOn = false;
             }
         }
-        if(left!=right)
+        if (left != right)
         {
-        if (left) {
-            if (!LeftIsActuallyOn)
+            if (left)
             {
-                LeftIsActuallyOn = true;
+                if (!LeftIsActuallyOn)
+                {
+                    LeftIsActuallyOn = true;
+                    RightIsActuallyOn = false;
+                }
+                else
+                {
+                    LeftIsActuallyOn = false;
+                }
             }
-            else
-            {
-                LeftIsActuallyOn = false;
-            }
-        }
             if (right)
             {
                 if (!RightIsActuallyOn)
@@ -126,35 +136,50 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
     }
 
-    void UpdateIndicator() {
-        if (indicaterStage == 1) {
+    void UpdateIndicator()
+    {
+        if (indicaterStage == 1)
+        {
             indicaterStage = 2;
             indicaterTimer = 0;
             ActualLightOn = false;
-        } else if (indicaterStage == 2 || indicaterStage == 3) {
+        }
+        else if (indicaterStage == 2 || indicaterStage == 3)
+        {
             indicaterTimer += Time.deltaTime;
 
-            if (indicaterTimer > interval) {
+            if (indicaterTimer > interval)
+            {
                 indicaterTimer = 0;
                 ActualLightOn = !ActualLightOn;
-                if (ActualLightOn) {
+                if (ActualLightOn)
+                {
                     CmdUpdateIndicatorLights(LeftIsActuallyOn, RightIsActuallyOn);
-                } else {
+                }
+                else
+                {
                     CmdUpdateIndicatorLights(false, false);
                 }
             }
-            if (indicaterStage == 2) {
+            if (indicaterStage == 2)
+            {
 
-                if (Mathf.Abs(steeringInput.GetSteerInput() * -450f) > 90) { // steering wheel angle detection to turn of the indicator
+                if (Mathf.Abs(steeringInput.GetSteerInput() * -450f) > 90)
+                { // steering wheel angle detection to turn of the indicator
                     indicaterStage = 3;
                 }
-            } else if (indicaterStage == 3) {
-                if (Mathf.Abs(steeringInput.GetSteerInput() * -450f) < 10) {
+            }
+            else if (indicaterStage == 3)
+            {
+                if (Mathf.Abs(steeringInput.GetSteerInput() * -450f) < 10)
+                {
                     indicaterStage = 4;
                 }
             }
 
-        } else if (indicaterStage == 4) {
+        }
+        else if (indicaterStage == 4)
+        {
             indicaterStage = 0;
             ActualLightOn = false;
             LeftIsActuallyOn = false;
@@ -165,31 +190,44 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdUpdateIndicatorLights(bool Left, bool Right) {
+    public void CmdUpdateIndicatorLights(bool Left, bool Right)
+    {
         RpcTurnOnLeft(Left);
         RpcTurnOnRight(Right);
 
     }
     [ClientRpc]
-    public void RpcTurnOnLeft(bool Leftl_) {
-        if (Leftl_) {
-            foreach (Transform t in Left) {
+    public void RpcTurnOnLeft(bool Leftl_)
+    {
+        if (Leftl_)
+        {
+            foreach (Transform t in Left)
+            {
                 t.GetComponent<MeshRenderer>().material = materialOn;
             }
-        } else {
-            foreach (Transform t in Left) {
+        }
+        else
+        {
+            foreach (Transform t in Left)
+            {
                 t.GetComponent<MeshRenderer>().material = materialOff;
             }
         }
     }
     [ClientRpc]
-    public void RpcTurnOnRight(bool Rightl_) {
-        if (Rightl_) {
-            foreach (Transform t in Right) {
+    public void RpcTurnOnRight(bool Rightl_)
+    {
+        if (Rightl_)
+        {
+            foreach (Transform t in Right)
+            {
                 t.GetComponent<MeshRenderer>().material = materialOn;
             }
-        } else {
-            foreach (Transform t in Right) {
+        }
+        else
+        {
+            foreach (Transform t in Right)
+            {
                 t.GetComponent<MeshRenderer>().material = materialOff;
             }
         }
@@ -197,40 +235,52 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
     }
 
     [Command]
-    public void CmdStartQuestionairGloablly() {
+    public void CmdStartQuestionairGloablly()
+    {
         RpcRunQuestionairNow();
     }
 
     [ClientRpc]
-    public void RpcRunQuestionairNow() {
+    public void RpcRunQuestionairNow()
+    {
         FindObjectOfType<SpecificSceneManager>().runQuestionairNow();
 
     }
     [Command]
-    public void CmdStartWalking() {
+    public void CmdStartWalking()
+    {
         RpcStartWallking();
     }
 
     [ClientRpc]
-    public void RpcStartWallking() {
-        foreach (MaleAvatarController a in FindObjectsOfType<MaleAvatarController>()) {
+    public void RpcStartWallking()
+    {
+        foreach (MaleAvatarController a in FindObjectsOfType<MaleAvatarController>())
+        {
             a.ChooseAnimation(1);
         }
     }
 
     [Command]
-    public void CmdSwitchBrakeLight(bool Active) {
+    public void CmdSwitchBrakeLight(bool Active)
+    {
         RpcTurnOnBrakeLight(Active);
 
     }
     [ClientRpc]
-    public void RpcTurnOnBrakeLight(bool Active) {
-        if (Active) {
-            foreach (Transform t in BrakeLightObjects) {
+    public void RpcTurnOnBrakeLight(bool Active)
+    {
+        if (Active)
+        {
+            foreach (Transform t in BrakeLightObjects)
+            {
                 t.GetComponent<MeshRenderer>().material = materialBrake;
             }
-        } else {
-            foreach (Transform t in BrakeLightObjects) {
+        }
+        else
+        {
+            foreach (Transform t in BrakeLightObjects)
+            {
                 t.GetComponent<MeshRenderer>().material = materialOff;
             }
         }
@@ -238,11 +288,13 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
 
     [Command]
-    public void CmdStartDriving() {
+    public void CmdStartDriving()
+    {
         RpcSetToDrive();
     }
     [ClientRpc]
-    public void RpcSetToDrive() {
+    public void RpcSetToDrive()
+    {
         SceneStateManager.Instance.SetDriving();
     }
 
@@ -267,10 +319,14 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         GetComponentInChildren<GpsController>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
     }
 
-    void Update() {
-        if (Input.GetKeyUp(KeyCode.Space)) {
-            foreach (seatCallibration sc in FindObjectsOfType<seatCallibration>()) {
-                if (sc.isPartOfLocalPlayer()) {
+    void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            foreach (seatCallibration sc in FindObjectsOfType<seatCallibration>())
+            {
+                if (sc.isPartOfLocalPlayer())
+                {
                     sc.reCallibrate();
                     break;
                 }
@@ -278,73 +334,94 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         }
 
 
-        if (isLocalPlayer) {
-            if (Input.GetKeyDown(KeyCode.Return)){
+        if (isLocalPlayer)
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
                 CmdStartDriving();
             }
 
-            if (Input.GetKeyDown(KeyCode.Q)) {
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
                 CmdStartQuestionairGloablly();
-                
+
             }
-            if (Input.GetKeyDown(KeyCode.A)) {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
                 GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Left);
             }
-            if (Input.GetKeyDown(KeyCode.D)) {
+            if (Input.GetKeyDown(KeyCode.D))
+            {
                 GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Right);
             }
-            if (Input.GetKeyDown(KeyCode.W)) {
+            if (Input.GetKeyDown(KeyCode.W))
+            {
                 GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Straight);
             }
-            if (Input.GetKeyDown(KeyCode.S)) {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
                 GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Stop);
             }
 
-            if (Input.GetKeyDown(KeyCode.E)) {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
                 GetComponentInChildren<GpsController>().SetDirection(GpsController.Direction.Hurry);
             }
-            if (Input.GetKeyDown(KeyCode.Y)) {
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
                 CmdStartWalking();
             }
-            
 
 
-            if (SceneStateManager.Instance.ActionState == ActionState.DRIVE) {
+
+            if (SceneStateManager.Instance.ActionState == ActionState.DRIVE)
+            {
 
 
                 transitionlerp = 0;
-                if (steeringInput == null || useKeyBoard) {
+                if (steeringInput == null || useKeyBoard)
+                {
                     controller.steerInput = Input.GetAxis("Horizontal");
                     controller.accellInput = Input.GetAxis("Vertical");
-                } else {
+                }
+                else
+                {
                     controller.steerInput = steeringInput.GetSteerInput();
                     controller.accellInput = steeringInput.GetAccelInput();
 
                     SteeringWheel.RotateAround(SteeringWheel.position, SteeringWheel.up, steeringAngle - steeringInput.GetSteerInput() * -450f);
                     steeringAngle = steeringInput.GetSteerInput() * -450f;
                 }
-              
-                if (Input.GetButtonDown("indicateLeft") || Input.GetButtonDown("indicateRight") ) {
+
+                if (Input.GetButtonDown("indicateLeft") || Input.GetButtonDown("indicateRight"))
+                {
                     startBlinking(Input.GetButtonDown("indicateLeft"), Input.GetButtonDown("indicateRight"));
                 }
-                if (Input.GetButtonDown("Horn")){
+                if (Input.GetButtonDown("Horn"))
+                {
                     //Debug.Log("HornSound");
                     CmdHonkMyCar();
                 }
 
                 UpdateIndicator();
 
-                if (controller.accellInput < 0 && !breakIsOn) {
+                if (controller.accellInput < 0 && !breakIsOn)
+                {
                     breakIsOn = true;
                     CmdSwitchBrakeLight(breakIsOn);
-                } else if (controller.accellInput >= 0 && breakIsOn) {
+                }
+                else if (controller.accellInput >= 0 && breakIsOn)
+                {
                     breakIsOn = false;
                     CmdSwitchBrakeLight(breakIsOn);
                 }
 
-            } else if (isLocalPlayer && SceneStateManager.Instance.ActionState == ActionState.QUESTIONS) {
+            }
+            else if (isLocalPlayer && SceneStateManager.Instance.ActionState == ActionState.QUESTIONS)
+            {
 
-                if (transitionlerp < 1) {
+                if (transitionlerp < 1)
+                {
                     transitionlerp += Time.deltaTime * SceneStateManager.slowDownSpeed;
                     controller.steerInput = Mathf.Lerp(controller.steerInput, 0, transitionlerp);
                     controller.accellInput = Mathf.Lerp(0, -1, transitionlerp);
