@@ -286,7 +286,7 @@ public class RemoteHandManager : MonoBehaviour
             GameObject go = ClientScene.FindLocalObject(newHead.netId);
             if (go != null)
             {
-                RemoteSyncedObjectsDict[newHead.netId].head.parent = go.transform;
+               // RemoteSyncedObjectsDict[newHead.netId].head.parent = go.transform;
             }
         }
     }
