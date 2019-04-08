@@ -426,13 +426,13 @@ public class VehicleInputControllerNetworked : NetworkBehaviour
                    
                 }
 
-                
 
 
 
                 if (Input.GetButtonDown("Horn"))
                 {
-                    //Debug.Log("HornSound");
+                    
+                    farlab_logger.Instance.EnqueEventLog("Honk");
                     CmdHonkMyCar();
                 }
 
