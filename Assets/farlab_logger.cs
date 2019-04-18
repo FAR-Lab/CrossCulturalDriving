@@ -14,7 +14,7 @@ public class farlab_logger : MonoBehaviour {
     private RemoteHandManager localHandManager;
     private MaleAvatarController localPedestrian;
     private Queue<string> EventLog= new Queue<string>();
-    private int epoch=0;
+    private double epoch=0.0d;
     public static char sep = ';'; //Separator for data values.
 
     /**The LogVariable class is a blueprint for the variable to be logged.
@@ -251,7 +251,7 @@ public class farlab_logger : MonoBehaviour {
             LogVariable EventLogVar = new LogVariable("D1", "Event log", delegate () { return EventLog.Count >0 ? EventLog.Dequeue() : " "; });
 
             LogVariable time = new LogVariable("U", "Game Time", delegate () { return Time.time.ToString("F4"); });
-            LogVariable realTime  = new LogVariable("U", "Real Time", delegate () { return epoch>0 ? epoch + Time.time.ToString("F4") : " "; });
+            LogVariable realTime  = new LogVariable("U", "Real Time", delegate () { return epoch>0 ? (epoch + Time.time).ToString("F4") : " "; });
             LogVariable frame = new LogVariable("U", "Frame Number", delegate () { return Time.frameCount.ToString(); });
 
 
@@ -263,7 +263,7 @@ public class farlab_logger : MonoBehaviour {
     void Start() {
 
 
-         epoch = (int)( System.DateTime.UtcNow - new System.DateTime(1970, 1, 1) ).TotalSeconds; //Epoch Time
+        epoch = (double)(( System.DateTime.UtcNow - new System.DateTime(1970, 1, 1) ).TotalSeconds - Time.time); //Epoch Time
         DateTime Now = System.DateTime.Now;
         path = @"D:\Logs\" + Now.Year.ToString() +"-"+Now.Month.ToString() + "-"+Now.Day.ToString() + "-"+Now.Hour.ToString() + "-"+Now.Minute.ToString() + "-"+Now.Second.ToString() + "-"; //Log file path
         //path = @"D:\Logs\" + epoch.toString()+"-";

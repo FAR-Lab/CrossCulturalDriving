@@ -130,7 +130,7 @@ public class seatCallibration : MonoBehaviour
                 break;
             case 3:
             case 4:
-                displayString = "Callibration DONE!";
+                displayString = "Callibration Done!";
                 gs.normal.textColor = Color.black;
                 break;
             case 5:
