@@ -1019,13 +1019,17 @@ MonoBehaviour:
   frontRightT: {fileID: 7844139451688553081}
   backLeftT: {fileID: 7844139451688553080}
   backRightT: {fileID: 7844139451688553063}
-  tailLight: {fileID: 2100000, guid: 27022d0c6860deb4285921802806eb7b, type: 2}
+  steeringWheelT: {fileID: 0}
+  tailLight: {fileID: 2100000, guid: d1917a35d5ad2344d95e805eb794dd04, type: 2}
+  soundEffects: []
+  instructionText: {fileID: 0}
   speedParameter: 0
   steerParameter: 0
-  breakParameter: 0
+  brakeParameter: 0
   _emittedColor: {r: 0, g: 0, b: 0, a: 0}
   _Color: {r: 0, g: 0, b: 0, a: 0}
-  isTrailer: 0
+  gasPressed: 0
+  isPlayer: 0
 --- !u!114 &7844139450507549131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1041,7 +1045,7 @@ MonoBehaviour:
   maxSpeed: 25
   maxAcceleration: 2
   maxMotorTorque: 1000
-  maxBreakTorque: 5000
+  maxBrakeTorque: 0
   maxSteerAngle: 45
 --- !u!114 &7844139450507549130
 MonoBehaviour:
@@ -1058,7 +1062,7 @@ MonoBehaviour:
   maxSpeed: 50
   maxAcceleration: 4
   maxMotorTorque: 1000
-  maxBreakTorque: 0
+  maxBrakeTorque: 5000
   maxSteerAngle: 45
   destination: {fileID: 0}
   agent: {fileID: 0}

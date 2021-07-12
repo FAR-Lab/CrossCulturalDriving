@@ -421,7 +421,6 @@ GameObject:
   - component: {fileID: 117489735}
   - component: {fileID: 117489738}
   - component: {fileID: 117489737}
-  - component: {fileID: 117489736}
   m_Layer: 3
   m_Name: Driver
   m_TagString: Untagged
@@ -443,27 +442,6 @@ Transform:
   m_Father: {fileID: 84941820}
   m_RootOrder: 25
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &117489736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 117489734}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ad526dc35893214e8d3c3b1b7d7b720, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxSpeed: 40
-  maxAcceleration: 1.2
-  maxMotorTorque: 1000
-  maxBrakeTorque: 0
-  maxSteerAngle: 45
-  destination: {fileID: 0}
-  agent: {fileID: 0}
-  max_rb_agent_distance: 40
-  offset: {x: 0, y: 1, z: 0}
 --- !u!114 &117489737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -514,8 +492,6 @@ MonoBehaviour:
   _emittedColor: {r: 0, g: 0, b: 0, a: 0}
   _Color: {r: 0, g: 0, b: 0, a: 0}
   gasPressed: 0
-  carStarted: 0
-  scenarioNum: 0
   isPlayer: 1
 --- !u!1 &127514804
 GameObject:
@@ -7462,12 +7438,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1946517392}
     - target: {fileID: 5891231532555111028, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
+      propertyPath: maxBrakeTorque
+      value: 5000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5891231532555111028, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: max_rb_agent_distance
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5891231532555111030, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
+      propertyPath: tailLight
+      value: 
+      objectReference: {fileID: 2100000, guid: d1917a35d5ad2344d95e805eb794dd04, type: 2}
+    - target: {fileID: 5891231532555111030, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: instructionText
       value: 
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5891231532555111031, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
