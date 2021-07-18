@@ -28,6 +28,8 @@ public class Drive_Bridge : MonoBehaviour {
     public Color _Color;
     [HideInInspector]
     public bool gasPressed;
+    [HideInInspector]
+    public float steeringWheelAngle;
     /*[HideInInspector]
     public bool carStarted;
     [HideInInspector]
@@ -138,7 +140,7 @@ public class Drive_Bridge : MonoBehaviour {
     }
 
     private void UpdateSteeringWheel() {
-        steeringWheelT.localRotation = Quaternion.Euler(-steerParameter, -90, 90);
+        steeringWheelT.localRotation = Quaternion.Euler(-steeringWheelAngle, -90, 90);
     }
 
     private void PlayAudio() {

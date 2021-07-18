@@ -763,9 +763,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 178470073}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4553814a88c71c64f883d32abba8f58b, type: 3}
+  m_Script: {fileID: 11500000, guid: 4afb3dd0708474bd7822f6617f1ccf73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  QuestionairsToAsk:
+  - {fileID: 4900000, guid: 52111da2a2777d341a828a218fdddaca, type: 3}
+  - {fileID: 4900000, guid: c764270986e6a4f9f8ae61246620b206, type: 3}
+  - {fileID: 4900000, guid: 274e37b2e73f14601bc9c6057d00fab8, type: 3}
+  conditionName: Scenario1
+  QuestionairPrefab: {fileID: 1853806982428388, guid: bb398da6725f53c4283a5f88c90d86ed, type: 3}
 --- !u!1 &197794448
 GameObject:
   m_ObjectHideFlags: 0

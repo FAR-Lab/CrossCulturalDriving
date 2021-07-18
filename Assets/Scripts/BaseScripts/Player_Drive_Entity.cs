@@ -9,7 +9,6 @@ public class Player_Drive_Entity : MonoBehaviour {
     public float maxMotorTorque;
     public float maxBrakeTorque;
     public float maxSteerAngle;
-
     private float currentSpeed;
     private EntityManager entitymanager;
     private Entity entity;
@@ -18,6 +17,7 @@ public class Player_Drive_Entity : MonoBehaviour {
     private float speedParameter;
     private float steerParameter;
     private float brakeParameter;
+    private float steeringWheelAngle;
     private bool gasPressed;
     /*private bool carStarted;
     private float scenarioNum;
@@ -54,6 +54,7 @@ public class Player_Drive_Entity : MonoBehaviour {
         speedParameter = pdc.speedParameter;
         steerParameter = pdc.steerParameter;
         brakeParameter = pdc.brakeParameter;
+        steeringWheelAngle = pdc.steeringWheelAngle;
         gasPressed = pdc.gasPedal;
         /*scenarioNum = pdc.scenarioNum;
         carStarted = pdc.carStarted;
@@ -66,6 +67,7 @@ public class Player_Drive_Entity : MonoBehaviour {
             db.steerParameter = steerParameter;
             db.brakeParameter = brakeParameter;
             db.gasPressed = gasPressed;
+            db.steeringWheelAngle = steeringWheelAngle;
             /*db.scenarioNum = scenarioNum;
             //db.carStarted = carStarted;
             can be used for GM control and in-scenario updates to instructions */
