@@ -71,12 +71,6 @@ public class QNSelectionManager : MonoBehaviour {
     // Use this for initialization
     void Awake() {
         qnlogger = GetComponent<QNLogger>();
-        StringBuilder sb = new StringBuilder();
-
-        foreach (TextAsset s in QNFiles) {
-            sb.Append(s.name);
-        }
-        qnlogger.qnName = sb.ToString();
     }
     void Start() {
         //useAltLanguage = SceneStateManager.Instance.UseHebrewLanguage;
@@ -96,7 +90,7 @@ public class QNSelectionManager : MonoBehaviour {
         //m_Raycaster = GetComponent<GraphicRaycaster>();
         // m_EventSystem = GetComponent<EventSystem>();
         
-        string[] sarray = new string[QNFiles.Count];
+        /*string[] sarray = new string[QNFiles.Count];
         int i = 0;
 
         StringBuilder sb = new StringBuilder();
@@ -107,7 +101,7 @@ public class QNSelectionManager : MonoBehaviour {
             i++;
         }
         qnlogger.qnName = sb.ToString();
-        startAskingTheQuestionairs(sarray, "Test"); //TODO
+        startAskingTheQuestionairs(sarray, "Test"); //TODO*/
 
 
     }
@@ -160,7 +154,7 @@ public class QNSelectionManager : MonoBehaviour {
 
         if (running) {
             if (ParentPosition != null) {
-                Debug.Log("Updated QN location!");
+                //Debug.Log("Updated QN location!");
                 transform.rotation = ParentPosition.rotation;
                 transform.position = ParentPosition.position + ParentPosition.up * up + ParentPosition.forward * forward;
             }

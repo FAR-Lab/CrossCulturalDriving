@@ -18,14 +18,13 @@ public class QNLogger : MonoBehaviour
     private bool doneSending; //Boolean to check whether data is sent once the application is stopped
     private static QNLogger _instance;
     public static QNLogger Instance { get { return _instance; } }
-    public string qnName;
-    private string participantID = "test";
+    private string participantID = "replace-pID";
     void Start()
     {
         epoch = (double)((System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds - Time.time); //Epoch Time
         DateTime Now = System.DateTime.Now;
         path = @"C:\Users\ryanj\UnityProjects\" + Now.Year.ToString() + "-" + Now.Month.ToString() + "-" + Now.Day.ToString() + "-" + Now.Hour.ToString() + "-" + Now.Minute.ToString() + "-" + Now.Second.ToString() + "-"; //Log file path
-        sw = File.AppendText(path + participantID + qnName + ".csv");
+        sw = File.AppendText(path + participantID + ".csv");
         doneSending = false;
         isSending = true;
         send = new Thread(ContinuousDataSend);
