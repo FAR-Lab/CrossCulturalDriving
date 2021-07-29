@@ -6,9 +6,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class QNSelectionManager : MonoBehaviour {
     // Some code to send data to the logger
+    private InputAction selectAction;
     private QNLogger qnlogger;
     
     public GameObject ButtonPrefab;
@@ -73,6 +75,9 @@ public class QNSelectionManager : MonoBehaviour {
         qnlogger = GetComponent<QNLogger>();
     }
     void Start() {
+        selectAction = new InputAction("Select");
+        selectAction.AddBinding("<Joystick>/trigger");
+        selectAction.Enable();
         //useAltLanguage = SceneStateManager.Instance.UseHebrewLanguage;
         useAltLanguage = false;
         foreach (TextAsset s in QNFiles) {
@@ -299,7 +304,7 @@ public class QNSelectionManager : MonoBehaviour {
                         totalTime = 0;
                     }
                 }
-                if (success && onTarget && totalTime >= targetTime) {
+                if (success && onTarget && totalTime >= targetTime || selectAction.triggered && onTarget) {
                     List<int> temp;
                     string lastAnswer = lastHitButton.activateNextQuestions(out temp);
                     string newLine = "";

@@ -18,6 +18,9 @@ public struct Player_Drive_Component : IComponentData {
 
     public bool gasPedal;
     public float steeringWheelAngle;
+    public bool inReverse;
+    public bool inRightTurn;
+    public bool inLeftTurn;
     /*public float scenarioNum;
     public bool carStarted;
     can be used for GM control and in-scenario updates to instructions*/
