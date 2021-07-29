@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,10 @@ public class Drive_Bridge : MonoBehaviour {
     public Transform steeringWheelT;
 
     public Material tailLight;
+    public Material frontLeftLamp;
+    public Material frontRightLamp;
+    public Material backLeftLamp;
+    public Material backRightLamp;
 
     public AudioSource[] soundEffects;
 
@@ -23,13 +28,23 @@ public class Drive_Bridge : MonoBehaviour {
     [HideInInspector]
     public float brakeParameter;
     [HideInInspector]
-    public Color _emittedColor;
+    public Color emittedReverseColor;
     [HideInInspector]
-    public Color _Color;
+    public Color reverseColor;
+    [HideInInspector]
+    public Color emittedTurnColor;
+    [HideInInspector]
+    public Color turnColor;
     [HideInInspector]
     public bool gasPressed;
     [HideInInspector]
     public float steeringWheelAngle;
+    [HideInInspector]
+    public bool inReverse;
+    [HideInInspector]
+    public bool inRightTurn;
+    [HideInInspector]
+    public bool inLeftTurn;
     /*[HideInInspector]
     public bool carStarted;
     [HideInInspector]
@@ -41,25 +56,36 @@ public class Drive_Bridge : MonoBehaviour {
     private Rigidbody rb;
     private Vector3 pos;
     private Quaternion rot;
+    private bool turnLightOn;
+    private Quaternion originalSteerRot;
     /*private bool receivedInstructions;
     private bool activeCar;
     can be used for GM control and in-scenario updates to instructions*/
 
     private void OnDestroy() {
-        tailLight.SetColor("_Color", _Color);
-        tailLight.SetColor("_EmissionColor", _emittedColor);
+        tailLight.SetColor("_Color", reverseColor);
+        tailLight.SetColor("_EmissionColor", emittedReverseColor);
+        TurnSignalOff(frontLeftLamp, backLeftLamp);
+        TurnSignalOff(frontRightLamp, backRightLamp);
+        inRightTurn = false;
+        inLeftTurn = false;
+        inReverse = false;
     }
     void Start() {
         speedParameter = 0;
         steerParameter = 0;
         brakeParameter = 0;
-        _Color = tailLight.GetColor("_Color");
-        _emittedColor = tailLight.GetColor("_EmissionColor");
+        reverseColor = tailLight.GetColor("_Color");
+        emittedReverseColor = tailLight.GetColor("_EmissionColor");
+        turnColor = frontLeftLamp.GetColor("_Color");
+        emittedTurnColor = frontLeftLamp.GetColor("_EmissionColor");
         rb = GetComponentInParent<Rigidbody>();
         rb.centerOfMass = rb.centerOfMass + new Vector3(0, -0.8f, 0);
+        turnLightOn = false;
         /*receivedInstructions = false;
         activeCar = false;
         can be used for GM control and in-scenario updates to instructions*/
+        originalSteerRot = steeringWheelT.localRotation;
     }
 
     void Update() {
@@ -75,9 +101,10 @@ public class Drive_Bridge : MonoBehaviour {
     }
 
     void Drive() {
+        ApplyTurnSignals();
         Accelerate();
         Steer();
-        ApplyBreaks();
+        ApplyBreaksAndReverse();
         UpdateWheelPositions();
         PlayAudio();
     }
@@ -106,19 +133,69 @@ public class Drive_Bridge : MonoBehaviour {
         frontRightWC.steerAngle = steerParameter;
     }
 
-    private void ApplyBreaks() {
+    private void ApplyBreaksAndReverse() {
         backLeftWC.brakeTorque = brakeParameter;
         backRightWC.brakeTorque = brakeParameter;
         frontLeftWC.brakeTorque = brakeParameter;
         frontRightWC.brakeTorque = brakeParameter;
-        if (brakeParameter != 0) {
+        if (brakeParameter != 0 || inReverse) {
             tailLight.SetColor("_Color", new Vector4(100, 0, 0, 500));
             tailLight.SetColor("_EmissionColor", new Vector4(100, 100, 100, 500));
         }
         else {
-            tailLight.SetColor("_Color", _Color);
-            tailLight.SetColor("_EmissionColor", _emittedColor);
+            tailLight.SetColor("_Color", reverseColor);
+            tailLight.SetColor("_EmissionColor", emittedReverseColor);
         }
+    }
+
+    private void ApplyTurnSignals() {
+        if (inRightTurn) {
+            TurnSignalOff(frontLeftLamp, backLeftLamp);
+            if (turnLightOn == false) {
+                TurnSignalOff(frontRightLamp, backRightLamp);
+                StartCoroutine(waitForLight(true));
+            }
+            if (turnLightOn == true) {
+                TurnSignalOn(frontRightLamp, backRightLamp);
+                StartCoroutine(waitForLight(false));
+            }
+        }
+        if (inLeftTurn) {
+            TurnSignalOff(frontRightLamp, backRightLamp);
+            if (turnLightOn == false) {
+                TurnSignalOff(frontLeftLamp, backLeftLamp);
+                StartCoroutine(waitForLight(true));
+            }
+            if (turnLightOn == true) {
+                TurnSignalOn(frontLeftLamp, backLeftLamp);
+                StartCoroutine(waitForLight(false));
+            }
+        }
+        if (frontRightLamp.GetColor("_Color") != turnColor && inRightTurn == false) {
+            TurnSignalOff(frontRightLamp, backRightLamp);
+        }
+        if (frontLeftLamp.GetColor("_Color") != turnColor && inLeftTurn == false) {
+            TurnSignalOff(frontLeftLamp, backLeftLamp);
+        }
+    }
+
+    private void TurnSignalOn(Material front, Material back) {
+        front.SetColor("_Color", new Vector4(100, 100, 0, 500));
+        front.SetColor("_EmissionColor", new Vector4(100, 100, 100, 500));
+        back.SetColor("_Color", new Vector4(100, 100, 0, 500));
+        back.SetColor("_EmissionColor", new Vector4(100, 100, 100, 500));
+    }
+
+    private void TurnSignalOff(Material front, Material back) {
+        front.SetColor("_Color", turnColor);
+        front.SetColor("_EmissionColor", emittedTurnColor);
+        back.SetColor("_Color", turnColor);
+        back.SetColor("_EmissionColor", emittedTurnColor);
+    }
+
+    IEnumerator waitForLight(bool turn) {
+        yield return new WaitForSeconds(0.8f);
+        turnLightOn = turn;
     }
 
     private void UpdateWheelPositions() {
@@ -140,7 +217,7 @@ public class Drive_Bridge : MonoBehaviour {
     }
 
     private void UpdateSteeringWheel() {
-        steeringWheelT.localRotation = Quaternion.Euler(-steeringWheelAngle, -90, 90);
+        steeringWheelT.localRotation = originalSteerRot * Quaternion.Euler(0, steeringWheelAngle, 0);
     }
 
     private void PlayAudio() {

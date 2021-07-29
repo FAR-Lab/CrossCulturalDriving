@@ -11,6 +11,8 @@ public class AI_Drive_Entity : MonoBehaviour {
     public float maxBrakeTorque;
     public float maxSteerAngle;
     public GameObject destination;
+    public List<GameObject> destinations;
+    public List<float> waitTimes;
     public NavMeshAgent agent;
     public float max_rb_agent_distance;
     public Vector3 offset;
@@ -24,12 +26,14 @@ public class AI_Drive_Entity : MonoBehaviour {
     private float steerParameter;
     private float brakeParameter;
     private float dotProduct;
+    private bool waiting;
     private Quaternion initialRotation;
 
     void Start() {
         db = GetComponent<Drive_Bridge>();
         rb = GetComponentInParent<Rigidbody>();
         initialRotation = rb.transform.rotation;
+        waiting = false;
         entitymanager = World.DefaultGameObjectInjectionWorld.EntityManager;
         EntityArchetype ea = entitymanager.CreateArchetype(
                              typeof(AI_Drive_Component)
@@ -43,7 +47,9 @@ public class AI_Drive_Entity : MonoBehaviour {
             maxSteerAngle = maxSteerAngle,
             worldDownVector = Vector3.down
         });
-        agent.SetDestination(destination.transform.position);
+        //agent.SetDestination(destination.transform.position);
+        agent.SetDestination(destinations[0].transform.position);
+        destinations.RemoveAt(0);
     }
 
     void Update() {
@@ -73,6 +79,14 @@ public class AI_Drive_Entity : MonoBehaviour {
             agent.isStopped = false;
         }
     }
+    IEnumerator wait() {
+        Debug.Log("entered");
+        yield return new WaitForSeconds(waitTimes[0]);
+        waiting = false;
+        waitTimes.RemoveAt(0);
+        Debug.Log(agent.SetDestination(destinations[0].transform.position));
+        destinations.RemoveAt(0);
+    }
 
     private void SetDriveParameters(float dist) {
         if (db != null && !agent.pathPending && dotProduct < 0 && agent.remainingDistance + dist > 5) {
@@ -89,6 +103,12 @@ public class AI_Drive_Entity : MonoBehaviour {
             db.speedParameter = 0;
             if (dotProduct > 0 && currentSpeed <= 0.1) {
                 ResetVehicle();
+            }
+            Debug.Log("remaining dist: " + agent.remainingDistance + dist);
+            Debug.Log("waiting: " + waiting);
+            if (db != null && dotProduct < 0 && agent.remainingDistance + dist < 1.5 && waiting == false && waitTimes.Count > 0) {
+                waiting = true;
+                StartCoroutine(wait());
             }
         }
     }

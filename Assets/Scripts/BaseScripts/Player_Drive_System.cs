@@ -6,7 +6,13 @@ using UnityEngine.InputSystem;
 public class Player_Drive_System : SystemBase {
     private InputAction accelerateAction;
     private InputAction steerAction;
+    private InputAction reverseAction;
+    private InputAction rightTurnSignalAction;
+    private InputAction leftTurnSignalAction;
     private InputAction brakeAction;
+    private bool reverse;
+    private bool rightTurn;
+    private bool leftTurn;
     protected override void OnCreate() {
         //KEYBOARD LEGACY INPUT---------------------------------------------------------------
         /*nothing to be done here*/
@@ -28,21 +34,45 @@ public class Player_Drive_System : SystemBase {
           accelerateAction = new InputAction("Accelerate");
           steerAction = new InputAction("Steer");
           brakeAction = new InputAction("Brake");
+          reverseAction = new InputAction("Reverse");
+          rightTurnSignalAction = new InputAction("Right Turn Signal");
+          leftTurnSignalAction = new InputAction("Left Turn Signal");
           accelerateAction.AddBinding("<Joystick>/z");
           steerAction.AddBinding("<Joystick>/stick/x");
           brakeAction.AddBinding("<Joystick>/rz");
+          reverseAction.AddBinding("<Joystick>/button24");
+          rightTurnSignalAction.AddBinding("<Joystick>/button5");
+          leftTurnSignalAction.AddBinding("<Joystick>/button6"); 
           accelerateAction.Enable();
           steerAction.Enable();
-          brakeAction.Enable();*/
+          brakeAction.Enable();
+          reverseAction.Enable();
+          rightTurnSignalAction.Enable();
+          leftTurnSignalAction.Enable();
+          reverse = false;
+          rightTurn = false;
+          leftTurn = false;*/
 
         //G29 LOGITECH INPUT------------------------------------------------------------------
         Debug.Log("SteeringInit:" + LogitechGSDK.LogiSteeringInitialize(false));
         accelerateAction = new InputAction("Accelerate");
         brakeAction = new InputAction("Brake");
+        reverseAction = new InputAction("Reverse");
+        rightTurnSignalAction = new InputAction("Right Turn Signal");
+        leftTurnSignalAction = new InputAction("Left Turn Signal");
         accelerateAction.AddBinding("<Joystick>/z");
         brakeAction.AddBinding("<Joystick>/rz");
+        reverseAction.AddBinding("<Joystick>/button24");
+        rightTurnSignalAction.AddBinding("<Joystick>/button5");
+        leftTurnSignalAction.AddBinding("<Joystick>/button6");
         accelerateAction.Enable();
-        brakeAction.Enable();      
+        brakeAction.Enable();
+        reverseAction.Enable();
+        rightTurnSignalAction.Enable();
+        leftTurnSignalAction.Enable();
+        reverse = false;
+        rightTurn = false;
+        leftTurn = false;
     }
     protected override void OnUpdate() {
         /*bool engineStarted = Input.GetKeyDown(KeyCode.LeftShift); change to a key not available on the steering wheel
@@ -85,12 +115,28 @@ public class Player_Drive_System : SystemBase {
         //because default brake value is 1, when pressed it goes to -1
         bool gasPedal = vAxis > 0;
         bool spaceKey = brakeValue > 0;
+        if (reverseAction.triggered) {
+            reverse = !reverse;
+        }
+        
+        if (rightTurnSignalAction.triggered) {
+            rightTurn = !rightTurn;
+            leftTurn = false;
+        }
+        
+        if (leftTurnSignalAction.triggered) {
+            leftTurn = !leftTurn;
+            rightTurn = false;
+        }
+        bool inReverse = reverse;
+        bool inLeftTurn = leftTurn;
+        bool inRightTurn = rightTurn;
+
 
         Entities.ForEach((ref Player_Drive_Component pdc) => {            
             pdc.currentSpeed = math.sqrt(math.pow(pdc.currentVelocity.x, 2) +
                                         math.pow(pdc.currentVelocity.y, 2) +
                                         math.pow(pdc.currentVelocity.z, 2));
-            pdc.speedParameter = pdc.maxMotorTorque * pdc.maxAcceleration * vAxis * (1 - (pdc.currentSpeed / pdc.maxSpeed));
             pdc.steerParameter = pdc.maxSteerAngle * hAxis;
             //G29 Input-----------------------------------------------------------------------
             pdc.steeringWheelAngle = 450.0f * hAxis;
@@ -100,6 +146,16 @@ public class Player_Drive_System : SystemBase {
                 pdc.brakeParameter = 0;
             }
             pdc.gasPedal = gasPedal;
+            if (inReverse) {
+                pdc.inReverse = true;
+                pdc.speedParameter = pdc.maxMotorTorque * pdc.maxAcceleration * vAxis * (1 - (pdc.currentSpeed / pdc.maxSpeed)) * -1f;
+            }
+            else {
+                pdc.inReverse = false;
+                pdc.speedParameter = pdc.maxMotorTorque * pdc.maxAcceleration * vAxis * (1 - (pdc.currentSpeed / pdc.maxSpeed));
+            }
+            pdc.inRightTurn = inRightTurn;
+            pdc.inLeftTurn = inLeftTurn;
 
             //Keyboard Input------------------------------------------------------------------
             /*pdc.steeringWheelAngle = 90.0f * hAxis;
@@ -119,6 +175,7 @@ public class Player_Drive_System : SystemBase {
 
     protected override void OnDestroy() {
         Debug.Log("SteeringShutdown:" + LogitechGSDK.LogiSteeringShutdown());
+        reverse = false;
     }
 
     void turnOnSpring() {
