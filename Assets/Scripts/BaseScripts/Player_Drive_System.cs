@@ -120,6 +120,7 @@ public class Player_Drive_System : SystemBase {
         }
         
         if (rightTurnSignalAction.triggered) {
+            Debug.Log("rPressed");
             rightTurn = !rightTurn;
             leftTurn = false;
         }
