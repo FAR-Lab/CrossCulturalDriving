@@ -63,10 +63,11 @@ public class Drive_Bridge : MonoBehaviour {
     can be used for GM control and in-scenario updates to instructions*/
 
     private void OnDestroy() {
+        Debug.Log("called");
         tailLight.SetColor("_Color", reverseColor);
         tailLight.SetColor("_EmissionColor", emittedReverseColor);
-        TurnSignalOff(frontLeftLamp, backLeftLamp);
-        TurnSignalOff(frontRightLamp, backRightLamp);
+        StopAllCoroutines();
+        TurnLightsOff();
         inRightTurn = false;
         inLeftTurn = false;
         inReverse = false;
@@ -81,7 +82,11 @@ public class Drive_Bridge : MonoBehaviour {
         emittedTurnColor = frontLeftLamp.GetColor("_EmissionColor");
         rb = GetComponentInParent<Rigidbody>();
         rb.centerOfMass = rb.centerOfMass + new Vector3(0, -0.8f, 0);
+        StopAllCoroutines();
+        inRightTurn = false;
+        inLeftTurn = false;
         turnLightOn = false;
+        TurnLightsOff();
         /*receivedInstructions = false;
         activeCar = false;
         can be used for GM control and in-scenario updates to instructions*/
@@ -189,8 +194,20 @@ public class Drive_Bridge : MonoBehaviour {
     private void TurnSignalOff(Material front, Material back) {
         front.SetColor("_Color", turnColor);
         front.SetColor("_EmissionColor", emittedTurnColor);
-        back.SetColor("_Color", turnColor);
-        back.SetColor("_EmissionColor", emittedTurnColor);
+        back.SetColor("_Color", reverseColor);
+        back.SetColor("_EmissionColor", emittedReverseColor);
+    }
+
+    private void TurnLightsOff()
+    {
+        frontRightLamp.SetColor("_Color", turnColor);
+        frontRightLamp.SetColor("_EmissionColor", emittedTurnColor);
+        backRightLamp.SetColor("_Color", reverseColor);
+        backRightLamp.SetColor("_EmissionColor", emittedReverseColor);
+        frontLeftLamp.SetColor("_Color", turnColor);
+        frontLeftLamp.SetColor("_EmissionColor", emittedTurnColor);
+        backLeftLamp.SetColor("_Color", reverseColor);
+        backLeftLamp.SetColor("_EmissionColor", emittedReverseColor);
     }
 
     IEnumerator waitForLight(bool turn) {

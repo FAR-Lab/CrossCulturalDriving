@@ -10,7 +10,6 @@ public class AI_Drive_Entity : MonoBehaviour {
     public float maxMotorTorque;
     public float maxBrakeTorque;
     public float maxSteerAngle;
-    public GameObject destination;
     public List<GameObject> destinations;
     public List<float> waitTimes;
     public NavMeshAgent agent;
@@ -47,7 +46,6 @@ public class AI_Drive_Entity : MonoBehaviour {
             maxSteerAngle = maxSteerAngle,
             worldDownVector = Vector3.down
         });
-        //agent.SetDestination(destination.transform.position);
         agent.SetDestination(destinations[0].transform.position);
         destinations.RemoveAt(0);
     }
@@ -80,16 +78,16 @@ public class AI_Drive_Entity : MonoBehaviour {
         }
     }
     IEnumerator wait() {
-        Debug.Log("entered");
+        //Debug.Log("entered");
         yield return new WaitForSeconds(waitTimes[0]);
         waiting = false;
         waitTimes.RemoveAt(0);
-        Debug.Log(agent.SetDestination(destinations[0].transform.position));
+        agent.SetDestination(destinations[0].transform.position);
         destinations.RemoveAt(0);
     }
 
     private void SetDriveParameters(float dist) {
-        if (db != null && !agent.pathPending && dotProduct < 0 && agent.remainingDistance + dist > 5) {
+        if (db != null && !agent.pathPending && dotProduct < 0 && agent.remainingDistance + dist > 4) {
             db.steerParameter = steerParameter;
             db.brakeParameter = 0;
             if (currentSpeed < maxSpeed) {
@@ -104,9 +102,9 @@ public class AI_Drive_Entity : MonoBehaviour {
             if (dotProduct > 0 && currentSpeed <= 0.1) {
                 ResetVehicle();
             }
-            Debug.Log("remaining dist: " + agent.remainingDistance + dist);
-            Debug.Log("waiting: " + waiting);
-            if (db != null && dotProduct < 0 && agent.remainingDistance + dist < 1.5 && waiting == false && waitTimes.Count > 0) {
+            //Debug.Log("remaining dist: " + agent.remainingDistance + dist);
+            //Debug.Log("waiting: " + waiting);
+            if (db != null && dotProduct < 0 && agent.remainingDistance + dist < 3.5 && waiting == false && waitTimes.Count > 0) {
                 waiting = true;
                 StartCoroutine(wait());
             }

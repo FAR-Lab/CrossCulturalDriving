@@ -90,4 +90,10 @@ public class Player_Drive_Entity : MonoBehaviour {
             db.inLeftTurn = inLeftTurn;
         }
     }
+
+    private void OnDestroy()
+    {
+        inLeftTurn = false;
+        inRightTurn = false;
+    }
 }
