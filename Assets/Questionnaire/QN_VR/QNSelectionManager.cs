@@ -77,6 +77,26 @@ public class QNSelectionManager : MonoBehaviour {
     void Start() {
         selectAction = new InputAction("Select");
         selectAction.AddBinding("<Joystick>/trigger");
+        selectAction.AddBinding("<Joystick>/button2");
+        selectAction.AddBinding("<Joystick>/button3");
+        selectAction.AddBinding("<Joystick>/button4");
+        selectAction.AddBinding("<Joystick>/button5");
+        selectAction.AddBinding("<Joystick>/button6");
+        selectAction.AddBinding("<Joystick>/button7");
+        selectAction.AddBinding("<Joystick>/button8");
+        selectAction.AddBinding("<Joystick>/button9");
+        selectAction.AddBinding("<Joystick>/button10");
+        selectAction.AddBinding("<Joystick>/button11");
+        selectAction.AddBinding("<Joystick>/button12");
+        selectAction.AddBinding("<Joystick>/button20");
+        selectAction.AddBinding("<Joystick>/button21");
+        selectAction.AddBinding("<Joystick>/button22");
+        selectAction.AddBinding("<Joystick>/button23");
+        selectAction.AddBinding("<Joystick>/button24");
+        selectAction.AddBinding("<Joystick>/hat/down");
+        selectAction.AddBinding("<Joystick>/hat/up");
+        selectAction.AddBinding("<Joystick>/hat/left");
+        selectAction.AddBinding("<Joystick>/hat/right");
         selectAction.Enable();
         //useAltLanguage = SceneStateManager.Instance.UseHebrewLanguage;
         useAltLanguage = false;

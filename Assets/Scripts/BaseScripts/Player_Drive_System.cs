@@ -2,6 +2,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Player_Drive_System : SystemBase {
     private InputAction accelerateAction;
@@ -10,6 +11,7 @@ public class Player_Drive_System : SystemBase {
     private InputAction rightTurnSignalAction;
     private InputAction leftTurnSignalAction;
     private InputAction brakeAction;
+    private InputAction resetAction;
     private bool reverse;
     private bool rightTurn;
     private bool leftTurn;
@@ -60,16 +62,19 @@ public class Player_Drive_System : SystemBase {
         reverseAction = new InputAction("Reverse");
         rightTurnSignalAction = new InputAction("Right Turn Signal");
         leftTurnSignalAction = new InputAction("Left Turn Signal");
+        resetAction = new InputAction("Reset Scene");
         accelerateAction.AddBinding("<Joystick>/z");
         brakeAction.AddBinding("<Joystick>/rz");
         reverseAction.AddBinding("<Joystick>/button24");
         rightTurnSignalAction.AddBinding("<Joystick>/button5");
         leftTurnSignalAction.AddBinding("<Joystick>/button6");
+        resetAction.AddBinding("<Keyboard>/q");
         accelerateAction.Enable();
         brakeAction.Enable();
         reverseAction.Enable();
         rightTurnSignalAction.Enable();
         leftTurnSignalAction.Enable();
+        resetAction.Enable();
         reverse = false;
         rightTurn = false;
         leftTurn = false;
@@ -103,7 +108,6 @@ public class Player_Drive_System : SystemBase {
           bool spaceKey = brakeValue > 0;*/
 
         //G29 LOGITECH INPUT------------------------------------------------------------------
-        turnOnSpring();
         LogitechGSDK.LogiUpdate();
         LogitechGSDK.DIJOYSTATE2ENGINES rec;
         rec = LogitechGSDK.LogiGetStateUnity(0);
@@ -129,9 +133,15 @@ public class Player_Drive_System : SystemBase {
             leftTurn = !leftTurn;
             rightTurn = false;
         }
+        if (resetAction.triggered)
+        {
+            SceneManager.LoadScene("ScenarioSelector");
+        }
         bool inReverse = reverse;
         bool inLeftTurn = leftTurn;
         bool inRightTurn = rightTurn;
+        int speedRatio = (int)(vAxis * 10);
+        springEdit(speedRatio);
 
 
         Entities.ForEach((ref Player_Drive_Component pdc) => {            
@@ -171,18 +181,19 @@ public class Player_Drive_System : SystemBase {
             pdc.carStarted = engineStarted;
             can be used for GM control and in-scenario updates to instructions*/
         }).Run();
-
+        
     }
 
     protected override void OnDestroy() {
         Debug.Log("SteeringShutdown:" + LogitechGSDK.LogiSteeringShutdown());
         reverse = false;
+        rightTurn = false;
+        leftTurn = false;
     }
 
-    void turnOnSpring() {
-        if (!LogitechGSDK.LogiIsPlaying(0, LogitechGSDK.LOGI_FORCE_SPRING)) {
-                LogitechGSDK.LogiPlaySpringForce(0, 0, 95, 10);
-        }
+    void springEdit(int r)
+    {
+        LogitechGSDK.LogiPlaySpringForce(0, 0, 95, r);
     }
 
 

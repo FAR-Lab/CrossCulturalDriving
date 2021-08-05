@@ -45,18 +45,18 @@ public class SpecificSceneManager : MonoBehaviour {
         if (lerpAdaption < 1) {
             lerpAdaption += Time.deltaTime * 10f;
             //Debug.Log("slowing DownTime at " + lerpAdaption);
-            Time.timeScale = Mathf.Lerp(1, 0.5f, lerpAdaption);
+            Time.timeScale = Mathf.Lerp(1, 0.01f, lerpAdaption);
         } else if (lerpAdaption >= 1 && lerpAdaption < 2) {
             lerpAdaption = 2;
             if (true) {
                 foreach (Player_Drive_Entity vn in FindObjectsOfType<Player_Drive_Entity>()) {
-
+                   
                         qnmanager = Instantiate(
                             QuestionairPrefab,
-                            vn.transform.position + vn.transform.up * 1.5f + vn.transform.forward * 2.5f,
+                            vn.transform.position + vn.transform.forward * 2.5f + vn.transform.up * 1.5f,
                             vn.transform.rotation).GetComponent<QNSelectionManager>();
 
-                        qnmanager.setRelativePosition(vn.transform, 1.75f, 4f);
+                        qnmanager.setRelativePosition(vn.transform, .75f, 4f);
                         
                         WaitAFrame = true;
                     
@@ -66,7 +66,7 @@ public class SpecificSceneManager : MonoBehaviour {
 
     }
     public void runQuestionairNow() {
-        Debug.Log("Running questionairNow");
+        Debug.Log("Running questionaire Now");
         //SceneStateManager.Instance.SetQuestionair();
         lerpAdaption = 0;
     }
