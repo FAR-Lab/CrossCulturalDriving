@@ -431,7 +431,7 @@ public class QNSelectionManager : MonoBehaviour {
         bool first = true;
         QandASet lastSet = new QandASet();
         lastSet.Answers = new List<OneAnswer>();
-
+        Debug.Log("lOADING: "+asset.name);
         foreach (string line in asset.text.Split('\n')) {
            
             if (line.StartsWith("/")) {// new Question
@@ -480,7 +480,7 @@ public class QNSelectionManager : MonoBehaviour {
                         {
                             temporary = temporary.Split(' ')[0];
                         }
-                        Debug.Log(temporary);
+                        //Debug.Log(temporary);
                         if (int.TryParse(temporary, out candidate)) {
                             temp.NextQuestionsIDs.Add(candidate);
                         }
@@ -492,7 +492,7 @@ public class QNSelectionManager : MonoBehaviour {
                             temp.Answer_DiffLang = ClearEmbedingCharacter(s.Substring(beginCharacter + 1, ( endCharacter ) - ( beginCharacter + 1 )));
                            
                         } else {
-                           
+                            Debug.Log("ERROR IN : " + s);
                             Debug.LogError("This should really not happen not finding a complete alt lang Answer");
                         }
                         

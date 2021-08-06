@@ -176,6 +176,7 @@ public class Player_Drive_System : SystemBase {
             } else {
                 pdc.brakeParameter = 0;
             }
+            pdc.speedParameter = pdc.maxMotorTorque * pdc.maxAcceleration * vAxis * (1 - (pdc.currentSpeed / pdc.maxSpeed));
             pdc.gasPedal = gasPedal;*/
 
             /*pdc.scenarioNum = scenarioNum;
