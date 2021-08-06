@@ -56,18 +56,18 @@ public class Drive_Bridge : MonoBehaviour {
     private Rigidbody rb;
     private Vector3 pos;
     private Quaternion rot;
-    private bool turnLightOn;
+    public bool turnLightOn;
     private Quaternion originalSteerRot;
     /*private bool receivedInstructions;
     private bool activeCar;
     can be used for GM control and in-scenario updates to instructions*/
 
     private void OnDestroy() {
-        Debug.Log("called");
         tailLight.SetColor("_Color", reverseColor);
         tailLight.SetColor("_EmissionColor", emittedReverseColor);
         StopAllCoroutines();
         TurnLightsOff();
+        turnLightOn = false;
         inRightTurn = false;
         inLeftTurn = false;
         inReverse = false;
@@ -102,7 +102,14 @@ public class Drive_Bridge : MonoBehaviour {
             if (Time.realtimeSinceStartup >= 8)
             Drive();
         }*/
-        Drive();
+        if (isPlayer)
+        {
+            Drive();
+        }
+        else if (Time.realtimeSinceStartup >= 4.2){
+
+            Drive();
+        }
     }
 
     void Drive() {

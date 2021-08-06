@@ -71,8 +71,10 @@ public class Player_Drive_Entity : MonoBehaviour {
         SetDriveParameters();
     }
 
-    private void SetDriveParameters() {
-        if (db != null) {
+    private void SetDriveParameters()
+    {
+        if (db != null)
+        {
             db.steerParameter = steerParameter;
             db.brakeParameter = brakeParameter;
             db.gasPressed = gasPressed;
@@ -80,20 +82,17 @@ public class Player_Drive_Entity : MonoBehaviour {
             /*db.scenarioNum = scenarioNum;
             //db.carStarted = carStarted;
             can be used for GM control and in-scenario updates to instructions */
-            if (currentSpeed < maxSpeed) {
+            if (currentSpeed < maxSpeed)
+            {
                 db.speedParameter = speedParameter;
-            } else {
+            }
+            else
+            {
                 db.speedParameter = 0;
             }
             db.inReverse = inReverse;
             db.inRightTurn = inRightTurn;
             db.inLeftTurn = inLeftTurn;
         }
-    }
-
-    private void OnDestroy()
-    {
-        inLeftTurn = false;
-        inRightTurn = false;
     }
 }

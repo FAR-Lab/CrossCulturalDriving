@@ -71,16 +71,21 @@ public class SpecificSceneManager : MonoBehaviour {
         lerpAdaption = 0;
     }
 
-    private void OnCollisionEnter(Collision collision) {
+    private void OnTriggerEnter(Collider other)
+    {
+        runQuestionairNow();
+    }
+
+    /*private void OnCollisionEnter(Collision collision) {
 
         //Debug.Log("OnCollisionEnter" + other.transform.name);
         runQuestionairNow();
-        /*if (other.transform.parent.GetComponent<VehicleInputControllerNetworked>() != null  //if its a car 
+        if (other.transform.parent.GetComponent<VehicleInputControllerNetworked>() != null  //if its a car 
             && other.transform.parent.GetComponent<VehicleInputControllerNetworked>().isLocalPlayer // and Its us
             && SceneStateManager.Instance.ActionState == ActionState.DRIVE) { // and we are driving
             Debug.Log("Found the local Player that was driving slowing down time,loading uquestionair");
             other.transform.parent.GetComponent<VehicleInputControllerNetworked>().CmdStartQuestionairGloablly();
-        }*/
-    }
+        }
+    }*/
 
 }

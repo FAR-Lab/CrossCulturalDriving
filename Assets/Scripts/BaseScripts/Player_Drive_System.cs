@@ -67,7 +67,9 @@ public class Player_Drive_System : SystemBase {
         brakeAction.AddBinding("<Joystick>/rz");
         reverseAction.AddBinding("<Joystick>/button24");
         rightTurnSignalAction.AddBinding("<Joystick>/button5");
+        rightTurnSignalAction.AddBinding("<Keyboard>/d");
         leftTurnSignalAction.AddBinding("<Joystick>/button6");
+        leftTurnSignalAction.AddBinding("<Keyboard>/a");
         resetAction.AddBinding("<Keyboard>/q");
         accelerateAction.Enable();
         brakeAction.Enable();
@@ -124,7 +126,6 @@ public class Player_Drive_System : SystemBase {
         }
         
         if (rightTurnSignalAction.triggered) {
-            Debug.Log("rPressed");
             rightTurn = !rightTurn;
             leftTurn = false;
         }
@@ -187,8 +188,6 @@ public class Player_Drive_System : SystemBase {
     protected override void OnDestroy() {
         Debug.Log("SteeringShutdown:" + LogitechGSDK.LogiSteeringShutdown());
         reverse = false;
-        rightTurn = false;
-        leftTurn = false;
     }
 
     void springEdit(int r)
