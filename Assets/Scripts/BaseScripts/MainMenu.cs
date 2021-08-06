@@ -45,6 +45,11 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("Scenario 10");
     }
 
+    public void PlayPractice()
+    {
+        SceneManager.LoadScene("Practice");
+    }
+
     public void PlayScenarioSelect() {
         SceneManager.LoadScene("ScenarioSelector");
     }
