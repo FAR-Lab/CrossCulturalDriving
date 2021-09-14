@@ -20,7 +20,7 @@ public class ConfigFileLoading : MonoBehaviour
     }
     void Start()
     {
-        m_path = Application.persistentDataPath + OffsetFileName;
+        m_path = Application.persistentDataPath + "\\" + OffsetFileName;
         ready = true;
     }
 
