@@ -376,10 +376,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170c92b9eea180d4ebc66dff45f7bd77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  steeringWheelT: {fileID: 1200685935}
+  steeringWheelCenter: {fileID: 0}
   OVRRig: {fileID: 1083145383}
-  leftHandAnchor: {fileID: 882028726}
-  rightHandAnchor: {fileID: 836504921}
+  leftHandPalm: {fileID: 0}
+  rightHandPalm: {fileID: 0}
+  steeringWheelLeft: {fileID: 0}
+  steeringWheelRight: {fileID: 0}
+  instructionText: {fileID: 0}
 --- !u!1001 &770100378
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -425,16 +428,6 @@ PrefabInstance:
       objectReference: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef59dc64d09a6bb47938aa11bb8c2740, type: 3}
---- !u!4 &836504921 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3925695855061439490, guid: f97ee77ddd274234080f9b80fa9bcc25, type: 3}
-  m_PrefabInstance: {fileID: 1717925031}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &882028726 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3998873213368273975, guid: f97ee77ddd274234080f9b80fa9bcc25, type: 3}
-  m_PrefabInstance: {fileID: 1717925031}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &894999825
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -834,11 +827,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!4 &1200685935 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4419251533435434, guid: f97ee77ddd274234080f9b80fa9bcc25, type: 3}
-  m_PrefabInstance: {fileID: 1717925031}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1383976725
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3023,6 +3011,10 @@ PrefabInstance:
     - target: {fileID: 4233475282074437767, guid: 0214a9c55cc8cb346880c6c8a3d9e4bf, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4233475282074437767, guid: 0214a9c55cc8cb346880c6c8a3d9e4bf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4233478005651002005, guid: 0214a9c55cc8cb346880c6c8a3d9e4bf, type: 3}
       propertyPath: m_Layer
