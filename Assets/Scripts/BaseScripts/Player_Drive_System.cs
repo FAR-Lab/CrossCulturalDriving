@@ -20,7 +20,7 @@ public class Player_Drive_System : SystemBase {
         /*nothing to be done here*/
 
         //KEYBOARD UNITY INPUTSYSTEM----------------------------------------------------------
-        accelerateAction = new InputAction("Accelerate");
+        /*accelerateAction = new InputAction("Accelerate");
         steerAction = new InputAction("Steer");
         accelerateAction.AddCompositeBinding("Axis")
             .With("Positive", "<Keyboard>/w")
@@ -29,7 +29,7 @@ public class Player_Drive_System : SystemBase {
             .With("Positive", "<Keyboard>/d")
             .With("Negative", "<Keyboard>/a");
         accelerateAction.Enable();
-        steerAction.Enable();
+        steerAction.Enable();*/
 
         //G29 UNITY INPUTSYSTEM---------------------------------------------------------------
         /*Debug.Log("SteeringInit:" + LogitechGSDK.LogiSteeringInitialize(false));
@@ -56,7 +56,7 @@ public class Player_Drive_System : SystemBase {
           leftTurn = false;*/
 
         //G29 LOGITECH INPUT------------------------------------------------------------------
-        /*Debug.Log("SteeringInit:" + LogitechGSDK.LogiSteeringInitialize(false));
+        Debug.Log("SteeringInit:" + LogitechGSDK.LogiSteeringInitialize(false));
         accelerateAction = new InputAction("Accelerate");
         brakeAction = new InputAction("Brake");
         reverseAction = new InputAction("Reverse");
@@ -79,7 +79,7 @@ public class Player_Drive_System : SystemBase {
         resetAction.Enable();
         reverse = false;
         rightTurn = false;
-        leftTurn = false;*/
+        leftTurn = false;
     }
     protected override void OnUpdate() {
         /*bool engineStarted = Input.GetKeyDown(KeyCode.LeftShift); change to a key not available on the steering wheel
@@ -95,10 +95,10 @@ public class Player_Drive_System : SystemBase {
           bool spaceKey = Input.GetKey("space");*/
 
         //KEYBOARD UNITY INPUTSYSTEM----------------------------------------------------------
-        float hAxis = steerAction.ReadValue<float>();
+        /*float hAxis = steerAction.ReadValue<float>();
           float vAxis = accelerateAction.ReadValue<float>();
           bool gasPedal = Keyboard.current.wKey.isPressed || Keyboard.current.sKey.isPressed;
-          bool spaceKey = Keyboard.current.spaceKey.isPressed;
+          bool spaceKey = Keyboard.current.spaceKey.isPressed;*/
 
         //G29 UNITY INPUTSYSTEM---------------------------------------------------------------
         /*float hAxis = steerAction.ReadValue<float>();
@@ -110,7 +110,7 @@ public class Player_Drive_System : SystemBase {
           bool spaceKey = brakeValue > 0;*/
 
         //G29 LOGITECH INPUT------------------------------------------------------------------
-        /*LogitechGSDK.LogiUpdate();
+        LogitechGSDK.LogiUpdate();
         LogitechGSDK.DIJOYSTATE2ENGINES rec;
         rec = LogitechGSDK.LogiGetStateUnity(0);
         float hAxis = rec.lX / 32767.0f;
@@ -142,7 +142,7 @@ public class Player_Drive_System : SystemBase {
         bool inLeftTurn = leftTurn;
         bool inRightTurn = rightTurn;
         int speedRatio = (int)(vAxis * 10);
-        springEdit(speedRatio);*/
+        springEdit(speedRatio);
 
 
         Entities.ForEach((ref Player_Drive_Component pdc) => {            
@@ -151,7 +151,7 @@ public class Player_Drive_System : SystemBase {
                                         math.pow(pdc.currentVelocity.z, 2));
             pdc.steerParameter = pdc.maxSteerAngle * hAxis;
             //G29 Input-----------------------------------------------------------------------
-            /*pdc.steeringWheelAngle = 450.0f * hAxis;
+            pdc.steeringWheelAngle = 450.0f * hAxis;
             if (spaceKey) {
                 pdc.brakeParameter = pdc.maxBrakeTorque * (pdc.currentSpeed / pdc.maxSpeed) * pdc.maxAcceleration * 3.0f * brakeValue;
             } else {
@@ -167,17 +167,17 @@ public class Player_Drive_System : SystemBase {
                 pdc.speedParameter = pdc.maxMotorTorque * pdc.maxAcceleration * vAxis * (1 - (pdc.currentSpeed / pdc.maxSpeed));
             }
             pdc.inRightTurn = inRightTurn;
-            pdc.inLeftTurn = inLeftTurn;*/
+            pdc.inLeftTurn = inLeftTurn;
 
             //Keyboard Input------------------------------------------------------------------
-            pdc.steeringWheelAngle = 90.0f * hAxis;
+            /*pdc.steeringWheelAngle = 90.0f * hAxis;
             if (spaceKey) {
                 pdc.brakeParameter = pdc.maxBrakeTorque * (pdc.currentSpeed / pdc.maxSpeed) * pdc.maxAcceleration;
             } else {
                 pdc.brakeParameter = 0;
             }
             pdc.speedParameter = pdc.maxMotorTorque * pdc.maxAcceleration * vAxis * (1 - (pdc.currentSpeed / pdc.maxSpeed));
-            pdc.gasPedal = gasPedal;
+            pdc.gasPedal = gasPedal;*/
 
             /*pdc.scenarioNum = scenarioNum;
             pdc.carStarted = engineStarted;
