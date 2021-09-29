@@ -18,7 +18,7 @@ public class GpsController : MonoBehaviour {
     // Use this for initialization
     void Start() {
         gpsImagePlane.sprite = spriteForDirection(defaultDirection);
-        AltLanguge = false;
+       // AltLanguge = SceneStateManager.Instance.UseHebrewLanguage;
     }
 
     // Update is called once per frame
