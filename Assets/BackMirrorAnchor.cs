@@ -18,7 +18,7 @@ public class BackMirrorAnchor : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (false)
+        if (true) //SceneStateManager.Instance.ActionState != ActionState.DRIVE
         {
             float lerpValue = Mathf.Lerp(0, 1, ((CameraPos.localPosition.y - minIn) / (maxIn - minIn)));
 ;            transform.localPosition = Vector3.Lerp(LowerTarget.localPosition, InitalUpperPosition, lerpValue);

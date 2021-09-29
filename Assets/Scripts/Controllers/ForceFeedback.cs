@@ -26,6 +26,7 @@ public class ForceFeedback : MonoBehaviour
     private Rigidbody rb;
     bool changedtoQuestionair = false;
     float forcelerperQuestionair = -1;
+    ActionState previousACtionstate;
     void Start()
     {
         
@@ -68,18 +69,18 @@ public class ForceFeedback : MonoBehaviour
 
     void Update()
     {
-       // if (previousACtionstate != ActionState.QUESTIONS && SceneStateManager.Instance.ActionState == ActionState.QUESTIONS) // Figure out when answering questions... 
-       // {
-      //      changedtoQuestionair = false;
-       //     forcelerperQuestionair = 2;
-         //   previousACtionstate = SceneStateManager.Instance.ActionState;
+        if (previousACtionstate != ActionState.QUESTIONS) //&& SceneStateManager.Instance.ActionState == ActionState.QUESTIONS
+        {
+            changedtoQuestionair = false;
+            forcelerperQuestionair = 2;
+           // previousACtionstate = SceneStateManager.Instance.ActionState;
            
-       // }
-     //   else
-       // {
-      //      previousACtionstate = SceneStateManager.Instance.ActionState;
-      //  }
-      /*
+        }
+        else
+        {
+           // previousACtionstate = SceneStateManager.Instance.ActionState;
+        }
+
         if (forcelerperQuestionair > 0)
         {
             forcelerperQuestionair -= (Time.deltaTime*(1 / Time.timeScale) );
@@ -94,7 +95,6 @@ public class ForceFeedback : MonoBehaviour
 
 
             selfAlignmentTorque = 0f;
-      */
         foreach (var wheel in wheels) {
             if (wheel.isGrounded) {
                 WheelHit hit;
@@ -120,7 +120,7 @@ public class ForceFeedback : MonoBehaviour
         float forceFeedback = selfAlignmentTorque;
 
         //disable during autodrive mode
-        /*if (SceneStateManager.Instance !=null && SceneStateManager.Instance.ActionState!=ActionState.DRIVE && SceneStateManager.Instance.ActionState != ActionState.QUESTIONS)
+        if (true)// SceneStateManager.Instance !=null && SceneStateManager.Instance.ActionState!=ActionState.DRIVE && SceneStateManager.Instance.ActionState != ActionState.QUESTIONS
         {
             if (logi != null)
             {
@@ -131,11 +131,11 @@ public class ForceFeedback : MonoBehaviour
             }
         }
         else
-        {*/
+        {
             if (logi != null)
             {
-                /*
-                if (SceneStateManager.Instance.ActionState == ActionState.QUESTIONS && changedtoQuestionair)
+
+                if (true) //SceneStateManager.Instance.ActionState == ActionState.QUESTIONS && changedtoQuestionairs
                 {
                     
                     if (logi.GetSteerInput() > 0.025f)
@@ -157,20 +157,20 @@ public class ForceFeedback : MonoBehaviour
                     logi.SetDamperForce((int)damperAmount/2);
 
 
-                }*/
-              //  else
-              //  {
+                }
+                else
+                {
                     logi.Init();
 
                     logi.SetConstantForce((int)(forceFeedback * 10000f));
                     logi.SetSpringForce(Mathf.RoundToInt(springSaturation * Mathf.Abs(forceFeedback) * 10000f), Mathf.RoundToInt(springCoeff * 10000f));
                     logi.SetDamperForce(damperAmount);
-               // }
+                }
                 
 
 
 
-          //  }
+            }
         }
 
 

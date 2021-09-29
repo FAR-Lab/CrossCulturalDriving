@@ -6,11 +6,10 @@
  */
 
 using UnityEngine;
-using UnityEngine.InputSystem;
-
+using UnityEngine.Networking;
 using System.Collections;
 
-public class VehicleInputControllerNetworked : MonoBehaviour
+public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
 {
 
     public Transform SteeringWheel;
@@ -53,9 +52,6 @@ public class VehicleInputControllerNetworked : MonoBehaviour
     public bool DualButtonDebounceIndicator;
     public bool LeftIndicatorDebounce;
     public bool RightIndicatorDebounce;
-    private InputAction rightTurnSignalAction;
-    private InputAction leftTurnSignalAction;
-    private InputAction hornAction;
     AudioSource HonkSound;
 
     void Awake()
@@ -65,33 +61,10 @@ public class VehicleInputControllerNetworked : MonoBehaviour
     }
     private void Start()
     {
-        rightTurnSignalAction = new InputAction("Right Turn Signal");
-        leftTurnSignalAction = new InputAction("Left Turn Signal");
-        hornAction = new InputAction("Horn");
-        rightTurnSignalAction.AddBinding("<Joystick>/button5");
-        leftTurnSignalAction.AddBinding("<Joystick>/button6");
-        hornAction.AddBinding("<Joystick>/trigger");
-        hornAction.AddBinding("<Joystick>/button2");
-        hornAction.AddBinding("<Joystick>/button3");
-        hornAction.AddBinding("<Joystick>/button4");
-        hornAction.AddBinding("<Joystick>/button7");
-        hornAction.AddBinding("<Joystick>/button8");
-        hornAction.AddBinding("<Joystick>/button9");
-        hornAction.AddBinding("<Joystick>/button10");
-        hornAction.AddBinding("<Joystick>/button11");
-        hornAction.AddBinding("<Joystick>/button12");
-        hornAction.AddBinding("<Joystick>/button20");
-        hornAction.AddBinding("<Joystick>/button21");
-        hornAction.AddBinding("<Joystick>/button22");
-        hornAction.AddBinding("<Joystick>/button23");
-        hornAction.AddBinding("<Joystick>/button24");
-        hornAction.AddBinding("<Joystick>/hat/down");
-        hornAction.AddBinding("<Joystick>/hat/up");
-        hornAction.AddBinding("<Joystick>/hat/left");
-        hornAction.AddBinding("<Joystick>/hat/right");
-        rightTurnSignalAction.Enable();
-        leftTurnSignalAction.Enable();
-        hornAction.Enable();
+       // if (SceneStateManager.Instance != null)
+       // {
+        //    SceneStateManager.Instance.SetReady();
+       // } // David 2021 Really feels like there should have been an else here? ..
 
         steeringInput = GetComponent<SteeringWheelInputController>();
         indicaterStage = 0;
@@ -228,14 +201,14 @@ public class VehicleInputControllerNetworked : MonoBehaviour
         }
     }
 
-  
+  ///  [Command]
     public void CmdUpdateIndicatorLights(bool Left, bool Right)
     {
         RpcTurnOnLeft(Left);
         RpcTurnOnRight(Right);
 
     }
-   
+    //[ClientRpc]
     public void RpcTurnOnLeft(bool Leftl_)
     {
         if (Leftl_)
@@ -253,7 +226,7 @@ public class VehicleInputControllerNetworked : MonoBehaviour
             }
         }
     }
-    
+  //  [ClientRpc]
     public void RpcTurnOnRight(bool Rightl_)
     {
         if (Rightl_)
@@ -273,25 +246,25 @@ public class VehicleInputControllerNetworked : MonoBehaviour
 
     }
 
-    
+    //[Command]
     public void CmdStartQuestionairGloablly()
     {
         RpcRunQuestionairNow();
     }
 
-   
+    //[ClientRpc]
     public void RpcRunQuestionairNow()
     {
-        FindObjectOfType<SpecificSceneManager>().runQuestionairNow();
+       // FindObjectOfType<SpecificSceneManager>().runQuestionairNow();
 
     }
-    
+   // [Command]
     public void CmdStartWalking()
     {
         RpcStartWallking();
     }
 
-    
+   // [ClientRpc]
     public void RpcStartWallking()
     {
         foreach (MaleAvatarController a in FindObjectsOfType<MaleAvatarController>())
@@ -300,13 +273,13 @@ public class VehicleInputControllerNetworked : MonoBehaviour
         }
     }
 
-   
+   // [Command]
     public void CmdSwitchBrakeLight(bool Active)
     {
         RpcTurnOnBrakeLight(Active);
 
     }
-   
+  //  [ClientRpc]
     public void RpcTurnOnBrakeLight(bool Active)
     {
         if (Active)
@@ -326,27 +299,25 @@ public class VehicleInputControllerNetworked : MonoBehaviour
     }
 
 
-   
+   // [Command]
     public void CmdStartDriving()
     {
         RpcSetToDrive();
     }
-    
+  //  [ClientRpc]
     public void RpcSetToDrive()
     {
-        //SceneStateManager.Instance.SetDriving();
+      //  SceneStateManager.Instance.SetDriving();
     }
 
 
-    
-
-
+   // [Command]
     public void CmdHonkMyCar()
     {
         RpcHonkmyCar();
     }
 
-   
+   // [ClientRpc]
     public void RpcHonkmyCar()
     {
         HonkSound.Play();
@@ -354,6 +325,7 @@ public class VehicleInputControllerNetworked : MonoBehaviour
 
 
 
+   // [ClientRpc]
     public void RpcSetGPS(GpsController.Direction[] dir)
     {
        // GetComponentInChildren<GpsController>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
@@ -361,11 +333,21 @@ public class VehicleInputControllerNetworked : MonoBehaviour
 
     void Update()
     {
-       
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            foreach (seatCallibration sc in FindObjectsOfType<seatCallibration>())
+            {
+                if (sc.isPartOfLocalPlayer())
+                {
+                    sc.reCallibrate();
+                    break;
+                }
+            }
+        }
 
-        //ToDo :Fix both the input (new input system and button layout 
-        //ToDo: And the output 
-        
+        //MoveTo2020
+      //  if (isLocalPlayer)
+       // {
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 CmdStartDriving();
@@ -404,8 +386,8 @@ public class VehicleInputControllerNetworked : MonoBehaviour
 
 
 
-            //if (SceneStateManager.Instance.ActionState == ActionState.DRIVE) // Check that we are drviving
-           // {
+            if (true) //SceneStateManager.Instance.ActionState == ActionState.DRIVE
+        {
 
 
                 transitionlerp = 0;
@@ -422,10 +404,8 @@ public class VehicleInputControllerNetworked : MonoBehaviour
                     SteeringWheel.RotateAround(SteeringWheel.position, SteeringWheel.up, steeringAngle - steeringInput.GetSteerInput() * -450f);
                     steeringAngle = steeringInput.GetSteerInput() * -450f;
                 }
-        //bool TempLeft = Input.GetButton("indicateLeft");
-                bool TempLeft = leftTurnSignalAction.ReadValue<float>() != 0;
-        //bool TempRight = Input.GetButton("indicateRight");
-                bool TempRight = rightTurnSignalAction.ReadValue<float>() != 0;
+                bool TempLeft = Input.GetButton("indicateLeft");
+                bool TempRight = Input.GetButton("indicateRight");
                // Debug.Log(TempLeft.ToString()+ TempRight.ToString());
                 if (TempLeft || TempRight)
                 {
@@ -450,8 +430,10 @@ public class VehicleInputControllerNetworked : MonoBehaviour
 
 
 
-                if (hornAction.triggered)
+                if (Input.GetButtonDown("Horn"))
                 {
+                    
+                    //farlab_logger.Instance.EnqueEventLog("Honk");
                     CmdHonkMyCar();
                 }
 
@@ -469,16 +451,17 @@ public class VehicleInputControllerNetworked : MonoBehaviour
                 }
 
             }
-            
+            else if (true) //MoveTo2020  SceneStateManager.Instance.ActionState == ActionState.QUESTIONS
+        {
 
-               /* if (transitionlerp < 1)
+                if (transitionlerp < 1)
                 {
-                    transitionlerp += Time.deltaTime * 0.5f;
-                    controller.steerInput = Mathf.Lerp(controller.steerInput, 0, transitionlerp);
+                transitionlerp += Time.deltaTime;// //MoveTo2020 * SceneStateManager.slowDownSpeed;
+                controller.steerInput = Mathf.Lerp(controller.steerInput, 0, transitionlerp);
                     controller.accellInput = Mathf.Lerp(0, -1, transitionlerp);
                     Debug.Log("SteeringWheel: " + controller.steerInput + "\tAccel: " + controller.accellInput);
-                }*/
-            
-        
-    
+                }
+            }
+       // }
+    }
 }
