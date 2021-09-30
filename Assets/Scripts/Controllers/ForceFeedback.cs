@@ -69,7 +69,7 @@ public class ForceFeedback : MonoBehaviour
 
     void Update()
     {
-        if (previousACtionstate != ActionState.QUESTIONS) //&& SceneStateManager.Instance.ActionState == ActionState.QUESTIONS
+        /*if (previousACtionstate != ActionState.QUESTIONS) && SceneStateManager.Instance.ActionState == ActionState.QUESTIONS
         {
             changedtoQuestionair = false;
             forcelerperQuestionair = 2;
@@ -91,7 +91,7 @@ public class ForceFeedback : MonoBehaviour
                 changedtoQuestionair = true;
                 forcelerperQuestionair = -1;
             }
-        }
+        }*/
 
 
             selfAlignmentTorque = 0f;
@@ -120,7 +120,7 @@ public class ForceFeedback : MonoBehaviour
         float forceFeedback = selfAlignmentTorque;
 
         //disable during autodrive mode
-        if (true)// SceneStateManager.Instance !=null && SceneStateManager.Instance.ActionState!=ActionState.DRIVE && SceneStateManager.Instance.ActionState != ActionState.QUESTIONS
+        if (false)// SceneStateManager.Instance !=null && SceneStateManager.Instance.ActionState!=ActionState.DRIVE && SceneStateManager.Instance.ActionState != ActionState.QUESTIONS
         {
             if (logi != null)
             {
@@ -134,8 +134,8 @@ public class ForceFeedback : MonoBehaviour
         {
             if (logi != null)
             {
-
-                if (true) //SceneStateManager.Instance.ActionState == ActionState.QUESTIONS && changedtoQuestionairs
+                // this should be true when want to reset steering wheel to center after entering questionnaire
+                if (false) //SceneStateManager.Instance.ActionState == ActionState.QUESTIONS && changedtoQuestionairs
                 {
                     
                     if (logi.GetSteerInput() > 0.025f)
@@ -158,6 +158,7 @@ public class ForceFeedback : MonoBehaviour
 
 
                 }
+                //pulls the computed values together and sets them all together
                 else
                 {
                     logi.Init();

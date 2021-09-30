@@ -486,7 +486,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 102736}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57df0dfd5264fdc46a24f82641972c20, type: 3}
   m_Name: 
@@ -8037,7 +8037,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4056613939988268}
-  - component: {fileID: 114599137587312040}
   - component: {fileID: 865491151842721446}
   m_Layer: 9
   m_Name: CameraPosition
@@ -8060,28 +8059,6 @@ Transform:
   m_Father: {fileID: 495970}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: -7.5, y: 0, z: 0}
---- !u!114 &114599137587312040
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1194871774110550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 986979759c8c19846bc2164560133374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  steeringWheelCenter: {fileID: 4947273423364598}
-  passangerCenter: {fileID: 4947273423364598}
-  handTrackin: 1
-  forPassenger: 0
-  callibrationTimer: 2
-  startCallibrating: 0
-  headPose: {fileID: 0}
-  offset: {x: 0, y: 0, z: 0}
-  rotOld: {x: 0, y: 0, z: 0, w: 0}
-  driftCorrection: {x: 0, y: 0, z: 0, w: 0}
 --- !u!20 &865491151842721446
 Camera:
   m_ObjectHideFlags: 0

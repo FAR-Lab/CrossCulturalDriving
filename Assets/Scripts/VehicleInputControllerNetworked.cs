@@ -333,7 +333,7 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
+        /*if (Input.GetKeyUp(KeyCode.Space))
         {
             foreach (seatCallibration sc in FindObjectsOfType<seatCallibration>())
             {
@@ -343,7 +343,7 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
                     break;
                 }
             }
-        }
+        }*/
 
         //MoveTo2020
       //  if (isLocalPlayer)
