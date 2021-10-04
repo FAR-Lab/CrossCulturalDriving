@@ -20,7 +20,7 @@ public class ConfigFileLoading : MonoBehaviour
     }
     void Start()
     {
-        m_path = Application.persistentDataPath + OffsetFileName;
+        m_path = Application.persistentDataPath + "\\" + OffsetFileName;
         ready = true;
     }
 
@@ -72,7 +72,6 @@ public class ConfigFileLoading : MonoBehaviour
    private Dictionary<string, string> LoadDict()
     {
         Debug.Log("Trying to load from: "+m_path);
-            
     Dictionary<string, string> dict = File
         .ReadLines(@m_path)
         .Where(line => !string.IsNullOrEmpty(line)) // to be on the safe side

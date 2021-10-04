@@ -1,15 +1,18 @@
-﻿using System.Collections;
-using System.IO;
+﻿using System.IO;
 using System;
+using System.Text;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class QNSelectionManager : MonoBehaviour {
     // Some code to send data to the logger
+    private InputAction selectAction;
+    private QNLogger qnlogger;
+    
     public GameObject ButtonPrefab;
 
     Text QustionField;
@@ -68,8 +71,35 @@ public class QNSelectionManager : MonoBehaviour {
         forward = forward_;
     }
     // Use this for initialization
+    void Awake() {
+        qnlogger = GetComponent<QNLogger>();
+    }
     void Start() {
+        selectAction = new InputAction("Select");
+        selectAction.AddBinding("<Joystick>/trigger");
+        selectAction.AddBinding("<Joystick>/button2");
+        selectAction.AddBinding("<Joystick>/button3");
+        selectAction.AddBinding("<Joystick>/button4");
+        selectAction.AddBinding("<Joystick>/button5");
+        selectAction.AddBinding("<Joystick>/button6");
+        selectAction.AddBinding("<Joystick>/button7");
+        selectAction.AddBinding("<Joystick>/button8");
+        selectAction.AddBinding("<Joystick>/button9");
+        selectAction.AddBinding("<Joystick>/button10");
+        selectAction.AddBinding("<Joystick>/button11");
+        selectAction.AddBinding("<Joystick>/button12");
+        selectAction.AddBinding("<Joystick>/button20");
+        selectAction.AddBinding("<Joystick>/button21");
+        selectAction.AddBinding("<Joystick>/button22");
+        selectAction.AddBinding("<Joystick>/button23");
+        selectAction.AddBinding("<Joystick>/button24");
+        selectAction.AddBinding("<Joystick>/hat/down");
+        selectAction.AddBinding("<Joystick>/hat/up");
+        selectAction.AddBinding("<Joystick>/hat/left");
+        selectAction.AddBinding("<Joystick>/hat/right");
+        selectAction.Enable();
         //useAltLanguage = SceneStateManager.Instance.UseHebrewLanguage;
+        useAltLanguage = false;
         foreach (TextAsset s in QNFiles) {
             questionaries.Add(s.name, ReadString(s));
 
@@ -84,16 +114,21 @@ public class QNSelectionManager : MonoBehaviour {
         _RaycastCollidableLayers = LayerMask.GetMask("UI");
         //m_Raycaster = GetComponent<GraphicRaycaster>();
         // m_EventSystem = GetComponent<EventSystem>();
-        /*
-        string[] sarray = new string[QNFiles.Count];
+        
+        /*string[] sarray = new string[QNFiles.Count];
         int i = 0;
+
+        StringBuilder sb = new StringBuilder();
 
         foreach (TextAsset s in QNFiles) {
             sarray[i] = s.name;
+            sb.Append(s.name);
             i++;
         }
-        //startAskingTheQuestionairs(sarray, "Test"); //TODO
-        */
+        qnlogger.qnName = sb.ToString();
+        startAskingTheQuestionairs(sarray, "Test"); //TODO*/
+
+
     }
 
     private void updateCursorPositoon(Transform currentHitTarget, RaycastResult rayRes) {
@@ -123,8 +158,10 @@ public class QNSelectionManager : MonoBehaviour {
             outputString = "";
             if (ExtraQNOutput)
             {
-              //  sw = new StreamWriter(@"D:\Logs\ID_" + SceneStateManager.Instance.MyID.ToString() + " Con_" + Condition + " at_" + epoch.ToString() + ".txt");
-              //  sw.WriteLine("Initated at inGameTime:" + Time.time + "\t With condition: " + Condition + "\t participantID: " + SceneStateManager.Instance.MyID);
+                //sw = new StreamWriter(@"D:\Logs\ID_" + SceneStateManager.Instance.MyID.ToString() + " Con_" + Condition + " at_" + epoch.ToString() + ".txt");
+                //sw.WriteLine("Initated at inGameTime:" + Time.time + "\t With condition: " + Condition + "\t participantID: " + SceneStateManager.Instance.MyID);
+                sw = new StreamWriter(@"D:\Logs\ID_" + "NoSceneStateManager" + " Con_" + Condition + " at_" + epoch.ToString() + ".txt");
+                sw.WriteLine("Initated at inGameTime:" + Time.time + "\t With condition: " + Condition + "\t participantID: " + "NoSceneStateManager");
             }
         }
     }
@@ -142,7 +179,7 @@ public class QNSelectionManager : MonoBehaviour {
 
         if (running) {
             if (ParentPosition != null) {
-                Debug.Log("Updated QN location!");
+                //Debug.Log("Updated QN location!");
                 transform.rotation = ParentPosition.rotation;
                 transform.position = ParentPosition.position + ParentPosition.up * up + ParentPosition.forward * forward;
             }
@@ -156,11 +193,13 @@ public class QNSelectionManager : MonoBehaviour {
                     }
                   
                     Debug.Log(outputString); //TODO: DATALOGGER
-                    //if (SceneStateManager.Instance != null) {
-                    //    SceneStateManager.Instance.SetPostQuestionair(); //TODO: DIsplay Wait Now Sign
-                  //  }
+                    /*if (SceneStateManager.Instance != null) {
+                        SceneStateManager.Instance.SetPostQuestionair(); //TODO: DIsplay Wait Now Sign
+                    }*/
                     running = false;
-                    transform.gameObject.SetActive(false);
+                    //transform.gameObject.SetActive(false);
+                    System.Threading.Thread.Sleep(3000);
+                    SceneManager.LoadScene("ScenarioSelector");
                     return;
                 }
                 string nextTodo = ToDolist.Dequeue();
@@ -285,12 +324,14 @@ public class QNSelectionManager : MonoBehaviour {
                         totalTime = 0;
                     }
                 }
-                if (success && onTarget && totalTime >= targetTime) {
+                if (success && onTarget && totalTime >= targetTime || selectAction.triggered && onTarget) {
                     List<int> temp;
                     string lastAnswer = lastHitButton.activateNextQuestions(out temp);
                     string newLine = "";
 
-                    //farlab_logger.Instance.EnqueEventLog("QN: "+currentActiveQustion.question + " => " + lastHitButton.englAnswer);//MoveTo2020
+                    //QNLogger.Instance.EnqueEventLog("QN: "+currentActiveQustion.question + " => " + lastHitButton.englAnswer);
+                    qnlogger.EnqueEventLog("QN: " + currentActiveQustion.question + " => " + lastHitButton.englAnswer);
+                    //Debug.Log("QN: " + currentActiveQustion.question + " => " + lastHitButton.englAnswer);
 
 
                     newLine += "At Time:," + Time.time.ToString() + ',';

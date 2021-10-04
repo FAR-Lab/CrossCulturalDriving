@@ -25,7 +25,6 @@ public class Calibration : MonoBehaviour
     private ConfigFileTester confTester;
     private InputAction exitCalibration;
 
-    // Start is called before the first frame update
     void Start()
     {
         calibrateAction = new InputAction("Calibrate");
