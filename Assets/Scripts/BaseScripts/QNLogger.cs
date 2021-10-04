@@ -23,8 +23,11 @@ public class QNLogger : MonoBehaviour
     {
         epoch = (double)((System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds - Time.time); //Epoch Time
         DateTime Now = System.DateTime.Now;
-     path = @"C:\Users\xrcdevelopment\Documents\Logs\" + Now.Year.ToString() + "-" + Now.Month.ToString() + "-" + Now.Day.ToString() + "-" + Now.Hour.ToString() + "-" + Now.Minute.ToString() + "-" + Now.Second.ToString() + "-"; //Log file path
-        sw = File.AppendText(path + participantID + ".csv");
+        path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        string identifier = Now.Year.ToString() + "-" + Now.Month.ToString() + "-" + Now.Day.ToString() + "-" + Now.Hour.ToString() + "-" + Now.Minute.ToString() + "-" + Now.Second.ToString() + "-";
+        string[] paths = {path, identifier};
+        string newPath = Path.Combine(paths);
+        sw = File.AppendText(newPath + participantID + ".csv");
         doneSending = false;
         isSending = true;
         send = new Thread(ContinuousDataSend);
