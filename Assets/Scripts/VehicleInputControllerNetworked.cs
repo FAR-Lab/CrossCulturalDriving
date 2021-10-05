@@ -5,8 +5,12 @@
  * Mozilla Public License is at https://www.mozilla.org/MPL/2.0/
  */
 
+
+using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
 using UnityEngine;
-using UnityEngine.Networking;
+
 using System.Collections;
 
 public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
