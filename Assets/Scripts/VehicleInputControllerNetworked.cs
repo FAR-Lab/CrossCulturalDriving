@@ -13,7 +13,7 @@ using UnityEngine;
 
 using System.Collections;
 
-public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
+public class VehicleInputControllerNetworked : NetworkBehaviour //MoveTo2020
 {
 
     public Transform SteeringWheel;
@@ -65,6 +65,7 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
     }
     private void Start()
     {
+        
        // if (SceneStateManager.Instance != null)
        // {
         //    SceneStateManager.Instance.SetReady();
@@ -149,7 +150,6 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
                 }
             }
         }
-
     }
 
     void UpdateIndicator()
@@ -170,11 +170,11 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
                 ActualLightOn = !ActualLightOn;
                 if (ActualLightOn)
                 {
-                    CmdUpdateIndicatorLights(LeftIsActuallyOn, RightIsActuallyOn);
+                    UpdateIndicatorLightsServerRpc(LeftIsActuallyOn, RightIsActuallyOn);
                 }
                 else
                 {
-                    CmdUpdateIndicatorLights(false, false);
+                    UpdateIndicatorLightsServerRpc(false, false);
                 }
             }
             if (indicaterStage == 2)
@@ -200,20 +200,20 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
             ActualLightOn = false;
             LeftIsActuallyOn = false;
             RightIsActuallyOn = false;
-            CmdUpdateIndicatorLights(false, false);
+            UpdateIndicatorLightsServerRpc(false, false);
 
         }
     }
 
-  ///  [Command]
-    public void CmdUpdateIndicatorLights(bool Left, bool Right)
+    [ServerRpc]
+    public void UpdateIndicatorLightsServerRpc(bool Left, bool Right)
     {
-        RpcTurnOnLeft(Left);
-        RpcTurnOnRight(Right);
+        TurnOnLeftClientRpc(Left);
+        TurnOnRightClientRpc(Right);
 
     }
-    //[ClientRpc]
-    public void RpcTurnOnLeft(bool Leftl_)
+    [ClientRpc]
+    public void TurnOnLeftClientRpc(bool Leftl_)
     {
         if (Leftl_)
         {
@@ -230,8 +230,8 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
             }
         }
     }
-  //  [ClientRpc]
-    public void RpcTurnOnRight(bool Rightl_)
+    [ClientRpc]
+    public void TurnOnRightClientRpc(bool Rightl_)
     {
         if (Rightl_)
         {
@@ -250,26 +250,27 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
 
     }
 
-    //[Command]
-    public void CmdStartQuestionairGloablly()
+    [ServerRpc]
+    public void StartQuestionairGloabllyServerRpc()
     {
-        RpcRunQuestionairNow();
+        
+        RunQuestionairNowClientRpc();
     }
 
-    //[ClientRpc]
-    public void RpcRunQuestionairNow()
+    [ClientRpc]
+    public void RunQuestionairNowClientRpc()
     {
        // FindObjectOfType<SpecificSceneManager>().runQuestionairNow();
 
     }
-   // [Command]
-    public void CmdStartWalking()
+    [ServerRpc]
+    public void StartWalkingServerRpc()
     {
-        RpcStartWallking();
+        StartWallkingClientRpc();
     }
 
-   // [ClientRpc]
-    public void RpcStartWallking()
+    [ClientRpc]
+    public void StartWallkingClientRpc()
     {
         foreach (MaleAvatarController a in FindObjectsOfType<MaleAvatarController>())
         {
@@ -277,14 +278,14 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
         }
     }
 
-   // [Command]
-    public void CmdSwitchBrakeLight(bool Active)
+    [ServerRpc]
+    public void SwitchBrakeLightServerRpc(bool Active)
     {
-        RpcTurnOnBrakeLight(Active);
+        TurnOnBrakeLightClientRpc(Active);
 
     }
-  //  [ClientRpc]
-    public void RpcTurnOnBrakeLight(bool Active)
+    [ClientRpc]
+    public void TurnOnBrakeLightClientRpc(bool Active)
     {
         if (Active)
         {
@@ -303,40 +304,42 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
     }
 
 
-   // [Command]
-    public void CmdStartDriving()
+    [ServerRpc]
+    public void StartDrivingServerRpc()
     {
-        RpcSetToDrive();
+        SetToDriveClientRpc();
     }
-  //  [ClientRpc]
-    public void RpcSetToDrive()
+   [ClientRpc]
+    public void SetToDriveClientRpc()
     {
       //  SceneStateManager.Instance.SetDriving();
     }
 
 
-   // [Command]
-    public void CmdHonkMyCar()
+    [ServerRpc]
+    public void HonkMyCarServerRpc()
     {
-        RpcHonkmyCar();
+        Debug.Log("HonkMyCarServerRpc");
+        HonkMyCarClientRpc();
     }
 
-   // [ClientRpc]
-    public void RpcHonkmyCar()
-    {
+    [ClientRpc]
+    public void HonkMyCarClientRpc()
+    {Debug.Log("HonkMyCarClientRpc");
         HonkSound.Play();
     }
 
 
 
-   // [ClientRpc]
-    public void RpcSetGPS(GpsController.Direction[] dir)
+   [ClientRpc]
+    public void SetGPSClientRpc(GpsController.Direction[] dir)
     {
        // GetComponentInChildren<GpsController>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
     }
 
     void Update()
     {
+       // Debug.Log(IsHost.ToString()+IsClient.ToString()+IsServer.ToString()+IsLocalPlayer.ToString());
         /*if (Input.GetKeyUp(KeyCode.Space))
         {
             foreach (seatCallibration sc in FindObjectsOfType<seatCallibration>())
@@ -350,16 +353,17 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
         }*/
 
         //MoveTo2020
-      //  if (isLocalPlayer)
-       // {
+        if (IsLocalPlayer)
+        {
+       
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                CmdStartDriving();
+                StartDrivingServerRpc();
             }
 
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                CmdStartQuestionairGloablly();
+                StartQuestionairGloabllyServerRpc();
 
             }
             if (Input.GetKeyDown(KeyCode.A))
@@ -385,12 +389,12 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
             }
             if (Input.GetKeyDown(KeyCode.Y))
             {
-                CmdStartWalking();
+                StartWalkingServerRpc();
             }
 
 
-
-            if (true) //SceneStateManager.Instance.ActionState == ActionState.DRIVE
+            Debug.Log((StateManager.Instance.InternalState));
+            if (StateManager.Instance.InternalState==ActionState.DRIVE) //SceneStateManager.Instance.ActionState == ActionState.DRIVE
         {
 
 
@@ -436,9 +440,10 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
 
                 if (Input.GetButtonDown("Horn"))
                 {
-                    
+                    //ToDoLogger
+                    Debug.Log("HORN");
                     //farlab_logger.Instance.EnqueEventLog("Honk");
-                    CmdHonkMyCar();
+                    HonkMyCarServerRpc();
                 }
 
                 UpdateIndicator();
@@ -446,26 +451,26 @@ public class VehicleInputControllerNetworked : MonoBehaviour //MoveTo2020
                 if (controller.accellInput < 0 && !breakIsOn)
                 {
                     breakIsOn = true;
-                    CmdSwitchBrakeLight(breakIsOn);
+                    SwitchBrakeLightServerRpc(breakIsOn);
                 }
                 else if (controller.accellInput >= 0 && breakIsOn)
                 {
                     breakIsOn = false;
-                    CmdSwitchBrakeLight(breakIsOn);
+                    SwitchBrakeLightServerRpc(breakIsOn);
                 }
 
             }
-            else if (true) //MoveTo2020  SceneStateManager.Instance.ActionState == ActionState.QUESTIONS
-        {
+            else if (StateManager.Instance.InternalState==ActionState.QUESTIONS) //MoveTo2020  SceneStateManager.Instance.ActionState == ActionState.QUESTIONS
+            {
 
-                if (transitionlerp < 1)
-                {
-                transitionlerp += Time.deltaTime;// //MoveTo2020 * SceneStateManager.slowDownSpeed;
-                controller.steerInput = Mathf.Lerp(controller.steerInput, 0, transitionlerp);
-                    controller.accellInput = Mathf.Lerp(0, -1, transitionlerp);
-                    Debug.Log("SteeringWheel: " + controller.steerInput + "\tAccel: " + controller.accellInput);
-                }
+                // if (transitionlerp < 1)
+                // {
+                // transitionlerp += Time.deltaTime;// //MoveTo2020 * SceneStateManager.slowDownSpeed;
+                // controller.steerInput = Mathf.Lerp(controller.steerInput, 0, transitionlerp);
+                //     controller.accellInput = Mathf.Lerp(0, -1, transitionlerp);
+                //     Debug.Log("SteeringWheel: " + controller.steerInput + "\tAccel: " + controller.accellInput);
+                // }
             }
-       // }
+        }
     }
 }

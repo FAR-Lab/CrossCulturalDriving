@@ -1,22 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
 using UnityEngine;
-using UnityEngine.Networking;
+using System.Collections.Generic;
 
-public class DeactivateOthers :MonoBehaviour  {
+
+public class DeactivateOthers :NetworkBehaviour  {
    // NetworkBehaviour
     public List<Behaviour> DeactivateMe = new List<Behaviour>();
     public List<Transform> AndMe = new List<Transform>();
     Camera MyCam;
     public List<MeshRenderer> DeactivateLocally= new List<MeshRenderer>();
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 
-        if (true) {
-            //!isLocalPlayer
+        if (IsLocalPlayer) {
             foreach (Behaviour b in DeactivateMe) {
                 b.enabled = false;
-                //MyCam.enabled = false;
+                
             }
             foreach (Transform t in AndMe) {
                 t.gameObject.SetActive(false);
@@ -25,7 +26,7 @@ public class DeactivateOthers :MonoBehaviour  {
 
             foreach (MeshRenderer b in DeactivateLocally) {
                 b.enabled = false;
-                //MyCam.enabled = false;
+                
             }
         }
 // rh = FindObjectOfType<RemoteHandManager>();
@@ -36,8 +37,6 @@ public class DeactivateOthers :MonoBehaviour  {
 
 	// Update is called once per frame
 	void Update () {
-      //  if (SceneStateManager.Instance.MyState == ClientState.NONE || SceneStateManager.Instance.MyState == ClientState.DISCONECTED)
      
-
     }
 }
