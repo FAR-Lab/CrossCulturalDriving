@@ -24,7 +24,7 @@ public class GpsTrigger : MonoBehaviour { //MovoTo2020
                 setDirectionParticipant5
             };
             foreach (VehicleInputControllerNetworked i in FindObjectsOfType<VehicleInputControllerNetworked>()) {
-                i.RpcSetGPS(sendArray);
+                i.SetGPSClientRpc(sendArray);
             }
                  
        

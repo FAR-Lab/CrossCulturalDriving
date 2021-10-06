@@ -14,8 +14,10 @@ public class StateManager : NetworkBehaviour
     private ActionState _state = ActionState.WAITING;
     public ActionState InternalState => _state;
 
-   void ServerStateChange(ActionState prevF, ActionState newF){
-       Debug.Log("ChangeingStates");
+   void ServerStateChange(ActionState prevState, ActionState newState){
+       Debug.Log("Changeing States");
+       _state = newState;
+       Debug.Log(InternalState);
    }
    
    
