@@ -17,7 +17,7 @@ public class ScenarioManager : MonoBehaviour {
     public bool ready { get; private set; }  // property
     private Dictionary<ParticipantOrder, Pose> MySpawnPositions;
 
-   
+    private Transform MyLocalClient;
 
     void Start() {
 
@@ -50,7 +50,7 @@ public class ScenarioManager : MonoBehaviour {
                         tempArray[i] = t.name;
                         i++;
                     }
-                    qnmanager.startAskingTheQuestionairs(tempArray, conditionName);
+                    qnmanager.startAskingTheQuestionairs(MyLocalClient,tempArray, conditionName);
                 }
             }
 
@@ -87,18 +87,18 @@ public class ScenarioManager : MonoBehaviour {
         }
     }
 
-    public void RunQuestionairNow(Transform MyLocalClient) {
+    public void RunQuestionairNow(Transform MyLocalClient_) {
         Debug.Log("Running questionaire Now");
         //StateManager.Instance.SetQuestionair();
         //SceneStateManager.Instance.SetQuestionair();
-            
+        MyLocalClient = MyLocalClient_;
             qnmanager = Instantiate(
                 QuestionairPrefab,
                 MyLocalClient.position + MyLocalClient.forward * 2.5f + MyLocalClient.up * 1.5f,
-                vn.transform.rotation).GetComponent<QNSelectionManager>();
+                MyLocalClient.transform.rotation).GetComponent<QNSelectionManager>();
 
-            qnmanager.setRelativePosition(vn.transform, .75f, 4f);
+            qnmanager.setRelativePosition(MyLocalClient, .75f, 4f);
             WaitAFrame = true;         
-        }
+        
     }
 }
