@@ -1,4 +1,5 @@
-﻿using MLAPI;
+﻿using System;
+using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 using UnityEngine;
@@ -12,27 +13,18 @@ public class DeactivateOthers :NetworkBehaviour  {
     Camera MyCam;
     public List<MeshRenderer> DeactivateLocally= new List<MeshRenderer>();
 	// Use this for initialization
-	void Awake () {
+    public override void NetworkStart ()
+    {
+        if (!IsServer)
+        {
+            GetComponent<VehicleController>().enabled = false;
+            Destroy (GetComponent<Rigidbody>());
+            foreach (WheelCollider wc in GetComponentsInChildren<WheelCollider>())
 
-        if (IsLocalPlayer) {
-            foreach (Behaviour b in DeactivateMe) {
-                b.enabled = false;
-                
-            }
-            foreach (Transform t in AndMe) {
-                t.gameObject.SetActive(false);
-            }
-        } else {
-
-            foreach (MeshRenderer b in DeactivateLocally) {
-                b.enabled = false;
-                
+            {
+	            wc.enabled = false;
             }
         }
-// rh = FindObjectOfType<RemoteHandManager>();
-
-       //     if (rh!=null)
-         //// rh.FindLocalLeap();
 	}
 
 	// Update is called once per frame

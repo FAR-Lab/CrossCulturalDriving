@@ -1,44 +1,48 @@
+using System;
 using MLAPI;
 using MLAPI.NetworkVariable;
+
+using MLAPI.Spawning;
 using System.Collections;
 using System.Collections.Generic;
+using MLAPI.Messaging;
+using MLAPI.SceneManagement;
+using Unity.Properties;
+using UnityEngine.SceneManagement;
+
 using UnityEngine;
+
 
 public class StateManager : NetworkBehaviour
 {
-    private static StateManager _instance;
-    public static StateManager Instance { get { return _instance; } }
-
     public NetworkVariable<ActionState> GlobalState = new NetworkVariable<ActionState>(
         new NetworkVariableSettings {WritePermission = NetworkVariablePermission.ServerOnly,ReadPermission  = NetworkVariablePermission.Everyone});
-    private ActionState _state = ActionState.WAITING;
-    public ActionState InternalState => _state;
+    
+    
 
    void ServerStateChange(ActionState prevState, ActionState newState){
-       Debug.Log("Changeing States");
-       _state = newState;
-       Debug.Log(InternalState);
+       
    }
-   
-   
-    private void Awake() {
-        if (_instance != null && _instance != this) {
-            Destroy(this.gameObject);
-        } else {
-            _instance = this;
-            // DontDestroyOnLoad(this);
-        }
-    }
-    void Start()
+   void Start()
     {
         GlobalState.OnValueChanged += ServerStateChange;
-        
-        
     }
 
-    // Update is called once per frame
+    // Update is called once per frames
     void Update()
     {
-        
+        if (IsServer)
+        {
+            if (GlobalState.Value != ConnectionAndSpawing.Singleton.ServerState)
+            {
+                GlobalState.Value = ConnectionAndSpawing.Singleton.ServerState;
+            }
+        }
     }
+
+    
+    
+    
+
+   
 }
