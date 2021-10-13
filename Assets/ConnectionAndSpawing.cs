@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using MLAPI;
 using MLAPI.Messaging;
@@ -214,7 +215,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         SceneSwitchingFinished = true;
     }
 
-    private void DesotryAllClientObjects()
+    private void DestroyAllClientObjects()
     {
         foreach (ulong id in ClientObjects.Keys)
         {
@@ -363,7 +364,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     
     private void SwitchToLoading(string name)
     {
-        DesotryAllClientObjects();
+        DestroyAllClientObjects();
         ServerState = ActionState.LOADING;
         SceneSwitching = true;
         NetworkSceneManager.SwitchScene(name);
@@ -380,6 +381,12 @@ public class ConnectionAndSpawing : MonoBehaviour
     {
         Debug.Log("QN triggered, canceling Velocities, and start Questionnaires");
         ServerState = ActionState.QUESTIONS;
+        QNFinished = new Dictionary<ParticipantOrder, bool>();
+        foreach(ParticipantOrder po in _OrderToClient.Keys)
+        {
+            QNFinished.Add(po,false);
+        }
+        
         foreach (ulong client in ClientObjects.Keys)
         {
             foreach(VehicleInputControllerNetworked  no in FindObjectsOfType<VehicleInputControllerNetworked>())
@@ -402,6 +409,13 @@ public class ConnectionAndSpawing : MonoBehaviour
         }
     }
 
+   private void SwitchToPostQN()
+   {
+       ServerState = ActionState.POSTQUESTIONS;
+       DestroyAllClientObjects();
+       SwitchToWaitingRoom();
+
+   }
 
     #endregion
     
@@ -421,7 +435,17 @@ public class ConnectionAndSpawing : MonoBehaviour
             {
                 SwitchToDriving();
             }
+
+            if (ServerState == ActionState.QUESTIONS)
+            {
+                if (!QNFinished.ContainsValue(false))
+                {
+                    
+                    SwitchToPostQN();
+                }
+            }
         }
+        
     }
 
 
@@ -446,6 +470,16 @@ public class ConnectionAndSpawing : MonoBehaviour
                     y += 27;
                 }
             }
+            
+            else if (ServerState == ActionState.QUESTIONS)
+            {
+                int y=50;
+                foreach(ParticipantOrder f in QNFinished.Keys)
+                {
+                    GUI.Label(new Rect(5, 5 + y, 150, 25), f + "  "+QNFinished[f].ToString());
+                    y += 27;
+                }
+            }
 
         }
         else if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
@@ -462,6 +496,13 @@ public class ConnectionAndSpawing : MonoBehaviour
             }
 
         }
+    }
+
+    private Dictionary<ParticipantOrder, bool> QNFinished;
+    public void FinishedQuestionair(ulong clientID)
+    {
+        ParticipantOrder po = GetOrder(clientID);
+        QNFinished[po] = true;
     }
 }
 

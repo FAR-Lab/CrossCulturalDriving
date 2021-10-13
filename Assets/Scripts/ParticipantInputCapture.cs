@@ -173,10 +173,10 @@ public class ParticipantInputCapture : NetworkBehaviour
         }
     }
 
-    public void PostQuestion()
+    [ServerRpc]
+    public void PostQuestionServerRPC(ulong clientID)
     {
-if(IsLocalPlayer)    
-    
+        ConnectionAndSpawing.Singleton.FinishedQuestionair(clientID);
     }
     
     
