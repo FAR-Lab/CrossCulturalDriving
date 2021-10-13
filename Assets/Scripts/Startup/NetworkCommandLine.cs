@@ -1,19 +1,87 @@
+using System;
 using System.Collections.Generic;
 using MLAPI;
 using UnityEngine;
 
+
 public class NetworkCommandLine : MonoBehaviour
 {
     private NetworkManager netManager;
+    private ConnectionAndSpawing connectionAndSpawing;
+
+    private bool runOnce = false;
 
     void Start()
     {
-        netManager = GetComponentInParent<NetworkManager>();
+        netManager = NetworkManager.Singleton;
+        connectionAndSpawing = ConnectionAndSpawing.Singleton;
+        SetupAndStart();
+        runOnce = true;
+    }
 
-        if (Application.isEditor) return;
+    private void Update()
+    {
+        if (false)
+        {
+            SetupAndStart();
+            runOnce = false;
+        }
+    }
 
+    private void SetupAndStart(){
+    if (Application.isEditor)
+        {
+            connectionAndSpawing.SetParticipantOrder(ParticipantOrder.A);
+            connectionAndSpawing.HostServer();
+            
+          //  stateManager.SetParticipantOrder(ParticipantOrder.B);
+          //  netManager.StartClient();
+            
+           // netManager.StartHost();
+            return;
+        }
+    Screen.SetResolution(1280,720,false);
         var args = GetCommandlineArgs();
 
+        
+        if (args.TryGetValue("-po", out string participantOrderString))
+        {
+            
+            
+
+            switch (participantOrderString)
+            {
+                case "A":
+                case "a":
+                    connectionAndSpawing.SetParticipantOrder(ParticipantOrder.A);
+                    break;
+                case "B":
+                case "b":
+                    connectionAndSpawing.SetParticipantOrder(ParticipantOrder.B);
+                    break;
+                case "C":
+                case "c":
+                    connectionAndSpawing.SetParticipantOrder(ParticipantOrder.C);
+                    break;
+                case "D":
+                case "d":
+                    connectionAndSpawing.SetParticipantOrder(ParticipantOrder.D);
+                    break;
+                case "E":
+                case "e":
+                    connectionAndSpawing.SetParticipantOrder(ParticipantOrder.E);
+                    break;
+                case "F":
+                case "f":
+                    connectionAndSpawing.SetParticipantOrder(ParticipantOrder.F);
+                    break;
+                default:
+                    connectionAndSpawing.SetParticipantOrder(ParticipantOrder.None);
+                    break;
+
+            }
+        }
+        
         if (args.TryGetValue("-mlapi", out string mlapiValue))
         {
             switch (mlapiValue)
@@ -22,10 +90,11 @@ public class NetworkCommandLine : MonoBehaviour
                     netManager.StartServer();
                     break;
                 case "host":
-                    netManager.StartHost();
+                    
+                    connectionAndSpawing.HostServer();
                     break;
                 case "client":
-         
+                   
                     netManager.StartClient();
                     break;
             }

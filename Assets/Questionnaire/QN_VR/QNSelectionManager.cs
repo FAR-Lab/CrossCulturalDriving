@@ -198,8 +198,9 @@ public class QNSelectionManager : MonoBehaviour {
                     }*/
                     running = false;
                     //transform.gameObject.SetActive(false);
-                    System.Threading.Thread.Sleep(3000);
-                    SceneManager.LoadScene("ScenarioSelector");
+                   // System.Threading.Thread.Sleep(3000);
+                   // SceneManager.LoadScene("ScenarioSelector");
+                   FindObjectOfType<ParticipantInputCapture>().();
                     return;
                 }
                 string nextTodo = ToDolist.Dequeue();
