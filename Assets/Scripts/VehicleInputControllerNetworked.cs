@@ -43,7 +43,7 @@ public class VehicleInputControllerNetworked : NetworkBehaviour //MoveTo2020
     public float SteeringInput;
     public float ThrottleInput;
 
-
+    [HideInInspector] public float selfAlignmentTorque;
 
     public override void NetworkStart()
     {

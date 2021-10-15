@@ -19,12 +19,18 @@ public class ForceFeedback : MonoBehaviour
     public float weightIntensity = 1f;
     public float tireWidth = .1f;
 
+    
     public float springSaturation;
     public float springCoeff;
     public int damperAmount = 3000;
     float selfAlignmentTorque;
+   
+    
     private Rigidbody rb;
+   
     bool changedtoQuestionair = false;
+    
+    
     float forcelerperQuestionair = -1;
     ActionState previousACtionstate;
     void Start()
@@ -69,38 +75,15 @@ public class ForceFeedback : MonoBehaviour
 
     void Update()
     {
-        /*if (previousACtionstate != ActionState.QUESTIONS) && SceneStateManager.Instance.ActionState == ActionState.QUESTIONS
-        {
-            changedtoQuestionair = false;
-            forcelerperQuestionair = 2;
-           // previousACtionstate = SceneStateManager.Instance.ActionState;
-           
-        }
-        else
-        {
-           // previousACtionstate = SceneStateManager.Instance.ActionState;
-        }
-
-        if (forcelerperQuestionair > 0)
-        {
-            forcelerperQuestionair -= (Time.deltaTime*(1 / Time.timeScale) );
-          
-            if (forcelerperQuestionair <= 0)
-            {
-
-                changedtoQuestionair = true;
-                forcelerperQuestionair = -1;
-            }
-        }*/
-
-
-            selfAlignmentTorque = 0f;
+        selfAlignmentTorque = 0f;
         foreach (var wheel in wheels) {
             if (wheel.isGrounded) {
                 WheelHit hit;
                 wheel.GetGroundHit(out hit);
-                Debug.DrawRay(hit.point, hit.sidewaysDir, Color.red);
-                Debug.DrawRay(hit.point, hit.forwardDir, Color.blue);
+               
+               // Debug.DrawRay(hit.point, hit.sidewaysDir, Color.red);
+                //Debug.DrawRay(hit.point, hit.forwardDir, Color.blue);
+               
                 Vector3 left = hit.point - ( hit.sidewaysDir * tireWidth * 0.5f );
                 Vector3 right = hit.point + ( hit.sidewaysDir * tireWidth * 0.5f );
 

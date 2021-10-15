@@ -217,18 +217,25 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     private void DestroyAllClientObjects()
     {
+        
         foreach (ulong id in ClientObjects.Keys)
         {
             foreach (NetworkObject no in ClientObjects[id])
             {
+                
                 if (NetworkManager.Singleton.ConnectedClients[id].PlayerObject == no)
                 {
                     NetworkManager.Singleton.ConnectedClients[id].PlayerObject = null;
+                    Debug.Log("Removing player object despanwn: "+no.name);
+                }
+                else
+                {
+                    Debug.Log("Trying to despanwn: "+no.name);
                 }
                 no.Despawn(true);
-                Debug.Log("Trying to despan"+no.name);
+                
             }
-            
+            ClientObjects[id].Clear();
             
         }
     }
@@ -239,7 +246,6 @@ public class ConnectionAndSpawing : MonoBehaviour
         {
             obj.Despawn(true);
         }
-
         RemoveParticipant(ClientID);
     }
 
@@ -247,7 +253,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     {
         if (! NetworkManager.Singleton.IsServer) return;
       if(SceneSwitchingFinished) SpawnAPlayer(ClientID);
-        
+         
     }
 
     private bool SpawnAPlayer(ulong ClientID)
@@ -337,15 +343,22 @@ public class ConnectionAndSpawing : MonoBehaviour
     #endregion
     
     
-    public void HostServer()
+    public void StartAsHost()
     {
         
         SetupConnectingAndSpawing();
         NetworkManager.Singleton.StartHost();
         AddParticipant(_participantOrder, NetworkManager.Singleton.LocalClientId);
         //SpawnAPlayer(NetworkManager.Singleton.LocalClientId);
+        
     }
-    
+
+    public void StartAsClient()
+    {
+        NetworkManager.Singleton.StartClient();
+        Destroy(this);
+    }
+
     private void ServerHasStarted()
     {
         
@@ -492,7 +505,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         {
             if (GUI.Button(new Rect(5, 105, 150, 50), "StartHost"))
             {
-                HostServer();
+                StartAsHost();
             }
 
         }
