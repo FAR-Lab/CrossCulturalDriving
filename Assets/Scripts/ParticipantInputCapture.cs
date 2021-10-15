@@ -14,6 +14,7 @@ using UnityEngine;
 
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class ParticipantInputCapture : NetworkBehaviour
 {
@@ -45,8 +46,8 @@ public class ParticipantInputCapture : NetworkBehaviour
     private bool DualButtonDebounceIndicator;
     private bool LeftIndicatorDebounce;
     private bool RightIndicatorDebounce;
-    
-    
+
+    public bool ReadyForAssignment = false;
     
     private NetworkVariableBool breakIsOn = new NetworkVariableBool(
         new NetworkVariableSettings {WritePermission = NetworkVariablePermission.OwnerOnly,ReadPermission  = NetworkVariablePermission.ServerOnly});
@@ -61,9 +62,15 @@ public class ParticipantInputCapture : NetworkBehaviour
         new NetworkVariableSettings {WritePermission = NetworkVariablePermission.OwnerOnly,ReadPermission  = NetworkVariablePermission.ServerOnly});
     public NetworkVariableFloat ThrottleInput = new NetworkVariableFloat(
         new NetworkVariableSettings {WritePermission = NetworkVariablePermission.OwnerOnly,ReadPermission  = NetworkVariablePermission.ServerOnly});
+ 
+    public NetworkVariableFloat selfAlignmentTorque = new NetworkVariableFloat(
+        new NetworkVariableSettings {WritePermission = NetworkVariablePermission.ServerOnly,ReadPermission  = NetworkVariablePermission.OwnerOnly});
+    
+    
+    
     void Awake()
     {
-        transform.GetChild(0).gameObject.SetActive(false);
+        ReadyForAssignment = false;
     }
     private void Start()
     {
@@ -108,18 +115,23 @@ public class ParticipantInputCapture : NetworkBehaviour
     public void AssignCarClientRPC(ulong ObjectID, ClientRpcParams clientRpcParams = default)
     {
         
+        Debug.Log("Got my Car Assigned");
         MyRemoteCar = GetNetworkObject(ObjectID).transform;
         transform.parent = MyRemoteCar.FindChildRecursive("CameraPosition");
         transform.localPosition = Vector3.zero;
-        if (IsLocalPlayer)
-        {
-            transform.GetChild(0).gameObject.SetActive(true);
-        }
-        else
-        {
-            transform.GetChild(0).gameObject.SetActive(false);
-        }
+        ReadyForAssignment = true;
     }
+    
+    [ServerRpc]
+    public void PostQuestionServerRPC(ulong clientID)
+    {
+        ConnectionAndSpawing.Singleton.FinishedQuestionair(clientID);
+    }
+    
+
+    #region IndicatorLogic
+
+    
     void startBlinking(bool left, bool right)
     {
        
@@ -173,14 +185,10 @@ public class ParticipantInputCapture : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
-    public void PostQuestionServerRPC(ulong clientID)
-    {
-        ConnectionAndSpawing.Singleton.FinishedQuestionair(clientID);
-    }
+   
+
     
-    
-    
+
     void UpdateIndicator()
     {
         if (indicaterStage == 1)
@@ -238,6 +246,8 @@ public class ParticipantInputCapture : NetworkBehaviour
         }
     }
 
+    #endregion
+    
     [ServerRpc]
     public void HonkMyCarServerRpc()
     {
@@ -274,6 +284,8 @@ public class ParticipantInputCapture : NetworkBehaviour
         {
             NetworkedVehicle.SteeringInput =SteeringInput.Value;
             NetworkedVehicle.ThrottleInput =ThrottleInput.Value;
+
+            selfAlignmentTorque.Value = NetworkedVehicle.selfAlignmentTorque;
         }
 
       

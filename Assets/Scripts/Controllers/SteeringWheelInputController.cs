@@ -156,7 +156,7 @@ public class SteeringWheelInputController : MonoBehaviour {
 
             tries++;
             if (tries > 150) {
-                Debug.Log("coudn't init spring forcefor the steerng wheel. aborting");
+                Debug.Log("coudn't init spring force for the steerng wheel. aborting");
                 break;
             }
 

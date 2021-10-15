@@ -9,35 +9,37 @@ public class NetworkCommandLine : MonoBehaviour
     private NetworkManager netManager;
     private ConnectionAndSpawing connectionAndSpawing;
 
-    private bool runOnce = false;
-
+    
+    public bool EditorRunAsServer;
     void Start()
     {
         netManager = NetworkManager.Singleton;
         connectionAndSpawing = ConnectionAndSpawing.Singleton;
         SetupAndStart();
-        runOnce = true;
+       
     }
 
     private void Update()
     {
-        if (false)
-        {
-            SetupAndStart();
-            runOnce = false;
-        }
+       
     }
 
     private void SetupAndStart(){
     if (Application.isEditor)
         {
-            connectionAndSpawing.SetParticipantOrder(ParticipantOrder.A);
-            connectionAndSpawing.HostServer();
-            
-          //  stateManager.SetParticipantOrder(ParticipantOrder.B);
-          //  netManager.StartClient();
-            
-           // netManager.StartHost();
+            if (EditorRunAsServer)
+            {
+                 connectionAndSpawing.SetParticipantOrder(ParticipantOrder.A);
+                 connectionAndSpawing.StartAsHost();
+            }
+            else
+            {
+
+                connectionAndSpawing.SetParticipantOrder(ParticipantOrder.A);
+                connectionAndSpawing.StartAsClient();
+            }
+
+            // netManager.StartHost();
             return;
         }
     Screen.SetResolution(1280,720,false);
@@ -91,11 +93,10 @@ public class NetworkCommandLine : MonoBehaviour
                     break;
                 case "host":
                     
-                    connectionAndSpawing.HostServer();
+                    connectionAndSpawing.StartAsHost();
                     break;
                 case "client":
-                   
-                    netManager.StartClient();
+                    connectionAndSpawing.StartAsClient();
                     break;
             }
         }
