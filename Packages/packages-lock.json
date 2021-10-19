@@ -10,12 +10,10 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "1.5.7",
+      "version": "1.9.0",
       "depth": 0,
       "source": "registry",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "2.0.0"
-      },
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.collections": {
@@ -64,7 +62,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.8",
+      "version": "2.0.11",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -73,7 +71,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.vscode": {
-      "version": "1.2.3",
+      "version": "1.2.4",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -103,6 +101,17 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.multiplayer.mlapi": {
+      "version": "https://github.com/Unity-Technologies/com.unity.multiplayer.mlapi.git?path=/com.unity.multiplayer.mlapi#release/0.1.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.modules.ai": "1.0.0",
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.nuget.mono-cecil": "1.10.1-preview.1"
+      },
+      "hash": "3e3aef6aa02c2a25359898319e5bd49d3518b57b"
+    },
     "com.unity.nuget.mono-cecil": {
       "version": "1.10.1",
       "depth": 0,
@@ -111,8 +120,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.newtonsoft-json": {
-      "version": "2.0.0",
-      "depth": 1,
+      "version": "2.0.1-preview.1",
+      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
@@ -187,7 +196,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.1.24",
+      "version": "1.1.29",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -272,7 +281,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.oculus": {
-      "version": "1.9.1",
+      "version": "1.10.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {

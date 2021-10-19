@@ -38,6 +38,7 @@ public class QNSelectionManager : MonoBehaviour {
 
     List<RectTransform> childList = new List<RectTransform>();
 
+    private Transform MyLocalClient;
 
     LayerMask _RaycastCollidableLayers;
 
@@ -144,9 +145,9 @@ public class QNSelectionManager : MonoBehaviour {
         /// WTF Unity??? this should not be that hard!!
     }
     // Update is called once per frame
-    public void startAskingTheQuestionairs(string[] list, string Condition) {
+    public void startAskingTheQuestionairs(Transform mylocalclient ,string[] list, string Condition) {
         int epoch = (int)( System.DateTime.UtcNow - new System.DateTime(1970, 1, 1) ).TotalSeconds; //Epoch Time
-
+        MyLocalClient = mylocalclient;
         if (!running) {
             _condition = Condition;
             foreach (string s in list) {
@@ -168,7 +169,7 @@ public class QNSelectionManager : MonoBehaviour {
     }
 
     void Update() {
-        if (overWrtieFinishedDebug) {
+        if (overWrtieFinishedDebug || Input.GetKeyUp(KeyCode.Q)) {
             ToDolist.Clear();
             ToDoQueue.Clear();
             Questionloaded = false;
@@ -199,8 +200,17 @@ public class QNSelectionManager : MonoBehaviour {
                     }*/
                     running = false;
                     //transform.gameObject.SetActive(false);
-                    System.Threading.Thread.Sleep(3000);
-                    SceneManager.LoadScene("ScenarioSelector");
+                   // System.Threading.Thread.Sleep(3000);
+                   // SceneManager.LoadScene("ScenarioSelector");
+                   ParticipantInputCapture tmp = MyLocalClient.GetComponent<ParticipantInputCapture>();
+                   if (tmp != null && tmp.IsLocalPlayer)
+                   {
+                       tmp.PostQuestionServerRPC(tmp.OwnerClientId);
+                   }
+                   else
+                   {
+                       Debug.LogError("Did not get my local player dont know who to report back to.");
+                   }
                     return;
                 }
                 string nextTodo = ToDolist.Dequeue();
