@@ -19,6 +19,7 @@ public class QNSelectionManager : MonoBehaviour {
     public bool overWrtieFinishedDebug = false;
     public bool ExtraQNOutput = false;
     private bool Questionloaded = false;
+    public bool countDownSelect = false;
     public bool running;
     bool useAltLanguage;
     bool onTarget;
@@ -311,8 +312,10 @@ public class QNSelectionManager : MonoBehaviour {
                                 onTarget = true;
                             } else {
                                 // Debug.Log("On Target");
-                                totalTime += Time.deltaTime * ( 1 / Time.timeScale );
-
+                                if (countDownSelect)
+                                {
+                                    totalTime += Time.deltaTime * (1 / Time.timeScale);
+                                }
                             }
                         } else {
                             lastHitButton = rcb;
