@@ -5,7 +5,7 @@ using MLAPI;
 using MLAPI.SceneManagement;
 using UnityEngine;
 
-public class LocalVRPlayyer : MonoBehaviour
+public class LocalVRPlayer : MonoBehaviour
 {
     private NetworkManager _networkManager;
     // Start is called before the first frame update
@@ -13,16 +13,16 @@ public class LocalVRPlayyer : MonoBehaviour
     private ParticipantInputCapture PIC = null;
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
         _networkManager = NetworkManager.Singleton;
         NetworkSceneManager.OnSceneSwitchStarted += SceneLoading;
         NetworkSceneManager.OnSceneSwitched += SceneLoaded;
     } 
     private void SceneLoading(AsyncOperation operation)
     {
-        Debug.Log("Loading A new scene getting in to the safespace befor.");
+        Debug.Log("Loading A new scene getting in to the Safe space before.");
         PIC = null;
-        transform.parent = null;
-        DontDestroyOnLoad(gameObject);
+        
         loading = true;
     }
 
@@ -30,7 +30,7 @@ public class LocalVRPlayyer : MonoBehaviour
     private void SceneLoaded()
     {
         loading = false;
-        Debug.Log("Scene loaded !");
+      
     }
 
     private void OnDestroy()
@@ -48,13 +48,23 @@ public class LocalVRPlayyer : MonoBehaviour
                 if (pic_.IsLocalPlayer && pic_.ReadyForAssignment)
                 {
                     
-                    Debug.Log("Trying to get a new parent!");
+                    Debug.Log("Trying to get a folowe object! ");
                     PIC = pic_;
-                    transform.parent = PIC.transform;
-                    transform.localPosition = Vector3.zero;
-                    transform.localRotation=Quaternion.identity;
+                  
                 }
             }
         }
+    }
+
+    private void LateUpdate()
+    {
+        if (PIC != null)
+        {
+            var transform1 = transform;
+            var transform2 = PIC.transform;
+            transform1.position = transform2.position;
+            transform1.rotation = transform2.rotation;
+        }
+       
     }
 }
