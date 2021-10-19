@@ -63,7 +63,7 @@ public class SteeringWheelInputController : MonoBehaviour {
         wheelIndex = getSpecificInputDevice("Logitech");
         if (wheelIndex == -1)
         {
-            Debug.LogError("CouldNotFindReqestedSteeringWheel");
+            Debug.LogWarning("CouldNotFindReqestedSteeringWheel");
         }
         minBrake = 1;
         maxBrake = -1;

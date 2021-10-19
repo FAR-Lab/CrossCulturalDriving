@@ -296,7 +296,7 @@ public class ConnectionAndSpawing : MonoBehaviour
             
             newPlayer.GetComponent<ParticipantInputCapture>().AssignCarLocalServerCall(newCar.GetComponent<VehicleInputControllerNetworked>());
             
-            Debug.Log("Assigning car to a new partcipant with clinetID:"+ClientID.ToString());
+            Debug.Log("Assigning car to a new partcipant with clinetID:"+ClientID.ToString()+" =>"+newCar.GetComponent<NetworkObject>().NetworkObjectId);
             newPlayer.GetComponent<ParticipantInputCapture>()
                 .AssignCarClientRPC(newCar.GetComponent<NetworkObject>().NetworkObjectId,clientRpcParams);
             
@@ -355,6 +355,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     public void StartAsClient()
     {
+        Debug.Log("Starting as Client Now!");
         NetworkManager.Singleton.StartClient();
         Destroy(this);
     }
