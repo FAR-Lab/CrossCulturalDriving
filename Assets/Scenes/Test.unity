@@ -188,7 +188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2300004, guid: d3e96af7de5335240be3fe2de45b954e, type: 3}
       propertyPath: m_Materials.Array.data[0]
-      value: 
+      value:
       objectReference: {fileID: 2100000, guid: a1c33bf8484a2974ca7bf5086ee7dd8f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d3e96af7de5335240be3fe2de45b954e, type: 3}
@@ -222,8 +222,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4afb3dd0708474bd7822f6617f1ccf73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   QuestionairsToAsk:
   - {fileID: 4900000, guid: 52111da2a2777d341a828a218fdddaca, type: 3}
   - {fileID: 4900000, guid: c764270986e6a4f9f8ae61246620b206, type: 3}
@@ -238,7 +238,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 257844290}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -374,8 +374,8 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 170c92b9eea180d4ebc66dff45f7bd77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   steeringWheelCenter: {fileID: 0}
   OVRRig: {fileID: 0}
   leftHandPalm: {fileID: 0}
@@ -424,7 +424,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 23510012960537028, guid: ef59dc64d09a6bb47938aa11bb8c2740, type: 3}
       propertyPath: m_Materials.Array.data[0]
-      value: 
+      value:
       objectReference: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ef59dc64d09a6bb47938aa11bb8c2740, type: 3}
@@ -489,7 +489,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11415450, guid: 4bc068894c863294190898137c403bea, type: 3}
       propertyPath: cameraPosition
-      value: 
+      value:
       objectReference: {fileID: 835439800}
     - target: {fileID: 1194871774110550, guid: 4bc068894c863294190898137c403bea, type: 3}
       propertyPath: m_IsActive
@@ -754,7 +754,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5891231532555111028, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: agent
-      value: 
+      value:
       objectReference: {fileID: 302634701}
     - target: {fileID: 5891231532555111028, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: maxSpeed
@@ -766,7 +766,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5891231532555111028, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: destination
-      value: 
+      value:
       objectReference: {fileID: 0}
     - target: {fileID: 5891231532555111028, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: maxBrakeTorque
@@ -790,11 +790,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5891231532555111028, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: destinations.Array.data[0]
-      value: 
+      value:
       objectReference: {fileID: 1888932875}
     - target: {fileID: 5891231532555111028, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: destinations.Array.data[1]
-      value: 
+      value:
       objectReference: {fileID: 257844290}
     - target: {fileID: 5891231532555111030, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: m_Enabled
@@ -802,31 +802,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5891231532555111030, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: tailLight
-      value: 
+      value:
       objectReference: {fileID: 2100000, guid: d1917a35d5ad2344d95e805eb794dd04, type: 2}
     - target: {fileID: 5891231532555111030, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: backLeftLamp
-      value: 
+      value:
       objectReference: {fileID: 2100000, guid: d1917a35d5ad2344d95e805eb794dd04, type: 2}
     - target: {fileID: 5891231532555111030, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: backRightLamp
-      value: 
+      value:
       objectReference: {fileID: 2100000, guid: d1917a35d5ad2344d95e805eb794dd04, type: 2}
     - target: {fileID: 5891231532555111030, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: frontLeftLamp
-      value: 
+      value:
       objectReference: {fileID: 2100000, guid: f21c4503cb019ef4e89d03b876f727b3, type: 2}
     - target: {fileID: 5891231532555111030, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: frontRightLamp
-      value: 
+      value:
       objectReference: {fileID: 2100000, guid: f21c4503cb019ef4e89d03b876f727b3, type: 2}
     - target: {fileID: 5891231532555111030, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: steeringWheelT
-      value: 
+      value:
       objectReference: {fileID: 917170644}
     - target: {fileID: 5891231532555111030, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
       propertyPath: instructionText
-      value: 
+      value:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5891231532555111031, guid: fa16261f1fd49c84bb2b0ef65b652661, type: 3}
@@ -1084,8 +1084,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e44dce7a8066eb409e3df57cae0b9af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   lastHit: {fileID: 0}
   collision: {x: 0, y: 0, z: 0}
   layer:
@@ -1630,6 +1630,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 82566605477800949, guid: f97ee77ddd274234080f9b80fa9bcc25, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 326439314706119735, guid: f97ee77ddd274234080f9b80fa9bcc25, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -1868,7 +1872,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3443867743394475813, guid: f97ee77ddd274234080f9b80fa9bcc25, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3762698294268897441, guid: f97ee77ddd274234080f9b80fa9bcc25, type: 3}
       propertyPath: m_Layer
@@ -2492,7 +2496,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6177457411002543831, guid: f97ee77ddd274234080f9b80fa9bcc25, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6177457411002543831, guid: f97ee77ddd274234080f9b80fa9bcc25, type: 3}
       propertyPath: m_TagString
@@ -2934,6 +2938,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8056062148690210507, guid: f97ee77ddd274234080f9b80fa9bcc25, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8409746472530397097, guid: f97ee77ddd274234080f9b80fa9bcc25, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -2986,8 +2994,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4afb3dd0708474bd7822f6617f1ccf73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   QuestionairsToAsk:
   - {fileID: 4900000, guid: 52111da2a2777d341a828a218fdddaca, type: 3}
   - {fileID: 4900000, guid: c764270986e6a4f9f8ae61246620b206, type: 3}
@@ -3097,8 +3105,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_AgentTypeID: 0
   m_CollectObjects: 0
   m_Size: {x: 10, y: 10, z: 10}
@@ -3567,7 +3575,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7619843845724843385, guid: 0214a9c55cc8cb346880c6c8a3d9e4bf, type: 3}
       propertyPath: agent
-      value: 
+      value:
       objectReference: {fileID: 302634701}
     - target: {fileID: 7619843845724843385, guid: 0214a9c55cc8cb346880c6c8a3d9e4bf, type: 3}
       propertyPath: max_rb_agent_distance
@@ -3575,7 +3583,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7619843845724843385, guid: 0214a9c55cc8cb346880c6c8a3d9e4bf, type: 3}
       propertyPath: destinations.Array.data[0]
-      value: 
+      value:
       objectReference: {fileID: 1888932875}
     - target: {fileID: 7619843845724843386, guid: 0214a9c55cc8cb346880c6c8a3d9e4bf, type: 3}
       propertyPath: m_Layer
