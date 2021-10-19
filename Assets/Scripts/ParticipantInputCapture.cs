@@ -13,6 +13,7 @@ using MLAPI.NetworkVariable;
 using UnityEngine;
 
 using System.Collections;
+using Unity.Transforms;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
@@ -20,21 +21,21 @@ public class ParticipantInputCapture : NetworkBehaviour
 {
 
     private VehicleInputControllerNetworked NetworkedVehicle;
-    private Transform MyRemoteCar;
+    public Transform MyRemoteCar;
 
     private StateManager localStateManager;
-    
+
     public Transform SteeringWheel;
     float steeringAngle;
-    
+
     private SteeringWheelInputController steeringInput;
 
     public bool useKeyBoard;
-    
+
 
     private bool LeftActive;
     private bool RightActive;
-   
+
 
     private bool LeftIsActuallyOn;
     private bool RightIsActuallyOn;
@@ -48,30 +49,51 @@ public class ParticipantInputCapture : NetworkBehaviour
     private bool RightIndicatorDebounce;
 
     public bool ReadyForAssignment = false;
-    
+
     private NetworkVariableBool breakIsOn = new NetworkVariableBool(
-        new NetworkVariableSettings {WritePermission = NetworkVariablePermission.OwnerOnly,ReadPermission  = NetworkVariablePermission.ServerOnly});
-    
+        new NetworkVariableSettings
+        {
+            WritePermission = NetworkVariablePermission.OwnerOnly, ReadPermission = NetworkVariablePermission.ServerOnly
+        });
+
     public NetworkVariableBool LeftIndicators = new NetworkVariableBool(
-        new NetworkVariableSettings {WritePermission = NetworkVariablePermission.OwnerOnly,ReadPermission  = NetworkVariablePermission.ServerOnly});
+        new NetworkVariableSettings
+        {
+            WritePermission = NetworkVariablePermission.OwnerOnly, ReadPermission = NetworkVariablePermission.ServerOnly
+        });
+
     public NetworkVariableBool RightIndicators = new NetworkVariableBool(
-        new NetworkVariableSettings {WritePermission = NetworkVariablePermission.OwnerOnly,ReadPermission  = NetworkVariablePermission.ServerOnly});
-   
-    
+        new NetworkVariableSettings
+        {
+            WritePermission = NetworkVariablePermission.OwnerOnly, ReadPermission = NetworkVariablePermission.ServerOnly
+        });
+
+
     public NetworkVariableFloat SteeringInput = new NetworkVariableFloat(
-        new NetworkVariableSettings {WritePermission = NetworkVariablePermission.OwnerOnly,ReadPermission  = NetworkVariablePermission.ServerOnly});
+        new NetworkVariableSettings
+        {
+            WritePermission = NetworkVariablePermission.OwnerOnly, ReadPermission = NetworkVariablePermission.ServerOnly
+        });
+
     public NetworkVariableFloat ThrottleInput = new NetworkVariableFloat(
-        new NetworkVariableSettings {WritePermission = NetworkVariablePermission.OwnerOnly,ReadPermission  = NetworkVariablePermission.ServerOnly});
- 
+        new NetworkVariableSettings
+        {
+            WritePermission = NetworkVariablePermission.OwnerOnly, ReadPermission = NetworkVariablePermission.ServerOnly
+        });
+
     public NetworkVariableFloat selfAlignmentTorque = new NetworkVariableFloat(
-        new NetworkVariableSettings {WritePermission = NetworkVariablePermission.ServerOnly,ReadPermission  = NetworkVariablePermission.OwnerOnly});
-    
-    
-    
+        new NetworkVariableSettings
+        {
+            WritePermission = NetworkVariablePermission.ServerOnly, ReadPermission = NetworkVariablePermission.OwnerOnly
+        });
+
+
+
     void Awake()
     {
         ReadyForAssignment = false;
     }
+
     private void Start()
     {
         steeringInput = GetComponent<SteeringWheelInputController>();
@@ -80,20 +102,17 @@ public class ParticipantInputCapture : NetworkBehaviour
 
     }
 
-
-    public void AssignCarLocalServerCall(VehicleInputControllerNetworked VICN)
+    public override void NetworkStart()
     {
-        if (!IsServer) return;
-
-        transform.parent = VICN.CameraPosition;
-        NetworkedVehicle = VICN;
-        
-        //Assigne the value change things
-
-        LeftIndicators.OnValueChanged += LeftIndicatorChanged;
-        RightIndicators.OnValueChanged += RightIndicatorChanged;
-        breakIsOn.OnValueChanged += BrakeLightChanged;
+        base.NetworkStart();
+        if (!IsLocalPlayer && transform.childCount > 0)
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
+        }
     }
+
+
+
 
     private void BrakeLightChanged(bool previousvalue, bool newvalue)
     {
@@ -104,22 +123,51 @@ public class ParticipantInputCapture : NetworkBehaviour
     private void RightIndicatorChanged(bool previousvalue, bool newvalue)
     {
         NetworkedVehicle.TurnOnRightClientRpc(newvalue);
-        
+
     }
+
     private void LeftIndicatorChanged(bool previousvalue, bool newvalue)
     {
         NetworkedVehicle.TurnOnLeftClientRpc(newvalue);
     }
 
-    [ClientRpc]
+    public void AssignCarLocalServerCall(VehicleInputControllerNetworked VICN)
+    {
+        if (IsServer)
+        {
+        
+
+        Debug.Log("Got a New Parent");
+
+        transform.parent = VICN.CameraPosition;
+        NetworkedVehicle = VICN;
+
+        LeftIndicators.OnValueChanged += LeftIndicatorChanged;
+        RightIndicators.OnValueChanged += RightIndicatorChanged;
+        breakIsOn.OnValueChanged += BrakeLightChanged;
+        }
+        else
+        {
+            Debug.LogWarning("Tried to execute something that should never happen. ");
+        }
+    }
+
+    
+[ClientRpc]
     public void AssignCarClientRPC(ulong ObjectID, ClientRpcParams clientRpcParams = default)
     {
-        
-        Debug.Log("Got my Car Assigned");
         MyRemoteCar = GetNetworkObject(ObjectID).transform;
+        Debug.Log("Got my Car Assigned" + ObjectID+"  object:"+MyRemoteCar.name);
+        FindCameraPositon();
+    }
+
+    private void FindCameraPositon()
+    {
+        
         transform.parent = MyRemoteCar.FindChildRecursive("CameraPosition");
+        Debug.Log("Assigned parent:"+ transform.parent.name.ToString());
         transform.localPosition = Vector3.zero;
-        ReadyForAssignment = true;
+        
     }
     
     [ServerRpc]
@@ -292,6 +340,15 @@ public class ParticipantInputCapture : NetworkBehaviour
 
         if (IsLocalPlayer)
         {
+
+            if (MyRemoteCar != null  && transform.parent == null)
+            {
+                FindCameraPositon();
+                if (transform.parent != null && ReadyForAssignment == false)
+                {
+                    ReadyForAssignment = true;
+                }
+            }
         
             if (Input.GetKeyDown(KeyCode.Return))
             {
