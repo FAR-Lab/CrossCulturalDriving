@@ -1,83 +1,69 @@
-﻿using System.IO;
+﻿//#define debug
+
+using System.IO;
 using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using Newtonsoft.Json;
 
 public class QNSelectionManager : MonoBehaviour {
-    // Some code to send data to the logger
-    private InputAction selectAction;
-    private QNLogger qnlogger;
-    
     public GameObject ButtonPrefab;
 
+    public enum QNStates {
+        IDLE,
+        LOADINGSET,
+        LOADINGQUESTION,
+        RESPONSEWAIT,
+        FINISH
+    };
+
+    public QNStates m_interalState = QNStates.IDLE;
+    private string m_condition;
+    private InputAction selectAction;
+
+
     Text QustionField;
-    public bool overWrtieFinishedDebug = false;
-    public bool ExtraQNOutput = false;
-    private bool Questionloaded = false;
-    public bool countDownSelect = false;
-    public bool running;
-    bool useAltLanguage;
-    bool onTarget;
-    rayCastButton lastHitButton;
-    public float totalTime;
-
-    public float targetTime;
     selectionBarAnimation sba;
+    List<RectTransform> AnswerFields = new List<RectTransform>();
 
-    string _condition;
+    private Transform m_MyLocalClient;
+    LayerMask m_RaycastCollidableLayers;
 
-    QandASet currentActiveQustion;
-    StreamWriter sw;
+    private LanguageSelect m_LanguageSelect;
 
-    string outputString = "";
+    public Dictionary<string, List<QuestionnaireQuestion>> QuestionariesToAsk =
+        new Dictionary<string, List<QuestionnaireQuestion>>();
 
-    List<RectTransform> childList = new List<RectTransform>();
+    private Dictionary<int, QuestionnaireQuestion> CurrentSetofQuestions;
+    private Queue<int> nextQuestionsToAskQueue;
+    QuestionnaireQuestion currentActiveQustion;
 
-    private Transform MyLocalClient;
+    private QNLogger m_QNLogger;
 
-    LayerMask _RaycastCollidableLayers;
-
-    //GraphicRaycaster m_Raycaster;
-    //PointerEventData m_PointerEventData;
-    //EventSystem m_EventSystem;
-    Queue<QandASet> ToDoQueue = new Queue<QandASet>();
-    Queue<string> ToDolist = new Queue<string>();
+#if debug
     public List<TextAsset> QNFiles;
-    Dictionary<string, List<QandASet>> questionaries = new Dictionary<string, List<QandASet>>();
-    Dictionary<int, QandASet> allCurrentQuestions = new Dictionary<int, QandASet>();
-    //private int targetIndex = -1;
-    //int listPointer;
+#endif
 
     Transform ParentPosition;
     float up, forward;
-    public struct QandASet {
-        public int id;
-        public string question;
-        public string question_DiffLang;
-        public List<OneAnswer> Answers;
-    }
 
-    public struct OneAnswer {
-        public string Answer;
-        public string Answer_DiffLang;
-        public List<int> NextQuestionsIDs;
-    }
+    public void ChangeLanguage(LanguageSelect lang) { m_LanguageSelect = lang; }
+
     public void setRelativePosition(Transform t, float up_, float forward_) {
         ParentPosition = t;
         up = up_;
         forward = forward_;
     }
-    // Use this for initialization
-    void Awake() {
-        qnlogger = GetComponent<QNLogger>();
-    }
+
     void Start() {
         selectAction = new InputAction("Select");
+        selectAction.AddBinding("<Keyboard>/space");
         selectAction.AddBinding("<Joystick>/trigger");
         selectAction.AddBinding("<Joystick>/button2");
         selectAction.AddBinding("<Joystick>/button3");
@@ -100,464 +86,233 @@ public class QNSelectionManager : MonoBehaviour {
         selectAction.AddBinding("<Joystick>/hat/left");
         selectAction.AddBinding("<Joystick>/hat/right");
         selectAction.Enable();
-        //useAltLanguage = SceneStateManager.Instance.UseHebrewLanguage;
-        useAltLanguage = false;
-        foreach (TextAsset s in QNFiles) {
-            questionaries.Add(s.name, ReadString(s));
-
-        }
-
         QustionField = transform.Find("QuestionField").GetComponent<Text>();
-
-
+        CurrentSetofQuestions = new Dictionary<int, QuestionnaireQuestion>();
+        nextQuestionsToAskQueue = new Queue<int>();
         sba = GetComponentInChildren<selectionBarAnimation>();
-        totalTime = 0;
-        running = false;
-        _RaycastCollidableLayers = LayerMask.GetMask("UI");
-        //m_Raycaster = GetComponent<GraphicRaycaster>();
-        // m_EventSystem = GetComponent<EventSystem>();
-        
-        /*string[] sarray = new string[QNFiles.Count];
-        int i = 0;
-
-        StringBuilder sb = new StringBuilder();
-
-        foreach (TextAsset s in QNFiles) {
-            sarray[i] = s.name;
-            sb.Append(s.name);
-            i++;
-        }
-        qnlogger.qnName = sb.ToString();
-        startAskingTheQuestionairs(sarray, "Test"); //TODO*/
-
+        m_QNLogger = GetComponent<QNLogger>();
+#if debug
+        startAskingTheQuestionairs(FindObjectOfType<LocalVRPlayer>().transform, QNFiles.ToArray(), "Test");
+        changeLanguage("English");
+        setRelativePosition(FindObjectOfType<LocalVRPlayer>().transform, 1, 2);
+#endif
 
     }
 
     private void updateCursorPositoon(Transform currentHitTarget, RaycastResult rayRes) {
-
         Vector3 temp = Camera.main.transform.position
-                      + Camera.main.ScreenPointToRay(new Vector3(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2, 0), Camera.MonoOrStereoscopicEye.Mono).direction.normalized
-                      * rayRes.distance;
-        // Debug.Log("Hit the Canvas" + temp);
+                       + Camera.main
+                           .ScreenPointToRay(new Vector3(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2, 0),
+                               Camera.MonoOrStereoscopicEye.Mono).direction.normalized
+                       * rayRes.distance;
+
         Debug.DrawLine(Camera.main.transform.position, temp, Color.red);
         temp -= transform.position;
         sba.updatePosition(transform.worldToLocalMatrix * temp);
-        /// WTF Unity??? this should not be that hard!!
     }
-    // Update is called once per frame
-    public void startAskingTheQuestionairs(Transform mylocalclient ,string[] list, string Condition) {
-        int epoch = (int)( System.DateTime.UtcNow - new System.DateTime(1970, 1, 1) ).TotalSeconds; //Epoch Time
-        MyLocalClient = mylocalclient;
-        if (!running) {
-            _condition = Condition;
-            foreach (string s in list) {
-                Debug.Log(s);
-                ToDolist.Enqueue(s);
 
+    // Update is called once per frame
+    public void startAskingTheQuestionairs(Transform mylocalclient, TextAsset[] list, string Condition,LanguageSelect lang) {
+        ChangeLanguage(lang);
+        int epoch = (int) (System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds; //Epoch Time
+        m_MyLocalClient = mylocalclient;
+        if (m_interalState == QNStates.IDLE) {
+            m_condition = Condition;
+            foreach (TextAsset s in list) {
+                Debug.Log(s);
+                QuestionariesToAsk.Add(s.name, ReadString(s));
             }
-            running = true;
-            Questionloaded = false;
-            outputString = "";
-            if (ExtraQNOutput)
-            {
-                //sw = new StreamWriter(@"D:\Logs\ID_" + SceneStateManager.Instance.MyID.ToString() + " Con_" + Condition + " at_" + epoch.ToString() + ".txt");
-                //sw.WriteLine("Initated at inGameTime:" + Time.time + "\t With condition: " + Condition + "\t participantID: " + SceneStateManager.Instance.MyID);
-                sw = new StreamWriter(@"D:\Logs\ID_" + "NoSceneStateManager" + " Con_" + Condition + " at_" + epoch.ToString() + ".txt");
-                sw.WriteLine("Initated at inGameTime:" + Time.time + "\t With condition: " + Condition + "\t participantID: " + "NoSceneStateManager");
-            }
+
+            m_interalState = QNStates.LOADINGSET;
         }
+        else { Debug.LogError("I should really only once start the Questionnaire."); }
     }
 
     void Update() {
-        if (overWrtieFinishedDebug || Input.GetKeyUp(KeyCode.Q)) {
-            ToDolist.Clear();
-            ToDoQueue.Clear();
-            Questionloaded = false;
+        if (Input.GetKeyUp(KeyCode.Q)) { m_interalState = QNStates.FINISH; }
+
+        if (ParentPosition != null) {
+            transform.rotation = ParentPosition.rotation;
+            transform.position = ParentPosition.position + ParentPosition.up * up + ParentPosition.forward * forward;
         }
 
 
+        switch (m_interalState) {
+            case QNStates.IDLE:
+                //Nothing is happening just waiting for something to happen. 
+                break;
+            case QNStates.LOADINGSET:
+                if (QuestionariesToAsk.Count <= 0) {
+                    m_interalState = QNStates.FINISH;
+                    break;
+                }
 
+                string nextKey = QuestionariesToAsk.Keys.First(); //Not sure that this will owkr
 
-
-        if (running) {
-            if (ParentPosition != null) {
-                //Debug.Log("Updated QN location!");
-                transform.rotation = ParentPosition.rotation;
-                transform.position = ParentPosition.position + ParentPosition.up * up + ParentPosition.forward * forward;
-            }
-            if (!Questionloaded && ToDoQueue.Count <= 0) {
-
-                if (ToDolist.Count <= 0) {
-                    Debug.Log("We are done here continue to the next conditon and stop displaying the questioniar.");
-                    if (ExtraQNOutput)
-                    {
-                        sw.Flush();
+                CurrentSetofQuestions.Clear();
+                foreach (QuestionnaireQuestion q in QuestionariesToAsk[nextKey]) {
+                    if (!CurrentSetofQuestions.ContainsKey(q.ID)) { CurrentSetofQuestions.Add(q.ID, q); }
+                    else {
+                        Debug.LogError("This should not happen we have duplicate question IDs. Please check: " +
+                                       nextKey);
                     }
-                  
-                    Debug.Log(outputString); //TODO: DATALOGGER
-                    /*if (SceneStateManager.Instance != null) {
-                        SceneStateManager.Instance.SetPostQuestionair(); //TODO: DIsplay Wait Now Sign
-                    }*/
-                    running = false;
-                    //transform.gameObject.SetActive(false);
-                   // System.Threading.Thread.Sleep(3000);
-                   // SceneManager.LoadScene("ScenarioSelector");
-                   ParticipantInputCapture tmp = MyLocalClient.GetComponent<ParticipantInputCapture>();
-                   if (tmp != null && tmp.IsLocalPlayer)
-                   {
-                       tmp.PostQuestionServerRPC(tmp.OwnerClientId);
-                   }
-                   else
-                   {
-                       Debug.LogError("Did not get my local player dont know who to report back to.");
-                   }
-                    return;
                 }
-                string nextTodo = ToDolist.Dequeue();
-                Debug.Log(nextTodo);
-                if (questionaries.ContainsKey(nextTodo)) {
-                    allCurrentQuestions.Clear();
 
-                    foreach (QandASet q in questionaries[nextTodo]) {
-                        //Debug.Log("Our new questions are: " + q.question);
-                        allCurrentQuestions.Add(q.id, q);
-                    }
-                    ToDoQueue.Enqueue(allCurrentQuestions[1]);// enque first question
-                    //Debug.Log(ToDoQueue.Count);
-                } else {
-                    Debug.LogError("Could not find the questionair in question => " + nextTodo);
-                    return;
+                QuestionariesToAsk.Remove(nextKey);
+
+                currentActiveQustion = null;
+                nextQuestionsToAskQueue.Clear();
+                nextQuestionsToAskQueue.Enqueue(1);
+                m_interalState = QNStates.LOADINGQUESTION;
+                break;
+            case QNStates.LOADINGQUESTION:
+
+
+                if (nextQuestionsToAskQueue.Count <= 0) {
+                    m_interalState = QNStates.LOADINGSET;
+                    break;
                 }
-            }
 
-            if (!Questionloaded) {
-                foreach (RectTransform r in childList) {
-                    Destroy(r.gameObject);
-                }
-                childList.Clear();
-                //foreach (int k in questionList.Keys) { Debug.Log("All the keys\t" + k); }
+                int NextQuestiuonID = nextQuestionsToAskQueue.Dequeue();
 
+                foreach (RectTransform r in AnswerFields) { Destroy(r.gameObject); }
 
-                QandASet temp = ToDoQueue.Dequeue();
-                currentActiveQustion = temp;
-                // Debug.Log("the ammount of first answer we retaained" + temp.Answers.Count);
-                if (!useAltLanguage) {
-                    QustionField.text = temp.question;
-                } else {
-                   
-                    QustionField.text = Reverse(temp.question_DiffLang);
-                    
-
-                }
-                //Debug.Log(temp.question);
-                //Debug.Log(temp.Answers.Count);
+                AnswerFields.Clear();
+                currentActiveQustion = CurrentSetofQuestions[NextQuestiuonID];
+                QustionField.text = currentActiveQustion.QuestionText[m_LanguageSelect];
                 int i = 0;
-                foreach (OneAnswer a in temp.Answers) {
-                    rayCastButton rcb = Instantiate(ButtonPrefab, this.transform).transform.GetComponentInChildren<rayCastButton>();
-                    if (!useAltLanguage) {
-                        
-                        rcb.initButton(a.Answer, a.NextQuestionsIDs);
-                    } else {
-                        
-                            
-                        rcb.initButton(Reverse(a.Answer_DiffLang), a.NextQuestionsIDs);
-
-                    }
-                    rcb.englAnswer = a.Answer;
+                foreach (ObjAnswer a in currentActiveQustion.Answers) {
+                    rayCastButton rcb = Instantiate(ButtonPrefab, this.transform).transform
+                        .GetComponentInChildren<rayCastButton>();
+                    rcb.initButton(a.AnswerText[m_LanguageSelect], currentActiveQustion.Answers.IndexOf(a));
                     RectTransform rtrans = rcb.transform.parent.GetComponentInParent<RectTransform>();
-                    childList.Add(rtrans);
-                    Vector2 tempVector = new Vector2(rtrans.anchoredPosition.x, ( -i * ( 165 / ( temp.Answers.Count ) ) ) + 55);
+                    AnswerFields.Add(rtrans);
+                    Vector2 tempVector = new Vector2(rtrans.anchoredPosition.x,
+                        (-i * (165 / (currentActiveQustion.Answers.Count))) + 55);
                     rtrans.anchoredPosition = tempVector;
                     i++;
                 }
-                Questionloaded = true;
-            }
 
-            //Set up the new Pointer Event
-            //  m_PointerEventData = new PointerEventData(m_EventSystem);
-            //Set the Pointer Event Position to that of the mouse position
-            // m_PointerEventData.position = new Vector2(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2);
-
-            //Create a list of Raycast Results
-            List<RaycastResult> results = new List<RaycastResult>();
-
-            //Raycast using the Graphics Raycaster and mouse click position
-            //m_Raycaster.Raycast(m_PointerEventData, results);
-            //EventSystem.current.RaycastAll(m_PointerEventData, results);
-            //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
+                m_interalState = QNStates.RESPONSEWAIT;
+                break;
 
 
-            RaycastHit hit;
-            if (Camera.main == null) {
-                Debug.Log("This is interesting unloading");
-                return;
-            }
-            Ray ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2f, Camera.main.pixelHeight / 2f));
-            int layerMask = 1 << 5;
-            if (Physics.Raycast(ray, out hit, layerMask)) {
-                //Debug.Log(hit.transform.name);
-                Transform objectHit = hit.transform;
-                // Debug.DrawLine(Camera.main.transform.position, hit.point, Color.blue);
-                bool success = false;
-                if (hit.transform == transform) {
-                    sba.updatePosition(transform.worldToLocalMatrix * ( hit.point - transform.position ));
-                } else {
-                    rayCastButton rcb = hit.transform.GetComponent<rayCastButton>();
-                    if (rcb != null) {
-                        success = true;
-                        if (lastHitButton == rcb) {
+            case QNStates.RESPONSEWAIT:
+                List<RaycastResult> results = new List<RaycastResult>();
+                RaycastHit hit;
+                if (Camera.main == null) {
+                    Debug.Log("This is interesting unloading");
+                    return;
+                }
 
-                            if (!onTarget) {
-                                //Debug.Log("Accquired Target");
-                                onTarget = true;
-                            } else {
-                                // Debug.Log("On Target");
-                                if (countDownSelect)
-                                {
-                                    totalTime += Time.deltaTime * (1 / Time.timeScale);
-                                }
-                            }
-                        } else {
-                            lastHitButton = rcb;
-                            onTarget = false;
-                            totalTime = 0;
-
-                        }
-
-                        sba.updatePosition(transform.worldToLocalMatrix * ( hit.point - transform.position ));
-
+                Ray ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2f,
+                    Camera.main.pixelHeight / 2f));
+                int layerMask = 1 << 5;
+                if (Physics.Raycast(ray, out hit, layerMask)) {
+                    rayCastButton rcb = null;
+                    Transform objectHit = hit.transform;
+                    bool onTarget = false;
+                    if (hit.transform == transform) {
+                        sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
                     }
-                }
-                if (!success) {
-                    lastHitButton = null;
-                    onTarget = false;
-                    if (totalTime > 0) {
-                        totalTime -= Time.deltaTime * 0.5f * ( 1 / Time.timeScale );
-                    } else {
-                        totalTime = 0;
-                    }
-                }
-                if (success && onTarget && totalTime >= targetTime || selectAction.triggered && onTarget) {
-                    List<int> temp;
-                    string lastAnswer = lastHitButton.activateNextQuestions(out temp);
-                    string newLine = "";
+                    else {
+                        rcb = hit.transform.GetComponent<rayCastButton>();
+                        if (rcb != null) { onTarget = true; }
 
-                    //QNLogger.Instance.EnqueEventLog("QN: "+currentActiveQustion.question + " => " + lastHitButton.englAnswer);
-                    qnlogger.EnqueEventLog("QN: " + currentActiveQustion.question + " => " + lastHitButton.englAnswer);
-                    //Debug.Log("QN: " + currentActiveQustion.question + " => " + lastHitButton.englAnswer);
-
-
-                    newLine += "At Time:," + Time.time.ToString() + ',';
-                    newLine += "Question," + currentActiveQustion.question + ',';
-                    newLine += "Answer," + lastHitButton.englAnswer;
-                    if (ExtraQNOutput)
-                    {
-                        sw.WriteLine(newLine);
-                    }
-                    outputString += lastAnswer;
-                    foreach (int i in temp) {
-                        ToDoQueue.Enqueue(allCurrentQuestions[i]);
-                    }
-                    totalTime = 0;
-                    lastHitButton = null;
-                    Questionloaded = false;
-                }
-                if (totalTime >= 0 && totalTime <= targetTime) {
-                    sba.setPercentageSelection(Mathf.Clamp01(totalTime / targetTime));
-                } else {
-                    //Debug.Log("This should not happen");
-                }
-            }
-            /*
-            foreach (RaycastResult result in results) {
-                //Debug.Log(result.gameObject.name);
-                if (result.gameObject.transform == transform) {
-                    updateCursorPositoon(transform, result);
-                }
-                rayCastButton rcb = result.gameObject.transform.GetComponent<rayCastButton>();
-                if (rcb == null) {
-                    //  Debug.Log("Found something but not the right thing" + result.gameObject.name);
-                    continue;
-                } else {
-
-                    success = true;
-                    if (lastHitButton == rcb) {
-
-                        if (!onTarget) {
-                            //Debug.Log("Accquired Target");
-                            onTarget = true;
-                        } else {
-                            // Debug.Log("On Target");
-                            totalTime += Time.deltaTime*(1/Time.timeScale);
-                        }
-                    } else {
-                        //Debug.Log("Lost Target");
-                        lastHitButton = rcb;
-                        onTarget = false;
-                        totalTime = 0;
+                        sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
                     }
 
-                    updateCursorPositoon(result.gameObject.transform, result);
-                    break; // we get out of the for each loop, we got what we came for!
-                }
-            }
-            if (!success) {
-                lastHitButton = null;
-                onTarget = false;
-                if (totalTime > 0) {
-                    totalTime -= Time.deltaTime * 2*(1/Time.timeScale);
-                } else {
-                    totalTime = 0;
-                }
-            }
-            if (success && onTarget && totalTime >= targetTime) {
-                List<int> temp;
-                outputString += lastHitButton.activateNextQuestions(out temp);
-                foreach (int i in temp) {
-                    ToDoQueue.Enqueue(allCurrentQuestions[i]);
-                }
-                totalTime = 0;
-                lastHitButton = null;
-                Questionloaded = false;
-            }
-            if (totalTime >= 0 && totalTime <= targetTime) {
-                sba.setPercentageSelection(Mathf.Clamp01(totalTime / targetTime));
-            } else {
-                //Debug.Log("This should not happen");
-            }
-            */
-        }
-    }
+
+                    if (selectAction.triggered && onTarget) {
+                        int AnswerIndex = rcb.activateNextQuestions();
 
 
-    //// This is For the file reading and interpretation
-    List<QandASet> ReadString(TextAsset asset) {
-        // if (path_.Length <= 0) {
-        //     return null;
-        //}
-        //string path = "Assets/QN/" + path_ + ".txt";
-        //Debug.Log("Trying to open" + path);
-        List<QandASet> output = new List<QandASet>();
-        //Read the text from directly from the test.txt file
-        //StreamReader reader = new StreamReader(path);
 
-        bool first = true;
-        QandASet lastSet = new QandASet();
-        lastSet.Answers = new List<OneAnswer>();
+                        m_QNLogger.AddNewDataPoint(currentActiveQustion, AnswerIndex, m_LanguageSelect);
+                        Debug.Log("To Quesstion: " + currentActiveQustion.QuestionText["English"] +
+                                  "We answered: " + currentActiveQustion.Answers[AnswerIndex].AnswerText["English"]);
 
-        foreach (string line in asset.text.Split('\n')) {
-           
-            if (line.StartsWith("/")) {// new Question
-
-                if (!first) {
-                    //Debug.Log(lastSet.Answers.Count + "   out last ansawer count");
-                    output.Add(lastSet);
-                    lastSet = new QandASet();
-                    lastSet.Answers = new List<OneAnswer>();
-                }
-                first = false;
-                string[] elems = line.Split('\t');
-                //Debug.Log(elems[0]+" :from line: "+line);
-                int id = 0;
-                int.TryParse(elems[0].TrimStart('/'), out id);
-                lastSet.id = id;
-                lastSet.question = ClearEmbedingCharacter(elems[1].Split('(')[0]);
-                if (elems[1].Contains("(")) {
-                    int beginCharacter = elems[1].IndexOf('(');
-                    int endCharacter = elems[1].IndexOf(')');
-                    
-                    if (beginCharacter != -1 && endCharacter != -1) {
-                        lastSet.question_DiffLang = ClearEmbedingCharacter(elems[1].Substring(beginCharacter + 1, ( endCharacter ) - ( 1 + beginCharacter )));
-                       
-                    } else {
-                        Debug.LogError("This should really not happen not finding a complete alt lang question i.e. missing closing braked");
-                    }
-                }
-            } else if (line.StartsWith("\t")) {// New Answer    
-                OneAnswer temp = new OneAnswer();
-
-                string[] elems = line.TrimStart('\t').Split('\t');
-                string tempAnswer = elems[0];
-                if (tempAnswer.Contains("("))
-                {
-                    tempAnswer = ClearEmbedingCharacter(tempAnswer.Split('(')[0]);
-                }
-                temp.Answer = tempAnswer;
-                string[] PotentialFolllowIDs = elems[elems.Length - 1].Split(',');
-                temp.NextQuestionsIDs = new List<int>();
-                foreach (string s in PotentialFolllowIDs) {
-                    if (s.StartsWith("/")) {
-                        int candidate;
-                        string temporary = ClearEmbedingCharacter(s.TrimStart('/'));
-                        if (temporary.Contains("("))
-                        {
-                            temporary = temporary.Split(' ')[0];
-                        }
-                        Debug.Log(temporary);
-                        if (int.TryParse(temporary, out candidate)) {
-                            temp.NextQuestionsIDs.Add(candidate);
-                        }
-                    }
-                    if (s.Contains("(")) {
-                        int beginCharacter = s.IndexOf('(');
-                        int endCharacter = s.IndexOf(')');
-                        if (beginCharacter != -1 && endCharacter != -1) {
-                            temp.Answer_DiffLang = ClearEmbedingCharacter(s.Substring(beginCharacter + 1, ( endCharacter ) - ( beginCharacter + 1 )));
-                           
-                        } else {
-                           
-                            Debug.LogError("This should really not happen not finding a complete alt lang Answer");
+                        foreach (int nextQ in currentActiveQustion.Answers[AnswerIndex].nextQuestionIndexQueue) {
+                            nextQuestionsToAskQueue.Enqueue(nextQ);
                         }
                         
-
+                        m_interalState = QNStates.LOADINGQUESTION;
                     }
+                    //  sba.setPercentageSelection(Mathf.Clamp01(totalTime / targetTime));
                 }
-                lastSet.Answers.Add(temp);
-            } else {
-                // Debug.Log("Fond an empty line or so");
-            }
 
+                break;
+            case QNStates.FINISH:
+                ParticipantInputCapture tmp = m_MyLocalClient.GetComponent<ParticipantInputCapture>();
+                if (tmp != null && tmp.IsLocalPlayer) {
+                    tmp.PostQuestionServerRPC(tmp.OwnerClientId);
+                    m_interalState = QNStates.IDLE;
+                }
+                else { Debug.LogError("Did not get my local player dont know who to report back to."); }
 
-        }
-        output.Add(lastSet);
-        // Debug.Log(output.Count);
-
-        //reader.Close();
-        return output;
-    }
-    private void OnDisable() {
-        if (ExtraQNOutput)
-        {
-            if (sw != null)
-            {
-                sw.Flush();
-                sw.Close();
-            }
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
-    public static string Reverse(string s) {
-        char[] charArray = s.ToCharArray();
-
-        //foreach (char c in charArray) {
-         //   Debug.Log(c);
-         //   Debug.Log(c.GetHashCode());
-        //}
-        Array.Reverse(charArray);
-
-
-        string output = new string(charArray);
-        output = output.Replace('\u202C'+"", ""); // removing the pop orientation character
-        output = output.Replace('\u202B'+"", "");// and replacing the various Left to right  and Right to left embedings 
-        output = output.Replace('\u200A'+"", "");
-
-        return output;
-    }
-    public static string ClearEmbedingCharacter(string s)
-    {
-        string output = s.Replace('\u202C' + "", ""); // removing the pop orientation character
-        output = output.Replace('\u202B' + "", "");// and replacing the various Left to right  and Right to left embedings 
-        output = output.Replace('\u200A' + "", "");
-        return output;
+    List<QuestionnaireQuestion> ReadString(TextAsset asset) {
+        return JsonConvert.DeserializeObject<List<QuestionnaireQuestion>>(asset.text);
     }
 }
+
+
+/*
+        QuestionnaireQuestion temp = new QuestionnaireQuestion
+        {
+            ID = 1,
+            Behavior = "TurnSignals",
+            SA_Level = "Prediction",
+
+        };
+
+        temp.QuestionText = new Dictionary<LanguageSelect, string>();
+        temp.QuestionText.Add("English", "Test question?");
+        temp.QuestionText.Add("German", "Test Frage?");
+
+        temp.Answers = new List<ObjAnswer>();
+        temp.Answers.Add(new ObjAnswer {index = 1});
+        temp.Answers[0].AnswerText = new Dictionary<LanguageSelect, string>();
+        temp.Answers[0].AnswerText.Add("English", "Test Answer 1");
+        temp.Answers[0].AnswerText.Add("German", "Test Antwort 1");
+        temp.Answers[0].nextQuestionIndexQueue = new List<int>{2};
+        
+        temp.Answers.Add(new ObjAnswer {index = 2});
+        temp.Answers[1].AnswerText = new Dictionary<LanguageSelect, string>();
+        temp.Answers[1].AnswerText.Add("English", "Test Answer 2");
+        temp.Answers[1].AnswerText.Add("German", "Test Antwort 2");
+        temp.Answers[1].nextQuestionIndexQueue = new List<int>{2};
+    
+        QuestionnaireQuestion temp2 = new QuestionnaireQuestion
+        {
+            ID = 2,
+            Behavior = "TurnSignals",
+            SA_Level = "Prediction",
+
+        };
+
+        temp2.QuestionText = new Dictionary<LanguageSelect, string>();
+        temp2.QuestionText.Add("English", "Second test question?");
+        temp2.QuestionText.Add("German", "Zweite Test Frage?");
+
+        temp2.Answers = new List<ObjAnswer>();
+        temp2.Answers.Add(new ObjAnswer {index = 1});
+        temp2.Answers[0].AnswerText = new Dictionary<LanguageSelect, string>();
+        temp2.Answers[0].AnswerText.Add("English", "Test Answer 3");
+        temp2.Answers[0].AnswerText.Add("German", "Test Antwort 3");
+        temp2.Answers[0].nextQuestionIndexQueue = new List<int>{};
+        
+        temp2.Answers.Add(new ObjAnswer {index = 2});
+        temp2.Answers[1].AnswerText = new Dictionary<LanguageSelect, string>();
+        temp2.Answers[1].AnswerText.Add("English", "Test Answer 4");
+        temp2.Answers[1].AnswerText.Add("German", "Test Antwort 4");
+        temp2.Answers[1].nextQuestionIndexQueue = new List<int>{};
+        
+         Debug.Log("SerializeObject");
+       Debug.Log( JsonConvert.SerializeObject(new List<QuestionnaireQuestion>{temp,temp2}));
+        */

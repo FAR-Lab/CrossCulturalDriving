@@ -10,7 +10,8 @@ public class LocalVRPlayer : MonoBehaviour
     private NetworkManager _networkManager;
     // Start is called before the first frame update
     private bool loading = true;
-    private ParticipantInputCapture PIC = null;
+    public ParticipantInputCapture PIC = null;
+    public LanguageSelect lang { private set; get; }
     void Start()
     {
         DontDestroyOnLoad(gameObject);
@@ -24,8 +25,10 @@ public class LocalVRPlayer : MonoBehaviour
         PIC = null;
         
         loading = true;
+      
     }
 
+   
 
     private void SceneLoaded()
     {
@@ -67,4 +70,6 @@ public class LocalVRPlayer : MonoBehaviour
         }
        
     }
+
+    public void Setlanguage(string lang_) { lang = lang_; }
 }

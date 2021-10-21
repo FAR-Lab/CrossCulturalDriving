@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using OVR.OpenVR;
 using UnityEngine.Networking;
 using UnityEngine;
@@ -12,13 +13,11 @@ public class ScenarioManager : MonoBehaviour {
    
     bool WaitAFrame = false;
     QNSelectionManager qnmanager;
-
-    
     public bool ready { get; private set; }  // property
     private Dictionary<ParticipantOrder, Pose> MySpawnPositions;
 
     private Transform MyLocalClient;
-
+    private LanguageSelect lang;
     void Start() {
 
       //  if (Camera.main != null)
@@ -31,6 +30,7 @@ public class ScenarioManager : MonoBehaviour {
         GetSpawnPoints();
         
         ready = true;
+        lang = FindObjectOfType<LocalVRPlayer>().lang;
 
     }
 
@@ -44,13 +44,8 @@ public class ScenarioManager : MonoBehaviour {
                 if (QuestionairsToAsk.Length > 0)
                 {
                     string[] tempArray = new string[QuestionairsToAsk.Length];
-                    int i = 0;
-                    foreach (TextAsset t in QuestionairsToAsk)
-                    {
-                        tempArray[i] = t.name;
-                        i++;
-                    }
-                    qnmanager.startAskingTheQuestionairs(MyLocalClient,tempArray, conditionName);
+                   
+                    qnmanager.startAskingTheQuestionairs(MyLocalClient,QuestionairsToAsk, conditionName,lang);
                 }
             }
 
@@ -88,9 +83,6 @@ public class ScenarioManager : MonoBehaviour {
     }
 
     public void RunQuestionairNow(Transform MyLocalClient_) {
-        Debug.Log("Running questionaire Now");
-        //StateManager.Instance.SetQuestionair();
-        //SceneStateManager.Instance.SetQuestionair();
         MyLocalClient = MyLocalClient_;
             qnmanager = Instantiate(
                 QuestionairPrefab,

@@ -39,6 +39,7 @@ public class NetworkCommandLine : MonoBehaviour
                 connectionAndSpawing.StartAsClient();
             }
 
+            SetlanguagePrivate("English");
             // netManager.StartHost();
             return;
         }
@@ -100,6 +101,13 @@ public class NetworkCommandLine : MonoBehaviour
                     break;
             }
         }
+        if (args.TryGetValue("-language", out string lang)) {
+            SetlanguagePrivate(lang);
+        }
+    }
+
+    private void SetlanguagePrivate(LanguageSelect lang) {
+        FindObjectOfType<LocalVRPlayer>().Setlanguage(lang);
     }
 
     private Dictionary<string, string> GetCommandlineArgs()

@@ -1,0 +1,60 @@
+[
+  {
+    "ID": 1,
+    "Behavior": "TurnSignals",
+    "SA_Level": "Prediction",
+    "QuestionText": {
+      "English": "Test question?",
+      "German": "Test Frage?"
+    },
+    "Answers": [
+      {
+        "index": 1,
+        "AnswerText": {
+          "English": "Test Answer 1",
+          "German": "Test Antwort 1"
+        },
+        "nextQuestionIndexQueue": [
+          2
+        ]
+      },
+      {
+        "index": 2,
+        "AnswerText": {
+          "English": "Test Answer 2",
+          "German": "Test Antwort 2"
+        },
+        "nextQuestionIndexQueue": [
+          2
+        ]
+      }
+    ]
+  },
+  {
+    "ID": 2,
+    "Behavior": "TurnSignals",
+    "SA_Level": "Prediction",
+    "QuestionText": {
+      "English": "Second test question?",
+      "German": "Zweite Test Frage?"
+    },
+    "Answers": [
+      {
+        "index": 1,
+        "AnswerText": {
+          "English": "Test Answer 3",
+          "German": "Test Antwort 3"
+        },
+        "nextQuestionIndexQueue": []
+      },
+      {
+        "index": 2,
+        "AnswerText": {
+          "English": "Test Answer 4",
+          "German": "Test Antwort 4"
+        },
+        "nextQuestionIndexQueue": []
+      }
+    ]
+  }
+]
