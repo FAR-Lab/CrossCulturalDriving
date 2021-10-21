@@ -518,6 +518,8 @@ public class ConnectionAndSpawing : MonoBehaviour
         ParticipantOrder po = GetOrder(clientID);
         QNFinished[po] = true;
     }
+
+    
 }
 
 

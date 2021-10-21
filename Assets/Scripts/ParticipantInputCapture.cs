@@ -344,10 +344,11 @@ public class ParticipantInputCapture : NetworkBehaviour
             if (MyRemoteCar != null  && transform.parent == null)
             {
                 FindCameraPositon();
-                if (transform.parent != null && ReadyForAssignment == false)
-                {
-                    ReadyForAssignment = true;
-                }
+                
+            }
+            else if (ReadyForAssignment == false && MyRemoteCar != null && transform.parent != null)
+            {
+                ReadyForAssignment = true;
             }
         
             if (Input.GetKeyDown(KeyCode.Return))
