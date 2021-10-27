@@ -353,7 +353,11 @@ public class ConnectionAndSpawing : MonoBehaviour {
     }
 
     private void SwitchToReady() { ServerState = ActionState.READY; }
-    private void SwitchToDriving() { ServerState = ActionState.DRIVE; }
+
+    private void SwitchToDriving() {
+        ServerState = ActionState.DRIVE;
+        
+    }
 
     public void SwitchToQN() {
      //   Debug.Log("QN triggered, canceling Velocities, and start Questionnaires");
@@ -398,7 +402,9 @@ public class ConnectionAndSpawing : MonoBehaviour {
                 case ActionState.WAITINGROOM: break;
                 case ActionState.LOADING: break;
                 case ActionState.READY:
-                    if (Input.GetKeyUp(KeyCode.Return)) { SwitchToDriving(); }
+                    if (Input.GetKeyUp(KeyCode.Return)) { SwitchToDriving();
+                        SetStartingGPSDirections();
+                    }
 
                     break;
                 case ActionState.DRIVE: break;
@@ -452,32 +458,26 @@ public class ConnectionAndSpawing : MonoBehaviour {
         ParticipantOrder po = GetOrder(clientID);
         QNFinished[po] = true;
     }
+
+    #region GPSUpdate
+
+
+    private void SetStartingGPSDirections() {
+        UpdateAllGPS(FindObjectOfType<ScenarioManager>().GetStartingPositions());
+
+    }
+    
+    public void UpdateAllGPS(Dictionary<ParticipantOrder,GpsController.Direction> dict) {
+
+        foreach (ParticipantOrder or in dict.Keys) {
+            ulong? cid = GetClientID(or);
+            if (cid != null) {
+                NetworkManager.Singleton.ConnectedClients[(ulong) cid].PlayerObject
+                    .GetComponent<ParticipantInputCapture>().CurrentDirection.Value = dict[or];
+            }
+        }
+    }
+
+    #endregion
 }
 
-
-/*
-switch (GlobalState.Value)
-{
-    case ActionState.DEFAULT:
-        if (ConnectionAndSpawing.Singleton.ServerisRunning)
-        {
-            NetworkSceneManager.SwitchScene(WaitingRoomSceneName);
-            GlobalState.Value = ActionState.WAITINGROOM;
-        }
-        break;
-    case ActionState.WAITINGROOM:
-        DontDestroyOnLoad(gameObject);
-        break;
-    case ActionState.LOADING:
-        break;
-    case ActionState.READY:
-        break;
-    case ActionState.DRIVE:
-        break;
-    case ActionState.QUESTIONS:
-        break;
-    case ActionState.POSTQUESTIONS:
-        break;
-    default:
-        throw new ArgumentOutOfRangeException();
-}*/
