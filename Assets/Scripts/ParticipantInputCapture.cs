@@ -54,14 +54,24 @@ public class ParticipantInputCapture : NetworkBehaviour {
     public float SteeringInput_LastFrame;
     public float ThrottleInput_LastFrame;
 
-
+    public NetworkVariable<GpsController.Direction> CurrentDirection =new NetworkVariable<GpsController.Direction>(NetworkVariableReadPermission.Everyone);
+    private GpsController m_GpsController;
+    
     public NetworkVariable<float> selfAlignmentTorque =
         new NetworkVariable<float>(NetworkVariableReadPermission.OwnerOnly);
 
 
     void Awake() { ReadyForAssignment = false; }
 
-    private void Start() { indicaterStage = 0; }
+    private void Start() {
+        indicaterStage = 0;
+        
+        CurrentDirection.OnValueChanged += NewGpsDirection;
+    }
+
+    private void NewGpsDirection(GpsController.Direction previousvalue, GpsController.Direction newvalue) {
+        if (m_GpsController != null) { m_GpsController.SetDirection(newvalue); }
+    }
 
 
     public override void OnNetworkSpawn() {
@@ -71,6 +81,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
         }
 
         if (IsLocalPlayer) {
+            
             localStateManager = GetComponent<StateManager>();
             steeringInput = GetComponent<SteeringWheelInputController>();
         }
@@ -249,8 +260,14 @@ public class ParticipantInputCapture : NetworkBehaviour {
 
 
         if (IsLocalPlayer) {
-            if (ReadyForAssignment == false && transform.parent != null) { ReadyForAssignment = true; }
+            if (ReadyForAssignment == false && transform.parent != null) { ReadyForAssignment = true;}
 
+            if (ReadyForAssignment && m_GpsController == null) {
+                m_GpsController = transform.parent.GetComponentInChildren<GpsController>();
+                if (m_GpsController == null) {
+                    m_GpsController.SetDirection(CurrentDirection.Value);
+                }
+            }
 
 /*
             if (Input.GetKeyDown(KeyCode.Q))

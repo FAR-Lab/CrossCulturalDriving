@@ -7,75 +7,71 @@ using UnityEngine;
 
 public class ScenarioManager : MonoBehaviour {
     public TextAsset[] QuestionairsToAsk;
+
     public string conditionName;
+
     // Use this for initialization
     public GameObject QuestionairPrefab;
-   
+
     bool WaitAFrame = false;
     QNSelectionManager qnmanager;
-    public bool ready { get; private set; }  // property
+    public bool ready { get; private set; } // property
     private Dictionary<ParticipantOrder, Pose> MySpawnPositions;
 
     private Transform MyLocalClient;
     private LanguageSelect lang;
-    void Start() {
 
-      //  if (Camera.main != null)
+    public GpsController.Direction StartingDirectionParticipantA;
+    public GpsController.Direction StartingDirectionParticipantB;
+    public GpsController.Direction StartingDirectionParticipantC;
+    public GpsController.Direction StartingDirectionParticipantD;
+    public GpsController.Direction StartingDirectionParticipantE;
+    public GpsController.Direction StartingDirectionParticipantF;
+
+    void Start() {
+        //  if (Camera.main != null)
         //    Camera.main.clearFlags = CameraClearFlags.Skybox;
-       
+
         //SceneStateManager.Instance.SetPreDriving();//We go to predrive since this is a driving scene... THis will cause the server to load the cars
         WaitAFrame = false;
         qnmanager = null;
 
         GetSpawnPoints();
-        
+
         ready = true;
         lang = FindObjectOfType<LocalVRPlayer>().lang;
-
     }
 
-    
+
     void Update() {
-        
         if (WaitAFrame) {
             WaitAFrame = false;
-            if (qnmanager != null)
-            {
-                if (QuestionairsToAsk.Length > 0)
-                {
+            if (qnmanager != null) {
+                if (QuestionairsToAsk.Length > 0) {
                     //string[] tempArray = new string[QuestionairsToAsk.Length];
-                   
-                    qnmanager.startAskingTheQuestionairs(MyLocalClient,QuestionairsToAsk, conditionName,lang);
+
+                    qnmanager.startAskingTheQuestionairs(MyLocalClient, QuestionairsToAsk, conditionName, lang);
                 }
             }
-
         }
     }
 
-    public Pose? GetStartPose(ParticipantOrder val)
-    {
-        
-            GetSpawnPoints();
-            
-            if (MySpawnPositions!=null && MySpawnPositions.Count>0 && MySpawnPositions.ContainsKey(val))
-        {
+    public Pose? GetStartPose(ParticipantOrder val) {
+        GetSpawnPoints();
+
+        if (MySpawnPositions != null && MySpawnPositions.Count > 0 && MySpawnPositions.ContainsKey(val)) {
             return MySpawnPositions[val];
         }
-        else
-        {
+        else {
             Debug.Log("Did not find an assigned spawn point");
             return null;
         }
-
     }
 
-    private void GetSpawnPoints()
-    {
-        if (MySpawnPositions == null || MySpawnPositions.Count == 0)
-        {
+    private void GetSpawnPoints() {
+        if (MySpawnPositions == null || MySpawnPositions.Count == 0) {
             MySpawnPositions = new Dictionary<ParticipantOrder, Pose>();
-            foreach (SpawnPosition sp in GetComponentsInChildren<SpawnPosition>())
-            {
+            foreach (SpawnPosition sp in GetComponentsInChildren<SpawnPosition>()) {
                 var transform1 = sp.transform;
                 MySpawnPositions[sp.StartingId] = new Pose(transform1.position, transform1.rotation);
             }
@@ -84,13 +80,23 @@ public class ScenarioManager : MonoBehaviour {
 
     public void RunQuestionairNow(Transform MyLocalClient_) {
         MyLocalClient = MyLocalClient_;
-            qnmanager = Instantiate(
-                QuestionairPrefab,
-                MyLocalClient.position + MyLocalClient.forward * 2.5f + MyLocalClient.up * 1.5f,
-                MyLocalClient.transform.rotation).GetComponent<QNSelectionManager>();
+        qnmanager = Instantiate(
+            QuestionairPrefab,
+            MyLocalClient.position + MyLocalClient.forward * 2.5f + MyLocalClient.up * 1.5f,
+            MyLocalClient.transform.rotation).GetComponent<QNSelectionManager>();
 
-            qnmanager.setRelativePosition(MyLocalClient, .75f, 4f);
-            WaitAFrame = true;         
-        
+        qnmanager.setRelativePosition(MyLocalClient, .75f, 4f);
+        WaitAFrame = true;
+    }
+
+    public Dictionary<ParticipantOrder, GpsController.Direction> GetStartingPositions() {
+        return new Dictionary<ParticipantOrder, GpsController.Direction>() {
+            {ParticipantOrder.A, StartingDirectionParticipantA},
+            {ParticipantOrder.B, StartingDirectionParticipantB},
+            {ParticipantOrder.C, StartingDirectionParticipantC},
+            {ParticipantOrder.D, StartingDirectionParticipantD},
+            {ParticipantOrder.E, StartingDirectionParticipantE},
+            {ParticipantOrder.F, StartingDirectionParticipantF}
+        };
     }
 }

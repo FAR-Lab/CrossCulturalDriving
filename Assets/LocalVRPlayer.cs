@@ -11,6 +11,7 @@ public class LocalVRPlayer : MonoBehaviour {
     // Start is called before the first frame update
     public bool loading = true;
     public ParticipantInputCapture PIC = null;
+    private Transform _transform;
     public LanguageSelect lang { private set; get; }
     public ParticipantOrder MyOrder{ private set; get; }
     private bool CallBackSet = false;
@@ -60,15 +61,17 @@ public class LocalVRPlayer : MonoBehaviour {
                 if (pic_.IsLocalPlayer && pic_.ReadyForAssignment) {
                    
                     PIC = pic_;
+                    _transform =PIC.transform.parent.Find("CameraPosition");
+                    
                 }
             }
         }
     }
 
     private void LateUpdate() {
-        if (PIC != null) {
+        if (PIC != null && _transform!= null) {
             var transform1 = transform;
-            var transform2 = PIC.transform;
+            var transform2 = _transform;//PIC.transform;
             transform1.position = transform2.position;
             transform1.rotation = transform2.rotation;
         }

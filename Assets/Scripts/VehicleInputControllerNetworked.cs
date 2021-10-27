@@ -41,6 +41,8 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
 
     [HideInInspector] public float selfAlignmentTorque;
     private ulong CLID;
+    
+    
 
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
@@ -105,11 +107,6 @@ public class VehicleInputControllerNetworked : NetworkBehaviour {
         HonkSound.Play();
     }
 
-
-    [ClientRpc]
-    public void SetGPSClientRpc(GpsController.Direction[] dir) {
-        // GetComponentInChildren<GpsController>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
-    }
 
     private void LateUpdate() {
         if (IsServer && controller != null) {
