@@ -1,30 +1,36 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using MLAPI;
-using MLAPI.Messaging;
-using MLAPI.SceneManagement;
+using Unity.Netcode;
+using UnityEditor;
+using UnityEngine.SceneManagement;
 
-public class ConnectionAndSpawing : MonoBehaviour
-{
+
+public class ConnectionAndSpawing : MonoBehaviour {
+    public GameObject PlayerPrefab;
+    public GameObject CarPrefab;
 
     public List<SceneField> IncludedScenes = new List<SceneField>();
     public string WaitingRoomSceneName;
     public bool ServerisRunning;
     private GameObject myStateManager;
     private ParticipantOrder _participantOrder = ParticipantOrder.None;
+
     public ParticipantOrder ParticipantOrder => _participantOrder;
+
     //Internal StateTracking
     private bool ParticipantOrder_Set = false;
 
     private ScenarioManager CurrentScenarioManager;
 
-    public ActionState ServerState;// { get; private set; }
-    
+    public ActionState ServerState; // { get; private set; }
+
     #region ParticipantMapping
-    private Dictionary<ParticipantOrder,ulong> _OrderToClient;
-    private Dictionary<ulong,ParticipantOrder> _ClientToOrder;
+
+    private Dictionary<ParticipantOrder, ulong> _OrderToClient;
+    private Dictionary<ulong, ParticipantOrder> _ClientToOrder;
 
     private Dictionary<ulong, List<NetworkObject>> ClientObjects = new Dictionary<ulong, List<NetworkObject>>();
 
@@ -32,494 +38,420 @@ public class ConnectionAndSpawing : MonoBehaviour
     private bool SceneSwitching = false;
     private bool SceneSwitchingFinished = false;
     private bool initalSceneLoaded = false;
-        
-    private bool AddParticipant(ParticipantOrder or ,ulong id)
-    {
+
+    private bool AddParticipant(ParticipantOrder or, ulong id) {
         bool outval = false;
-        if (_OrderToClient == null)
-        {
-            initDicts();
-        }
-        if (!_OrderToClient.ContainsKey(or))
-        {
+        if (_OrderToClient == null) { initDicts(); }
+
+        if (!_OrderToClient.ContainsKey(or)) {
             _OrderToClient.Add(or, id);
-            _ClientToOrder.Add(id,or);
-            
-            
-               ClientObjects.Add(id, new List<NetworkObject>());
-            
+            _ClientToOrder.Add(id, or);
+
+
+            ClientObjects.Add(id, new List<NetworkObject>());
+
 
             outval = true;
         }
+
         return outval;
     }
-    private void RemoveParticipant(ulong id)
-    {
+
+    private void RemoveParticipant(ulong id) {
         ParticipantOrder or = GetOrder(id);
-        if (_OrderToClient.ContainsKey(or) &&_ClientToOrder.ContainsKey(id))
-        {
+        if (_OrderToClient.ContainsKey(or) && _ClientToOrder.ContainsKey(id)) {
             _OrderToClient.Remove(or);
             _ClientToOrder.Remove(id);
             ClientObjects.Remove(id);
         }
-       
     }
 
-    private void initDicts()
-    {
-        _OrderToClient=new Dictionary<ParticipantOrder, ulong>();
-        _ClientToOrder=new Dictionary<ulong,ParticipantOrder>();
-        
+    private void initDicts() {
+        _OrderToClient = new Dictionary<ParticipantOrder, ulong>();
+        _ClientToOrder = new Dictionary<ulong, ParticipantOrder>();
     }
 
-    private ulong? GetClientID(ParticipantOrder or)
-    {if (_OrderToClient == null)
-        {
-            initDicts();
-        }
-        if (CheckOrder(or))
-        {
-            return _OrderToClient[or];
-        }
-        else
-        {
-            return null;
-        }
+    private ulong? GetClientID(ParticipantOrder or) {
+        if (_OrderToClient == null) { initDicts(); }
+
+        if (CheckOrder(or)) { return _OrderToClient[or]; }
+        else { return null; }
     }
-    private bool CheckOrder(ParticipantOrder or)
-    {if (_OrderToClient == null)
-        {
-            initDicts();
-        }
+
+    private bool CheckOrder(ParticipantOrder or) {
+        if (_OrderToClient == null) { initDicts(); }
+
         return _OrderToClient.ContainsKey(or);
     }
-    private bool CheckClientID(ulong id)
-    {if (_OrderToClient == null)
-        {
-            initDicts();
-        }
+
+    private bool CheckClientID(ulong id) {
+        if (_OrderToClient == null) { initDicts(); }
+
         return _ClientToOrder.ContainsKey(id);
     }
-    
-    private ParticipantOrder GetOrder(ulong id)
-    {if (_OrderToClient == null)
-        {
-            initDicts();
-        }
-        if (CheckClientID(id))
-        {
-            return _ClientToOrder[id];
-        }
-        else
-        {
-            return ParticipantOrder.None;
-        }
+
+    private ParticipantOrder GetOrder(ulong id) {
+        if (_OrderToClient == null) { initDicts(); }
+
+        if (CheckClientID(id)) { return _ClientToOrder[id]; }
+        else { return ParticipantOrder.None; }
     }
 
-    private int GetParticipantCount()
-    {
-        if (_ClientToOrder.Count == _OrderToClient.Count)
-        {
-            return _ClientToOrder.Count;
-        }
-        else
-        {
-            Debug.LogError("Our Participant Connection has become inconsistent. This is bad. Please restart and tell david!");
+    private int GetParticipantCount() {
+        if (_ClientToOrder.Count == _OrderToClient.Count) { return _ClientToOrder.Count; }
+        else {
+            Debug.LogError(
+                "Our Participant Connection has become inconsistent. This is bad. Please restart and tell david!");
             return -1;
         }
     }
+
     #endregion
-    
-    public void SetParticipantOrder(ParticipantOrder val)
-    {
-        Debug.Log(val+"  " + (byte) val);
-        NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] {(byte) val};  // assigning ID 
+
+    public void SetParticipantOrder(ParticipantOrder val) {
+       
+        NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] {(byte) val}; // assigning ID 
         _participantOrder = val;
         ParticipantOrder_Set = true;
     }
-    
+
     #region SingeltonManagment
 
-   
     public static ConnectionAndSpawing Singleton { get; private set; }
-    private void SetSingleton()
-    {
-        Singleton = this;
+    private void SetSingleton() { Singleton = this; }
 
-    }
-
-    private void OnEnable()
-    {
-        if (Singleton != null && Singleton != this)
-        {
+    private void OnEnable() {
+        if (Singleton != null && Singleton != this) {
             Destroy(gameObject);
             return;
         }
+
         SetSingleton();
         DontDestroyOnLoad(gameObject);
-      
     }
 
-    private void OnDestroy()
-    {
-      
-        if (Singleton != null && Singleton == this)
-        {
-           
-            Singleton = null;
-        }
+    private void OnDestroy() {
+        if (Singleton != null && Singleton == this) { Singleton = null; }
     }
+
     #endregion
-    
-    
+
+
     #region SpawingAndConnecting
 
-    
+    IEnumerator WaitForSetup() {
+        while (NetworkManager.Singleton == null) { yield return new WaitForSeconds(0.1f); }
 
-    
-    private void SetupConnectingAndSpawing()
-    {
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
         NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected;
-       NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
-       NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
+        NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
+        NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
+       
 
-       NetworkSceneManager.OnSceneSwitchStarted += SceneLoading;
-       NetworkSceneManager.OnSceneSwitched += SceneIsLoaded;
-       Debug.Log("Set up server Callbacks");
-    }
+        NetworkManager.Singleton.StartHost();
+        while (NetworkManager.Singleton.SceneManager == null) { yield return new WaitForSeconds(0.1f); }
 
-    private void SceneLoading(AsyncOperation operation)
-    {
-        SceneSwitchingFinished = false;
+        NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;
+
+        AddParticipant(_participantOrder, NetworkManager.Singleton.LocalClientId);
+
        
     }
 
-    private void SceneIsLoaded()
-    {
-       
-        foreach (ulong ClientID  in _ClientToOrder.Keys)
-        {
-            var tmp=SpawnAPlayer(ClientID);
-            if (tmp == false)
-            {
-                Debug.LogError("Could not spawn a player!");
-            }
+
+    private void SceneEvent(SceneEvent sceneEvent) {
+        
+
+        switch (sceneEvent.SceneEventType) {
+            case SceneEventType.Load:
+                SceneSwitchingFinished = false;
+                break;
+            case SceneEventType.Unload: break;
+            case SceneEventType.Synchronize: break;
+            case SceneEventType.ReSynchronize: break;
+            case SceneEventType.LoadEventCompleted:
+                if (ServerState == ActionState.LOADING) { SwitchToReady(); }
+
+                break;
+            case SceneEventType.UnloadEventCompleted: break;
+            case SceneEventType.LoadComplete:
+                SpawnAPlayer(sceneEvent.ClientId);
+
+                //   SceneIsLoaded();
+                break;
+            case SceneEventType.UnloadComplete: break;
+            case SceneEventType.SynchronizeComplete: break;
+            default: throw new ArgumentOutOfRangeException();
+        }
+    }
+
+
+    [Obsolete("Dont use it, it will break things.(loading and sycronizing the scene", true)]
+    private void SceneIsLoaded() {
+        foreach (ulong ClientID in _ClientToOrder.Keys) {
+            var tmp = SpawnAPlayer(ClientID);
+            if (tmp == false) { Debug.LogError("Could not spawn a player!"); }
         }
 
-        if (ServerState == ActionState.LOADING)
-        {
-            SwitchToReady();
-        }
+        if (ServerState == ActionState.LOADING) { SwitchToReady(); }
 
         SceneSwitchingFinished = true;
     }
 
-    private void DestroyAllClientObjects()
-    {
-        
-        foreach (ulong id in ClientObjects.Keys)
-        {
-            foreach (NetworkObject no in ClientObjects[id])
-            {
-                
-                if (NetworkManager.Singleton.ConnectedClients[id].PlayerObject == no)
-                {
+    private void DestroyAllClientObjects() {
+        foreach (ulong id in ClientObjects.Keys) {
+            foreach (NetworkObject no in ClientObjects[id]) {
+                if (NetworkManager.Singleton.ConnectedClients[id].PlayerObject == no) {
                     NetworkManager.Singleton.ConnectedClients[id].PlayerObject = null;
-                    Debug.Log("Removing player object despanwn: "+no.name);
+                    Debug.Log("Removing player object despanwn: " + no.name);
                 }
-                else
-                {
-                    Debug.Log("Trying to despanwn: "+no.name);
-                }
+                else { Debug.Log("Trying to despanwn: " + no.name); }
+
                 no.Despawn(true);
-                
             }
+
             ClientObjects[id].Clear();
-            
         }
     }
 
-    private void ClientDisconnected(ulong ClientID)
-    {
-        foreach (NetworkObject obj in ClientObjects[ClientID])
-        {
-            obj.Despawn(true);
-        }
+    private void ClientDisconnected(ulong ClientID) {
+        foreach (NetworkObject obj in ClientObjects[ClientID]) { obj.Despawn(true); }
+
         RemoveParticipant(ClientID);
     }
 
-    private void ClientConnected(ulong ClientID)
-    {
-        if (! NetworkManager.Singleton.IsServer) return;
-      if(SceneSwitchingFinished) SpawnAPlayer(ClientID);
-         
+    private void ClientConnected(ulong ClientID) {
+        //      if (! NetworkManager.Singleton.IsServer) return;
+//      if(SceneSwitchingFinished) SpawnAPlayer(ClientID);
     }
 
-    private bool SpawnAPlayer(ulong ClientID)
-    {
-        Debug.Log("trying to spawn a player for"+ClientID);
+    private bool SpawnAPlayer(ulong ClientID) {
         ParticipantOrder temp = GetOrder(ClientID);
-        if (temp == ParticipantOrder.None)
-        {
-            return false;
-            
-        }
-        else
-        {
+        if (temp == ParticipantOrder.None) { return false; }
+        else {
             Pose? tempPose = GetScenarioManager().GetStartPose(temp);
-            if (tempPose == null)
-            {
-                return false;
-            }
-            
+            if (tempPose == null) { return false; }
+
             var newPlayer =
-                Instantiate(NetworkManager.Singleton.NetworkConfig.NetworkPrefabs[0].Prefab,
+                Instantiate(PlayerPrefab,
                     tempPose.Value.position, tempPose.Value.rotation);
-            
+
             var newCar =
-                Instantiate(NetworkManager.Singleton.NetworkConfig.NetworkPrefabs[1].Prefab,
+                Instantiate(CarPrefab,
                     tempPose.Value.position, tempPose.Value.rotation);
-            newCar.name = "XE_Rigged_Networked" +  GetOrder(ClientID) ;
-            
-            newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(ClientID, null, false);
-            newCar.GetComponent<NetworkObject>().Spawn();
-            
-            ClientRpcParams clientRpcParams = new ClientRpcParams
-            {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = new ulong[]{ClientID}
+
+            newCar.name = "XE_Rigged_Networked_" + GetOrder(ClientID);
+
+            ClientRpcParams clientRpcParams = new ClientRpcParams {
+                Send = new ClientRpcSendParams {
+                    TargetClientIds = new ulong[] {ClientID}
                 }
             };
 
-            
-            newPlayer.GetComponent<ParticipantInputCapture>().AssignCarLocalServerCall(newCar.GetComponent<VehicleInputControllerNetworked>());
-            
-            Debug.Log("Assigning car to a new partcipant with clinetID:"+ClientID.ToString()+" =>"+newCar.GetComponent<NetworkObject>().NetworkObjectId);
+            newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(ClientID, true);
+            newCar.GetComponent<NetworkObject>().Spawn(true);
+
+            newCar.GetComponent<VehicleInputControllerNetworked>().AssignClient(ClientID);
+            // newPlayer.GetComponent<ParticipantInputCapture>().AssignCarLocalServerCall(newCar.GetComponent<VehicleInputControllerNetworked>());
+            Debug.Log("Assigning car to a new partcipant with clinetID:" + ClientID.ToString() + " =>" +
+                      newCar.GetComponent<NetworkObject>().NetworkObjectId);
+
             newPlayer.GetComponent<ParticipantInputCapture>()
-                .AssignCarClientRPC(newCar.GetComponent<NetworkObject>().NetworkObjectId,clientRpcParams);
-            
+                .AssignCarTransformClientRPC(newCar.GetComponent<NetworkObject>(), clientRpcParams);
+            newPlayer.GetComponent<ParticipantInputCapture>()
+                .AssignCarTransform_OnServer(newCar.GetComponent<VehicleInputControllerNetworked>());
             ClientObjects[ClientID].Add(newPlayer.GetComponent<NetworkObject>());
             ClientObjects[ClientID].Add(newCar.GetComponent<NetworkObject>());
-            
+
             return true;
         }
     }
 
-    private ScenarioManager GetScenarioManager()
-    {
-        CurrentScenarioManager = FindObjectOfType<ScenarioManager>();
-        if (CurrentScenarioManager == null)
-        {
-            Debug.LogError("Tried to find a scenario manager(probably to spawn cars), but they was nothing. Did you load your scenario(subscene?");
-        }
-        return CurrentScenarioManager;
 
+    private ScenarioManager GetScenarioManager() {
+        CurrentScenarioManager = FindObjectOfType<ScenarioManager>();
+        if (CurrentScenarioManager == null) {
+            Debug.LogError(
+                "Tried to find a scenario manager(probably to spawn cars), but they was nothing. Did you load your scenario(subscene?");
+        }
+
+        return CurrentScenarioManager;
     }
 
+
     private void ApprovalCheck(byte[] connectionData, ulong clientId,
-        MLAPI.NetworkManager.ConnectionApprovedDelegate callback)
-    {
-        Debug.Log("Adding a player " + connectionData);
+        NetworkManager.ConnectionApprovedDelegate callback) {
+        
         //Your logic here
         bool approve = false;
         ParticipantOrder temp = (ParticipantOrder) connectionData[0];
-       
+
         approve = AddParticipant(temp, clientId);
 
-        if (!approve)
-        {
+        if (!approve) {
             Debug.Log("Participant Order " + connectionData +
-                  " tried to join, but we already have a participant with that order. " +
-                  "Try to change the -po commandline argument of the participant that is" +
-                  " trying to connect.");
-               
+                      " tried to join, but we already have a participant with that order. " +
+                      "Try to change the -po commandline argument of the participant that is" +
+                      " trying to connect.");
         }
-        callback(false, 0, approve,null, null);
 
-        
+        callback(false, 0, approve, null, null);
     }
+
     #endregion
-    
-    
-    public void StartAsHost()
-    {
-        
-        SetupConnectingAndSpawing();
-        NetworkManager.Singleton.StartHost();
-        AddParticipant(_participantOrder, NetworkManager.Singleton.LocalClientId);
-        //SpawnAPlayer(NetworkManager.Singleton.LocalClientId);
-        
+
+
+    private StartUpType m_StartUpType;
+
+    enum StartUpType {
+        Client,
+        Host,
+        Completed
     }
 
-    public void StartAsClient()
-    {
-        Debug.Log("Starting as Client Now!");
-        NetworkManager.Singleton.StartClient();
-        Destroy(this);
+    private void _internalStart(StartUpType startUpType) {
+        Debug.Log(startUpType);
+        switch (startUpType) {
+            default:
+            case StartUpType.Client:
+                NetworkManager.Singleton.StartClient();
+                Destroy(this);
+                break;
+            case StartUpType.Host:
+              
+                IEnumerator RegisterTask = WaitForSetup();
+                StartCoroutine(RegisterTask);
+
+                break;
+        }
+
+        m_StartUpType = StartUpType.Completed;
     }
 
-    private void ServerHasStarted()
-    {
-        
+    public void StartAsHost() { m_StartUpType = StartUpType.Host; }
+
+    public void StartAsClient() { m_StartUpType = StartUpType.Client; }
+
+    private void ServerHasStarted() {
         ServerisRunning = true;
         SwitchToWaitingRoom();
     }
 
     #region StateChangeCalls
 
-    private void SwitchToWaitingRoom()
-    {
+    private void SwitchToWaitingRoom() {
         ServerState = ActionState.WAITINGROOM;
         SceneSwitching = true;
-        NetworkSceneManager.SwitchScene(WaitingRoomSceneName);
+        NetworkManager.Singleton.SceneManager.LoadScene(WaitingRoomSceneName, LoadSceneMode.Single);
     }
-    
-    private void SwitchToLoading(string name)
-    {
+
+    private void SwitchToLoading(string name) {
         DestroyAllClientObjects();
         ServerState = ActionState.LOADING;
         SceneSwitching = true;
-        NetworkSceneManager.SwitchScene(name);
+        NetworkManager.Singleton.SceneManager.LoadScene(name, LoadSceneMode.Single);
     }
-    private void SwitchToReady()
-    {
-        ServerState = ActionState.READY;
-    }
-    private void SwitchToDriving()
-    {
-        ServerState = ActionState.DRIVE;
-    }
-    public void SwitchToQN()
-    {
-        Debug.Log("QN triggered, canceling Velocities, and start Questionnaires");
+
+    private void SwitchToReady() { ServerState = ActionState.READY; }
+    private void SwitchToDriving() { ServerState = ActionState.DRIVE; }
+
+    public void SwitchToQN() {
+     //   Debug.Log("QN triggered, canceling Velocities, and start Questionnaires");
         ServerState = ActionState.QUESTIONS;
         QNFinished = new Dictionary<ParticipantOrder, bool>();
-        foreach(ParticipantOrder po in _OrderToClient.Keys)
-        {
-            QNFinished.Add(po,false);
-        }
-        
-        foreach (ulong client in ClientObjects.Keys)
-        {
-            foreach(VehicleInputControllerNetworked  no in FindObjectsOfType<VehicleInputControllerNetworked>())
-            {
-                
-                    no.GetComponent<Rigidbody>().velocity=Vector3.zero;
-                    no.GetComponent<Rigidbody>().angularVelocity=Vector3.zero;
-                   
+        foreach (ParticipantOrder po in _OrderToClient.Keys) { QNFinished.Add(po, false); }
+
+        foreach (ulong client in ClientObjects.Keys) {
+            foreach (VehicleInputControllerNetworked no in FindObjectsOfType<VehicleInputControllerNetworked>()) {
+                no.transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                no.transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             }
         }
 
-        foreach (ulong clinet in NetworkManager.Singleton.ConnectedClients.Keys)
-        {
+        foreach (ulong clinet in NetworkManager.Singleton.ConnectedClients.Keys) {
             ParticipantInputCapture inCapture =
                 NetworkManager.Singleton.ConnectedClients[clinet].PlayerObject.GetComponent<ParticipantInputCapture>();
-            if (inCapture != null)
-            {
-                inCapture.StartQuestionnaireClientRpc();
-            }
+            if (inCapture != null) { inCapture.StartQuestionnaireClientRpc(); }
         }
     }
 
-   private void SwitchToPostQN()
-   {
-       ServerState = ActionState.POSTQUESTIONS;
-       DestroyAllClientObjects();
-       SwitchToWaitingRoom();
-
-   }
+    private void SwitchToPostQN() {
+        ServerState = ActionState.POSTQUESTIONS;
+        DestroyAllClientObjects();
+        SwitchToWaitingRoom();
+    }
 
     #endregion
-    
+
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    void Start() { }
 
     // Update is called once per frame
-    void Update()
-    {
-        if (NetworkManager.Singleton.IsServer)
-        {
-           
-            if(Input.GetKeyUp(KeyCode.Return) && ServerState == ActionState.READY)
-            {
-                SwitchToDriving();
-            }
+    void Update() {
+        if (NetworkManager.Singleton != null && m_StartUpType != StartUpType.Completed) {
+            _internalStart(m_StartUpType);
+        }
 
-            if (ServerState == ActionState.QUESTIONS)
-            {
-                if (!QNFinished.ContainsValue(false))
-                {
-                    
-                    SwitchToPostQN();
-                }
+        if (NetworkManager.Singleton.IsServer) {
+            switch (ServerState) {
+                case ActionState.DEFAULT: break;
+                case ActionState.WAITINGROOM: break;
+                case ActionState.LOADING: break;
+                case ActionState.READY:
+                    if (Input.GetKeyUp(KeyCode.Return)) { SwitchToDriving(); }
+
+                    break;
+                case ActionState.DRIVE: break;
+                case ActionState.QUESTIONS:
+                    if (!QNFinished.ContainsValue(false)) { SwitchToPostQN(); }
+
+                    break;
+                case ActionState.POSTQUESTIONS: break;
+                default: throw new ArgumentOutOfRangeException();
             }
         }
-        
     }
 
 
-
-    void OnGUI()
-    {
-
-        if (NetworkManager.Singleton.IsHost)
-        {
+    void OnGUI() {
+        if (NetworkManager.Singleton.IsHost) {
             GUI.Label(new Rect(5, 5, 150, 50), "Server: " + ParticipantOrder + " " +
-                                                NetworkManager.Singleton.ConnectedClients.Count + " " +
-                                                GetParticipantCount() + "  " +
-                                                ServerState+"  "+Time.timeScale);
-            if (ServerState == ActionState.WAITINGROOM)
-            {
-                int y=50;
-                foreach(SceneField f in IncludedScenes){
-                    if (GUI.Button(new Rect(5, 5 + y, 150, 25), f.SceneName))
-                    {
-                        SwitchToLoading(f.SceneName);
-                    }
-                    y += 27;
-                }
-            }
-            
-            else if (ServerState == ActionState.QUESTIONS)
-            {
-                int y=50;
-                foreach(ParticipantOrder f in QNFinished.Keys)
-                {
-                    GUI.Label(new Rect(5, 5 + y, 150, 25), f + "  "+QNFinished[f].ToString());
+                                               NetworkManager.Singleton.ConnectedClients.Count + " " +
+                                               GetParticipantCount() + "  " +
+                                               ServerState + "  " + Time.timeScale);
+            if (ServerState == ActionState.WAITINGROOM) {
+                int y = 50;
+                foreach (SceneField f in IncludedScenes) {
+                    if (GUI.Button(new Rect(5, 5 + y, 150, 25), f.SceneName)) { SwitchToLoading(f.SceneName); }
+
                     y += 27;
                 }
             }
 
+            else if (ServerState == ActionState.QUESTIONS) {
+                int y = 50;
+                foreach (ParticipantOrder f in QNFinished.Keys) {
+                    GUI.Label(new Rect(5, 5 + y, 150, 25), f + "  " + QNFinished[f].ToString());
+                    y += 27;
+                }
+            }
         }
-        else if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
-        {
+        else if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost) {
             GUI.Label(new Rect(5, 5, 150, 100), "Client: " +
                                                 ParticipantOrder + " " +
                                                 NetworkManager.Singleton.IsConnectedClient);
         }
-        else
-        {
-            if (GUI.Button(new Rect(5, 105, 150, 50), "StartHost"))
-            {
-                StartAsHost();
-            }
-
+        else {
+            if (GUI.Button(new Rect(5, 105, 150, 50), "StartHost")) { StartAsHost(); }
         }
     }
 
     private Dictionary<ParticipantOrder, bool> QNFinished;
-    public void FinishedQuestionair(ulong clientID)
-    {
+
+    public void FinishedQuestionair(ulong clientID) {
         ParticipantOrder po = GetOrder(clientID);
         QNFinished[po] = true;
     }
-
-    
 }
 
 

@@ -209,12 +209,6 @@ MonoBehaviour:
   ConnectAddress: 127.0.0.1
   ConnectPort: 7777
   ServerListenPort: 7777
-  ServerWebsocketListenPort: 8887
-  SupportWebsocket: 0
-  Channels: []
-  UseMLAPIRelay: 0
-  MLAPIRelayAddress: 184.72.104.138
-  MLAPIRelayPort: 8888
   MessageSendMode: 0
 --- !u!114 &476093109
 MonoBehaviour:
@@ -234,48 +228,33 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 476093108}
-    RegisteredScenes:
-    - GameManagment
-    - WaitingRoom
-    - Scenario 1
-    - Scenario 2
-    - Scenario 3
-    AllowRuntimeSceneChanges: 1
+    PlayerPrefab: {fileID: 4827439202578429411, guid: ace60f06c1a9d5b499576725ca59bc2d, type: 3}
     NetworkPrefabs:
-    - Prefab: {fileID: 4827439202578429411, guid: ace60f06c1a9d5b499576725ca59bc2d, type: 3}
-      PlayerPrefab: 1
-    - Prefab: {fileID: 102736, guid: 76bfb64261b6b4eb080dcd0e2fa84572, type: 3}
-      PlayerPrefab: 0
-    PlayerPrefabHash:
-      id: 0
-    CreatePlayerPrefab: 0
-    ReceiveTickrate: 64
-    NetworkTickIntervalSec: 0.05
-    MaxReceiveEventsPerTickRate: 500
-    EventTickrate: 64
+    - Override: 0
+      Prefab: {fileID: 4827439202578429411, guid: ace60f06c1a9d5b499576725ca59bc2d, type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 102736, guid: 76bfb64261b6b4eb080dcd0e2fa84572, type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 1
     ConnectionData: 
     EnableTimeResync: 1
     TimeResyncInterval: 30
-    EnableNetworkVariable: 1
     EnsureNetworkVariableLengthSafety: 0
     EnableSceneManagement: 1
     ForceSamePrefabs: 0
-    UsePrefabSync: 0
     RecycleNetworkIds: 0
     NetworkIdRecycleDelay: 120
     RpcHashSize: 0
     LoadSceneTimeOut: 120
-    EnableMessageBuffering: 1
     MessageBufferTimeout: 20
     EnableNetworkLogs: 1
-  references:
-    version: 1
-    00000000:
-      type: {class: NullableBoolSerializable, ns: MLAPI.Configuration, asm: Unity.Multiplayer.MLAPI.Runtime}
-      data:
-        Value: 13091078764758155200
 --- !u!114 &476093110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,6 +267,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f22dd40787c7434449f1f52151313a02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerPrefab: {fileID: 4827439202578429411, guid: ace60f06c1a9d5b499576725ca59bc2d, type: 3}
+  CarPrefab: {fileID: 102736, guid: 76bfb64261b6b4eb080dcd0e2fa84572, type: 3}
   IncludedScenes:
   - m_SceneAsset: {fileID: 102900000, guid: 51d43d9fb4f066f43832b0b5d5fcee97, type: 3}
     m_SceneName: Scenario 1
@@ -324,7 +305,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4471618475864336876, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4471618475864336876, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -511,7 +492,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3858003787392411251, guid: 3d2b882fcf20c98479e2162c82de243f, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3858003787392411251, guid: 3d2b882fcf20c98479e2162c82de243f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -556,6 +537,10 @@ PrefabInstance:
     - target: {fileID: 3858003787392411260, guid: 3d2b882fcf20c98479e2162c82de243f, type: 3}
       propertyPath: m_Name
       value: HandDataStreamerTest
+      objectReference: {fileID: 0}
+    - target: {fileID: 3858003787392411260, guid: 3d2b882fcf20c98479e2162c82de243f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d2b882fcf20c98479e2162c82de243f, type: 3}
