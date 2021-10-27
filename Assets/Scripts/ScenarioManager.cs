@@ -43,7 +43,7 @@ public class ScenarioManager : MonoBehaviour {
             {
                 if (QuestionairsToAsk.Length > 0)
                 {
-                    string[] tempArray = new string[QuestionairsToAsk.Length];
+                    //string[] tempArray = new string[QuestionairsToAsk.Length];
                    
                     qnmanager.startAskingTheQuestionairs(MyLocalClient,QuestionairsToAsk, conditionName,lang);
                 }

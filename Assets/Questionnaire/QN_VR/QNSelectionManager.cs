@@ -96,7 +96,6 @@ public class QNSelectionManager : MonoBehaviour {
         changeLanguage("English");
         setRelativePosition(FindObjectOfType<LocalVRPlayer>().transform, 1, 2);
 #endif
-
     }
 
     private void updateCursorPositoon(Transform currentHitTarget, RaycastResult rayRes) {
@@ -112,14 +111,15 @@ public class QNSelectionManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    public void startAskingTheQuestionairs(Transform mylocalclient, TextAsset[] list, string Condition,LanguageSelect lang) {
+    public void startAskingTheQuestionairs(Transform mylocalclient, TextAsset[] list, string Condition,
+        LanguageSelect lang) {
         ChangeLanguage(lang);
         int epoch = (int) (System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds; //Epoch Time
         m_MyLocalClient = mylocalclient;
         if (m_interalState == QNStates.IDLE) {
             m_condition = Condition;
             foreach (TextAsset s in list) {
-                Debug.Log(s);
+                // Debug.Log(s);
                 QuestionariesToAsk.Add(s.name, ReadString(s));
             }
 
@@ -179,6 +179,9 @@ public class QNSelectionManager : MonoBehaviour {
 
                 AnswerFields.Clear();
                 currentActiveQustion = CurrentSetofQuestions[NextQuestiuonID];
+                Debug.Log("Get lanauge: >" + m_LanguageSelect + "<But only have the following avalible:");
+                foreach (string s in currentActiveQustion.QuestionText.Keys) { Debug.Log(">"+s+"<"); }
+
                 QustionField.text = currentActiveQustion.QuestionText[m_LanguageSelect];
                 int i = 0;
                 foreach (ObjAnswer a in currentActiveQustion.Answers) {
@@ -227,7 +230,6 @@ public class QNSelectionManager : MonoBehaviour {
                         int AnswerIndex = rcb.activateNextQuestions();
 
 
-
                         m_QNLogger.AddNewDataPoint(currentActiveQustion, AnswerIndex, m_LanguageSelect);
                         Debug.Log("To Quesstion: " + currentActiveQustion.QuestionText["English"] +
                                   "We answered: " + currentActiveQustion.Answers[AnswerIndex].AnswerText["English"]);
@@ -235,7 +237,7 @@ public class QNSelectionManager : MonoBehaviour {
                         foreach (int nextQ in currentActiveQustion.Answers[AnswerIndex].nextQuestionIndexQueue) {
                             nextQuestionsToAskQueue.Enqueue(nextQ);
                         }
-                        
+
                         m_interalState = QNStates.LOADINGQUESTION;
                     }
                     //  sba.setPercentageSelection(Mathf.Clamp01(totalTime / targetTime));

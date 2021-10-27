@@ -1,7 +1,6 @@
 ﻿using System;
-using MLAPI;
-using MLAPI.Messaging;
-using MLAPI.NetworkVariable;
+using  Unity.Netcode;
+
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -13,12 +12,13 @@ public class DeactivateOthers :NetworkBehaviour  {
     Camera MyCam;
     public List<MeshRenderer> DeactivateLocally= new List<MeshRenderer>();
 	// Use this for initialization
-    public override void NetworkStart ()
+    public override void OnNetworkSpawn ()
     {
         if (!IsServer)
         {
+	        
             GetComponent<VehicleController>().enabled = false;
-            Destroy (GetComponent<Rigidbody>());
+            /// Destroy (GetComponent<Rigidbody>()); //Yaaaay we have rigid body support now :-D
             foreach (WheelCollider wc in GetComponentsInChildren<WheelCollider>())
 
             {

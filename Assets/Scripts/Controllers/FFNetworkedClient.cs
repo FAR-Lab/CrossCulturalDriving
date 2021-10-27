@@ -49,8 +49,8 @@ public class FFNetworkedClient : MonoBehaviour
         }
 
         _stateManager.GlobalState.OnValueChanged += StartTransition;
-        Debug.Log("State,Network,Steering:"+_stateManager?.ToString()+
-                  _participantInputCapture?.ToString()+logi?.ToString());
+       // Debug.Log("State,Network,Steering:"+_stateManager?.ToString()+
+                //  _participantInputCapture?.ToString()+logi?.ToString());
 
     }
 

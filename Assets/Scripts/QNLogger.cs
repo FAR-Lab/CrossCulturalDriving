@@ -22,7 +22,7 @@ public class QNLogger : MonoBehaviour
     {
         
         path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        string identifier = String.Format("{0:yyyymmdd-HHmmss}.txt", System.DateTime.Now);
+        string identifier = String.Format("{0:yyyymmdd-HHmmss}-{1}.txt", System.DateTime.Now,FindObjectOfType<LocalVRPlayer>().MyOrder.ToString());
         sw  = new StreamWriter(Path.Combine( path, identifier));
         // sw = File.AppendText(newPath + participantID + ".csv");
     }
@@ -41,6 +41,5 @@ public class QNLogger : MonoBehaviour
         sw.Close();
     }
 
-
-
+   
 }
