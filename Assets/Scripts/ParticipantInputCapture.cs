@@ -5,14 +5,14 @@
  * Mozilla Public License is at https://www.mozilla.org/MPL/2.0/
  */
 
-
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
-//using  Unity.Netcode.Messaging;
 using UnityEngine;
-using System.Collections;
-//using Unity.Transforms;
+
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
@@ -59,6 +59,8 @@ public class ParticipantInputCapture : NetworkBehaviour {
     
     public NetworkVariable<float> selfAlignmentTorque =
         new NetworkVariable<float>(NetworkVariableReadPermission.OwnerOnly);
+
+    private FastBufferWriter _fastBufferWriter;
 
 
     void Awake() { ReadyForAssignment = false; }
@@ -345,5 +347,16 @@ public class ParticipantInputCapture : NetworkBehaviour {
                 ThrottleInput = -1;
             }
         }
+    }
+
+    [ServerRpc(Delivery = RpcDelivery.Unreliable)]
+    public void BounceHandDataServerRPC(NetworkSkeletonPoseData newPose ) {
+        _fastBufferWriter = new FastBufferWriter(NetworkSkeletonPoseData.GetSize(), Allocator.Temp);
+        _fastBufferWriter.WriteNetworkSerializable(newPose);
+        NetworkManager.Singleton.CustomMessagingManager.SendNamedMessageToAll(HandDataStreamerWriter.HandMessageName,
+            _fastBufferWriter,
+            NetworkDelivery.UnreliableSequenced);
+        Debug.Log("Send a message");
+        _fastBufferWriter.Dispose();
     }
 }
