@@ -39,7 +39,7 @@ public class QNTrigger : MonoBehaviour
         {
             Debug.Log("On trigger enter with from the server detected."+other.transform.parent.name);
             
-            if (other.transform.GetComponentInParent<VehicleInputControllerNetworked>() != null)
+            if (other.transform.GetComponentInParent<NetworkVehicleController>() != null)
             {
                 Debug.Log("Found a car so I am telling the server to switch to QNs");
                 ConnectionAndSpawing.Singleton.SwitchToQN();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using OVR.OpenVR;
+using Unity.Netcode;
 using UnityEngine.Networking;
 using UnityEngine;
 
@@ -29,17 +30,12 @@ public class ScenarioManager : MonoBehaviour {
     public GpsController.Direction StartingDirectionParticipantF;
 
     void Start() {
-        //  if (Camera.main != null)
-        //    Camera.main.clearFlags = CameraClearFlags.Skybox;
-
-        //SceneStateManager.Instance.SetPreDriving();//We go to predrive since this is a driving scene... THis will cause the server to load the cars
+      
         WaitAFrame = false;
         qnmanager = null;
-
         GetSpawnPoints();
-
         ready = true;
-        lang = FindObjectOfType<LocalVRPlayer>().lang;
+        if (NetworkManager.Singleton.IsClient) { lang = FindObjectOfType<LocalVRPlayer>().lang; }
     }
 
 

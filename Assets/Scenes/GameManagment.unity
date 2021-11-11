@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -279,6 +279,7 @@ MonoBehaviour:
   WaitingRoomSceneName: WaitingRoom
   ServerisRunning: 0
   ServerState: 0
+  CameraPrefab: {fileID: 2541865709739137554, guid: 4b1707ac5184a8d4b9d4b29043512971, type: 3}
 --- !u!114 &476093111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,7 +292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcaf14b342bc6492fbbacba7ff774a9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EditorRunAsServer: 1
+  EditorRunAsServer: 0
 --- !u!4 &611472930 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4471618475864336876, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
