@@ -18,9 +18,6 @@ public class LocalVRPlayer : MonoBehaviour {
 
     void Start() {
         DontDestroyOnLoad(gameObject);
-      //  _networkManager = NetworkManager.Singleton;
-       // NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneLoading;
-        
     }
 
     public void SetParticipantOrder(ParticipantOrder or) {

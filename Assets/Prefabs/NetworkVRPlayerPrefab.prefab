@@ -10,11 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 445674352166615110}
   - component: {fileID: 846040396490132298}
-  - component: {fileID: 9019766098275221918}
   - component: {fileID: 4278339547011770872}
   - component: {fileID: 6191014247404591568}
   - component: {fileID: 8169285368414048824}
-  - component: {fileID: 8793198499178222720}
   m_Layer: 0
   m_Name: NetworkVRPlayerPrefab
   m_TagString: Untagged
@@ -29,13 +27,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4827439202578429411}
-  m_LocalRotation: {x: -0.13052694, y: -0.0032307485, z: -0.00000026792986, w: 0.9914396}
-  m_LocalPosition: {x: -0.391, y: 1.144, z: 0.108}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -15, y: -0.38, z: 0.05}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &846040396490132298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52,29 +50,14 @@ MonoBehaviour:
   useKeyBoard: 1
   interval: 0.5
   ReadyForAssignment: 0
-  LeftIndicators:
-    m_InternalValue: 0
-  RightIndicators:
-    m_InternalValue: 0
-  SteeringInput:
-    m_InternalValue: 0
-  ThrottleInput:
+  SteeringInput: 0
+  ThrottleInput: 0
+  SteeringInput_LastFrame: 0
+  ThrottleInput_LastFrame: 0
+  CurrentDirection:
     m_InternalValue: 0
   selfAlignmentTorque:
     m_InternalValue: 0
---- !u!114 &9019766098275221918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4827439202578429411}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e5fb0d7114dab64d811ffffba27f509, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FFBGain: 2
 --- !u!114 &4278339547011770872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,18 +115,3 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   CanCommitToTransform: 0
---- !u!114 &8793198499178222720
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4827439202578429411}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f24f80fb42f367e4ba1341443dc8f030, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  springSaturation: 0.4
-  springCoeff: 0.05
-  damperAmount: 3000

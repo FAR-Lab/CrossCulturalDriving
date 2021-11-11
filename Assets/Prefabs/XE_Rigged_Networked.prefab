@@ -175,7 +175,8 @@ GameObject:
   - component: {fileID: 11415450}
   - component: {fileID: 114012480399126062}
   - component: {fileID: 11476574}
-  - component: {fileID: 5994347945075066203}
+  - component: {fileID: 3015805072074362688}
+  - component: {fileID: 5959237676026758103}
   - component: {fileID: 1452036174}
   - component: {fileID: 82318783350293580}
   - component: {fileID: 5308659446361930710}
@@ -446,7 +447,7 @@ MonoBehaviour:
   windAudio: {fileID: 11409220}
   driveSnapshot: {fileID: 24500003, guid: 97e149cad54f7b44e91f3cc8df036300, type: 2}
   selectSnapshot: {fileID: 24590204, guid: 97e149cad54f7b44e91f3cc8df036300, type: 2}
---- !u!114 &5994347945075066203
+--- !u!114 &3015805072074362688
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -455,16 +456,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 102736}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c114d5c7ce5bd3d4e95852009ce48ff4, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b08ceb10d7d8d3439eda3c0bf954426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheels:
-  - {fileID: 14670720}
-  - {fileID: 14698806}
-  - {fileID: 14607232}
-  - {fileID: 14651374}
-  weightIntensity: -5
-  tireWidth: 0.25
+  wheels: []
+  damperCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  isShowingDebugDialog: 0
+  weightIntensity: 1
+  tireWidth: 0.1
+  springSaturation: 0
+  springCoeff: 0
+  damperAmount: 3000
+--- !u!114 &5959237676026758103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e5fb0d7114dab64d811ffffba27f509, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FFBGain: 1
 --- !u!114 &1452036174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,9 +497,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57df0dfd5264fdc46a24f82641972c20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeactivateMe: []
-  AndMe: []
-  DeactivateLocally: []
 --- !u!82 &82318783350293580
 AudioSource:
   m_ObjectHideFlags: 0

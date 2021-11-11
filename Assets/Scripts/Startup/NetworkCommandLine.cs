@@ -22,16 +22,14 @@ public class NetworkCommandLine : MonoBehaviour {
     private void SetupAndStart() {
         if (Application.isEditor) {
             if (EditorRunAsServer) {
-                BroadCastParticipantOrder(ParticipantOrder.A);
-                connectionAndSpawing.StartAsHost();
+                BroadCastParticipantOrder(ParticipantOrder.None);
+                connectionAndSpawing.StartAsServer();
             }
             else {
                 BroadCastParticipantOrder(ParticipantOrder.A);
                 connectionAndSpawing.StartAsClient();
             }
-
             SetlanguagePrivate("English");
-            // netManager.StartHost();
             return;
         }
 
@@ -74,10 +72,12 @@ public class NetworkCommandLine : MonoBehaviour {
         if (args.TryGetValue("-mlapi", out string mlapiValue)) {
             switch (mlapiValue) {
                 case "server":
-                    netManager.StartServer();
+                    connectionAndSpawing.StartAsServer();
                     break;
                 case "host":
-                    connectionAndSpawing.StartAsHost();
+                    Debug.LogError("No longer support please start as server(on a computer) or client on an oculus quest!");
+                    Application.Quit();
+                    //connectionAndSpawing.StartAsHost();
                     break;
                 case "client":
                     connectionAndSpawing.StartAsClient();
