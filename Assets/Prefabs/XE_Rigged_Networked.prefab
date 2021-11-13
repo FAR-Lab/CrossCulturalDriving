@@ -176,7 +176,6 @@ GameObject:
   - component: {fileID: 114012480399126062}
   - component: {fileID: 11476574}
   - component: {fileID: 3015805072074362688}
-  - component: {fileID: 5959237676026758103}
   - component: {fileID: 1452036174}
   - component: {fileID: 82318783350293580}
   - component: {fileID: 5308659446361930710}
@@ -427,7 +426,8 @@ MonoBehaviour:
   Off: {r: 0, g: 0, b: 0, a: 1}
   SteeringInput: 0
   ThrottleInput: 0
-  selfAlignmentTorque: 0
+  SteeringWheel: {fileID: 0}
+  interval: 0
 --- !u!114 &11476574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,32 +459,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b08ceb10d7d8d3439eda3c0bf954426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheels: []
+  wheels:
+  - {fileID: 14670720}
+  - {fileID: 14698806}
   damperCurve:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  isShowingDebugDialog: 0
   weightIntensity: 1
   tireWidth: 0.1
   springSaturation: 0
   springCoeff: 0
   damperAmount: 3000
---- !u!114 &5959237676026758103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 102736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e5fb0d7114dab64d811ffffba27f509, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FFBGain: 1
 --- !u!114 &1452036174
 MonoBehaviour:
   m_ObjectHideFlags: 0
