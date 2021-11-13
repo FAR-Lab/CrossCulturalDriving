@@ -90,10 +90,9 @@ public class NetworkCommandLine : MonoBehaviour {
 
     private void BroadCastParticipantOrder(ParticipantOrder or) {
         connectionAndSpawing.SetParticipantOrder(or);
-        FindObjectOfType<LocalVRPlayer>().SetParticipantOrder(or);
     }
 
-    private void SetlanguagePrivate(LanguageSelect lang) { FindObjectOfType<LocalVRPlayer>().Setlanguage(lang); }
+    private void SetlanguagePrivate(LanguageSelect lang) { connectionAndSpawing.Setlanguage(lang);}
 
     private Dictionary<string, string> GetCommandlineArgs() {
         Dictionary<string, string> argDictionary = new Dictionary<string, string>();

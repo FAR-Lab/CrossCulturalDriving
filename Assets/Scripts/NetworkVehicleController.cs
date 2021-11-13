@@ -36,17 +36,13 @@ public class NetworkVehicleController : NetworkBehaviour {
     public float SteeringInput;
     public float ThrottleInput;
 
-    [HideInInspector] public float selfAlignmentTorque;
+
     private ulong CLID;
 
-    private SteeringWheelInputController steeringInput;
 
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
-        if (IsServer) {
-            controller = GetComponent<VehicleController>();
-            steeringInput  = GetComponent<SteeringWheelInputController>();
-        }
+        if (IsServer) { controller = GetComponent<VehicleController>(); }
     }
 
     private void Start() {
@@ -119,69 +115,71 @@ public class NetworkVehicleController : NetworkBehaviour {
                                              "  IsClient: " +
                                              IsClient.ToString());
     }
+
     float steeringAngle;
     public Transform SteeringWheel;
+
     void Update() {
         if (!IsServer) return;
         if (ConnectionAndSpawing.Singleton.ServerState == ActionState.DRIVE) {
-                if (steeringInput == null || useKeyBoard) {
-                    SteeringInput = Input.GetAxis("Horizontal");
-                    ThrottleInput = Input.GetAxis("Vertical");
-                }
-                else {
-                    SteeringInput = steeringInput.GetSteerInput();
-                    ThrottleInput = steeringInput.GetAccelInput();
-                    SteeringWheel.RotateAround(SteeringWheel.position, SteeringWheel.up,
-                        steeringAngle - SteeringInput * -450f);
-                    steeringAngle =SteeringInput * -450f;
-                }
-
-                bool TempLeft = Input.GetButton("indicateLeft");
-                bool TempRight = Input.GetButton("indicateRight");
-                if (TempLeft || TempRight) {
-                    DualButtonDebounceIndicator = true;
-                    if (TempLeft) { LeftIndicatorDebounce = true; }
-
-                    if (TempRight) { RightIndicatorDebounce = true; }
-                }
-                else if (DualButtonDebounceIndicator && !TempLeft && !TempRight) {
-                    startBlinking(LeftIndicatorDebounce, RightIndicatorDebounce);
-                    DualButtonDebounceIndicator = false;
-                    LeftIndicatorDebounce = false;
-                    RightIndicatorDebounce = false;
-                }
-
-                UpdateIndicator();
-
-
-                if (Input.GetButtonDown("Horn")) { HonkMyCarServerRpc(); }
-
-                if (ThrottleInput < 0 && !breakIsOn) {
-                    BrakeLightChangedServerRpc(true);
-                    breakIsOn = true;
-                }
-                else if (ThrottleInput >= 0 && breakIsOn) {
-                    BrakeLightChangedServerRpc(false);
-                    breakIsOn = false;
-                }
+            if (SteeringWheelManager.Singleton == null || useKeyBoard) {
+                SteeringInput = Input.GetAxis("Horizontal");
+                ThrottleInput = Input.GetAxis("Vertical");
             }
-            else if (ConnectionAndSpawing.Singleton.ServerState == ActionState.QUESTIONS) {
-                SteeringInput = 0;
-                ThrottleInput = -1;
+            else {
+                SteeringInput = SteeringWheelManager.Singleton.GetSteerInput(_participantOrder);
+                ThrottleInput = SteeringWheelManager.Singleton.GetAccelInput(_participantOrder);
+                SteeringWheel.RotateAround(SteeringWheel.position, SteeringWheel.up,
+                    steeringAngle - SteeringInput * -450f);
+                steeringAngle = SteeringInput * -450f;
             }
-        
+
+            bool TempLeft = Input.GetButton("indicateLeft");
+            bool TempRight = Input.GetButton("indicateRight");
+            if (TempLeft || TempRight) {
+                DualButtonDebounceIndicator = true;
+                if (TempLeft) { LeftIndicatorDebounce = true; }
+
+                if (TempRight) { RightIndicatorDebounce = true; }
+            }
+            else if (DualButtonDebounceIndicator && !TempLeft && !TempRight) {
+                startBlinking(LeftIndicatorDebounce, RightIndicatorDebounce);
+                DualButtonDebounceIndicator = false;
+                LeftIndicatorDebounce = false;
+                RightIndicatorDebounce = false;
+            }
+
+            UpdateIndicator();
+
+
+            if (Input.GetButtonDown("Horn")) { HonkMyCarServerRpc(); }
+
+            if (ThrottleInput < 0 && !breakIsOn) {
+                BrakeLightChangedServerRpc(true);
+                breakIsOn = true;
+            }
+            else if (ThrottleInput >= 0 && breakIsOn) {
+                BrakeLightChangedServerRpc(false);
+                breakIsOn = false;
+            }
+        }
+        else if (ConnectionAndSpawing.Singleton.ServerState == ActionState.QUESTIONS) {
+            SteeringInput = 0;
+            ThrottleInput = -1;
+        }
     }
 
-    public void AssignClient(ulong CLID_) {
+    public void AssignClient(ulong CLID_, ParticipantOrder _participantOrder_) {
         if (IsServer) {
             NetworkManager.SceneManager.OnSceneEvent += SceneManager_OnSceneEvent;
             CLID = CLID_;
-            SetPlayerParent(CLID_);
+            _participantOrder = _participantOrder_;
+            GetComponent<ForceFeedback>()?.Init(transform.GetComponent<Rigidbody>(), _participantOrder);
         }
         else { Debug.LogWarning("Tried to execute something that should never happen. "); }
     }
 
-
+/*
     private void SetPlayerParent(ulong clientId) {
         if (IsSpawned && IsServer) {
             // As long as the client (player) is in the connected clients list
@@ -190,11 +188,10 @@ public class NetworkVehicleController : NetworkBehaviour {
                 NetworkManager.ConnectedClients[clientId].PlayerObject.transform.parent =
                     transform; // Should be Camera position but this doesnt work cause of NetworkObject restrictions
                 NetworkManager.SceneManager.OnSceneEvent -= SceneManager_OnSceneEvent;
-                
             }
         }
     }
-
+*/
     private void SceneManager_OnSceneEvent(SceneEvent sceneEvent) {
         Debug.Log("SceneManager_OnSceneEvent called with event:" + sceneEvent.SceneEventType.ToString());
         switch (sceneEvent.SceneEventType) {
@@ -203,7 +200,7 @@ public class NetworkVehicleController : NetworkBehaviour {
                 if (sceneEvent.ClientId == CLID) {
                     Debug.Log("Server: " + IsServer.ToString() + "  IsClient: " + IsClient.ToString() +
                               "  IsHost: " + IsHost.ToString());
-                    SetPlayerParent(sceneEvent.ClientId);
+                    //SetPlayerParent(sceneEvent.ClientId);
                 }
 
                 break;
@@ -212,21 +209,21 @@ public class NetworkVehicleController : NetworkBehaviour {
                 break;
         }
     }
-    
-    
+
+
     private bool breakIsOn;
+
     [ServerRpc]
     private void BrakeLightChangedServerRpc(bool newvalue) { TurnOnBrakeLightClientRpc(newvalue); }
-    
+
     [ServerRpc]
     public void HonkMyCarServerRpc() {
         Debug.Log("HonkMyCarServerRpc");
         HonkMyCarClientRpc();
     }
-    
+
     #region IndicatorLogic
-    
-    
+
     private bool LeftActive;
     private bool RightActive;
 
@@ -241,8 +238,8 @@ public class NetworkVehicleController : NetworkBehaviour {
     private bool DualButtonDebounceIndicator;
     private bool LeftIndicatorDebounce;
     private bool RightIndicatorDebounce;
-    
-    
+    private ParticipantOrder _participantOrder;
+
 
     void startBlinking(bool left, bool right) {
         indicaterStage = 1;
@@ -307,12 +304,14 @@ public class NetworkVehicleController : NetworkBehaviour {
             }
 
             if (indicaterStage == 2) {
-                if (steeringInput != null && Mathf.Abs(steeringInput.GetSteerInput() * -450f) > 90) {
+                if (SteeringWheelManager.Singleton != null &&
+                    Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(_participantOrder) * -450f) > 90) {
                     indicaterStage = 3;
                 }
             }
             else if (indicaterStage == 3) {
-                if (steeringInput != null && Mathf.Abs(steeringInput.GetSteerInput() * -450f) < 10) {
+                if (SteeringWheelManager.Singleton != null &&
+                    Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(_participantOrder) * -450f) < 10) {
                     indicaterStage = 4;
                 }
             }
@@ -327,7 +326,8 @@ public class NetworkVehicleController : NetworkBehaviour {
             // UpdateIndicatorLightsServerRpc(false, false);
         }
     }
-    private void RightIndicatorChanged(bool newvalue) {TurnOnRightClientRpc(newvalue); }
+
+    private void RightIndicatorChanged(bool newvalue) { TurnOnRightClientRpc(newvalue); }
 
     private void LeftIndicatorChanged(bool newvalue) { TurnOnLeftClientRpc(newvalue); }
 

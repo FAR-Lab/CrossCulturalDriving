@@ -34,7 +34,6 @@ public class HandDataStreamerWriter : MonoBehaviour {
 
     private ParticipantInputCapture PIC = null;
 
-    private LocalVRPlayer m_LocalVRPlayer = null;
 
     // Start is called before the first frame update
     void Start() {
@@ -96,19 +95,13 @@ public class HandDataStreamerWriter : MonoBehaviour {
     }
 
 
-    private void FindReferences() {
-        if (m_LocalVRPlayer == null) { m_LocalVRPlayer = FindObjectOfType<LocalVRPlayer>(); }
-
-        if (PIC == null && m_LocalVRPlayer != null) { PIC = m_LocalVRPlayer.PIC; }
-    }
-
     // Update is called once per frame
     void Update() {
-        FindReferences();
-        if (MyOrder == ParticipantOrder.None && m_LocalVRPlayer != null) {
-            MyOrder = m_LocalVRPlayer.MyOrder;
+        if (PIC == null) {
+            PIC = ParticipantInputCapture.GetMyPIC();
         }
-        else { if(PIC!=null){GetHandState(OVRPlugin.Step.Render);} }
+        else if (PIC != null && MyOrder == ParticipantOrder.None) { MyOrder = PIC.participantOrder; }
+        else if (PIC != null && MyOrder == ParticipantOrder.None) { GetHandState(OVRPlugin.Step.Render); }
     }
 
     private void GetHandState(OVRPlugin.Step step) {
@@ -119,7 +112,7 @@ public class HandDataStreamerWriter : MonoBehaviour {
             if (OVRPlugin.GetHandState(step, HandType, ref _handState)) {
                 HandConfidence = (OVRPlugin.TrackingConfidence) _handState.HandConfidence;
                 NetworkSkeletonPoseData networkSkeletonPoseData = new NetworkSkeletonPoseData(
-                    // MyOrder,
+                   
                     _handState.RootPose.Position.FromVector3f(),
                     _handState.RootPose.Orientation.FromQuatf(),
                     _handState.HandScale,
@@ -129,18 +122,15 @@ public class HandDataStreamerWriter : MonoBehaviour {
 
                 if ((_handState.Status & OVRPlugin.HandStatus.HandTracked) != 0 &&
                     HandConfidence == OVRPlugin.TrackingConfidence.High) {
-                    PIC.BounceHandDataServerRPC(networkSkeletonPoseData);
+                    PIC.BounceHandDataServerRPC(networkSkeletonPoseData,NetworkManager.Singleton.LocalClientId);
                 }
             }
         }
     }
-
-    
 }
 
 
 public struct NetworkSkeletonPoseData : INetworkSerializable {
-    // public ParticipantOrder ThisOrder;
     public OVRPlugin.Hand HandType;
     public Vector3 RootPos;
     public Quaternion RootRot;

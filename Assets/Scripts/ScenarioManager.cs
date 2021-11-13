@@ -30,12 +30,14 @@ public class ScenarioManager : MonoBehaviour {
     public GpsController.Direction StartingDirectionParticipantF;
 
     void Start() {
-      
         WaitAFrame = false;
         qnmanager = null;
         GetSpawnPoints();
         ready = true;
-        if (NetworkManager.Singleton.IsClient) { lang = FindObjectOfType<LocalVRPlayer>().lang; }
+        if (NetworkManager.Singleton.IsClient) {
+            var tmp = ParticipantInputCapture.GetMyPIC();
+            if (tmp != null) { lang = tmp.lang; }
+        }
     }
 
 
