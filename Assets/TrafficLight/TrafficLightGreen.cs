@@ -18,8 +18,18 @@ public class TrafficLightGreen : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(GoGreen());
+        
     }
+    void Update()
+    {
+        if (Input.GetKeyDown("g"))
+        {
+
+            StartCoroutine(GoGreen());
+        }
+
+    }
+    
     IEnumerator GoGreen()
     {
 
