@@ -17,6 +17,9 @@ public class DisableComponents : NetworkBehaviour
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
         //ToDO Write code that deactivetes stuff that doesnt need to be synced 
+        if (IsLocalPlayer) {
+            DontDestroyOnLoad(gameObject);
+        }
         if (IsClient && !IsLocalPlayer) {
             GetComponent<ParticipantInputCapture>().enabled = false;
             GetComponent<StateManager>().enabled = false;
@@ -45,8 +48,6 @@ public class DisableComponents : NetworkBehaviour
         }
         
         if (!IsServer) {
-            
-            
             GetComponent<ReplayTransform>().enabled = false;
            
             foreach (ReplayTransform tf in GetComponentsInChildren<ReplayTransform>()) {

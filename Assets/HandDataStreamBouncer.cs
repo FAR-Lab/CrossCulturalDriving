@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Collections;
@@ -13,57 +14,47 @@ using Unity.Mathematics;
 
 //https://www.youtube.com/watch?v=lBzwUKQ3tbw
 
-public class HandDataStreamerWriter : MonoBehaviour {
+public class HandDataStreamBouncer : MonoBehaviour {
     public GameObject RightHandReader;
     public GameObject LeftHandReader;
 
     public GameObject RightHandReader_ReRun;
     public GameObject LeftHandReader_ReRun;
 
-    private OVRPlugin.TrackingConfidence HandConfidence;
-    private ParticipantOrder MyOrder = ParticipantOrder.None;
 
-    private FastBufferWriter _fastBufferWriter;
+
+
+
 
     private Dictionary<ulong, Dictionary<OVRPlugin.Hand, HandDataStreamerReader>> HandClinets =
         new Dictionary<ulong, Dictionary<OVRPlugin.Hand, HandDataStreamerReader>>();
 
-    private OVRPlugin.HandState _handState;
-
     public static string HandMessageName = "HandMessage";
 
-    private ParticipantInputCapture PIC = null;
+    //private bool Ready = false;
 
 
     // Start is called before the first frame update
-    void Start() {
-        IEnumerator coroutine = RegisterHandMessageHandler();
-        StartCoroutine(coroutine);
-    }
-
-    IEnumerator RegisterHandMessageHandler() {
-        while (true) {
-            if (NetworkManager.Singleton != null && NetworkManager.Singleton.CustomMessagingManager != null) {
-                NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(HandMessageName,
-                    RecievingHandData);
-                Debug.Log("Registered hand call back!");
-                break;
-            }
-
-            yield return new WaitForSeconds(0.1f);
-        }
-    }
-
-    private void RecievingHandData(ulong senderclientid, FastBufferReader messagepayload) {
-        Debug.Log("Got a HandMessage from: " + senderclientid.ToString());
-        if (senderclientid == NetworkManager.Singleton.LocalClientId) return;
+    void Start() { }
 
 
-        messagepayload.ReadNetworkSerializable(
+
+
+
+    public void ReceivingHandData(ulong senderClientId, FastBufferReader messagePayload) {
+        Debug.Log("Got a HandMessage from: " + senderClientId.ToString());
+        if (senderClientId == NetworkManager.Singleton.LocalClientId) return;
+
+
+        messagePayload.ReadNetworkSerializable(
             out NetworkSkeletonPoseData newRemoteHandData);
+        RecievedHandData(senderClientId, newRemoteHandData);
+    }
 
-        if (HandClinets.ContainsKey(senderclientid)) {
-            HandClinets[senderclientid][newRemoteHandData.HandType].GetNewData(newRemoteHandData);
+public void RecievedHandData(ulong senderClientId, NetworkSkeletonPoseData newRemoteHandData){
+
+if (HandClinets.ContainsKey(senderClientId)) {
+            HandClinets[senderClientId][newRemoteHandData.HandType].GetNewData(newRemoteHandData);
         }
         else {
             HandDataStreamerReader leftHand = null;
@@ -81,7 +72,7 @@ public class HandDataStreamerWriter : MonoBehaviour {
             }
 
             if (leftHand != null && rightHand != null) {
-                HandClinets.Add(senderclientid, new Dictionary<OVRPlugin.Hand, HandDataStreamerReader> {
+                HandClinets.Add(senderClientId, new Dictionary<OVRPlugin.Hand, HandDataStreamerReader> {
                         {OVRPlugin.Hand.HandLeft, leftHand},
                         {OVRPlugin.Hand.HandRight, rightHand}
                     }
@@ -97,38 +88,12 @@ public class HandDataStreamerWriter : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (PIC == null) {
-            PIC = ParticipantInputCapture.GetMyPIC();
-        }
-        else if (PIC != null && MyOrder == ParticipantOrder.None) { MyOrder = PIC.participantOrder; }
-        else if (PIC != null && MyOrder == ParticipantOrder.None) { GetHandState(OVRPlugin.Step.Render); }
+       
+      
     }
 
-    private void GetHandState(OVRPlugin.Step step) {
-        OVRPlugin.Hand[] temp = new OVRPlugin.Hand[] {
-            OVRPlugin.Hand.HandLeft, OVRPlugin.Hand.HandRight
-        };
-        foreach (OVRPlugin.Hand HandType in temp) {
-            if (OVRPlugin.GetHandState(step, HandType, ref _handState)) {
-                HandConfidence = (OVRPlugin.TrackingConfidence) _handState.HandConfidence;
-                NetworkSkeletonPoseData networkSkeletonPoseData = new NetworkSkeletonPoseData(
-                   
-                    _handState.RootPose.Position.FromVector3f(),
-                    _handState.RootPose.Orientation.FromQuatf(),
-                    _handState.HandScale,
-                    Array.ConvertAll(_handState.BoneRotations, s => s.FromQuatf()),
-                    HandType
-                );
-
-                if ((_handState.Status & OVRPlugin.HandStatus.HandTracked) != 0 &&
-                    HandConfidence == OVRPlugin.TrackingConfidence.High) {
-                    PIC.BounceHandDataServerRPC(networkSkeletonPoseData,NetworkManager.Singleton.LocalClientId);
-                }
-            }
-        }
-    }
+   
 }
-
 
 public struct NetworkSkeletonPoseData : INetworkSerializable {
     public OVRPlugin.Hand HandType;
@@ -162,20 +127,18 @@ public struct NetworkSkeletonPoseData : INetworkSerializable {
 
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter {
-        // serializer.SerializeValue(ref ThisOrder);
+       
 
         serializer.SerializeValue(ref RootPos);
         serializer.SerializeValue(ref RootRot);
         serializer.SerializeValue(ref RootScale);
-        int length = 0;
+        int length=0;
 
         if (!serializer.IsReader) { length = BoneRotations.Length; }
 
         serializer.SerializeValue(ref length);
-        if (serializer.IsReader || true) { BoneRotations = new Quaternion[length]; }
-
+        if (serializer.IsReader) { BoneRotations = new Quaternion[length]; }
         for (int n = 0; n < length; ++n) { serializer.SerializeValue(ref BoneRotations[n]); }
-
         serializer.SerializeValue(ref HandType);
     }
 }

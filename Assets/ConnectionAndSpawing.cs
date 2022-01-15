@@ -30,6 +30,10 @@ public class ConnectionAndSpawing : MonoBehaviour {
     public LanguageSelect lang { private set; get; }
 
 
+    
+    public bool RunAsServer;
+    
+    
     #region ParticipantMapping
 
     enum ParticipantObjectSpawnType {
@@ -46,8 +50,6 @@ public class ConnectionAndSpawing : MonoBehaviour {
         new Dictionary<ulong, Dictionary<ParticipantObjectSpawnType, NetworkObject>>();
 
 
-    private bool SceneSwitching = false;
-    private bool SceneSwitchingFinished = false;
     private bool initalSceneLoaded = false;
 
     private bool AddParticipant(ParticipantOrder or, ulong id) {
@@ -152,8 +154,9 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     #region SpawingAndConnecting
 
-    IEnumerator WaitForSetup() {
-        while (NetworkManager.Singleton == null) { yield return new WaitForSeconds(0.1f); }
+    void SetupServerFunctionality() {
+        
+       
 
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
         NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected;
@@ -162,30 +165,28 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
 
         NetworkManager.Singleton.StartServer();
-        while (NetworkManager.Singleton.SceneManager == null) { yield return new WaitForSeconds(0.1f); }
-
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;
-        //AddParticipant(_participantOrder, NetworkManager.Singleton.LocalClientId);
-        SteeringWheelManager.Singleton.Init();
+        
+        
+        
+        SteeringWheelManager.Singleton.Init(); //TODO enable steering wheel
     }
 
 
-    private string ActiveScene;
-    private string PreviousScene;
+   // private string ActiveScene;
+   // private string PreviousScene;
 
     private void LocalLoadScene(string name) {
-        DestroyAllClientObjects(true);
-        SceneSwitching = true;
-        PreviousScene = ActiveScene;
-        ActiveScene = name;
-        NetworkManager.Singleton.SceneManager.LoadScene(ActiveScene, LoadSceneMode.Single);
+        DestroyAllClientObjects(false);
+      
+      //  PreviousScene = ActiveScene;
+      //  ActiveScene = name;
+        NetworkManager.Singleton.SceneManager.LoadScene(name, LoadSceneMode.Single);
     }
 
     private void SceneEvent(SceneEvent sceneEvent) {
         switch (sceneEvent.SceneEventType) {
             case SceneEventType.Load:
-                SceneSwitchingFinished = false;
-                break;
             case SceneEventType.Unload: break;
             case SceneEventType.Synchronize: break;
             case SceneEventType.ReSynchronize: break;
@@ -195,7 +196,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
             case SceneEventType.UnloadEventCompleted:
                 break;
             case SceneEventType.LoadComplete:
-                SpawnAPlayer(sceneEvent.ClientId);
+               // SpawnAPlayer(sceneEvent.ClientId);
                 SpawnACar(sceneEvent.ClientId);
                 break;
             case SceneEventType.UnloadComplete: break;
@@ -238,47 +239,47 @@ public class ConnectionAndSpawing : MonoBehaviour {
 //      if(SceneSwitchingFinished) SpawnAPlayer(ClientID);
     }
 
-    private bool _prepareSpawing(ulong ClientID, out Pose? tempPose) {
+    private bool _prepareSpawing(ulong clientID, out Pose? tempPose) {
         bool success = true;
-        tempPose = GetScenarioManager().GetStartPose(GetOrder(ClientID));
+        tempPose = GetScenarioManager().GetStartPose(GetOrder(clientID));
         if (tempPose == null) { success = false; }
 
         return success;
     }
 
-    private bool SpawnACar(ulong ClientID) {
-        ParticipantOrder temp = GetOrder(ClientID);
+    private bool SpawnACar(ulong clientID) {
+        ParticipantOrder temp = GetOrder(clientID);
         if (temp == ParticipantOrder.None) return false;
-        if (_prepareSpawing(ClientID, out Pose? tempPose)) {
+        if (_prepareSpawing(clientID, out Pose? tempPose)) {
             var newCar =
                 Instantiate(CarPrefab,
                     tempPose.Value.position, tempPose.Value.rotation);
 
-            newCar.name = "XE_Rigged_Networked_" + GetOrder(ClientID);
+            newCar.name = "XE_Rigged_Networked_" + GetOrder(clientID);
 
             ClientRpcParams clientRpcParams = new ClientRpcParams {
                 Send = new ClientRpcSendParams {
-                    TargetClientIds = new ulong[] {ClientID}
+                    TargetClientIds = new ulong[] {clientID}
                 }
             };
 
             newCar.GetComponent<NetworkObject>().Spawn(true);
 
-            newCar.GetComponent<NetworkVehicleController>().AssignClient(ClientID, GetOrder(ClientID));
+            newCar.GetComponent<NetworkVehicleController>().AssignClient(clientID, GetOrder(clientID));
             // newPlayer.GetComponent<ParticipantInputCapture>().AssignCarLocalServerCall(newCar.GetComponent<VehicleInputControllerNetworked>());
-            Debug.Log("Assigning car to a new partcipant with clinetID:" + ClientID.ToString() + " =>" +
+            Debug.Log("Assigning car to a new partcipant with clinetID:" + clientID.ToString() + " =>" +
                       newCar.GetComponent<NetworkObject>().NetworkObjectId);
-            if (ClientObjects[ClientID][ParticipantObjectSpawnType.MAIN] != null) {
-                ClientObjects[ClientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
-                    .AssignCarTransformClientRPC(newCar.GetComponent<NetworkObject>(), GetOrder(ClientID), lang,
+            if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null) {
+                ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
+                    .AssignCarTransformClientRPC(newCar.GetComponent<NetworkObject>(), GetOrder(clientID), lang,
                         clientRpcParams);
 
-                ClientObjects[ClientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
+                ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
                     .AssignCarTransform_OnServer(newCar.GetComponent<NetworkVehicleController>());
             }
             else { Debug.LogError("Could not find player as I am spawing the CAR. Broken please fix."); }
 
-            ClientObjects[ClientID].Add(ParticipantObjectSpawnType.CAR, newCar.GetComponent<NetworkObject>());
+            ClientObjects[clientID].Add(ParticipantObjectSpawnType.CAR, newCar.GetComponent<NetworkObject>());
 
             return true;
         }
@@ -286,19 +287,19 @@ public class ConnectionAndSpawing : MonoBehaviour {
         return false;
     }
 
-    private bool SpawnAPlayer(ulong ClientID) {
-        ParticipantOrder temp = GetOrder(ClientID);
+    private bool SpawnAPlayer(ulong clientID,bool persistent) {
+        ParticipantOrder temp = GetOrder(clientID);
         if (temp == ParticipantOrder.None) return false;
 
-        if (_prepareSpawing(ClientID, out Pose? tempPose)) {
+        if (_prepareSpawing(clientID, out Pose? tempPose)) {
             tempPose ??= Pose.identity;
 
             var newPlayer =
                 Instantiate(PlayerPrefab,
                     tempPose.Value.position, tempPose.Value.rotation);
 
-            newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(ClientID, true);
-            ClientObjects[ClientID].Add(ParticipantObjectSpawnType.MAIN, newPlayer.GetComponent<NetworkObject>());
+            newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID,!persistent);
+            ClientObjects[clientID].Add(ParticipantObjectSpawnType.MAIN, newPlayer.GetComponent<NetworkObject>());
             return true;
         }
 
@@ -332,49 +333,29 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
         callback(false, 0, approve, null, null);
 
-        //SpawnAPlayer(clientId);
+        SpawnAPlayer(clientId,true);
     }
 
     #endregion
 
 
-    private StartUpType m_StartUpType;
+    
 
-    enum StartUpType {
-        Client,
-        Host,
-        Server,
-        Completed
+  
+
+
+    
+
+    public void StartAsServer() {
+        Debug.Log("Starting as Server");
+        SteeringWheelManager.Singleton.enabled = true;
+        SetupServerFunctionality();
     }
-
-    private void _internalStart(StartUpType startUpType) {
-        Debug.Log(startUpType);
-        switch (startUpType) {
-            default:
-            case StartUpType.Client:
-                NetworkManager.Singleton.StartClient();
-                Destroy(this);
-                break;
-            case StartUpType.Server:
-            case StartUpType.Host:
-
-                IEnumerator RegisterTask = WaitForSetup();
-                StartCoroutine(RegisterTask);
-
-                break;
-        }
-
-        m_StartUpType = StartUpType.Completed;
-    }
-
-
-    public void StartAsHost() { m_StartUpType = StartUpType.Host; }
-
-    public void StartAsServer() { m_StartUpType = StartUpType.Server; }
 
     public void StartAsClient() {
-        m_StartUpType = StartUpType.Client;
-        SteeringWheelManager.Singleton.enabled = false;
+       Debug.Log("Starting as Client");
+        NetworkManager.Singleton.StartClient();
+        this.enabled = false;
     }
 
     private void ServerHasStarted() {
@@ -428,13 +409,26 @@ public class ConnectionAndSpawing : MonoBehaviour {
     #endregion
 
     // Start is called before the first frame update
-    void Start() { }
+    void Start() {
+        
+            Setlanguage("English");
+            if (RunAsServer) {
+                SetParticipantOrder(ParticipantOrder.None);
+                StartAsServer();
+            }
+            else {
+                SetParticipantOrder(ParticipantOrder.A);
+                StartAsClient();
+                
+            }
+           
+        
+        
+    }
 
     // Update is called once per frame
     void Update() {
-        if (NetworkManager.Singleton != null && m_StartUpType != StartUpType.Completed) {
-            _internalStart(m_StartUpType);
-        }
+    
 
         if (NetworkManager.Singleton.IsServer) {
             switch (ServerState) {
@@ -470,7 +464,9 @@ public class ConnectionAndSpawing : MonoBehaviour {
             if (ServerState == ActionState.WAITINGROOM) {
                 int y = 50;
                 foreach (SceneField f in IncludedScenes) {
-                    if (GUI.Button(new Rect(5, 5 + y, 150, 25), f.SceneName)) { SwitchToLoading(f.SceneName); }
+                    if (GUI.Button(new Rect(5, 5 + y, 150, 25), f.SceneName)) {
+                        SwitchToLoading(f.SceneName);
+                    }
 
                     y += 27;
                 }
