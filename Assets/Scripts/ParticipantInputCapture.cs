@@ -26,9 +26,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
         new NetworkVariable<GpsController.Direction>(NetworkVariableReadPermission.Everyone);
 
     private GpsController m_GpsController;
-
-    private FastBufferWriter _fastBufferWriter;
-
+    
     public ParticipantOrder participantOrder { private set; get; }
     public Transform _transform;
     public LanguageSelect lang { private set; get; }
@@ -62,7 +60,9 @@ public class ParticipantInputCapture : NetworkBehaviour {
 
     [ClientRpc]
     public void StartQuestionnaireClientRpc() {
-        if (IsLocalPlayer) { FindObjectOfType<ScenarioManager>().RunQuestionairNow(transform); }
+        if (IsLocalPlayer) {
+            FindObjectOfType<ScenarioManager>().RunQuestionairNow(transform); 
+        }
     }
 
     [ClientRpc]
@@ -79,6 +79,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
     public void AssignCarTransformClientRPC(NetworkObjectReference MyCar, ParticipantOrder participantOrder_,
         LanguageSelect lang_, ClientRpcParams clientRpcParams = default) {
         participantOrder = participantOrder_;
+        GetComponent<HandDataSender>().SetOrder(participantOrder_);
         lang = lang_;
         if (MyCar.TryGet(out NetworkObject targetObject)) {
             NetworkedVehicle = targetObject.transform.GetComponent<NetworkVehicleController>();
@@ -114,27 +115,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
         }
     }
 
-    [ServerRpc(Delivery = RpcDelivery.Unreliable)]
-    public void BounceHandDataServerRPC(NetworkSkeletonPoseData newPose, ulong clinetID) {
-        if (!IsServer) return;
-        List<ulong> clientIds = ConnectionAndSpawing.Singleton.GetClientList();
-        if (clientIds.Contains(clinetID)) { clientIds.Remove(clinetID); }
-        else {
-            Debug.LogError(
-                "CurrentClinet not in active client list, things are getting inconsistent." +
-                "Consider reqriting ConnectionAndSpawing class.");
-        }
-
-        _fastBufferWriter = new FastBufferWriter(NetworkSkeletonPoseData.GetSize(), Allocator.Temp);
-        _fastBufferWriter.WriteNetworkSerializable(newPose);
-        NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
-            HandDataStreamerWriter.HandMessageName,
-            clientIds,
-            _fastBufferWriter,
-            NetworkDelivery.UnreliableSequenced);
-        Debug.Log("bounced Hand a message");
-        _fastBufferWriter.Dispose();
-    }
+   
 
   
 }

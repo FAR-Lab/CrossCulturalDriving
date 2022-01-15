@@ -16,15 +16,7 @@ public class SteeringWheelManager : MonoBehaviour {
     public static SteeringWheelManager Singleton { get; private set; }
     private void SetSingleton() { Singleton = this; }
 
-    private void OnEnable() {
-        if (Singleton != null && Singleton != this) {
-            Destroy(this);
-            return;
-        }
-
-        SetSingleton();
-        DontDestroyOnLoad(gameObject);
-    }
+  
 
     private class SteeringWheelData {
         public int wheelIndex;
@@ -65,7 +57,7 @@ public class SteeringWheelManager : MonoBehaviour {
 
     public float FFBGain = 1f;
 
-    private  static string WheelManufacturer = " Logitech";
+    private static string WheelManufacturer = " Logitech";
     
     [SerializeField] 
     private Dictionary<string, WheelCallibration> SteeringWheelConfigs =
@@ -82,6 +74,20 @@ public class SteeringWheelManager : MonoBehaviour {
     private Dictionary<ParticipantOrder, SteeringWheelData> ActiveWheels =
         new Dictionary<ParticipantOrder, SteeringWheelData>();
 
+    private void Awake() {
+        
+        if (Singleton != null && Singleton != this) {
+            Destroy(this);
+            return;
+        }
+
+        SetSingleton();
+        DontDestroyOnLoad(gameObject);
+        
+        
+        this.enabled = false;
+        
+    }
     void Start() { FFBGain = 1.0f; }
 
     public void Init() {

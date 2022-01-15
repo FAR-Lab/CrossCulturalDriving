@@ -179,19 +179,7 @@ public class NetworkVehicleController : NetworkBehaviour {
         else { Debug.LogWarning("Tried to execute something that should never happen. "); }
     }
 
-/*
-    private void SetPlayerParent(ulong clientId) {
-        if (IsSpawned && IsServer) {
-            // As long as the client (player) is in the connected clients list
-            if (NetworkManager.ConnectedClients.ContainsKey(clientId)) {
-                // Set the player as a child of this in-scene placed NetworkObject 
-                NetworkManager.ConnectedClients[clientId].PlayerObject.transform.parent =
-                    transform; // Should be Camera position but this doesnt work cause of NetworkObject restrictions
-                NetworkManager.SceneManager.OnSceneEvent -= SceneManager_OnSceneEvent;
-            }
-        }
-    }
-*/
+
     private void SceneManager_OnSceneEvent(SceneEvent sceneEvent) {
         Debug.Log("SceneManager_OnSceneEvent called with event:" + sceneEvent.SceneEventType.ToString());
         switch (sceneEvent.SceneEventType) {
