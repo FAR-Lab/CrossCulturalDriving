@@ -19,7 +19,7 @@ public class Interface : MonoBehaviour
     {
         for (int i = 0; i < num_of_participant; i++)
         {
-            GUI.Box(new Rect(10 + i * 100, 10, 100, 110), participant[i]);
+            GUI.Box(new Rect(10 + i * 100, 10, 100, 140), participant[i]);
             // Make the assign button.
             button_name = (i == dev1 | i == dev2) ? "Dissociate" : "Assign";
             if (GUI.Button(new Rect(20 + i * 100, 70, 80, 20), button_name))
@@ -51,6 +51,10 @@ public class Interface : MonoBehaviour
                     Debug.Log("No device Available");
                 }
             }
+
+             if (GUI.Button(new Rect(20 + i * 100, 120, 80, 20), "Calibrate")) {
+                 Debug.Log("Calibrate Participant: " + (i + 1));
+             }
             
             if (assigned[i]) {
                 GUI.Box(new Rect(45 + i * 100, 40, 20, 20), onIcon);
