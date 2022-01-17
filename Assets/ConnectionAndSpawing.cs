@@ -250,12 +250,14 @@ public class ConnectionAndSpawing : MonoBehaviour {
     private bool SpawnACar(ulong clientID) {
         ParticipantOrder temp = GetOrder(clientID);
         if (temp == ParticipantOrder.None) return false;
+        
+        
         if (_prepareSpawing(clientID, out Pose? tempPose)) {
             var newCar =
                 Instantiate(CarPrefab,
                     tempPose.Value.position, tempPose.Value.rotation);
 
-            newCar.name = "XE_Rigged_Networked_" + GetOrder(clientID);
+            //newCar.name = "XE_Rigged_Networked_" + GetOrder(clientID);
 
             ClientRpcParams clientRpcParams = new ClientRpcParams {
                 Send = new ClientRpcSendParams {
@@ -265,8 +267,8 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
             newCar.GetComponent<NetworkObject>().Spawn(true);
 
-            newCar.GetComponent<NetworkVehicleController>().AssignClient(clientID, GetOrder(clientID));
-            // newPlayer.GetComponent<ParticipantInputCapture>().AssignCarLocalServerCall(newCar.GetComponent<VehicleInputControllerNetworked>());
+            newCar.GetComponent<NetworkVehicleController>().AssignClient(clientID, GetOrder(clientID)); 
+       
             Debug.Log("Assigning car to a new partcipant with clinetID:" + clientID.ToString() + " =>" +
                       newCar.GetComponent<NetworkObject>().NetworkObjectId);
             if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null) {
@@ -355,7 +357,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
     public void StartAsClient() {
        Debug.Log("Starting as Client");
         NetworkManager.Singleton.StartClient();
-        this.enabled = false;
+      //  this.enabled = false;
     }
 
     private void ServerHasStarted() {
@@ -410,7 +412,12 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        
+
+        if (Application.platform == RuntimePlatform.Android ) {
+            SetParticipantOrder(ParticipantOrder.A);
+            StartAsClient();
+        }
+        /*
             Setlanguage("English");
             if (RunAsServer) {
                 SetParticipantOrder(ParticipantOrder.None);
@@ -421,14 +428,14 @@ public class ConnectionAndSpawing : MonoBehaviour {
                 StartAsClient();
                 
             }
-           
+           */
         
         
     }
 
     // Update is called once per frame
     void Update() {
-    
+        
 
         if (NetworkManager.Singleton.IsServer) {
             switch (ServerState) {

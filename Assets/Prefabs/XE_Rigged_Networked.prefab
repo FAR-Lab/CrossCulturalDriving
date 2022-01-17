@@ -234,7 +234,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 3
 --- !u!114 &11415450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8045,7 +8045,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 5246925a3f57dc740bf5815be15dfe49, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -8067,6 +8067,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5a578309b7a24b46ba988c6dcb2838b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TargetMaterial: {fileID: 2100000, guid: 64c81bdb65d3ffe44bcc4cd22be452ce, type: 2}
+  width: 512
+  height: 768
+  depth: 0
+  rtf: 0
 --- !u!1 &1184536589677604
 GameObject:
   m_ObjectHideFlags: 0
@@ -8292,7 +8297,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 9cf47bab589b9cc4c957469c6ac16a85, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
@@ -8314,6 +8319,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5a578309b7a24b46ba988c6dcb2838b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TargetMaterial: {fileID: 2100000, guid: 3a7465f1a75f24546b2231bbc1c8e8d0, type: 2}
+  width: 384
+  height: 1308
+  depth: 0
+  rtf: 0
 --- !u!1 &1232226947679096
 GameObject:
   m_ObjectHideFlags: 0
@@ -9126,7 +9136,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 20c43032c92a16d4db3930ed680ad1cc, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -9148,6 +9158,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5a578309b7a24b46ba988c6dcb2838b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TargetMaterial: {fileID: 2100000, guid: b740340c1954871479378842c7cf0571, type: 2}
+  width: 512
+  height: 768
+  depth: 0
+  rtf: 0
 --- !u!1 &1584263918984448
 GameObject:
   m_ObjectHideFlags: 0

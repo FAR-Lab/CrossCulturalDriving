@@ -153,6 +153,7 @@ GameObject:
   - component: {fileID: 476093108}
   - component: {fileID: 476093110}
   - component: {fileID: 476093112}
+  - component: {fileID: 476093111}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -189,7 +190,7 @@ MonoBehaviour:
   MessageBufferSize: 5120
   MaxConnections: 100
   MaxSentMessageQueueSize: 128
-  ConnectAddress: 127.0.0.1
+  ConnectAddress: 192.168.1.160
   ConnectPort: 7777
   ServerListenPort: 7777
   MessageSendMode: 0
@@ -255,14 +256,24 @@ MonoBehaviour:
   IncludedScenes:
   - m_SceneAsset: {fileID: 102900000, guid: 51d43d9fb4f066f43832b0b5d5fcee97, type: 3}
     m_SceneName: Scenario 1
-  - m_SceneAsset: {fileID: 102900000, guid: 73aea86f71acf5c409ebb8e8908efed1, type: 3}
-    m_SceneName: Scenario 2
-  - m_SceneAsset: {fileID: 102900000, guid: 738a87936c4e69c43a179fecee739096, type: 3}
-    m_SceneName: Scenario 3
   WaitingRoomSceneName: WaitingRoom
   ServerisRunning: 0
   ServerState: 0
-  RunAsServer: 0
+  RunAsServer: 1
+--- !u!114 &476093111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476093106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b600a263d8f394499481a78c7dce490, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onIcon: {fileID: 2800000, guid: 07a857a27c487ad409a6c422ddf30a91, type: 3}
+  offIcon: {fileID: 0}
 --- !u!114 &476093112
 MonoBehaviour:
   m_ObjectHideFlags: 0
