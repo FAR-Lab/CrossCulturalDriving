@@ -408,7 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CameraPosition: {fileID: 4056613939988268}
-  useKeyBoard: 1
+  useKeyBoard: 0
   Left:
   - {fileID: 4234196572143992}
   - {fileID: 4118818471692194}
@@ -426,7 +426,7 @@ MonoBehaviour:
   Off: {r: 0, g: 0, b: 0, a: 1}
   SteeringInput: 0
   ThrottleInput: 0
-  SteeringWheel: {fileID: 0}
+  SteeringWheel: {fileID: 4147952271443172}
   interval: 0
 --- !u!114 &11476574
 MonoBehaviour:
@@ -464,14 +464,32 @@ MonoBehaviour:
   - {fileID: 14698806}
   damperCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  weightIntensity: 1
-  tireWidth: 0.1
-  springSaturation: 0
-  springCoeff: 0
+  weightIntensity: -5
+  tireWidth: 0.25
+  springSaturation: 0.4
+  springCoeff: 0.05
   damperAmount: 3000
 --- !u!114 &1452036174
 MonoBehaviour:

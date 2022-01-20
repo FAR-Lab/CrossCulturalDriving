@@ -13,8 +13,7 @@ using System.Linq;
 
 
 public class SteeringWheelManager : MonoBehaviour {
-    public static SteeringWheelManager Singleton { get; private set; }
-    private void SetSingleton() { Singleton = this; }
+  
 
   
 
@@ -74,6 +73,10 @@ public class SteeringWheelManager : MonoBehaviour {
     private Dictionary<ParticipantOrder, SteeringWheelData> ActiveWheels =
         new Dictionary<ParticipantOrder, SteeringWheelData>();
 
+    
+    
+    public static SteeringWheelManager Singleton { get; private set; }
+    private void SetSingleton() { Singleton = this; }
     private void Awake() {
         
         if (Singleton != null && Singleton != this) {
@@ -84,16 +87,21 @@ public class SteeringWheelManager : MonoBehaviour {
         SetSingleton();
         DontDestroyOnLoad(gameObject);
         
-        
         this.enabled = false;
         
     }
-    void Start() { FFBGain = 1.0f; }
+
+    void Start() {
+        FFBGain = 1.0f;
+        Debug.Log("SteeringWheelController - Startup");
+    }
 
     public void Init() {
         ready = true;
         DirectInputWrapper.Init();
         AssignSteeringWheels();
+        var initForceFeedback = InitForceFeedback();
+        StartCoroutine(initForceFeedback);
     }
 
     IEnumerator SpringforceFix() {
@@ -157,6 +165,7 @@ public class SteeringWheelManager : MonoBehaviour {
 
     public void StopSpringForce() {
         foreach (SteeringWheelData swd in ActiveWheels.Values) {
+            swd.forceFeedbackPlaying = false;
             Debug.Log("stopping spring" + DirectInputWrapper.StopSpringForce(swd.wheelIndex));
         }
 
@@ -221,42 +230,41 @@ public class SteeringWheelManager : MonoBehaviour {
 
     void Update() {
         if (!ready || ActiveWheels==null) return;
-        if (Application.platform != RuntimePlatform.OSXEditor) {
-            DirectInputWrapper.Update();
-            if (DirectInputWrapper.DevicesCount() > 0) { ready = true; }
-            else { ready = false; }
+        if (Application.platform == RuntimePlatform.OSXEditor) return;
+        DirectInputWrapper.Update();
+        ready = DirectInputWrapper.DevicesCount() > 0;
 
-            FoundSteeringWheels = ActiveWheels.Count();
-            foreach (SteeringWheelData swd in ActiveWheels.Values) {
-                DeviceState state;
-                state = DirectInputWrapper.GetStateManaged(swd.wheelIndex);
-                swd.steerInput = state.lX / 32768f;
-                // accelInput = (state.lY- 32768f) / -32768f;
+        FoundSteeringWheels = ActiveWheels.Count();
+        foreach (SteeringWheelData swd in ActiveWheels.Values) {
+            DeviceState state;
+            state = DirectInputWrapper.GetStateManaged(swd.wheelIndex);
+            swd.steerInput = state.lX / 32768f;
+            // accelInput = (state.lY- 32768f) / -32768f;
 
-                swd.gas = 0.9f * swd.gas + 0.1f * ((state.lY) / (-32768f));
+            swd.gas = 0.9f * swd.gas + 0.1f * ((state.lY) / (-32768f));
 
-                swd.brake = (state.lRz) / (32768f);
-
-
-                if (swd.forceFeedbackPlaying) {
-                    DirectInputWrapper.PlayConstantForce(swd.wheelIndex, Mathf.RoundToInt(swd.constant * FFBGain));
-                    DirectInputWrapper.PlayDamperForce(swd.wheelIndex, Mathf.RoundToInt(swd.damper * FFBGain));
-                    //DirectInputWrapper.PlaySpringForce(wheelIndex, 0, Mathf.RoundToInt(0 * FFBGain), springCoefficient);
+            swd.brake = (state.lRz) / (32768f);
 
 
-                    DirectInputWrapper.PlaySpringForce(swd.wheelIndex, 0,
-                        Mathf.RoundToInt((swd.springSaturation <= 0 ? 1 : swd.springSaturation) * FFBGain), swd.springCoefficient);
-                }
+            if (swd.forceFeedbackPlaying) {
+                Debug.Log("playing force"+swd.wheelIndex+swd.ToString());
+                DirectInputWrapper.PlayConstantForce(swd.wheelIndex, Mathf.RoundToInt(swd.constant * FFBGain));
+                DirectInputWrapper.PlayDamperForce(swd.wheelIndex, Mathf.RoundToInt(swd.damper * FFBGain));
+                //DirectInputWrapper.PlaySpringForce(wheelIndex, 0, Mathf.RoundToInt(0 * FFBGain), springCoefficient);
 
 
-                //Debug.Log(brake.ToString() + " break and gas" + gas.ToString());
-                
-                
-                float totalGas = (SteeringWheelConfigs[WheelManufacturer].maxGas - SteeringWheelConfigs[WheelManufacturer].minGas);
-                float totalBrake = (SteeringWheelConfigs[WheelManufacturer].maxBrake - SteeringWheelConfigs[WheelManufacturer].minBrake);
-
-                swd.accelInput = (swd.gas - SteeringWheelConfigs[WheelManufacturer].minGas) / totalGas - (swd.brake - SteeringWheelConfigs[WheelManufacturer].minBrake) / totalBrake;
+                DirectInputWrapper.PlaySpringForce(swd.wheelIndex, 0,
+                    Mathf.RoundToInt((swd.springSaturation <= 0 ? 1 : swd.springSaturation) * FFBGain), swd.springCoefficient);
             }
+
+
+            //Debug.Log(brake.ToString() + " break and gas" + gas.ToString());
+                
+                
+            float totalGas = (SteeringWheelConfigs[WheelManufacturer].maxGas - SteeringWheelConfigs[WheelManufacturer].minGas);
+            float totalBrake = (SteeringWheelConfigs[WheelManufacturer].maxBrake - SteeringWheelConfigs[WheelManufacturer].minBrake);
+
+            swd.accelInput = (swd.gas - SteeringWheelConfigs[WheelManufacturer].minGas) / totalGas - (swd.brake - SteeringWheelConfigs[WheelManufacturer].minBrake) / totalBrake;
         }
     }
 

@@ -52,8 +52,10 @@ public class ParticipantInputCapture : NetworkBehaviour {
         CurrentDirection.OnValueChanged += NewGpsDirection;
         localStateManager = GetComponent<StateManager>();
     }
+
+
     
-    
+
 
     [ServerRpc]
     public void PostQuestionServerRPC(ulong clientID) { ConnectionAndSpawing.Singleton.FinishedQuestionair(clientID); }
@@ -75,12 +77,18 @@ public class ParticipantInputCapture : NetworkBehaviour {
             GUI.Label(new Rect(200, 5, 150, 100), "Client State" + localStateManager.GlobalState.Value);
     }
 
+    public void AssignCarTransform(NetworkVehicleController MyCar,ClientRpcParams  clientRpcParams) {
+        if (IsServer) {
+            NetworkedVehicle = MyCar;
+            AssignCarTransformClientRPC(MyCar.NetworkObject,clientRpcParams);
+        }
+    }
+    
     [ClientRpc]
-    public void AssignCarTransformClientRPC(NetworkObjectReference MyCar, ParticipantOrder participantOrder_,
-        LanguageSelect lang_, ClientRpcParams clientRpcParams = default) {
-        participantOrder = participantOrder_;
-        GetComponent<HandDataSender>().SetOrder(participantOrder_);
-        lang = lang_;
+    private void AssignCarTransformClientRPC(NetworkObjectReference MyCar, ClientRpcParams clientRpcParams = default) {
+       
+        //GetComponent<HandDataSender>().SetOrder(participantOrder_);
+       
         if (MyCar.TryGet(out NetworkObject targetObject)) {
             NetworkedVehicle = targetObject.transform.GetComponent<NetworkVehicleController>();
 
@@ -92,11 +100,25 @@ public class ParticipantInputCapture : NetworkBehaviour {
         }
     }
 
-    public void AssignCarTransform_OnServer(NetworkVehicleController MyCar) {
-        if (IsServer) { NetworkedVehicle = MyCar; }
+   
+    public void De_AssignCarTransform(ClientRpcParams  clientRpcParams) {
+        if (IsServer) {
+            NetworkedVehicle = null;
+            De_AssignCarTransformClientRPC(clientRpcParams);
+        }
     }
 
+    [ClientRpc]
+    private void De_AssignCarTransformClientRPC(ClientRpcParams clientRpcParams = default) {
+        NetworkedVehicle = null;
+        _transform = null;
+        DontDestroyOnLoad(gameObject);
+        Debug.Log("De_assign Car ClientRPC");
+    }
 
+    
+    
+    
     private void LateUpdate() {
         if (_transform != null) {
             var transform1 = transform;

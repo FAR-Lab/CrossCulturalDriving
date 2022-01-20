@@ -16,9 +16,9 @@ public class HandDataSender : NetworkBehaviour {
     private ParticipantOrder MyOrder = ParticipantOrder.None;
     private OVRPlugin.HandState _handState;
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Start() {
+        this.enabled = false; //TODO remove after debugging
+
     }
     
     public override void OnNetworkSpawn() {
