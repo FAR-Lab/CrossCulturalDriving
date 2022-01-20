@@ -33,12 +33,12 @@ public class StartServerClientGUI : MonoBehaviour
         }
     }
 
-    public void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response) {
-        if (response == ConnectionAndSpawing.ClienConnectionResponse.FAILED) {
-            Debug.Log("Connection Failed maybe change IP address, participant order (A,b,C, etc.) or the port");
-        }
-      else  if (response == ConnectionAndSpawing.ClienConnectionResponse.SUCCESS) {
-            Debug.Log("We are connected you can stop showing the UI now!");
+    private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response) {
+        switch (response) {
+            case ConnectionAndSpawing.ClienConnectionResponse.FAILED: Debug.Log("Connection Failed maybe change IP address, participant order (A,b,C, etc.) or the port");
+                break;
+            case ConnectionAndSpawing.ClienConnectionResponse.SUCCESS: Debug.Log("We are connected you can stop showing the UI now!");
+                break;
         }
     }
 
