@@ -17,7 +17,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class ParticipantInputCapture : NetworkBehaviour {
-    private StateManager localStateManager;
+    private StateManager _localStateManager;
     public bool ReadyForAssignment = false;
 
     private NetworkVehicleController NetworkedVehicle;
@@ -50,7 +50,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
     public override void OnNetworkSpawn() {
        
         CurrentDirection.OnValueChanged += NewGpsDirection;
-        localStateManager = GetComponent<StateManager>();
+        _localStateManager = GetComponent<StateManager>();
     }
 
 
@@ -74,7 +74,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
 
     private void OnGUI() {
         if (IsLocalPlayer)
-            GUI.Label(new Rect(200, 5, 150, 100), "Client State" + localStateManager.GlobalState.Value);
+            GUI.Label(new Rect(200, 5, 150, 100), "Client State" + _localStateManager.GlobalState.Value);
     }
 
     public void AssignCarTransform(NetworkVehicleController MyCar,ClientRpcParams  clientRpcParams) {

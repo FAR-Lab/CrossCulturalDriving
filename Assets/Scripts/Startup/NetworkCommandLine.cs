@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-
+/*
 public class NetworkCommandLine : MonoBehaviour {
     private NetworkManager netManager;
     private ConnectionAndSpawing connectionAndSpawing;
@@ -112,3 +112,4 @@ public class NetworkCommandLine : MonoBehaviour {
         return argDictionary;
     }
 }
+*/

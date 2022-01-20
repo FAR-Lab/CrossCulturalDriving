@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UNET;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 
@@ -123,11 +124,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     #endregion
 
-    public void SetParticipantOrder(ParticipantOrder val) {
-        NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] {(byte) val}; // assigning ID 
-        _participantOrder = val;
-        ParticipantOrder_Set = true;
-    }
+  
 
     #region SingeltonManagment
 
@@ -167,9 +164,11 @@ public class ConnectionAndSpawing : MonoBehaviour {
         SteeringWheelManager.Singleton.Init(); //TODO enable steering wheel
     }
 
+    void SetupClientFunctionality() {
+      NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected_client; 
+      NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected_client;
+    }
 
-    // private string ActiveScene;
-    // private string PreviousScene;
 
     private void LocalLoadScene(string name) {
         DestroyAllClientObjects(new List<ParticipantObjectSpawnType> {ParticipantObjectSpawnType.CAR});
@@ -245,6 +244,17 @@ public class ConnectionAndSpawing : MonoBehaviour {
             ClientObjects[clientID].Remove(oType);
         }
     }
+
+
+    public enum ClienConnectionResponse {
+        SUCCESS,
+        FAILED
+    };
+    
+    public delegate void ReponseDelegate(ClienConnectionResponse response);
+    private ReponseDelegate ReponseHandler;
+    private void ClientDisconnected_client(ulong ClientID) {ReponseHandler.Invoke(ClienConnectionResponse.FAILED);}
+    private void ClientConnected_client(ulong ClientID) { ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS);}
 
 
     private void ClientDisconnected(ulong ClientID) {
@@ -370,10 +380,25 @@ public class ConnectionAndSpawing : MonoBehaviour {
         SetupServerFunctionality();
     }
 
-    public void StartAsClient() {
+    private void SetParticipantOrder(ParticipantOrder val) {
+        NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] {(byte) val}; // assigning ID 
+        _participantOrder = val;
+        ParticipantOrder_Set = true;
+    }
+    private void Setlanguage(LanguageSelect lang_) { lang = lang_; }
+    public void StartAsClient(LanguageSelect lang_,ParticipantOrder val,string ip,int port, ReponseDelegate result) {
+        SetupClientFunctionality();
+        ReponseHandler += result;
+        SetupTransport(ip, port);
+        Setlanguage(lang_);
+        SetParticipantOrder(val);
         Debug.Log("Starting as Client");
-        NetworkManager.Singleton.StartClient();
-        //  this.enabled = false;
+        NetworkManager.Singleton.StartClient(); 
+    }
+
+    private void SetupTransport(string ip="127.0.0.1",int port=7777) {
+        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = "127.0.0.1"; 
+        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectPort = 7777;         
     }
 
     private void ServerHasStarted() {
@@ -428,10 +453,10 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        if (Application.platform == RuntimePlatform.Android) {
-            SetParticipantOrder(ParticipantOrder.A);
-            StartAsClient();
-        }
+        //if (Application.platform == RuntimePlatform.Android) {
+         //   SetParticipantOrder(ParticipantOrder.A);
+       //     StartAsClient();
+     //   }
         /*
             Setlanguage("English");
             if (RunAsServer) {
@@ -544,7 +569,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     #endregion
 
-    public void Setlanguage(LanguageSelect lang_) { lang = lang_; }
+  
 
     public List<ulong> GetClientList() {
         if (_ClientToOrder == null) return null;
