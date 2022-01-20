@@ -5,29 +5,15 @@ using Unity.Netcode;
 using UnityEngine;
 
 public class SimpleServerCameraScript : MonoBehaviour {
-   
     // Start is called before the first frame update
-    void Awake()
-    {
-        
-        DontDestroyOnLoad(gameObject);
-        
-    }
-    void Start()
-    {
-        
+    void Awake() { DontDestroyOnLoad(gameObject); }
+    void Start() { NetworkManager.Singleton.OnClientConnectedCallback += DisableMe; }
+
+    private void DisableMe(ulong obj) {
+        if (NetworkManager.Singleton.IsClient) { Destroy(gameObject); }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if ( NetworkManager.Singleton != null) {
-            if (NetworkManager.Singleton.IsClient) {
-                Destroy(gameObject);
-            }
-            else {
-                
-            }
-        }
-    }
+
+// Update is called once per frame
+void Update() { }
 }
