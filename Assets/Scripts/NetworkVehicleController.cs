@@ -121,6 +121,7 @@ public class NetworkVehicleController : NetworkBehaviour {
 
     void Update() {
         if (!IsServer) return;
+       
         if (ConnectionAndSpawing.Singleton.ServerState == ActionState.DRIVE) {
             if (SteeringWheelManager.Singleton == null || useKeyBoard) {
                 SteeringInput = Input.GetAxis("Horizontal");
@@ -129,6 +130,7 @@ public class NetworkVehicleController : NetworkBehaviour {
             else {
                 SteeringInput = SteeringWheelManager.Singleton.GetSteerInput(_participantOrder);
                 ThrottleInput = SteeringWheelManager.Singleton.GetAccelInput(_participantOrder);
+               
                 SteeringWheel.RotateAround(SteeringWheel.position, SteeringWheel.up,
                     steeringAngle - SteeringInput * -450f);
                 steeringAngle = SteeringInput * -450f;

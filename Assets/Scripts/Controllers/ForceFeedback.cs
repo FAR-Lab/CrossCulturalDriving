@@ -39,12 +39,16 @@ public class ForceFeedback : MonoBehaviour {
         _participantOrder = po_;
         rb = rigidBodyRef;
 
+      //  SteeringWheelManager SWMObj = FindObjectOfType<SteeringWheelManager>();
+        
         if (SteeringWheelManager.Singleton != null) {
             SteeringWheelManager.Singleton.SetConstantForce(0, _participantOrder);
             SteeringWheelManager.Singleton.SetDamperForce(0, _participantOrder);
             SteeringWheelManager.Singleton.SetSpringForce(0, 0, _participantOrder);
             ready = true;
         }
+
+       
         else { this.enabled = false; }
     }
 
@@ -81,7 +85,7 @@ public class ForceFeedback : MonoBehaviour {
         }
 
         float forceFeedback = selfAlignmentTorque;
-
+    
 
         if (SteeringWheelManager.Singleton != null) {
             if (ConnectionAndSpawing.Singleton.ServerState == ActionState.QUESTIONS) {
@@ -102,6 +106,7 @@ public class ForceFeedback : MonoBehaviour {
             }
 
             else {
+                
                 SteeringWheelManager.Singleton.SetConstantForce((int) (forceFeedback * 10000f), _participantOrder);
                 SteeringWheelManager.Singleton.SetSpringForce(
                     Mathf.RoundToInt(springSaturation * Mathf.Abs(forceFeedback) * 10000f),
