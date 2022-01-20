@@ -1,6 +1,7 @@
 /* Flashing button example */
 using UnityEngine;
 using System.Collections;
+using UnityEditor;
 using UnityEngine.SceneManagement;
 
 public class StartServerClientGUI : MonoBehaviour
@@ -18,18 +19,26 @@ public class StartServerClientGUI : MonoBehaviour
         if (GUI.Button(new Rect(20, 30, 80, 20), "start server")) {
             Debug.Log("Server Started.");
             ServerStarted = true;
-            GetComponent<ConnectionAndSpawing>().Setlanguage("English");
-            GetComponent<ConnectionAndSpawing>().StartAsServer();
+           
+            ConnectionAndSpawing.Singleton.StartAsServer();
             this.enabled = false;
         }
 
         if (GUI.Button(new Rect(20, 60, 80, 20), "start client")) {
             Debug.Log("Client Started.");
             ClientStarted = true;
-            GetComponent<ConnectionAndSpawing>().SetParticipantOrder(ParticipantOrder.A);
-            GetComponent<ConnectionAndSpawing>().Setlanguage("English");
-            GetComponent<ConnectionAndSpawing>().StartAsClient();
+            
+            ConnectionAndSpawing.Singleton.StartAsClient("English",ParticipantOrder.A,"192.168.1.160",7777,ResponseDelegate);
             this.enabled = false;
+        }
+    }
+
+    public void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response) {
+        if (response == ConnectionAndSpawing.ClienConnectionResponse.FAILED) {
+            Debug.Log("Connection Failed maybe change IP address, participant order (A,b,C, etc.) or the port");
+        }
+      else  if (response == ConnectionAndSpawing.ClienConnectionResponse.SUCCESS) {
+            Debug.Log("We are connected you can stop showing the UI now!");
         }
     }
 
