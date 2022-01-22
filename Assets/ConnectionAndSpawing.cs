@@ -467,7 +467,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
     private bool started = false;
     void Start() {
         if (Application.platform == RuntimePlatform.Android &&  !started) {
-            StartAsClient("English",ParticipantOrder.A,"192.168.1.160",7777,ResponseDelegate);
+            StartAsClient("English",ParticipantOrder.B,"192.168.1.160",7777,ResponseDelegate);
             started = true;
             Debug.Log("Started Client");
        }
