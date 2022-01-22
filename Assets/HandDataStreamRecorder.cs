@@ -14,46 +14,35 @@ using Unity.Mathematics;
 
 //https://www.youtube.com/watch?v=lBzwUKQ3tbw
 
-public class HandDataStreamBouncer : MonoBehaviour {
-    public GameObject RightHandReader;
-    public GameObject LeftHandReader;
-
+public class HandDataStreamRecorder : MonoBehaviour {
     public GameObject RightHandReader_ReRun;
     public GameObject LeftHandReader_ReRun;
-
-
-
-
 
 
     private Dictionary<ulong, Dictionary<OVRPlugin.Hand, HandDataStreamerReader>> HandClinets =
         new Dictionary<ulong, Dictionary<OVRPlugin.Hand, HandDataStreamerReader>>();
 
-    public static string HandMessageName = "HandMessage";
+    
+    public static HandDataStreamRecorder Singleton { get; private set; }
+    private void Awake() {
+        
+        if (Singleton != null && Singleton != this) {
+            Destroy(this);
+            return;
+        }
 
-    //private bool Ready = false;
+        Singleton = this;
+        DontDestroyOnLoad(gameObject);
 
-
-    // Start is called before the first frame update
+    }
     void Start() { }
 
+    
 
-
-
-
-    public void ReceivingHandData(ulong senderClientId, FastBufferReader messagePayload) {
-        Debug.Log("Got a HandMessage from: " + senderClientId.ToString());
-        if (senderClientId == NetworkManager.Singleton.LocalClientId) return;
-
-
-        messagePayload.ReadNetworkSerializable(
-            out NetworkSkeletonPoseData newRemoteHandData);
-        RecievedHandData(senderClientId, newRemoteHandData);
-    }
-
-public void RecievedHandData(ulong senderClientId, NetworkSkeletonPoseData newRemoteHandData){
-
-if (HandClinets.ContainsKey(senderClientId)) {
+    public void StoreHandData(ulong senderClientId, NetworkSkeletonPoseData newRemoteHandData) {
+        
+        
+        if (HandClinets.ContainsKey(senderClientId)) {
             HandClinets[senderClientId][newRemoteHandData.HandType].GetNewData(newRemoteHandData);
         }
         else {
@@ -66,10 +55,7 @@ if (HandClinets.ContainsKey(senderClientId)) {
                 rightHand = Instantiate(RightHandReader_ReRun, transform)
                     .GetComponent<HandDataStreamerReader>();
             }
-            else {
-                leftHand = Instantiate(LeftHandReader, transform).GetComponent<HandDataStreamerReader>();
-                rightHand = Instantiate(RightHandReader, transform).GetComponent<HandDataStreamerReader>();
-            }
+            
 
             if (leftHand != null && rightHand != null) {
                 HandClinets.Add(senderClientId, new Dictionary<OVRPlugin.Hand, HandDataStreamerReader> {
@@ -77,6 +63,7 @@ if (HandClinets.ContainsKey(senderClientId)) {
                         {OVRPlugin.Hand.HandRight, rightHand}
                     }
                 );
+                Debug.Log("Just added hand for the client:"+senderClientId.ToString());
             }
             else {
                 Debug.LogWarning(
@@ -86,13 +73,8 @@ if (HandClinets.ContainsKey(senderClientId)) {
     }
 
 
-    // Update is called once per frame
-    void Update() {
-       
-      
-    }
-
-   
+    
+    void Update() { }
 }
 
 public struct NetworkSkeletonPoseData : INetworkSerializable {
@@ -127,18 +109,18 @@ public struct NetworkSkeletonPoseData : INetworkSerializable {
 
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter {
-       
-
         serializer.SerializeValue(ref RootPos);
         serializer.SerializeValue(ref RootRot);
         serializer.SerializeValue(ref RootScale);
-        int length=0;
+        int length = 0;
 
         if (!serializer.IsReader) { length = BoneRotations.Length; }
 
         serializer.SerializeValue(ref length);
         if (serializer.IsReader) { BoneRotations = new Quaternion[length]; }
+
         for (int n = 0; n < length; ++n) { serializer.SerializeValue(ref BoneRotations[n]); }
+
         serializer.SerializeValue(ref HandType);
     }
 }

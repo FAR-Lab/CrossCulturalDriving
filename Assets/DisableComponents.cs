@@ -15,35 +15,33 @@ public class DisableComponents : NetworkBehaviour
     
 
     public override void OnNetworkSpawn() {
-        base.OnNetworkSpawn();
-        //ToDO Write code that deactivetes stuff that doesnt need to be synced 
-        if (IsLocalPlayer) {
-            DontDestroyOnLoad(gameObject);
-        }
-        if (IsClient && !IsLocalPlayer) {
-            GetComponent<ParticipantInputCapture>().enabled = false;
-            GetComponent<StateManager>().enabled = false;
-        }
-        if (!IsLocalPlayer || IsServer ) {
-            Debug.Log("Trying to destroy things that don't belong to me.");
-          
-            
-            GetComponent<OVRManager>().enabled = false;
-            GetComponent<OVRCameraRig>().enabled = false;
-           
-            GetComponentInChildren<OVRScreenFade>().enabled = false;
+        
+        DontDestroyOnLoad(gameObject);
+        
+        if(!IsLocalPlayer) {
+          //  Destroy(GetComponent<ParticipantInputCapture>());
+           // Destroy(GetComponent<StateManager>());
 
-            GetComponentInChildren<Camera>().enabled = false;
+           GetComponent<OVRCameraRig>().disableEyeAnchorCameras = true;
+            GetComponent<OVRCameraRig>().enabled = false;
+            
+            foreach(var c in GetComponentsInChildren<Camera>()){c.enabled = false;}
             GetComponentInChildren<AudioListener>().enabled = false;
+           
+        }
+
+        else {
+            GetComponentInChildren<OVRScreenFade>().enabled = true;
+            GetComponent<OVRCameraRig>().enabled = true;
+            GetComponent<OVRCameraRig>().disableEyeAnchorCameras = false;
             foreach (OVRHand tf in GetComponentsInChildren<OVRHand>()) {
-                tf.enabled = false;
+                tf.enabled = true;
             }
-             
             foreach (OVRCustomSkeleton tf in GetComponentsInChildren<OVRCustomSkeleton>()) {
-                tf.enabled = false;
+                tf.enabled = true;
             }
             foreach (OVRControllerHelper tf in GetComponentsInChildren<OVRControllerHelper>()) {
-                tf.enabled = false;
+                tf.enabled = true;
             }
         }
         
@@ -59,7 +57,7 @@ public class DisableComponents : NetworkBehaviour
                 tf.enabled = false;
             }
         }
-        
+        base.OnNetworkSpawn();
     }
 
 
@@ -69,3 +67,17 @@ public class DisableComponents : NetworkBehaviour
         
     }
 }
+/*GetComponent<OVRManager>().enabled = false;
+            GetComponent<OVRCameraRig>().enabled = true;
+            GetComponentInChildren<OVRScreenFade>().enabled = true;
+            GetComponentInChildren<Camera>().enabled = true;
+            GetComponentInChildren<AudioListener>().enabled = true;
+            foreach (OVRHand tf in GetComponentsInChildren<OVRHand>()) {
+                tf.enabled = true;
+            }
+            foreach (OVRCustomSkeleton tf in GetComponentsInChildren<OVRCustomSkeleton>()) {
+                tf.enabled = true;
+            }
+            foreach (OVRControllerHelper tf in GetComponentsInChildren<OVRControllerHelper>()) {
+                tf.enabled = true;
+            }*/
