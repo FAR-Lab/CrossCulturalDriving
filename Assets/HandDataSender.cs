@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Oculus.Platform;
@@ -42,12 +43,12 @@ public class HandDataSender : NetworkBehaviour {
                 .GetComponent<HandDataStreamerReader>();
 
 
-            Debug.Log("Client Registering CustomMessage Recieve for:" + GETMessageNameBroadcast());
+            Debug.Log("Client Registering CustomMessage Receive for:" + GETMessageNameBroadcast());
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(
                 GETMessageNameBroadcast(), ClientReceivingHandData);
         }
         else if (IsServer) {
-            Debug.Log("Server Registering CustomMessage Recieve for:" + GETMessageNameServer());
+            Debug.Log("Server Registering CustomMessage Receive for:" + GETMessageNameServer());
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(
                 GETMessageNameServer(), ServerReceivingHandData);
         }
@@ -57,11 +58,13 @@ public class HandDataSender : NetworkBehaviour {
     public string GETMessageNameServer() { return ServerHandMessageName + OwnerClientId; }
 
     public void ClientReceivingHandData(ulong senderClientId, FastBufferReader messagePayload) {
-        //Debug.Log("Client got HandMessage from: " + senderClientId.ToString());
+        Debug.Log("Got a message call back");
         messagePayload.ReadNetworkSerializable<NetworkSkeletonPoseData>(
             out NetworkSkeletonPoseData newRemoteHandData);
-        if (senderClientId == NetworkManager.Singleton.LocalClientId) return;
+        Debug.Log("Recieved Hand data for had:  " + newRemoteHandData.HandType);
+      //  if (senderClientId == NetworkManager.Singleton.LocalClientId) return;
         if (leftHand == null || rightHand == null) return;
+        Debug.Log("About to apply new hands");
         if (newRemoteHandData.HandType == OVRPlugin.Hand.HandLeft) { leftHand.GetNewData(newRemoteHandData); }
         else if (newRemoteHandData.HandType == OVRPlugin.Hand.HandRight) { rightHand.GetNewData(newRemoteHandData); }
     }
@@ -73,9 +76,9 @@ public class HandDataSender : NetworkBehaviour {
             out NetworkSkeletonPoseData newRemoteHandData);
        // HandDataStreamRecorder.Singleton.StoreHandData(senderClientId, newRemoteHandData);
         
-            
+            Debug.Log("GotMessage from Client About to bounce it out on: "+GETMessageNameBroadcast());
       
-        
+       
         _fastBufferWriter = new FastBufferWriter(NetworkSkeletonPoseData.GetSize(), Allocator.Temp);
         _fastBufferWriter.WriteNetworkSerializable(newRemoteHandData);
         NetworkManager.Singleton.CustomMessagingManager.SendNamedMessageToAll(GETMessageNameBroadcast(),  // optimization option dont send to all
@@ -104,7 +107,7 @@ public class HandDataSender : NetworkBehaviour {
                     Array.ConvertAll(_handState.BoneRotations, s => s.FromQuatf()),
                     HandType
                 );
-
+                
                 if ((_handState.Status & OVRPlugin.HandStatus.HandTracked) != 0 &&
                     HandConfidence == OVRPlugin.TrackingConfidence.High) { BoradCastHandData(networkSkeletonPoseData); }
             }
