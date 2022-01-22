@@ -247,7 +247,7 @@ public class SteeringWheelManager : MonoBehaviour {
 
 
             if (swd.forceFeedbackPlaying) {
-                Debug.Log("playing force"+swd.wheelIndex+swd.ToString());
+              //  Debug.Log("playing force"+swd.wheelIndex+swd.ToString());
                 DirectInputWrapper.PlayConstantForce(swd.wheelIndex, Mathf.RoundToInt(swd.constant * FFBGain));
                 DirectInputWrapper.PlayDamperForce(swd.wheelIndex, Mathf.RoundToInt(swd.damper * FFBGain));
                 //DirectInputWrapper.PlaySpringForce(wheelIndex, 0, Mathf.RoundToInt(0 * FFBGain), springCoefficient);

@@ -25,7 +25,7 @@ public class MirrorCamera : MonoBehaviour
         TargetMaterial.SetTexture("_MainTex",rt,RenderTextureSubElement.Color);
         cam.forceIntoRenderTexture = true;
         cam.targetTexture = rt;
-        Debug.Log("Camera Mirror script start up assigned RT");
+      //  Debug.Log("Camera Mirror script start up assigned RT");
     }
 
     void OnPreCull()

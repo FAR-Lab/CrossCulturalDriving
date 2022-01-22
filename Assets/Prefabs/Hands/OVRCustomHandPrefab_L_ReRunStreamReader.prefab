@@ -3451,8 +3451,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HandSkeleton: {fileID: 0}
   HandType: 0
-  FakeRemoteHand: {fileID: 0}
-  ThisOrder: 0
   RootPos: {x: 0, y: 0, z: 0}
   RootRot: {x: 0, y: 0, z: 0, w: 0}
   RootScale: 0
@@ -3471,10 +3469,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _skeletonType: 0
-  _updateRootPose: 0
-  _updateRootScale: 0
+  _updateRootPose: 1
+  _updateRootScale: 1
   _enablePhysicsCapsules: 0
-  _applyBoneTranslations: 0
+  _applyBoneTranslations: 1
   _customBones_V2:
   - {fileID: 3230688464050198864}
   - {fileID: 3230767706219693802}

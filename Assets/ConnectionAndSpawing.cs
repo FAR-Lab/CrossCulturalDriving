@@ -397,8 +397,8 @@ public class ConnectionAndSpawing : MonoBehaviour {
     }
 
     private void SetupTransport(string ip="127.0.0.1",int port=7777) {
-        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = "127.0.0.1"; 
-        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectPort = 7777;         
+        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ip; 
+        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectPort = port;         
     }
 
     private void ServerHasStarted() {
@@ -451,12 +451,27 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     #endregion
 
-    // Start is called before the first frame update
+    private bool retry = true;
+    private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response) {
+        if (response == ClienConnectionResponse.FAILED && retry) {
+            Debug.Log("Tried as participant A retrying with B");
+            StartAsClient("English", ParticipantOrder.B, "192.168.1.160", 7777, ResponseDelegate);
+            retry = false;
+        }
+        else if (response == ClienConnectionResponse.FAILED && !retry) {
+            Debug.Log("Failed with A and B Quitting");
+            Application.Quit();
+        }
+    }
+
+    private bool started = false;
     void Start() {
-        //if (Application.platform == RuntimePlatform.Android) {
-         //   SetParticipantOrder(ParticipantOrder.A);
-       //     StartAsClient();
-     //   }
+        if (Application.platform == RuntimePlatform.Android &&  !started) {
+            StartAsClient("English",ParticipantOrder.A,"192.168.1.160",7777,ResponseDelegate);
+            started = true;
+            Debug.Log("Started Client");
+       }
+       
         /*
             Setlanguage("English");
             if (RunAsServer) {

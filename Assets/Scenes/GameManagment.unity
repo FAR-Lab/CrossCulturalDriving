@@ -154,6 +154,7 @@ GameObject:
   - component: {fileID: 476093110}
   - component: {fileID: 476093112}
   - component: {fileID: 476093111}
+  - component: {fileID: 476093113}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -288,6 +289,66 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FoundSteeringWheels: 0
   FFBGain: 1
+--- !u!114 &476093113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476093106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useRecommendedMSAALevel: 0
+  _monoscopic: 0
+  _colorGamut: 4
+  minRenderScale: 0.7
+  maxRenderScale: 1
+  _headPoseRelativeOffsetRotation: {x: 0, y: 0, z: 0}
+  _headPoseRelativeOffsetTranslation: {x: 0, y: 0, z: 0}
+  profilerTcpPort: 32419
+  expandMixedRealityCapturePropertySheet: 0
+  enableMixedReality: 0
+  compositionMethod: 0
+  extraHiddenLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  extraVisibleLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  dynamicCullingMask: 1
+  externalCompositionBackdropColorRift: {r: 0, g: 1, b: 0, a: 1}
+  externalCompositionBackdropColorQuest: {r: 0, g: 0, b: 0, a: 0}
+  capturingCameraDevice: 0
+  flipCameraFrameHorizontally: 0
+  flipCameraFrameVertically: 0
+  handPoseStateLatency: 0
+  sandwichCompositionRenderLatency: 0
+  sandwichCompositionBufferedFrames: 8
+  chromaKeyColor: {r: 0, g: 1, b: 0, a: 1}
+  chromaKeySimilarity: 0.6
+  chromaKeySmoothRange: 0.03
+  chromaKeySpillRange: 0.06
+  useDynamicLighting: 0
+  depthQuality: 1
+  dynamicLightingSmoothFactor: 8
+  dynamicLightingDepthVariationClampingValue: 0.001
+  virtualGreenScreenType: 0
+  virtualGreenScreenTopY: 10
+  virtualGreenScreenBottomY: -10
+  virtualGreenScreenApplyDepthCulling: 0
+  virtualGreenScreenDepthTolerance: 0.2
+  mrcActivationMode: 0
+  isInsightPassthroughEnabled: 0
+  _trackingOriginType: 1
+  usePositionTracking: 1
+  useRotationTracking: 1
+  useIPDInPositionTracking: 1
+  resetTrackerOnLoad: 1
+  AllowRecenter: 1
+  LateControllerUpdate: 1
 --- !u!1 &1334481668
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,10 +379,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67604408bcbd014a8123ae4f4d3e7ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RightHandReader: {fileID: 3160131195066563751, guid: 371c0dfd68cdacc44aa4b1b0d291aef7, type: 3}
-  LeftHandReader: {fileID: 1732268206786806, guid: 3d2b24169287c8d4e93287f1f4330708, type: 3}
-  RightHandReader_ReRun: {fileID: 3225602410497314536, guid: b25e930083131c1499ac0632316c88d2, type: 3}
-  LeftHandReader_ReRun: {fileID: 2993955821352386363, guid: 5151dfc23e5f92e498a8ddc5e4a77499, type: 3}
+  RightHandReader_ReRun: {fileID: 2993955821352386363, guid: 5151dfc23e5f92e498a8ddc5e4a77499, type: 3}
+  LeftHandReader_ReRun: {fileID: 3225602410497314536, guid: b25e930083131c1499ac0632316c88d2, type: 3}
 --- !u!114 &1334481670
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ public class DeactivateOthers :NetworkBehaviour  {
         if (!IsServer)
         {
             GetComponent<VehicleController>().enabled = false;
-            //GetComponent<SteeringWheelInputController>().enabled = false;
+            
             GetComponent<ForceFeedback>().enabled = false;
             foreach (WheelCollider wc in GetComponentsInChildren<WheelCollider>())
             {

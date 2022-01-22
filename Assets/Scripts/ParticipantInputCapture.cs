@@ -48,7 +48,9 @@ public class ParticipantInputCapture : NetworkBehaviour {
 
 
     public override void OnNetworkSpawn() {
-       
+        if (!IsLocalPlayer) {
+            this.enabled = false;
+        }
         CurrentDirection.OnValueChanged += NewGpsDirection;
         _localStateManager = GetComponent<StateManager>();
     }
@@ -87,12 +89,12 @@ public class ParticipantInputCapture : NetworkBehaviour {
     [ClientRpc]
     private void AssignCarTransformClientRPC(NetworkObjectReference MyCar, ClientRpcParams clientRpcParams = default) {
        
-        //GetComponent<HandDataSender>().SetOrder(participantOrder_);
        
         if (MyCar.TryGet(out NetworkObject targetObject)) {
             NetworkedVehicle = targetObject.transform.GetComponent<NetworkVehicleController>();
 
             _transform = NetworkedVehicle.transform.Find("CameraPosition");
+            Debug.Log("Tried to get a new car. hopefully its my car!");
         }
         else {
             Debug.LogWarning(
