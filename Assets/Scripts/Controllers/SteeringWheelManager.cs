@@ -10,13 +10,10 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.UI;
 
 
 public class SteeringWheelManager : MonoBehaviour {
-  
-
-  
-
     private class SteeringWheelData {
         public int wheelIndex;
         public float steerInput;
@@ -29,6 +26,7 @@ public class SteeringWheelManager : MonoBehaviour {
         public bool forceFeedbackPlaying;
         public float gas;
         public float brake;
+
         public SteeringWheelData(int index) {
             steerInput = 0f;
             wheelIndex = index;
@@ -46,6 +44,7 @@ public class SteeringWheelManager : MonoBehaviour {
 
     private bool ready = false;
     public int FoundSteeringWheels;
+
     private struct WheelCallibration {
         public int minBrake;
         public int maxBrake;
@@ -57,28 +56,26 @@ public class SteeringWheelManager : MonoBehaviour {
     public float FFBGain = 1f;
 
     private static string WheelManufacturer = " Logitech";
-    
-    [SerializeField] 
-    private Dictionary<string, WheelCallibration> SteeringWheelConfigs =
+
+    [SerializeField] private Dictionary<string, WheelCallibration> SteeringWheelConfigs =
         new Dictionary<string, WheelCallibration> {
-            [WheelManufacturer]= new WheelCallibration{
+            [WheelManufacturer] = new WheelCallibration {
                 minBrake = 1,
                 maxBrake = -1,
                 minGas = -1,
                 maxGas = 1
             }
         };
- 
+
 
     private Dictionary<ParticipantOrder, SteeringWheelData> ActiveWheels =
         new Dictionary<ParticipantOrder, SteeringWheelData>();
 
-    
-    
+
     public static SteeringWheelManager Singleton { get; private set; }
     private void SetSingleton() { Singleton = this; }
+
     private void Awake() {
-        
         if (Singleton != null && Singleton != this) {
             Destroy(this);
             return;
@@ -86,9 +83,8 @@ public class SteeringWheelManager : MonoBehaviour {
 
         SetSingleton();
         DontDestroyOnLoad(gameObject);
-        
+
         this.enabled = false;
-        
     }
 
     void Start() {
@@ -114,24 +110,20 @@ public class SteeringWheelManager : MonoBehaviour {
     void AssignSteeringWheels() {
         ParticipantOrder po = ParticipantOrder.A;
         for (int i = 0; i < DirectInputWrapper.DevicesCount(); i++) {
-            Debug.Log("We got the input controller called" + DirectInputWrapper.GetProductNameManaged(i));
+            Debug.Log("We got the input controller called" + DirectInputWrapper.GetProductNameManaged(i) +
+                      "Asigning it to participant: " + po.ToString());
             ActiveWheels.Add(po, new SteeringWheelData(i));
-            Debug.Log(po);
             po++;
         }
     }
 
 
     public void CleanUp() {
-        
-        foreach(SteeringWheelData steeringWheelData in  ActiveWheels.Values)
-        {
-            
-            steeringWheelData.forceFeedbackPlaying= false;
+        foreach (SteeringWheelData steeringWheelData in ActiveWheels.Values) {
+            steeringWheelData.forceFeedbackPlaying = false;
             steeringWheelData.constant = 0;
             steeringWheelData.damper = 0;
         }
-     
     }
 
     public void SetConstantForce(int force, ParticipantOrder po) {
@@ -139,7 +131,6 @@ public class SteeringWheelManager : MonoBehaviour {
             var steeringWheelData = ActiveWheels[po];
             steeringWheelData.constant = force;
         }
-     
     }
 
     public void SetDamperForce(int force, ParticipantOrder po) {
@@ -150,17 +141,14 @@ public class SteeringWheelManager : MonoBehaviour {
     }
 
     public void SetSpringForce(int sat, int coeff, ParticipantOrder po) {
-            if (ActiveWheels.ContainsKey(po)) {
-                var steeringWheelData = ActiveWheels[po];
-                steeringWheelData.springCoefficient = coeff;
-                steeringWheelData.springSaturation = sat;
-            } 
-            
-           
-        
+        if (ActiveWheels.ContainsKey(po)) {
+            var steeringWheelData = ActiveWheels[po];
+            steeringWheelData.springCoefficient = coeff;
+            steeringWheelData.springSaturation = sat;
+        }
     }
 
-   
+
     public void InitSpringForce(int sat, int coeff) { StartCoroutine(_InitSpringForce(sat, coeff)); }
 
     public void StopSpringForce() {
@@ -168,18 +156,14 @@ public class SteeringWheelManager : MonoBehaviour {
             swd.forceFeedbackPlaying = false;
             Debug.Log("stopping spring" + DirectInputWrapper.StopSpringForce(swd.wheelIndex));
         }
-
     }
 
     private IEnumerator _InitSpringForce(int sat, int coeff) {
-      
-
         yield return new WaitForSeconds(1f);
         long res = -1;
         int tries = 0;
-        foreach (SteeringWheelData  swd in  ActiveWheels.Values ) {
+        foreach (SteeringWheelData swd in ActiveWheels.Values) {
             while (res < 0) {
-
                 res = DirectInputWrapper.PlaySpringForce(swd.wheelIndex, 0, Mathf.RoundToInt(sat * FFBGain),
                     Mathf.RoundToInt(coeff * FFBGain));
                 Debug.Log("starting spring for the wheel" + res);
@@ -197,21 +181,56 @@ public class SteeringWheelManager : MonoBehaviour {
 
 
     public void OnGUI() {
-        /* if (GUI.Button(new Rect(new Vector2(50, 50), new Vector2(50, 50)), "ResetForceFeedBack")) {
-             Init();
- 
-         }
-         if (debugInfo) {
-             GUI.Label(new Rect(20, Screen.height - 180, 500, 100), "Raw Input: " + accelInput, debugStyle);
-             GUI.Label(new Rect(20, Screen.height - 100, 500, 100), "Adjusted Input: " + gas, debugStyle);
-         }
- 
-         GUI.Label(new Rect(0, 0, 100, 100), "alignment Torque: " + constant
-                 + "\n spring coeff" + springCoefficient
-                  + "\n spring sat" + springSaturation
-                   + "\n damp" + damper
- 
-                 );*/
+        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.WAITINGROOM) {
+            //   GUISkin skin = new GUISkin();
+            // skin.font.fontSize = 16;
+            List<ParticipantOrder> tmp =
+                new List<ParticipantOrder>(Enum.GetValues(typeof(ParticipantOrder)).Cast<ParticipantOrder>().ToArray());
+            tmp.Remove(ParticipantOrder.None);
+            int x = 75;
+            
+            foreach (var v in tmp) {
+                GUI.Label(new Rect(160 + x, 25, 25, 25), v.ToString());
+                var text = "";
+                if (ActiveWheels.ContainsKey(v)) { text = ActiveWheels[v].wheelIndex.ToString(); }
+
+                var prev = text;
+                text = GUI.TextField(new Rect(150 + x, 50, 25, 25), text, 2);
+                if (prev != text) {
+                    if (int.TryParse(text, out int newIndex)) {
+
+                        
+                        ParticipantOrder switchPartner = ParticipantOrder.None;
+                        foreach (var swd in tmp) {
+                            if (ActiveWheels.ContainsKey(swd) && ActiveWheels[swd].wheelIndex == newIndex) {
+                                switchPartner = swd;
+                                break;
+                            }
+                        }
+
+                        if (switchPartner != ParticipantOrder.None) {
+                            if (ActiveWheels.ContainsKey(v)) {
+                                (ActiveWheels[v], ActiveWheels[switchPartner]) = (ActiveWheels[switchPartner], ActiveWheels[v]);
+                                return;
+                            }
+                            else {
+                                ActiveWheels[v] = ActiveWheels[switchPartner];
+                                ActiveWheels.Remove(switchPartner);
+                                return;
+                            }
+                        }
+                        else {
+                            text = prev;
+                        }
+                        
+                    }
+                    else { text = prev; }
+                }
+
+
+                x += 25;
+            }
+        }
     }
 
     private IEnumerator InitForceFeedback() {
@@ -221,15 +240,14 @@ public class SteeringWheelManager : MonoBehaviour {
             swd.springCoefficient = 0;
             swd.springSaturation = 0;
         }
+
         yield return new WaitForSeconds(0.5f);
-        foreach (SteeringWheelData swd in ActiveWheels.Values) {
-            swd.forceFeedbackPlaying = true;
-        }
+        foreach (SteeringWheelData swd in ActiveWheels.Values) { swd.forceFeedbackPlaying = true; }
     }
 
 
     void Update() {
-        if (!ready || ActiveWheels==null) return;
+        if (!ready || ActiveWheels == null) return;
         if (Application.platform == RuntimePlatform.OSXEditor) return;
         DirectInputWrapper.Update();
         ready = DirectInputWrapper.DevicesCount() > 0;
@@ -247,28 +265,32 @@ public class SteeringWheelManager : MonoBehaviour {
 
 
             if (swd.forceFeedbackPlaying) {
-              //  Debug.Log("playing force"+swd.wheelIndex+swd.ToString());
+                //  Debug.Log("playing force"+swd.wheelIndex+swd.ToString());
                 DirectInputWrapper.PlayConstantForce(swd.wheelIndex, Mathf.RoundToInt(swd.constant * FFBGain));
                 DirectInputWrapper.PlayDamperForce(swd.wheelIndex, Mathf.RoundToInt(swd.damper * FFBGain));
                 //DirectInputWrapper.PlaySpringForce(wheelIndex, 0, Mathf.RoundToInt(0 * FFBGain), springCoefficient);
 
 
                 DirectInputWrapper.PlaySpringForce(swd.wheelIndex, 0,
-                    Mathf.RoundToInt((swd.springSaturation <= 0 ? 1 : swd.springSaturation) * FFBGain), swd.springCoefficient);
+                    Mathf.RoundToInt((swd.springSaturation <= 0 ? 1 : swd.springSaturation) * FFBGain),
+                    swd.springCoefficient);
             }
 
 
             //Debug.Log(brake.ToString() + " break and gas" + gas.ToString());
-                
-                
-            float totalGas = (SteeringWheelConfigs[WheelManufacturer].maxGas - SteeringWheelConfigs[WheelManufacturer].minGas);
-            float totalBrake = (SteeringWheelConfigs[WheelManufacturer].maxBrake - SteeringWheelConfigs[WheelManufacturer].minBrake);
 
-            swd.accelInput = (swd.gas - SteeringWheelConfigs[WheelManufacturer].minGas) / totalGas - (swd.brake - SteeringWheelConfigs[WheelManufacturer].minBrake) / totalBrake;
+
+            float totalGas = (SteeringWheelConfigs[WheelManufacturer].maxGas -
+                              SteeringWheelConfigs[WheelManufacturer].minGas);
+            float totalBrake = (SteeringWheelConfigs[WheelManufacturer].maxBrake -
+                                SteeringWheelConfigs[WheelManufacturer].minBrake);
+
+            swd.accelInput = (swd.gas - SteeringWheelConfigs[WheelManufacturer].minGas) / totalGas -
+                             (swd.brake - SteeringWheelConfigs[WheelManufacturer].minBrake) / totalBrake;
         }
     }
 
-    public void GetAccelBrakeInput(out float accel, out float brk,ParticipantOrder po) {
+    public void GetAccelBrakeInput(out float accel, out float brk, ParticipantOrder po) {
         if (ActiveWheels.ContainsKey(po)) {
             accel = ActiveWheels[po].gas;
             brk = ActiveWheels[po].brake;

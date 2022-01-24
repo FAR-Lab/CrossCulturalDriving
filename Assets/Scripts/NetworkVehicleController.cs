@@ -40,6 +40,46 @@ public class NetworkVehicleController : NetworkBehaviour {
     private ulong CLID;
 
 
+
+    /// <summary>
+    /// SoundRelevant Variables
+    /// </summary>
+
+    public NetworkVariable<bool> IsShifting;
+
+    public NetworkVariable<float> accellInput;
+    public NetworkVariable<float> RPM;
+    public NetworkVariable<float> traction;
+    public NetworkVariable<float> MotorWheelsSlip;
+
+    public NetworkVariable<float> CurrentSpeed;
+    public NetworkVariable<RoadSurface> CurrentSurface;
+    
+    void UpdateSounds() {
+        if (controller == null) return;
+        IsShifting.Value = controller.IsShifting;
+        accellInput.Value = controller.accellInput;
+        RPM.Value = controller.RPM;
+        traction.Value=(controller.traction + controller.tractionR + controller.rtraction + controller.rtractionR)/4.0f;
+        MotorWheelsSlip.Value = controller.MotorWheelsSlip;
+        CurrentSpeed.Value = controller.CurrentSpeed;
+        CurrentSurface.Value = controller.CurrentSurface;
+
+    }
+
+
+    
+    public void StartTheCar() {
+        GetComponent<VehicleAudioController>().PlayIgnition();
+        StartTheCarClientRpc();
+
+    }
+
+    [ClientRpc]
+    public void StartTheCarClientRpc() {
+       GetComponent<VehicleAudioController>().PlayIgnition();
+    }
+
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
         if (IsServer) { controller = GetComponent<VehicleController>(); }
@@ -169,6 +209,8 @@ public class NetworkVehicleController : NetworkBehaviour {
             SteeringInput = 0;
             ThrottleInput = -1;
         }
+
+        UpdateSounds();
     }
 
     public void AssignClient(ulong CLID_, ParticipantOrder _participantOrder_) {

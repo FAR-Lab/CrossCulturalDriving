@@ -11,6 +11,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using Newtonsoft.Json;
+using Unity.Collections;
+using Unity.Netcode;
 
 public class QNSelectionManager : MonoBehaviour {
     public GameObject ButtonPrefab;
@@ -90,7 +92,8 @@ public class QNSelectionManager : MonoBehaviour {
         CurrentSetofQuestions = new Dictionary<int, QuestionnaireQuestion>();
         nextQuestionsToAskQueue = new Queue<int>();
         sba = GetComponentInChildren<selectionBarAnimation>();
-        m_QNLogger = GetComponent<QNLogger>();
+        m_QNLogger = new QNLogger();
+
 #if debug
         startAskingTheQuestionairs(FindObjectOfType<LocalVRPlayer>().transform, QNFiles.ToArray(), "Test");
         changeLanguage("English");
@@ -113,10 +116,13 @@ public class QNSelectionManager : MonoBehaviour {
     // Update is called once per frame
     public void startAskingTheQuestionairs(Transform mylocalclient, TextAsset[] list, string Condition,
         LanguageSelect lang) {
-        ChangeLanguage(lang);
-        int epoch = (int) (System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds; //Epoch Time
-        m_MyLocalClient = mylocalclient;
         if (m_interalState == QNStates.IDLE) {
+            m_QNLogger.Init();
+            transform.parent = mylocalclient;
+            ChangeLanguage(lang);
+            int epoch = (int) (System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds; //Epoch Time
+            m_MyLocalClient = mylocalclient;
+
             m_condition = Condition;
             foreach (TextAsset s in list) {
                 // Debug.Log(s);
@@ -131,11 +137,6 @@ public class QNSelectionManager : MonoBehaviour {
     void Update() {
         if (Input.GetKeyUp(KeyCode.Q)) { m_interalState = QNStates.FINISH; }
 
-        if (ParentPosition != null) {
-            transform.rotation = ParentPosition.rotation;
-            transform.position = ParentPosition.position + ParentPosition.up * up + ParentPosition.forward * forward;
-        }
-
 
         switch (m_interalState) {
             case QNStates.IDLE:
@@ -147,13 +148,13 @@ public class QNSelectionManager : MonoBehaviour {
                     break;
                 }
 
-                string nextKey = QuestionariesToAsk.Keys.First(); //Not sure that this will owkr
+                string nextKey = QuestionariesToAsk.Keys.First(); //Not sure that this will work
 
                 CurrentSetofQuestions.Clear();
                 foreach (QuestionnaireQuestion q in QuestionariesToAsk[nextKey]) {
                     if (!CurrentSetofQuestions.ContainsKey(q.ID)) { CurrentSetofQuestions.Add(q.ID, q); }
                     else {
-                        Debug.LogError("This should not happen we have duplicate question IDs. Please check: " +
+                        Debug.LogError("This should not happen. We have duplicate question IDs. Please check: " +
                                        nextKey);
                     }
                 }
@@ -180,7 +181,7 @@ public class QNSelectionManager : MonoBehaviour {
                 AnswerFields.Clear();
                 currentActiveQustion = CurrentSetofQuestions[NextQuestiuonID];
                 Debug.Log("Get lanauge: >" + m_LanguageSelect + "<But only have the following avalible:");
-                foreach (string s in currentActiveQustion.QuestionText.Keys) { Debug.Log(">"+s+"<"); }
+                foreach (string s in currentActiveQustion.QuestionText.Keys) { Debug.Log(">" + s + "<"); }
 
                 QustionField.text = currentActiveQustion.QuestionText[m_LanguageSelect];
                 int i = 0;
@@ -231,8 +232,8 @@ public class QNSelectionManager : MonoBehaviour {
 
 
                         m_QNLogger.AddNewDataPoint(currentActiveQustion, AnswerIndex, m_LanguageSelect);
-                        Debug.Log("To Quesstion: " + currentActiveQustion.QuestionText["English"] +
-                                  "We answered: " + currentActiveQustion.Answers[AnswerIndex].AnswerText["English"]);
+                        //  Debug.Log("To Quesstion: " + currentActiveQustion.QuestionText["English"] +
+                        //"We answered: " + currentActiveQustion.Answers[AnswerIndex].AnswerText["English"]);
 
                         foreach (int nextQ in currentActiveQustion.Answers[AnswerIndex].nextQuestionIndexQueue) {
                             nextQuestionsToAskQueue.Enqueue(nextQ);
@@ -247,6 +248,13 @@ public class QNSelectionManager : MonoBehaviour {
             case QNStates.FINISH:
                 ParticipantInputCapture tmp = m_MyLocalClient.GetComponent<ParticipantInputCapture>();
                 if (tmp != null && tmp.IsLocalPlayer) {
+                    m_QNLogger.DumpData(out string data);
+
+                    using FastBufferWriter writer = new FastBufferWriter(data.Length, Allocator.Temp);
+                    writer.WriteValueSafe(data);
+                    NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(QNLogger.qnMessageName,
+                        NetworkManager.Singleton.ServerClientId, new FastBufferWriter(), NetworkDelivery.Reliable);
+
                     tmp.PostQuestionServerRPC(tmp.OwnerClientId);
                     m_interalState = QNStates.IDLE;
                 }
@@ -259,6 +267,7 @@ public class QNSelectionManager : MonoBehaviour {
     }
 
     List<QuestionnaireQuestion> ReadString(TextAsset asset) {
+        Debug.Log("Trying to load text asset:"+asset.name);
         return JsonConvert.DeserializeObject<List<QuestionnaireQuestion>>(asset.text);
     }
 }
