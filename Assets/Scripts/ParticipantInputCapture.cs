@@ -26,15 +26,14 @@ public class ParticipantInputCapture : NetworkBehaviour {
         new NetworkVariable<GpsController.Direction>(NetworkVariableReadPermission.Everyone);
 
     private GpsController m_GpsController;
-    
-  
+
+
     public Transform _transform;
     public LanguageSelect lang { private set; get; }
     private const string OffsetFileName = "offset";
-    
+
     void Awake() { ReadyForAssignment = false; }
-    
-    
+
 
     public static ParticipantInputCapture GetMyPIC() {
         foreach (ParticipantInputCapture pic in FindObjectsOfType<ParticipantInputCapture>()) {
@@ -50,25 +49,20 @@ public class ParticipantInputCapture : NetworkBehaviour {
         if (m_GpsController != null) { m_GpsController.SetDirection(newvalue); }
     }
 
-    
+
     public override void OnNetworkSpawn() {
-        if (!IsLocalPlayer) {
-            this.enabled = false;
-        }
+        //if (!IsLocalPlayer) {
+        //   this.enabled = false;//TODO this is a somehwat late change  // we need to figure out iof anything broke
+        // }
         CurrentDirection.OnValueChanged += NewGpsDirection;
         _localStateManager = GetComponent<StateManager>();
 
         ConfigFileLoading conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
-        if (conf.FileAvalible()) {
-            conf.LoadLocalOffset(out offsetPositon,out offsetRotation);
-        }
-        
-      
+        if (conf.FileAvalible()) { conf.LoadLocalOffset(out offsetPositon, out offsetRotation); }
     }
 
-
-    
+    public NetworkVariable<bool> ButtonPushed; // This is only active during QN time 
 
 
     [ServerRpc]
@@ -76,9 +70,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
 
     [ClientRpc]
     public void StartQuestionnaireClientRpc() {
-        if (IsLocalPlayer) {
-            FindObjectOfType<ScenarioManager>().RunQuestionairNow(transform); 
-        }
+        if (IsLocalPlayer) { FindObjectOfType<ScenarioManager>().RunQuestionairNow(transform); }
     }
 
     [ClientRpc]
@@ -91,17 +83,15 @@ public class ParticipantInputCapture : NetworkBehaviour {
             GUI.Label(new Rect(200, 5, 150, 100), "Client State" + _localStateManager.GlobalState.Value);
     }
 
-    public void AssignCarTransform(NetworkVehicleController MyCar,ClientRpcParams  clientRpcParams) {
+    public void AssignCarTransform(NetworkVehicleController MyCar, ClientRpcParams clientRpcParams) {
         if (IsServer) {
             NetworkedVehicle = MyCar;
-            AssignCarTransformClientRPC(MyCar.NetworkObject,clientRpcParams);
+            AssignCarTransformClientRPC(MyCar.NetworkObject, clientRpcParams);
         }
     }
-    
+
     [ClientRpc]
     private void AssignCarTransformClientRPC(NetworkObjectReference MyCar, ClientRpcParams clientRpcParams = default) {
-       
-       
         if (MyCar.TryGet(out NetworkObject targetObject)) {
             NetworkedVehicle = targetObject.transform.GetComponent<NetworkVehicleController>();
 
@@ -114,8 +104,8 @@ public class ParticipantInputCapture : NetworkBehaviour {
         }
     }
 
-   
-    public void De_AssignCarTransform(ClientRpcParams  clientRpcParams) {
+
+    public void De_AssignCarTransform(ClientRpcParams clientRpcParams) {
         if (IsServer) {
             NetworkedVehicle = null;
             De_AssignCarTransformClientRPC(clientRpcParams);
@@ -130,11 +120,10 @@ public class ParticipantInputCapture : NetworkBehaviour {
         Debug.Log("De_assign Car ClientRPC");
     }
 
-    
+
     [ClientRpc]
     public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default) {
-
-        if (!IsLocalPlayer) return;       
+        if (!IsLocalPlayer) return;
         GetComponent<SeatCalibration>().StartCalibration(
             NetworkedVehicle.transform.Find("SteeringCenter"),
             transform.Find("TrackingSpace").Find("CenterEyeAnchor"),
@@ -144,19 +133,28 @@ public class ParticipantInputCapture : NetworkBehaviour {
 
     void Update() {
         if (IsLocalPlayer) {
-            if (m_GpsController == null && _transform!=null) {
+            if (m_GpsController == null && _transform != null) {
                 m_GpsController = _transform.parent.GetComponentInChildren<GpsController>();
                 if (m_GpsController != null) { m_GpsController.SetDirection(CurrentDirection.Value); }
             }
         }
+
+        if (IsServer) {
+            ButtonPushed.Value =
+                SteeringWheelManager.Singleton.GetButtonInput(
+                    ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(OwnerClientId));
+        }
     }
-    
-    
-    private Quaternion offsetRotation=Quaternion.identity;
-    private Vector3 offsetPositon=Vector3.zero;
-    
-    private Quaternion LastRot=Quaternion.identity;
+
+    public bool ButtonPush() { return ButtonPushed.Value; }
+
+
+    private Quaternion offsetRotation = Quaternion.identity;
+    private Vector3 offsetPositon = Vector3.zero;
+
+    private Quaternion LastRot = Quaternion.identity;
     private bool init = false;
+
     private void LateUpdate() {
         if (_transform != null) {
             var transform1 = transform;
@@ -166,22 +164,19 @@ public class ParticipantInputCapture : NetworkBehaviour {
                 LastRot = transform1.rotation;
                 init = true;
             }
-            transform1.position = transform2.position+((transform1.rotation*Quaternion.Inverse(LastRot))*offsetPositon);
+
+            transform1.position = transform2.position +
+                                  ((transform1.rotation * Quaternion.Inverse(LastRot)) * offsetPositon);
         }
     }
 
-   
 
-
-    public void SetNewRotationOffset(Quaternion yawCorrection) {
-        offsetRotation *= yawCorrection; }
-    public void SetNewPositionOffset(Vector3 positionOffset) {
-        offsetPositon += positionOffset; }
+    public void SetNewRotationOffset(Quaternion yawCorrection) { offsetRotation *= yawCorrection; }
+    public void SetNewPositionOffset(Vector3 positionOffset) { offsetPositon += positionOffset; }
 
     public void FinishedCalibration() {
         ConfigFileLoading conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
-        conf.StoreLocalOffset(offsetPositon,offsetRotation);
-        
+        conf.StoreLocalOffset(offsetPositon, offsetRotation);
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Oculus.Platform;
 using Unity.Netcode;
 using UnityEngine;
@@ -15,9 +16,11 @@ public class QNDataStorageServer : MonoBehaviour
     private void DataStorage(ulong senderclientid, FastBufferReader messagepayload) {
 
 
-       ParticipantOrder po =  ConnectionAndSpawing.Singleton.GetParticipantOrder(senderclientid);
-        messagepayload.ReadValueSafe(out string message); 
-        Debug.Log(message);
+       ParticipantOrder po =  ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(senderclientid);
+       byte[] value = new byte[] { };
+     //  messagepayload.ReadBytesSafe(value); 
+        
+       // Debug.Log();
 
     }
 

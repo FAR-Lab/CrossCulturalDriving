@@ -34,7 +34,7 @@ public class QNSelectionManager : MonoBehaviour {
     selectionBarAnimation sba;
     List<RectTransform> AnswerFields = new List<RectTransform>();
 
-    private Transform m_MyLocalClient;
+    private ParticipantInputCapture m_MyLocalClient;
     LayerMask m_RaycastCollidableLayers;
 
     private LanguageSelect m_LanguageSelect;
@@ -92,7 +92,7 @@ public class QNSelectionManager : MonoBehaviour {
         CurrentSetofQuestions = new Dictionary<int, QuestionnaireQuestion>();
         nextQuestionsToAskQueue = new Queue<int>();
         sba = GetComponentInChildren<selectionBarAnimation>();
-        m_QNLogger = new QNLogger();
+      
 
 #if debug
         startAskingTheQuestionairs(FindObjectOfType<LocalVRPlayer>().transform, QNFiles.ToArray(), "Test");
@@ -117,11 +117,12 @@ public class QNSelectionManager : MonoBehaviour {
     public void startAskingTheQuestionairs(Transform mylocalclient, TextAsset[] list, string Condition,
         LanguageSelect lang) {
         if (m_interalState == QNStates.IDLE) {
+            m_QNLogger = new QNLogger();
             m_QNLogger.Init();
             transform.parent = mylocalclient;
             ChangeLanguage(lang);
-            int epoch = (int) (System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds; //Epoch Time
-            m_MyLocalClient = mylocalclient;
+         //   int epoch = (int) (System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds; //Epoch Time
+            m_MyLocalClient = mylocalclient.GetComponent<ParticipantInputCapture>();
 
             m_condition = Condition;
             foreach (TextAsset s in list) {
@@ -227,7 +228,7 @@ public class QNSelectionManager : MonoBehaviour {
                     }
 
 
-                    if (selectAction.triggered && onTarget) {
+                    if (m_MyLocalClient.ButtonPush() && onTarget) {
                         int AnswerIndex = rcb.activateNextQuestions();
 
 
@@ -246,17 +247,21 @@ public class QNSelectionManager : MonoBehaviour {
 
                 break;
             case QNStates.FINISH:
-                ParticipantInputCapture tmp = m_MyLocalClient.GetComponent<ParticipantInputCapture>();
-                if (tmp != null && tmp.IsLocalPlayer) {
+               
+                if (m_MyLocalClient != null && m_MyLocalClient.IsLocalPlayer) {
                     m_QNLogger.DumpData(out string data);
 
-                    using FastBufferWriter writer = new FastBufferWriter(data.Length, Allocator.Temp);
-                    writer.WriteValueSafe(data);
+                    byte[] tmp = Encoding.Unicode.GetBytes(data);
+                   
+                    Debug.Log(tmp.Length+"charcount");
+                    FastBufferWriter writer = new FastBufferWriter(tmp.Length, Allocator.Temp);
+                    writer.WriteBytesSafe(tmp);
                     NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(QNLogger.qnMessageName,
-                        NetworkManager.Singleton.ServerClientId, new FastBufferWriter(), NetworkDelivery.Reliable);
+                        NetworkManager.Singleton.ServerClientId, writer, NetworkDelivery.Reliable);
 
-                    tmp.PostQuestionServerRPC(tmp.OwnerClientId);
+                    m_MyLocalClient.PostQuestionServerRPC(m_MyLocalClient.OwnerClientId);
                     m_interalState = QNStates.IDLE;
+                    writer.Dispose();
                 }
                 else { Debug.LogError("Did not get my local player dont know who to report back to."); }
 

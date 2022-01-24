@@ -176,8 +176,8 @@ public class NetworkVehicleController : NetworkBehaviour {
                 steeringAngle = SteeringInput * -450f;
             }
 
-            bool TempLeft = Input.GetButton("indicateLeft");
-            bool TempRight = Input.GetButton("indicateRight");
+            bool TempLeft = SteeringWheelManager.Singleton.GetLeftIndicatorInput(_participantOrder); //Input.GetButton("indicateLeft");
+            bool TempRight =SteeringWheelManager.Singleton.GetRightIndicatorInput(_participantOrder);// Input.GetButton("indicateRight");
             if (TempLeft || TempRight) {
                 DualButtonDebounceIndicator = true;
                 if (TempLeft) { LeftIndicatorDebounce = true; }
@@ -194,7 +194,7 @@ public class NetworkVehicleController : NetworkBehaviour {
             UpdateIndicator();
 
 
-            if (Input.GetButtonDown("Horn")) { HonkMyCarServerRpc(); }
+            if (SteeringWheelManager.Singleton.GetButtonInput(_participantOrder)) { HonkMyCar(); }
 
             if (ThrottleInput < 0 && !breakIsOn) {
                 BrakeLightChangedServerRpc(true);
@@ -248,9 +248,12 @@ public class NetworkVehicleController : NetworkBehaviour {
     [ServerRpc]
     private void BrakeLightChangedServerRpc(bool newvalue) { TurnOnBrakeLightClientRpc(newvalue); }
 
-    [ServerRpc]
-    public void HonkMyCarServerRpc() {
-        Debug.Log("HonkMyCarServerRpc");
+    
+    public void HonkMyCar() {
+        
+       if(HonkSound.isPlaying){return;}
+        HonkSound.Play();
+      //  Debug.Log("HonkMyCarServerRpc");
         HonkMyCarClientRpc();
     }
 

@@ -601,7 +601,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
             : null;
     }
 
-    public ParticipantOrder GetParticipantOrder(ulong clientid) {
+    public ParticipantOrder GetParticipantOrderClientId(ulong clientid) {
         if (_ClientToOrder.ContainsKey(clientid)) return _ClientToOrder[clientid];
         else return ParticipantOrder.None;
     }
