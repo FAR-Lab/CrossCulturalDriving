@@ -17,6 +17,9 @@ public class ServerChange : MonoBehaviour
     public TMP_Text ServerConnectionStatusTextBox;
     public TMP_InputField serverIPField;
 
+    public GameObject OVRCamera;
+    public GameObject NetworkManager;
+
     private string ServerIPString;
     private string ParticipantIDString;
     private string LanguageString;
@@ -119,6 +122,11 @@ public class ServerChange : MonoBehaviour
             case ConnectionAndSpawing.ClienConnectionResponse.SUCCESS:
                 Debug.Log("We are connected you can stop showing the UI now!");
                 ServerConnectionStatusTextBox.text = "CONNECTED!";
+
+                Destroy(OVRCamera);
+
+                NetworkManager.AddComponent(Type.GetType("OVRManager"));
+
                 this.enabled = false;
                 break;
         }
