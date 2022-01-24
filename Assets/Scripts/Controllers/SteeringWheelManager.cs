@@ -27,6 +27,10 @@ public class SteeringWheelManager : MonoBehaviour {
         public float gas;
         public float brake;
 
+        public bool L_IndSwitch;
+        public bool R_IndSwitch;
+        public bool OtherButton;
+
         public SteeringWheelData(int index) {
             steerInput = 0f;
             wheelIndex = index;
@@ -39,6 +43,9 @@ public class SteeringWheelManager : MonoBehaviour {
             gas = 0;
             brake = 0;
             running = false;
+            L_IndSwitch = false;
+            R_IndSwitch = false;
+            OtherButton = false;
         }
     }
 
@@ -188,7 +195,7 @@ public class SteeringWheelManager : MonoBehaviour {
                 new List<ParticipantOrder>(Enum.GetValues(typeof(ParticipantOrder)).Cast<ParticipantOrder>().ToArray());
             tmp.Remove(ParticipantOrder.None);
             int x = 75;
-            
+
             foreach (var v in tmp) {
                 GUI.Label(new Rect(160 + x, 25, 25, 25), v.ToString());
                 var text = "";
@@ -198,8 +205,6 @@ public class SteeringWheelManager : MonoBehaviour {
                 text = GUI.TextField(new Rect(150 + x, 50, 25, 25), text, 2);
                 if (prev != text) {
                     if (int.TryParse(text, out int newIndex)) {
-
-                        
                         ParticipantOrder switchPartner = ParticipantOrder.None;
                         foreach (var swd in tmp) {
                             if (ActiveWheels.ContainsKey(swd) && ActiveWheels[swd].wheelIndex == newIndex) {
@@ -210,7 +215,8 @@ public class SteeringWheelManager : MonoBehaviour {
 
                         if (switchPartner != ParticipantOrder.None) {
                             if (ActiveWheels.ContainsKey(v)) {
-                                (ActiveWheels[v], ActiveWheels[switchPartner]) = (ActiveWheels[switchPartner], ActiveWheels[v]);
+                                (ActiveWheels[v], ActiveWheels[switchPartner]) =
+                                    (ActiveWheels[switchPartner], ActiveWheels[v]);
                                 return;
                             }
                             else {
@@ -219,10 +225,7 @@ public class SteeringWheelManager : MonoBehaviour {
                                 return;
                             }
                         }
-                        else {
-                            text = prev;
-                        }
-                        
+                        else { text = prev; }
                     }
                     else { text = prev; }
                 }
@@ -258,12 +261,33 @@ public class SteeringWheelManager : MonoBehaviour {
             state = DirectInputWrapper.GetStateManaged(swd.wheelIndex);
             swd.steerInput = state.lX / 32768f;
             // accelInput = (state.lY- 32768f) / -32768f;
-
             swd.gas = 0.9f * swd.gas + 0.1f * ((state.lY) / (-32768f));
-
             swd.brake = (state.lRz) / (32768f);
 
 
+            swd.L_IndSwitch = state.rgbButtons[5] > 0;
+            swd.R_IndSwitch = state.rgbButtons[4] > 0;
+
+            swd.OtherButton =
+                state.rgbButtons[0] > 0 ||
+                state.rgbButtons[1] > 0 ||
+                state.rgbButtons[2] > 0 ||
+                state.rgbButtons[3] > 0 ||
+                state.rgbButtons[6] > 0 ||
+                state.rgbButtons[7] > 0 ||
+                state.rgbButtons[10] > 0 ||
+                state.rgbButtons[11] > 0 ||
+                state.rgbButtons[23] > 0;
+
+            /*
+            int i = 0;
+            string tmp = "";
+            foreach (byte b in state.rgbButtons) {
+                tmp += i.ToString() + ">" + b.ToString() + "  ";
+                i++;
+            }
+            Debug.Log(tmp);
+            */
             if (swd.forceFeedbackPlaying) {
                 //  Debug.Log("playing force"+swd.wheelIndex+swd.ToString());
                 DirectInputWrapper.PlayConstantForce(swd.wheelIndex, Mathf.RoundToInt(swd.constant * FFBGain));
@@ -301,6 +325,18 @@ public class SteeringWheelManager : MonoBehaviour {
         }
     }
 
+    public bool GetLeftIndicatorInput(ParticipantOrder po) {
+        if (ActiveWheels.ContainsKey(po)) { return ActiveWheels[po].L_IndSwitch; }
+        else { return false; }
+    }
+    public bool GetRightIndicatorInput(ParticipantOrder po) {
+        if (ActiveWheels.ContainsKey(po)) { return ActiveWheels[po].R_IndSwitch; }
+        else { return false; }
+    }
+    public bool GetButtonInput(ParticipantOrder po) {
+        if (ActiveWheels.ContainsKey(po)) { return ActiveWheels[po].OtherButton; }
+        else { return false; }
+    }
     public float GetAccelInput(ParticipantOrder po) {
         if (ActiveWheels.ContainsKey(po)) { return ActiveWheels[po].accelInput; }
         else { return -1; }

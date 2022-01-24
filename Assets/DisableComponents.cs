@@ -19,8 +19,7 @@ public class DisableComponents : NetworkBehaviour
         DontDestroyOnLoad(gameObject);
         
         if(!IsLocalPlayer) {
-          //  Destroy(GetComponent<ParticipantInputCapture>());
-           // Destroy(GetComponent<StateManager>());
+          
 
            GetComponent<OVRCameraRig>().disableEyeAnchorCameras = true;
             GetComponent<OVRCameraRig>().enabled = false;
