@@ -124,7 +124,6 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     #endregion
 
-  
 
     #region SingeltonManagment
 
@@ -165,8 +164,8 @@ public class ConnectionAndSpawing : MonoBehaviour {
     }
 
     void SetupClientFunctionality() {
-      NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected_client; 
-      NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected_client;
+        NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected_client;
+        NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected_client;
     }
 
 
@@ -250,11 +249,12 @@ public class ConnectionAndSpawing : MonoBehaviour {
         SUCCESS,
         FAILED
     };
-    
+
     public delegate void ReponseDelegate(ClienConnectionResponse response);
+
     private ReponseDelegate ReponseHandler;
-    private void ClientDisconnected_client(ulong ClientID) {ReponseHandler.Invoke(ClienConnectionResponse.FAILED);}
-    private void ClientConnected_client(ulong ClientID) { ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS);}
+    private void ClientDisconnected_client(ulong ClientID) { ReponseHandler.Invoke(ClienConnectionResponse.FAILED); }
+    private void ClientConnected_client(ulong ClientID) { ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS); }
 
 
     private void ClientDisconnected(ulong ClientID) {
@@ -377,6 +377,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
     public void StartAsServer() {
         Debug.Log("Starting as Server");
         SteeringWheelManager.Singleton.enabled = true;
+        GetComponent<QNDataStorageServer>().enabled = true;
         SetupServerFunctionality();
     }
 
@@ -385,20 +386,22 @@ public class ConnectionAndSpawing : MonoBehaviour {
         _participantOrder = val;
         ParticipantOrder_Set = true;
     }
+
     private void Setlanguage(LanguageSelect lang_) { lang = lang_; }
-    public void StartAsClient(LanguageSelect lang_,ParticipantOrder val,string ip,int port, ReponseDelegate result) {
+
+    public void StartAsClient(LanguageSelect lang_, ParticipantOrder val, string ip, int port, ReponseDelegate result) {
         SetupClientFunctionality();
         ReponseHandler += result;
         SetupTransport(ip, port);
         Setlanguage(lang_);
         SetParticipantOrder(val);
         Debug.Log("Starting as Client");
-        NetworkManager.Singleton.StartClient(); 
+        NetworkManager.Singleton.StartClient();
     }
 
-    private void SetupTransport(string ip="127.0.0.1",int port=7777) {
-        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ip; 
-        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectPort = port;         
+    private void SetupTransport(string ip = "127.0.0.1", int port = 7777) {
+        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ip;
+        NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectPort = port;
     }
 
     private void ServerHasStarted() {
@@ -421,7 +424,10 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     private void SwitchToReady() { ServerState = ActionState.READY; }
 
-    private void SwitchToDriving() { ServerState = ActionState.DRIVE; }
+    private void SwitchToDriving() {
+        //  foreach (var nvc in FindObjectsOfType<NetworkVehicleController>()) { nvc.StartTheCar();}
+        ServerState = ActionState.DRIVE;
+    }
 
     public void SwitchToQN() {
         //   Debug.Log("QN triggered, canceling Velocities, and start Questionnaires");
@@ -452,38 +458,16 @@ public class ConnectionAndSpawing : MonoBehaviour {
     #endregion
 
     private bool retry = true;
-    private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response) {
-        if (response == ClienConnectionResponse.FAILED && retry) {
-            Debug.Log("Tried as participant A retrying with B");
-            StartAsClient("English", ParticipantOrder.B, "192.168.1.160", 7777, ResponseDelegate);
-            retry = false;
-        }
-        else if (response == ClienConnectionResponse.FAILED && !retry) {
-            Debug.Log("Failed with A and B Quitting");
-            Application.Quit();
-        }
-    }
+    private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response) { }
 
     private bool started = false;
+
     void Start() {
-        if (Application.platform == RuntimePlatform.Android &&  !started) {
-            StartAsClient("English",ParticipantOrder.B,"192.168.1.160",7777,ResponseDelegate);
+        if (Application.platform == RuntimePlatform.Android && !started) {
+            StartAsClient("English", ParticipantOrder.B, "192.168.1.160", 7777, ResponseDelegate);
             started = true;
             Debug.Log("Started Client");
-       }
-       
-        /*
-            Setlanguage("English");
-            if (RunAsServer) {
-                SetParticipantOrder(ParticipantOrder.None);
-                StartAsServer();
-            }
-            else {
-                SetParticipantOrder(ParticipantOrder.A);
-                StartAsClient();
-                
-            }
-           */
+        }
     }
 
     // Update is called once per frame
@@ -508,6 +492,9 @@ public class ConnectionAndSpawing : MonoBehaviour {
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q)) {
                         Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
                         SwitchToPostQN();
+                    }
+                    else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Q)) {
+                        SwitchToQN();
                     }
 
                     break;
@@ -540,6 +527,22 @@ public class ConnectionAndSpawing : MonoBehaviour {
                     if (GUI.Button(new Rect(5, 5 + y, 150, 25), f.SceneName)) { SwitchToLoading(f.SceneName); }
 
                     y += 27;
+                }
+
+                y = 50;
+                if (_OrderToClient == null) return;
+                foreach (var p in _OrderToClient.Keys) {
+                    if (GUI.Button(new Rect(200, 5 + y, 100, 25), "Calibrate " + p)) {
+                        ulong clientID = _OrderToClient[p];
+                        ClientRpcParams clientRpcParams = new ClientRpcParams {
+                            Send = new ClientRpcSendParams {
+                                TargetClientIds = new ulong[] {clientID}
+                            }
+                        };
+
+                        ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
+                            .CalibrateClientRPC(clientRpcParams);
+                    }
                 }
             }
 
@@ -584,10 +587,21 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     #endregion
 
-  
 
     public List<ulong> GetClientList() {
         if (_ClientToOrder == null) return null;
         return _ClientToOrder.Keys.ToList();
+    }
+
+    public Transform GetMainClientObject(ulong senderClientId) {
+        if (!ClientObjects.ContainsKey(senderClientId)) return null;
+        return ClientObjects[senderClientId].ContainsKey(ParticipantObjectSpawnType.MAIN)
+            ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
+            : null;
+    }
+
+    public ParticipantOrder GetParticipantOrder(ulong clientid) {
+        if (_ClientToOrder.ContainsKey(clientid)) return _ClientToOrder[clientid];
+        else return ParticipantOrder.None;
     }
 }

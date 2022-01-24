@@ -6,25 +6,19 @@ using System;
 using UnityEngine;
 
 
-public class QNLogger : MonoBehaviour
-{
-   
-    
+public class QNLogger {
+    public static string qnMessageName = "QNDATA";
     public static char sep = ';'; //Separator for data values.
-    private string path; //Location of the log files
-    private Thread send; //Independent thread for writing and sending data from databuffer
-    private StreamWriter sw;
 
-    private static QNLogger _instance;
-    public static QNLogger Instance { get { return _instance; } }
+    private string output = "";
    
-    void Start()
-    {
-        
-        path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        string identifier = String.Format("{0:yyyymmdd-HHmmss}-{1}.txt", System.DateTime.Now,ParticipantInputCapture.GetMyPIC().participantOrder.ToString());
-        sw  = new StreamWriter(Path.Combine( path, identifier));
-        // sw = File.AppendText(newPath + participantID + ".csv");
+    public void Init() {
+
+        output += String.Format("{0:yyyymmdd-HHmmss}-{1}.txt", System.DateTime.Now,
+            ConnectionAndSpawing.Singleton.ParticipantOrder.ToString());
+
+        output += sep;
+
     }
 
     public void AddNewDataPoint(QuestionnaireQuestion qq,int AnswerIndex,LanguageSelect lang) {
@@ -32,13 +26,15 @@ public class QNLogger : MonoBehaviour
         string temp = String.Format(
             "Time: {0:g}, Questions: {1}, Answer: {2}, Language {3}.",
             System.DateTime.Now, qq.QuestionText[lang], qq.Answers[AnswerIndex].AnswerText[lang], lang.ToString());
+        output +=temp;
+        output += sep;
+        
         //qq.SA_Level  
         //qq.Behavior
-        sw.WriteLine(temp);
+
     }
-    void OnDestroy() {
-        sw.Flush();
-        sw.Close();
+    public void DumpData(out string data) {
+        data = output;
     }
 
    

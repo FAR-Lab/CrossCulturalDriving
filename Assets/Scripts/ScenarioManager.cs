@@ -14,13 +14,13 @@ public class ScenarioManager : MonoBehaviour {
     // Use this for initialization
     public GameObject QuestionairPrefab;
 
-    bool WaitAFrame = false;
+   
     QNSelectionManager qnmanager;
     public bool ready { get; private set; } // property
     private Dictionary<ParticipantOrder, Pose> MySpawnPositions;
 
     private Transform MyLocalClient;
-    private LanguageSelect lang;
+   
 
     public GpsController.Direction StartingDirectionParticipantA;
     public GpsController.Direction StartingDirectionParticipantB;
@@ -30,28 +30,14 @@ public class ScenarioManager : MonoBehaviour {
     public GpsController.Direction StartingDirectionParticipantF;
 
     void Start() {
-        WaitAFrame = false;
         qnmanager = null;
         GetSpawnPoints();
         ready = true;
-        if (NetworkManager.Singleton.IsClient) {
-            var tmp = ParticipantInputCapture.GetMyPIC();
-            if (tmp != null) { lang = tmp.lang; }
-        }
     }
 
 
     void Update() {
-        if (WaitAFrame) {
-            WaitAFrame = false;
-            if (qnmanager != null) {
-                if (QuestionairsToAsk.Length > 0) {
-                    //string[] tempArray = new string[QuestionairsToAsk.Length];
-
-                    qnmanager.startAskingTheQuestionairs(MyLocalClient, QuestionairsToAsk, conditionName, lang);
-                }
-            }
-        }
+     
     }
 
     public Pose? GetStartPose(ParticipantOrder val) {
@@ -84,7 +70,9 @@ public class ScenarioManager : MonoBehaviour {
             MyLocalClient.transform.rotation).GetComponent<QNSelectionManager>();
 
         qnmanager.setRelativePosition(MyLocalClient, .75f, 4f);
-        WaitAFrame = true;
+        if (QuestionairsToAsk.Length > 0) {
+            qnmanager.startAskingTheQuestionairs(MyLocalClient, QuestionairsToAsk, conditionName, ConnectionAndSpawing.Singleton.lang);
+        }
     }
 
     public Dictionary<ParticipantOrder, GpsController.Direction> GetStartingPositions() {

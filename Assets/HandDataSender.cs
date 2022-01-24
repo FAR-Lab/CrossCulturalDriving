@@ -74,9 +74,9 @@ public class HandDataSender : NetworkBehaviour {
        // Debug.Log("Bouncing Hand Data for:" + senderClientId.ToString());
         messagePayload.ReadNetworkSerializable<NetworkSkeletonPoseData>(
             out NetworkSkeletonPoseData newRemoteHandData);
-       // HandDataStreamRecorder.Singleton.StoreHandData(senderClientId, newRemoteHandData);
+        HandDataStreamRecorder.Singleton.StoreHandData(senderClientId, newRemoteHandData);
         
-            Debug.Log("GotMessage from Client About to bounce it out on: "+GETMessageNameBroadcast());
+           // Debug.Log("GotMessage from Client About to bounce it out on: "+GETMessageNameBroadcast());
       
        
         _fastBufferWriter = new FastBufferWriter(NetworkSkeletonPoseData.GetSize(), Allocator.Temp);

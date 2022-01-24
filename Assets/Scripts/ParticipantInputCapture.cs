@@ -27,10 +27,14 @@ public class ParticipantInputCapture : NetworkBehaviour {
 
     private GpsController m_GpsController;
     
-    public ParticipantOrder participantOrder { private set; get; }
+  
     public Transform _transform;
     public LanguageSelect lang { private set; get; }
+    private const string OffsetFileName = "offset";
+    
     void Awake() { ReadyForAssignment = false; }
+    
+    
 
     public static ParticipantInputCapture GetMyPIC() {
         foreach (ParticipantInputCapture pic in FindObjectsOfType<ParticipantInputCapture>()) {
@@ -46,13 +50,21 @@ public class ParticipantInputCapture : NetworkBehaviour {
         if (m_GpsController != null) { m_GpsController.SetDirection(newvalue); }
     }
 
-
+    
     public override void OnNetworkSpawn() {
         if (!IsLocalPlayer) {
             this.enabled = false;
         }
         CurrentDirection.OnValueChanged += NewGpsDirection;
         _localStateManager = GetComponent<StateManager>();
+
+        ConfigFileLoading conf = new ConfigFileLoading();
+        conf.Init(OffsetFileName);
+        if (conf.FileAvalible()) {
+            conf.LoadLocalOffset(out offsetPositon,out offsetRotation);
+        }
+        
+      
     }
 
 
@@ -119,15 +131,15 @@ public class ParticipantInputCapture : NetworkBehaviour {
     }
 
     
-    
-    
-    private void LateUpdate() {
-        if (_transform != null) {
-            var transform1 = transform;
-            var transform2 = _transform;
-            transform1.position = transform2.position;
-            transform1.rotation = transform2.rotation;
-        }
+    [ClientRpc]
+    public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default) {
+
+        if (!IsLocalPlayer) return;       
+        GetComponent<SeatCalibration>().StartCalibration(
+            NetworkedVehicle.transform.Find("SteeringCenter"),
+            transform.Find("TrackingSpace").Find("CenterEyeAnchor"),
+            this);
+        Debug.Log("Calibrate ClientRPC");
     }
 
     void Update() {
@@ -138,8 +150,38 @@ public class ParticipantInputCapture : NetworkBehaviour {
             }
         }
     }
+    
+    
+    private Quaternion offsetRotation=Quaternion.identity;
+    private Vector3 offsetPositon=Vector3.zero;
+    
+    private Quaternion LastRot=Quaternion.identity;
+    private bool init = false;
+    private void LateUpdate() {
+        if (_transform != null) {
+            var transform1 = transform;
+            var transform2 = _transform;
+            transform1.rotation = transform2.rotation * offsetRotation;
+            if (!init) {
+                LastRot = transform1.rotation;
+                init = true;
+            }
+            transform1.position = transform2.position+((transform1.rotation*Quaternion.Inverse(LastRot))*offsetPositon);
+        }
+    }
 
    
 
-  
+
+    public void SetNewRotationOffset(Quaternion yawCorrection) {
+        offsetRotation *= yawCorrection; }
+    public void SetNewPositionOffset(Vector3 positionOffset) {
+        offsetPositon += positionOffset; }
+
+    public void FinishedCalibration() {
+        ConfigFileLoading conf = new ConfigFileLoading();
+        conf.Init(OffsetFileName);
+        conf.StoreLocalOffset(offsetPositon,offsetRotation);
+        
+    }
 }

@@ -216,6 +216,7 @@ Transform:
   - {fileID: 4945884919592592}
   - {fileID: 4761535004510826}
   - {fileID: 4432124452030234}
+  - {fileID: 7288225826279891193}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -179.944, z: 0}
@@ -408,7 +409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CameraPosition: {fileID: 4056613939988268}
-  useKeyBoard: 1
+  useKeyBoard: 0
   Left:
   - {fileID: 4234196572143992}
   - {fileID: 4118818471692194}
@@ -426,8 +427,22 @@ MonoBehaviour:
   Off: {r: 0, g: 0, b: 0, a: 1}
   SteeringInput: 0
   ThrottleInput: 0
+  IsShifting:
+    m_InternalValue: 0
+  accellInput:
+    m_InternalValue: 0
+  RPM:
+    m_InternalValue: 0
+  traction:
+    m_InternalValue: 0
+  MotorWheelsSlip:
+    m_InternalValue: 0
+  CurrentSpeed:
+    m_InternalValue: 0
+  CurrentSurface:
+    m_InternalValue: 0
   SteeringWheel: {fileID: 4147952271443172}
-  interval: 0
+  interval: 0.5
 --- !u!114 &11476574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8021,10 +8036,10 @@ MonoBehaviour:
   SyncScaleY: 0
   SyncScaleZ: 0
   PositionThreshold: 10
-  RotAngleThreshold: 0.01
+  RotAngleThreshold: 0.005
   ScaleThreshold: 10
   InLocalSpace: 1
-  Interpolate: 1
+  Interpolate: 0
   CanCommitToTransform: 0
 --- !u!1 &1120682330170792
 GameObject:
@@ -8069,7 +8084,7 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
+  m_projectionMatrixMode: 0
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
@@ -8089,15 +8104,15 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 511
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 3
+  m_TargetEye: 0
   m_HDR: 1
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
+  m_ForceIntoRT: 1
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -8114,10 +8129,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetMaterial: {fileID: 2100000, guid: 64c81bdb65d3ffe44bcc4cd22be452ce, type: 2}
+  rt: {fileID: 0}
   width: 512
   height: 768
-  depth: 0
+  depth: 16
   rtf: 0
+  flipHorizontal: 1
 --- !u!1 &1184536589677604
 GameObject:
   m_ObjectHideFlags: 0
@@ -8289,7 +8306,7 @@ GameObject:
   - component: {fileID: 4541480518286528}
   - component: {fileID: 20936849985572802}
   - component: {fileID: 114739507899819822}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: CenterMirrorCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8321,7 +8338,7 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
+  m_projectionMatrixMode: 0
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
@@ -8341,15 +8358,15 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 511
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 3
+  m_TargetEye: 0
   m_HDR: 0
   m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
+  m_ForceIntoRT: 1
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -8366,10 +8383,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetMaterial: {fileID: 2100000, guid: 3a7465f1a75f24546b2231bbc1c8e8d0, type: 2}
+  rt: {fileID: 0}
   width: 384
   height: 1308
-  depth: 0
+  depth: 16
   rtf: 0
+  flipHorizontal: 1
 --- !u!1 &1232226947679096
 GameObject:
   m_ObjectHideFlags: 0
@@ -8381,7 +8400,7 @@ GameObject:
   - component: {fileID: 4172202489935960}
   - component: {fileID: 33166550921405718}
   - component: {fileID: 23100646099633464}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: LeftMirror
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9142,8 +9161,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1524117855195952}
-  m_LocalRotation: {x: -0.7071068, y: 0.7071068, z: -0, w: 0}
-  m_LocalPosition: {x: -0.907, y: 1.0248, z: 0.5219}
+  m_LocalRotation: {x: -0.70710677, y: 0.7071069, z: 2.0372679e-10, w: -2.0372679e-10}
+  m_LocalPosition: {x: -0.9351, y: 1.025, z: 0.522}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 495970}
@@ -9160,7 +9179,7 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
+  m_projectionMatrixMode: 0
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
@@ -9180,15 +9199,15 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 511
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 3
+  m_TargetEye: 0
   m_HDR: 1
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
+  m_ForceIntoRT: 1
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -9205,10 +9224,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetMaterial: {fileID: 2100000, guid: b740340c1954871479378842c7cf0571, type: 2}
+  rt: {fileID: 0}
   width: 512
   height: 768
-  depth: 0
+  depth: 16
   rtf: 0
+  flipHorizontal: 1
 --- !u!1 &1584263918984448
 GameObject:
   m_ObjectHideFlags: 0
@@ -9786,7 +9807,7 @@ GameObject:
   - component: {fileID: 4463307008947054}
   - component: {fileID: 33599099782841070}
   - component: {fileID: 23767021041498426}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RightMirror
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10029,7 +10050,7 @@ GameObject:
   - component: {fileID: 4205284165012840}
   - component: {fileID: 33076707359007252}
   - component: {fileID: 23387448993188222}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: BackMirror
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10361,3 +10382,33 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &176327687480123085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7288225826279891193}
+  m_Layer: 0
+  m_Name: SteeringCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7288225826279891193
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176327687480123085}
+  m_LocalRotation: {x: 0.17188081, y: -0, z: -7.2759567e-12, w: 0.98511773}
+  m_LocalPosition: {x: -0.378, y: 0.8761, z: 0.5234}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 495970}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 19.794, y: 0, z: 0}

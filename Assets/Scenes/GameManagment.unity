@@ -155,6 +155,7 @@ GameObject:
   - component: {fileID: 476093112}
   - component: {fileID: 476093111}
   - component: {fileID: 476093113}
+  - component: {fileID: 476093114}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -226,7 +227,7 @@ MonoBehaviour:
       SourceHashToOverride: 0
       OverridingTargetPrefab: {fileID: 0}
     TickRate: 30
-    ClientConnectionBufferTimeout: 10
+    ClientConnectionBufferTimeout: 30
     ConnectionApproval: 1
     ConnectionData: 
     EnableTimeResync: 1
@@ -342,13 +343,25 @@ MonoBehaviour:
   virtualGreenScreenDepthTolerance: 0.2
   mrcActivationMode: 0
   isInsightPassthroughEnabled: 0
-  _trackingOriginType: 1
+  _trackingOriginType: 0
   usePositionTracking: 1
   useRotationTracking: 1
   useIPDInPositionTracking: 1
   resetTrackerOnLoad: 1
   AllowRecenter: 1
   LateControllerUpdate: 1
+--- !u!114 &476093114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476093106}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e6df0abbd4cb894ea115ccd850414b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1334481668
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,21 +435,25 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2541865709739137556, guid: 4b1707ac5184a8d4b9d4b29043512971, type: 3}
+      propertyPath: field of view
+      value: 60
+      objectReference: {fileID: 0}
     - target: {fileID: 2541865709739137559, guid: 4b1707ac5184a8d4b9d4b29043512971, type: 3}
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2541865709739137559, guid: 4b1707ac5184a8d4b9d4b29043512971, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.065086
+      value: -14.477118
       objectReference: {fileID: 0}
     - target: {fileID: 2541865709739137559, guid: 4b1707ac5184a8d4b9d4b29043512971, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.60460484
+      value: 1377.04
       objectReference: {fileID: 0}
     - target: {fileID: 2541865709739137559, guid: 4b1707ac5184a8d4b9d4b29043512971, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 12.30617
+      value: 551.2252
       objectReference: {fileID: 0}
     - target: {fileID: 2541865709739137559, guid: 4b1707ac5184a8d4b9d4b29043512971, type: 3}
       propertyPath: m_LocalRotation.w

@@ -89,6 +89,22 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         // Debug.Log("Sending Skelton Data" + IsDataValid);
         return data;
     }
+    public OVRSkeleton.SkeletonPoseData GetSkeletonPoseData() {
+        // Debug.Log("GetSkeletonPoseData");
+        var data = new OVRSkeleton.SkeletonPoseData();
+
+        data.IsDataValid = IsDataValid;
+        if (IsDataValid) {
+            data.RootPose = new OVRPlugin.Posef() {Orientation = RootRot.ToQuatf(), Position = RootPos.ToVector3f()};
+            data.RootScale = RootScale;
+            data.BoneRotations = Array.ConvertAll(BoneRotations, s => s.ToQuatf());
+            data.IsDataHighConfidence =
+                true; // this is obviusly not communicate but we do not send data if thats false.
+        }
+
+        // Debug.Log("Sending Skelton Data" + IsDataValid);
+        return data;
+    }
 
     OVRSkeletonRenderer.SkeletonRendererData OVRSkeletonRenderer.IOVRSkeletonRendererDataProvider.
         GetSkeletonRendererData() {

@@ -35,7 +35,12 @@ public class HandDataStreamRecorder : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
 
     }
-    void Start() { }
+
+    void Start() {
+       // Instantiate(RightHandReader_ReRun, transform)
+       //     .GetComponent<HandDataStreamerReader>();
+        
+    }
 
     
 
@@ -50,9 +55,14 @@ public class HandDataStreamRecorder : MonoBehaviour {
             HandDataStreamerReader rightHand = null;
 
             if (NetworkManager.Singleton.IsServer) {
-                leftHand = Instantiate(LeftHandReader_ReRun, transform)
+                var _tr = ConnectionAndSpawing.Singleton.GetMainClientObject(senderClientId);
+                if (_tr == null) {
+                    Debug.LogWarning("Wups, we where alittle early with try to display hand data. Lets try that again at the next data pakage.");
+                    return;
+                }
+                leftHand = Instantiate(LeftHandReader_ReRun, _tr)
                     .GetComponent<HandDataStreamerReader>();
-                rightHand = Instantiate(RightHandReader_ReRun, transform)
+                rightHand = Instantiate(RightHandReader_ReRun, _tr)
                     .GetComponent<HandDataStreamerReader>();
             }
             
@@ -73,8 +83,11 @@ public class HandDataStreamRecorder : MonoBehaviour {
     }
 
 
-    
-    void Update() { }
+
+    void Update() {
+        
+        
+    }
 }
 
 public struct NetworkSkeletonPoseData : INetworkSerializable {
