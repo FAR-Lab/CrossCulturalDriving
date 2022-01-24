@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 public class ConnectionAndSpawing : MonoBehaviour {
     public GameObject PlayerPrefab;
     public GameObject CarPrefab;
+    public GameObject VRUIStartPrefab;
 
     public List<SceneField> IncludedScenes = new List<SceneField>();
     public string WaitingRoomSceneName;
@@ -451,28 +452,56 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     #endregion
 
-    private bool retry = true;
+/*    private bool retry = true;
     private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response) {
         if (response == ClienConnectionResponse.FAILED && retry) {
             Debug.Log("Tried as participant A retrying with B");
-            StartAsClient("English", ParticipantOrder.B, "192.168.1.160", 7777, ResponseDelegate);
+            StartAsClient("English", ParticipantOrder.B, "192.168.1.163", 7777, ResponseDelegate);
             retry = false;
         }
         else if (response == ClienConnectionResponse.FAILED && !retry) {
             Debug.Log("Failed with A and B Quitting");
             Application.Quit();
         }
-    }
+    }*/
+
+   /* private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response)
+    {
+        switch (response)
+        {
+            case ConnectionAndSpawing.ClienConnectionResponse.FAILED:
+                Debug.Log("Connection Failed maybe change IP address, participant order (A,b,C, etc.) or the port");
+                break;
+            case ConnectionAndSpawing.ClienConnectionResponse.SUCCESS:
+                Debug.Log("We are connected you can stop showing the UI now!");
+
+                gameObject.AddComponent(Type.GetType("OVRManager"));
+
+                break;
+        }
+    }*/
 
     private bool started = false;
-    void Start() {
-        if (Application.platform == RuntimePlatform.Android &&  !started) {
-            StartAsClient("English",ParticipantOrder.B,"192.168.1.160",7777,ResponseDelegate);
+    void Start()
+    {
+        if (Application.platform == RuntimePlatform.WindowsPlayer && !started)
+        {
+            gameObject.AddComponent(Type.GetType("OVRManager"));
+        }
+        }
+
+       /* void Start() {
+        if (Application.platform == RuntimePlatform.Android && !started)
+        {
+*//*            Instantiate(VRUIStartPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+*/
+
+            /*StartAsClient("English", ParticipantOrder.B, "192.168.1.163", 7777, ResponseDelegate);
             started = true;
-            Debug.Log("Started Client");
-       }
-       
-        /*
+            Debug.Log("Started Client");*//*
+        }
+
+        *//*
             Setlanguage("English");
             if (RunAsServer) {
                 SetParticipantOrder(ParticipantOrder.None);
@@ -483,8 +512,8 @@ public class ConnectionAndSpawing : MonoBehaviour {
                 StartAsClient();
                 
             }
-           */
-    }
+           *//*
+    }*/
 
     // Update is called once per frame
     void Update() {
