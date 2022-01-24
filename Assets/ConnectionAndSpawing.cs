@@ -461,12 +461,14 @@ public class ConnectionAndSpawing : MonoBehaviour {
     private bool retry = true;
     private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response) { }
 
-    private bool started = false;
+    
 
+   
     void Start() {
-        if (Application.platform == RuntimePlatform.Android && !started) {
-            StartAsClient("English", ParticipantOrder.B, "192.168.1.160", 7777, ResponseDelegate);
-            started = true;
+        if (Application.platform == RuntimePlatform.Android ) {
+           // StartAsClient("English", ParticipantOrder.A, "192.168.1.160", 7777, ResponseDelegate);
+
+           Instantiate(VRUIStartPrefab);
             Debug.Log("Started Client");
         }
     }
