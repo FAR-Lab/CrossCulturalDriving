@@ -15,7 +15,7 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
     public OVRSkeleton HandSkeleton;
     private OVRBone[] HandBones;
 
-    [SerializeField] private OVRPlugin.Hand HandType = OVRPlugin.Hand.None;
+    [SerializeField] private OVRPlugin.SkeletonType HandType = OVRPlugin.SkeletonType.None;
 
     private OVRSkeleton.IOVRSkeletonDataProvider _iovrSkeletonDataProviderImplementation;
 
@@ -50,31 +50,34 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
        if(! ready) {
            return;
        }
+      // Debug.Log("Should be a right hand");
         lastUpdate = Time.time;
         IsDataValid = true;
+       // Debug.Log("Should be a right hand1");
         RootPos = newRemoteHandData.RootPos;
         RootRot = newRemoteHandData.RootRot;
         RootScale = newRemoteHandData.RootScale;
-       
+      //  Debug.Log("Should be a right hand2");
         newRemoteHandData.BoneRotations.CopyTo(BoneRotations, 0);
     }
 
 
     OVRSkeleton.SkeletonType OVRSkeleton.IOVRSkeletonDataProvider.GetSkeletonType() {
-        Debug.Log("GetSkeletonType");
+       // Debug.Log("GetSkeletonType");
         switch (HandType) {
-            case OVRPlugin.Hand.HandLeft:
+            case OVRPlugin.SkeletonType.HandLeft:
                 return OVRSkeleton.SkeletonType.HandLeft;
-            case OVRPlugin.Hand.HandRight:
+            
+            case OVRPlugin.SkeletonType.HandRight:
                 return OVRSkeleton.SkeletonType.HandRight;
-            case OVRPlugin.Hand.None:
+            case OVRPlugin.SkeletonType.None:
             default:
                 return OVRSkeleton.SkeletonType.None;
         }
     }
 
     OVRSkeleton.SkeletonPoseData OVRSkeleton.IOVRSkeletonDataProvider.GetSkeletonPoseData() {
-       // Debug.Log("GetSkeletonPoseData");
+       // Debug.Log("GetSkeletonPoseData Only right hand ??");
         var data = new OVRSkeleton.SkeletonPoseData();
 
         data.IsDataValid = IsDataValid;
@@ -124,11 +127,11 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
     OVRMesh.MeshType OVRMesh.IOVRMeshDataProvider.GetMeshType() {
        // Debug.Log("GetMeshType");
         switch (HandType) {
-            case OVRPlugin.Hand.None:
+            case OVRPlugin.SkeletonType.None:
                 return OVRMesh.MeshType.None;
-            case OVRPlugin.Hand.HandLeft:
+            case OVRPlugin.SkeletonType.HandLeft:
                 return OVRMesh.MeshType.HandLeft;
-            case OVRPlugin.Hand.HandRight:
+            case OVRPlugin.SkeletonType.HandRight:
                 return OVRMesh.MeshType.HandRight;
             default:
                 return OVRMesh.MeshType.None;

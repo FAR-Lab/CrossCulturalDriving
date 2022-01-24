@@ -64,7 +64,6 @@ public class NetworkVehicleController : NetworkBehaviour {
         MotorWheelsSlip.Value = controller.MotorWheelsSlip;
         CurrentSpeed.Value = controller.CurrentSpeed;
         CurrentSurface.Value = controller.CurrentSurface;
-
     }
 
 
