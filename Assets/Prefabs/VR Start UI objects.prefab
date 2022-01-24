@@ -631,6 +631,7 @@ MonoBehaviour:
   ServerConnectionStatusTextBox: {fileID: 8770236261931635328}
   serverIPField: {fileID: 8770236262249608284}
   OVRCamera: {fileID: 7392387573209481054}
+  NetworkManager: {fileID: 0}
   FileName: Participant.conf
 --- !u!114 &8770236260584608480
 MonoBehaviour:
@@ -4037,7 +4038,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2243120532342953298, guid: 75dbed928484da249be1f3709948a384, type: 3}
+    - {fileID: 2213408069209997846, guid: 75dbed928484da249be1f3709948a384, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 75dbed928484da249be1f3709948a384, type: 3}
 --- !u!114 &7422355639803793269 stripped
 MonoBehaviour:

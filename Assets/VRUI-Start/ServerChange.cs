@@ -123,11 +123,7 @@ public class ServerChange : MonoBehaviour
                 Debug.Log("We are connected you can stop showing the UI now!");
                 ServerConnectionStatusTextBox.text = "CONNECTED!";
 
-                Destroy(OVRCamera);
-
-                NetworkManager.AddComponent(Type.GetType("OVRManager"));
-
-                this.enabled = false;
+                Destroy(transform.parent.gameObject);
                 break;
         }
     }

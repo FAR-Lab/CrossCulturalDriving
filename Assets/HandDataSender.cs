@@ -66,7 +66,7 @@ public class HandDataSender : NetworkBehaviour {
         if (leftHand == null || rightHand == null) return;
         Debug.Log("About to apply new hands");
         if (newRemoteHandData.HandType == OVRPlugin.Hand.HandLeft) { leftHand.GetNewData(newRemoteHandData); }
-        else if (newRemoteHandData.HandType == OVRPlugin.Hand.HandRight) { rightHand.GetNewData(newRemoteHandData); }
+        else if (newRemoteHandData.HandType == OVRPlugin.Hand.HandRight) {Debug.Log("Updating Hand data ona quest, right hand"); rightHand.GetNewData(newRemoteHandData); }
     }
 
     public void ServerReceivingHandData(ulong senderClientId, FastBufferReader messagePayload) {
