@@ -58,15 +58,16 @@ public class HandDataSender : NetworkBehaviour {
     public string GETMessageNameServer() { return ServerHandMessageName + OwnerClientId; }
 
     public void ClientReceivingHandData(ulong senderClientId, FastBufferReader messagePayload) {
-        Debug.Log("Got a message call back");
+       // Debug.Log("Got a message call back");
         messagePayload.ReadNetworkSerializable<NetworkSkeletonPoseData>(
             out NetworkSkeletonPoseData newRemoteHandData);
-        Debug.Log("Recieved Hand data for had:  " + newRemoteHandData.HandType);
+        //Debug.Log("Recieved Hand data for had:  " + newRemoteHandData.HandType);
       //  if (senderClientId == NetworkManager.Singleton.LocalClientId) return;
         if (leftHand == null || rightHand == null) return;
-        Debug.Log("About to apply new hands");
-        if (newRemoteHandData.HandType == OVRPlugin.Hand.HandLeft) { leftHand.GetNewData(newRemoteHandData); }
-        else if (newRemoteHandData.HandType == OVRPlugin.Hand.HandRight) {Debug.Log("Updating Hand data ona quest, right hand"); rightHand.GetNewData(newRemoteHandData); }
+   //     Debug.Log("ClientReceivingHandData type:"+newRemoteHandData.HandType);
+        if (newRemoteHandData.HandType == OVRPlugin.Hand.HandLeft) { leftHand.GetNewData(newRemoteHandData);
+                                                                     }
+        else if (newRemoteHandData.HandType == OVRPlugin.Hand.HandRight) { rightHand.GetNewData(newRemoteHandData); }
     }
 
     public void ServerReceivingHandData(ulong senderClientId, FastBufferReader messagePayload) {
@@ -81,6 +82,7 @@ public class HandDataSender : NetworkBehaviour {
        
         _fastBufferWriter = new FastBufferWriter(NetworkSkeletonPoseData.GetSize(), Allocator.Temp);
         _fastBufferWriter.WriteNetworkSerializable(newRemoteHandData);
+        Debug.Log("ServerReceivingHandData type:"+newRemoteHandData.HandType);
         NetworkManager.Singleton.CustomMessagingManager.SendNamedMessageToAll(GETMessageNameBroadcast(),  // optimization option dont send to all
             _fastBufferWriter, NetworkDelivery.UnreliableSequenced);
         _fastBufferWriter.Dispose();
