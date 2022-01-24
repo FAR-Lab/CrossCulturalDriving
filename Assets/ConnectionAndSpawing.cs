@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 public class ConnectionAndSpawing : MonoBehaviour {
     public GameObject PlayerPrefab;
     public GameObject CarPrefab;
+    public GameObject VRUIStartPrefab;
 
     public List<SceneField> IncludedScenes = new List<SceneField>();
     public string WaitingRoomSceneName;
@@ -382,7 +383,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
     }
 
     private void SetParticipantOrder(ParticipantOrder val) {
-        NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] {(byte) val}; // assigning ID 
+        NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] {(byte) val}; // assigning ID
         _participantOrder = val;
         ParticipantOrder_Set = true;
     }
