@@ -12,30 +12,41 @@ public class StartServerClientGUI : MonoBehaviour
     private bool ClientStarted = false;
     private bool CONNECTING = false;
     
+    private string pairName="test";
     void OnGUI () {
         if (ServerStarted || ClientStarted)
             return;
         if (CONNECTING) {
-            GUI.Label(new Rect(10, 10, 120, 80), "CONNECTING");
+            GUI.Label(new Rect(10, 10, 200, 80), "CONNECTING");
             return;
         }
         
-        GUI.Box(new Rect(10, 10, 120, 80), "Controlls");
-        if (GUI.Button(new Rect(20, 30, 80, 20), "start server")) {
-            Debug.Log("Server Started.");
+        GUI.Box(new Rect(10, 10, 200, 120), "");
+
+        GUI.Label(new Rect(20, 20, 80, 20),"pairname:");
+        pairName = GUI.TextField(new Rect(120, 20, 80, 20), pairName);
+        
+        if (GUI.Button(new Rect(20, 50, 80, 20), "start server")) {
+        
             ServerStarted = true;
-           
-            ConnectionAndSpawing.Singleton.StartAsServer();
+            ConnectionAndSpawing.Singleton.StartAsServer(pairName);
+            this.enabled = false;
+        }
+        
+        if (GUI.Button(new Rect(120, 50, 80, 20), "RERUN")) {
+            Debug.Log("Server Started.");
+
+            ConnectionAndSpawing.Singleton.StartReRun();
             this.enabled = false;
         }
 
-        if (GUI.Button(new Rect(20, 60, 40, 20), "sclient A")) {
+        if (GUI.Button(new Rect(20, 100, 80, 20), "sclient A")) {
             Debug.Log("Client Started.");
             CONNECTING = true;
             ConnectionAndSpawing.Singleton.StartAsClient("English",ParticipantOrder.A,"192.168.1.161",7777,ResponseDelegate);
           
         }
-        if (GUI.Button(new Rect(65, 60, 40, 20), "client B")) {
+        if (GUI.Button(new Rect(120, 100, 80, 20), "client B")) {
             Debug.Log("Client Started.");
             CONNECTING = true;
             ConnectionAndSpawing.Singleton.StartAsClient("English",ParticipantOrder.B,"192.168.1.161",7777,ResponseDelegate);

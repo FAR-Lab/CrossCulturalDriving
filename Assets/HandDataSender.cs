@@ -80,7 +80,7 @@ public class HandDataSender : NetworkBehaviour {
 
         _fastBufferWriter = new FastBufferWriter(NetworkSkeletonPoseData.GetSize(), Allocator.Temp);
         _fastBufferWriter.WriteNetworkSerializable(newRemoteHandData);
-        Debug.Log("ServerReceivingHandData type:" + newRemoteHandData.HandType);
+     
         NetworkManager.Singleton.CustomMessagingManager.SendNamedMessageToAll(
             GETMessageNameBroadcast(), // optimization option dont send to all
             _fastBufferWriter, NetworkDelivery.UnreliableSequenced);

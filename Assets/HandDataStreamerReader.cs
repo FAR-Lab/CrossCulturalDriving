@@ -64,7 +64,7 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         RootScale = newRemoteHandData.RootScale;
       //  Debug.Log("Should be a right hand2");
         newRemoteHandData.BoneRotations.CopyTo(BoneRotations, 0);
-        Debug.Log("Updated Hand Data finished!");
+        
     }
 
 

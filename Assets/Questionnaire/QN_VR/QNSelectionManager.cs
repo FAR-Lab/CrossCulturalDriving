@@ -119,11 +119,9 @@ public class QNSelectionManager : MonoBehaviour {
         if (m_interalState == QNStates.IDLE) {
             m_QNLogger = new QNLogger();
             m_QNLogger.Init();
-            transform.parent = mylocalclient;
             ChangeLanguage(lang);
-         //   int epoch = (int) (System.DateTime.UtcNow - new System.DateTime(1970, 1, 1)).TotalSeconds; //Epoch Time
             m_MyLocalClient = mylocalclient.GetComponent<ParticipantInputCapture>();
-
+            transform.parent = m_MyLocalClient.GetMyCar();
             m_condition = Condition;
             foreach (TextAsset s in list) {
                 // Debug.Log(s);
@@ -227,7 +225,8 @@ public class QNSelectionManager : MonoBehaviour {
                         sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
                     }
 
-
+                    
+                    
                     if (m_MyLocalClient.ButtonPush() && onTarget) {
                         int AnswerIndex = rcb.activateNextQuestions();
 
