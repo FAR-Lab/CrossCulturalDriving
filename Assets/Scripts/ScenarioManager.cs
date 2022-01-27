@@ -64,12 +64,14 @@ public class ScenarioManager : MonoBehaviour {
 
     public void RunQuestionairNow(Transform MyLocalClient_) {
         MyLocalClient = MyLocalClient_;
+
+        Transform MyCar = MyLocalClient.GetComponent<ParticipantInputCapture>().GetMyCar();
         qnmanager = Instantiate(
             QuestionairPrefab,
-            MyLocalClient.position + MyLocalClient.forward * 2.5f + MyLocalClient.up * 1.5f,
-            MyLocalClient.transform.rotation).GetComponent<QNSelectionManager>();
+            MyCar.position + MyCar.forward * 2.5f + MyCar.up * 1.5f,
+            MyCar.rotation).GetComponent<QNSelectionManager>();
 
-        qnmanager.setRelativePosition(MyLocalClient, .75f, 4f);
+        qnmanager.setRelativePosition(MyCar, .75f, 4f);
         if (QuestionairsToAsk.Length > 0) {
             qnmanager.startAskingTheQuestionairs(MyLocalClient, QuestionairsToAsk, conditionName, ConnectionAndSpawing.Singleton.lang);
         }

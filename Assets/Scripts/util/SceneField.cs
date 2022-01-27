@@ -16,6 +16,7 @@ public class SceneField {
     public static implicit operator string(SceneField sceneField) {
         return sceneField.SceneName;
     }
+    
 }
 #if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(SceneField))]

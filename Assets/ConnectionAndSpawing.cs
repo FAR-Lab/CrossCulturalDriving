@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Rerun;
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UNET;
@@ -13,7 +14,8 @@ public class ConnectionAndSpawing : MonoBehaviour {
     public GameObject PlayerPrefab;
     public GameObject CarPrefab;
     public GameObject VRUIStartPrefab;
-
+   
+    
     public List<SceneField> IncludedScenes = new List<SceneField>();
     public string WaitingRoomSceneName;
     public bool ServerisRunning;
@@ -26,9 +28,10 @@ public class ConnectionAndSpawing : MonoBehaviour {
     //Internal StateTracking
     private bool ParticipantOrder_Set = false;
     private ScenarioManager CurrentScenarioManager;
-
-    public ActionState ServerState; // { get; private set; }
-
+    private RerunManager m_ReRunManager;
+    
+    
+    public ActionState ServerState { get; private set; }
     public LanguageSelect lang { private set; get; }
 
 
@@ -164,11 +167,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
         SteeringWheelManager.Singleton.Init(); //TODO enable steering wheel
     }
 
-    void SetupClientFunctionality() {
-        NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected_client;
-        NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected_client;
-    }
-
+   
 
     private void LocalLoadScene(string name) {
         DestroyAllClientObjects(new List<ParticipantObjectSpawnType> {ParticipantObjectSpawnType.CAR});
@@ -251,11 +250,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
         FAILED
     };
 
-    public delegate void ReponseDelegate(ClienConnectionResponse response);
-
-    private ReponseDelegate ReponseHandler;
-    private void ClientDisconnected_client(ulong ClientID) { ReponseHandler.Invoke(ClienConnectionResponse.FAILED); }
-    private void ClientConnected_client(ulong ClientID) { ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS); }
+   
 
 
     private void ClientDisconnected(ulong ClientID) {
@@ -375,13 +370,39 @@ public class ConnectionAndSpawing : MonoBehaviour {
     #endregion
 
 
-    public void StartAsServer() {
-        Debug.Log("Starting as Server");
+    public void StartAsServer(string pairName) {
         SteeringWheelManager.Singleton.enabled = true;
         GetComponent<QNDataStorageServer>().enabled = true;
         SetupServerFunctionality();
+        m_ReRunManager.SetRecordingFolder(pairName);
+        Debug.Log("Starting Server for pair: "+pairName);
     }
 
+    
+    
+    
+    public delegate void ReponseDelegate(ClienConnectionResponse response);
+    private ReponseDelegate ReponseHandler;
+    private bool SuccessFullyConnected = false;
+
+    private void ClientDisconnected_client(ulong ClientID) {
+        if (!SuccessFullyConnected) {
+            ReponseHandler.Invoke(ClienConnectionResponse.FAILED);
+        }
+        else {
+            Application.Quit();
+        }
+        
+    }
+    private void ClientConnected_client(ulong ClientID) { ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS);
+        SuccessFullyConnected = true;
+    }
+    void SetupClientFunctionality() {
+        NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected_client;
+        NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected_client;
+    }
+    
+    
     private void SetParticipantOrder(ParticipantOrder val) {
         NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] {(byte) val}; // assigning ID
         _participantOrder = val;
@@ -397,9 +418,44 @@ public class ConnectionAndSpawing : MonoBehaviour {
         Setlanguage(lang_);
         SetParticipantOrder(val);
         Debug.Log("Starting as Client");
+       
         NetworkManager.Singleton.StartClient();
+       
+        
     }
 
+    public void LoadSceneReRun(string totalPath) {
+        if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsClient) {
+            Debug.LogError("Dont try to load a scene for RERUN while the server is running. Pleas restart the program");
+            Application.Quit();
+        }
+        var fileName = System.IO.Path.GetFileName(totalPath);
+        var sceneNameList = fileName.Split('_');
+        var sceneName = sceneNameList[0];
+        Debug.Log("Scene Name"+sceneName);
+        foreach (var v in IncludedScenes) {
+            Debug.Log(v.SceneName);
+        }
+        if(IncludedScenes.ConvertAll(x => x.SceneName).Contains(sceneName)) {
+            Debug.Log("Found scene. Loading!");
+            SceneManager.LoadScene(sceneName);
+        }
+        else {
+            Debug.LogWarning("Did not find scene. Aborting!");
+        }
+        
+    }
+
+    public void StartReRun() {
+        ServerState = ActionState.RERUN;
+
+        m_ReRunManager.RegisterPreLoadHandler(LoadSceneReRun);
+        NetworkManager.Singleton.enabled = false;
+        GetComponent<OVRManager>().enabled = false;
+        FindObjectOfType<RerunGUI>().enabled=true;
+        FindObjectOfType<RerunInputManager>().enabled=true;
+      
+    }
     private void SetupTransport(string ip = "127.0.0.1", int port = 7777) {
         NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ip;
         NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectPort = port;
@@ -413,6 +469,10 @@ public class ConnectionAndSpawing : MonoBehaviour {
     #region StateChangeCalls
 
     private void SwitchToWaitingRoom() {
+        if (m_ReRunManager.IsRecording()) {
+            m_ReRunManager.StopRecording();
+            Debug.LogWarning("I stoped Recording as I was loaded back to the Waitingroom. Recording should have stopped at the switch to the Questionnaire stage.");
+        }
         ServerState = ActionState.WAITINGROOM;
         LocalLoadScene(WaitingRoomSceneName);
     }
@@ -420,18 +480,25 @@ public class ConnectionAndSpawing : MonoBehaviour {
     private void SwitchToLoading(string name) {
         ServerState = ActionState.LOADING;
         LocalLoadScene(name);
+        LastLoadedScene = name;
     }
 
-
+    private string LastLoadedScene = "";
     private void SwitchToReady() { ServerState = ActionState.READY; }
 
+    
+    
     private void SwitchToDriving() {
-        //  foreach (var nvc in FindObjectsOfType<NetworkVehicleController>()) { nvc.StartTheCar();}
+        
         ServerState = ActionState.DRIVE;
+        m_ReRunManager.BeginRecording(LastLoadedScene);
     }
 
     public void SwitchToQN() {
-        //   Debug.Log("QN triggered, canceling Velocities, and start Questionnaires");
+        
+        Debug.Log("Stopping Driving and Stopping the recording.");
+        m_ReRunManager.StopRecording();
+        
         ServerState = ActionState.QUESTIONS;
         QNFinished = new Dictionary<ParticipantOrder, bool>();
         foreach (ParticipantOrder po in _OrderToClient.Keys) { QNFinished.Add(po, false); }
@@ -471,6 +538,17 @@ public class ConnectionAndSpawing : MonoBehaviour {
            Instantiate(VRUIStartPrefab);
             Debug.Log("Started Client");
         }
+
+        if (FindObjectsOfType<RerunManager>().Length > 1) {
+            Debug.LogError("We found more than 1 RerunManager. This is not support. Check your Hiracy" );
+            Application.Quit();
+        }
+        m_ReRunManager = FindObjectOfType<RerunManager>();
+        if (m_ReRunManager == null) {
+            Debug.LogError("Did not find a ReRunManager. Need exactly 1. Quitting!" );
+            Application.Quit();
+        }
+        
     }
 
     // Update is called once per frame
@@ -511,6 +589,15 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
                     break;
                 case ActionState.POSTQUESTIONS: break;
+                case ActionState.RERUN:
+                    if (!NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient) {
+                        this.enabled = false;
+                    }
+                    else {
+                        Debug.LogError("We where running as either client or server while in ReRun mode. This is not supported! I am Quitting");
+                        Application.Quit();
+                    }
+                    break;
                 default: throw new ArgumentOutOfRangeException();
             }
         }
@@ -535,17 +622,19 @@ public class ConnectionAndSpawing : MonoBehaviour {
                 y = 50;
                 if (_OrderToClient == null) return;
                 foreach (var p in _OrderToClient.Keys) {
-                    if (GUI.Button(new Rect(200, 5 + y, 100, 25), "Calibrate " + p)) {
+                   
+                    if (GUI.Button(new Rect(200, 200 + y, 100, 25), "Calibrate " + p)) {
                         ulong clientID = _OrderToClient[p];
                         ClientRpcParams clientRpcParams = new ClientRpcParams {
                             Send = new ClientRpcSendParams {
                                 TargetClientIds = new ulong[] {clientID}
                             }
                         };
-
+                      
                         ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
                             .CalibrateClientRPC(clientRpcParams);
                     }
+                    y += 50;
                 }
             }
 
