@@ -334,7 +334,7 @@ public class SteeringWheelManager : MonoBehaviour {
         else { return false; }
     }
     public bool GetButtonInput(ParticipantOrder po) {
-        if (ActiveWheels.ContainsKey(po)) { return ActiveWheels[po].OtherButton; }
+        if (ActiveWheels.ContainsKey(po)) {  Debug.Log(po.ToString()+"Requested Button it is "+ActiveWheels[po].OtherButton); return ActiveWheels[po].OtherButton;}
         else { return false; }
     }
     public float GetAccelInput(ParticipantOrder po) {

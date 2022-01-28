@@ -60,8 +60,11 @@ public class ParticipantInputCapture : NetworkBehaviour {
         ConfigFileLoading conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
         if (conf.FileAvalible()) { conf.LoadLocalOffset(out offsetPositon, out offsetRotation); }
+
+        po = ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(OwnerClientId);
     }
 
+    private ParticipantOrder po = ParticipantOrder.None;
     public NetworkVariable<bool> ButtonPushed; // This is only active during QN time 
 
 
@@ -139,14 +142,23 @@ public class ParticipantInputCapture : NetworkBehaviour {
             }
         }
 
-        if (IsServer) {
-            ButtonPushed.Value =
-                SteeringWheelManager.Singleton.GetButtonInput(
-                    ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(OwnerClientId));
-        }
+        if (IsServer) { ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(po); }
     }
 
-    public bool ButtonPush() { return ButtonPushed.Value; }
+
+    private bool lastValue = false;
+
+    public bool ButtonPush() {
+        if (lastValue == true && ButtonPushed.Value == false) {
+            lastValue = ButtonPushed.Value;
+            Debug.Log("Button Got pushed!!");
+            return true;
+        }
+        else {
+            lastValue = ButtonPushed.Value;
+            return false;
+        }
+    }
 
 
     private Quaternion offsetRotation = Quaternion.identity;
@@ -179,4 +191,6 @@ public class ParticipantInputCapture : NetworkBehaviour {
         conf.Init(OffsetFileName);
         conf.StoreLocalOffset(offsetPositon, offsetRotation);
     }
+
+    public Transform GetMyCar() { return NetworkedVehicle.transform; }
 }
