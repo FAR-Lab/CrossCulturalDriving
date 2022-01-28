@@ -51,7 +51,7 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
        }
 
        if (newRemoteHandData.HandType != (OVRPlugin.Hand) HandType) {
-           
+
            Debug.Log("Data miss match left right hand aborting!!");
            return;
        }
@@ -64,7 +64,7 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         RootScale = newRemoteHandData.RootScale;
       //  Debug.Log("Should be a right hand2");
         newRemoteHandData.BoneRotations.CopyTo(BoneRotations, 0);
-        Debug.Log("Updated Hand Data finished!");
+
     }
 
 
@@ -73,7 +73,7 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         switch (HandType) {
             case OVRPlugin.SkeletonType.HandLeft:
                 return OVRSkeleton.SkeletonType.HandLeft;
-            
+
             case OVRPlugin.SkeletonType.HandRight:
                 return OVRSkeleton.SkeletonType.HandRight;
             case OVRPlugin.SkeletonType.None:

@@ -80,7 +80,7 @@ public class HandDataSender : NetworkBehaviour {
 
         _fastBufferWriter = new FastBufferWriter(NetworkSkeletonPoseData.GetSize(), Allocator.Temp);
         _fastBufferWriter.WriteNetworkSerializable(newRemoteHandData);
-        Debug.Log("ServerReceivingHandData type:" + newRemoteHandData.HandType);
+
         NetworkManager.Singleton.CustomMessagingManager.SendNamedMessageToAll(
             GETMessageNameBroadcast(), // optimization option dont send to all
             _fastBufferWriter, NetworkDelivery.UnreliableSequenced);
@@ -97,8 +97,8 @@ public class HandDataSender : NetworkBehaviour {
        // OVRPlugin.Hand[] temp = new OVRPlugin.Hand[] {
       //      OVRPlugin.Hand.HandLeft, OVRPlugin.Hand.HandRight
       //  };
-        
-        
+
+
         OVRPlugin.Hand[] temp =  {
              OVRPlugin.Hand.HandRight,OVRPlugin.Hand.HandLeft
         };
@@ -129,7 +129,7 @@ public class HandDataSender : NetworkBehaviour {
             NetworkManager.Singleton.ServerClientId,
             _fastBufferWriter,
             NetworkDelivery.UnreliableSequenced);
-        
+
         _fastBufferWriter.Dispose();
     }
 }

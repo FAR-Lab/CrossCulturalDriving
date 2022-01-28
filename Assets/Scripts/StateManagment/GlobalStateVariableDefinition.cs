@@ -10,7 +10,8 @@ public enum ActionState {
     READY,
     DRIVE,
     QUESTIONS,
-    POSTQUESTIONS
+    POSTQUESTIONS,
+    RERUN
 };
 
 
