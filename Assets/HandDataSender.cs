@@ -58,37 +58,35 @@ public class HandDataSender : NetworkBehaviour {
     public string GETMessageNameServer() { return ServerHandMessageName + OwnerClientId; }
 
     public void ClientReceivingHandData(ulong senderClientId, FastBufferReader messagePayload) {
-       // Debug.Log("Got a message call back");
         messagePayload.ReadNetworkSerializable<NetworkSkeletonPoseData>(
             out NetworkSkeletonPoseData newRemoteHandData);
-        //Debug.Log("Recieved Hand data for had:  " + newRemoteHandData.HandType);
-      //  if (senderClientId == NetworkManager.Singleton.LocalClientId) return;
+
         if (leftHand == null || rightHand == null) return;
-   //     Debug.Log("ClientReceivingHandData type:"+newRemoteHandData.HandType);
-        if (newRemoteHandData.HandType == OVRPlugin.Hand.HandLeft) { leftHand.GetNewData(newRemoteHandData);
-                                                                     }
-        else if (newRemoteHandData.HandType == OVRPlugin.Hand.HandRight) { rightHand.GetNewData(newRemoteHandData); }
+
+        if (newRemoteHandData.HandType == OVRPlugin.Hand.HandRight) { rightHand.GetNewData(newRemoteHandData); }
+
+        if (newRemoteHandData.HandType == OVRPlugin.Hand.HandLeft) { leftHand.GetNewData(newRemoteHandData); }
     }
 
     public void ServerReceivingHandData(ulong senderClientId, FastBufferReader messagePayload) {
         if (!IsServer) return;
-       // Debug.Log("Bouncing Hand Data for:" + senderClientId.ToString());
+        // Debug.Log("Bouncing Hand Data for:" + senderClientId.ToString());
         messagePayload.ReadNetworkSerializable<NetworkSkeletonPoseData>(
             out NetworkSkeletonPoseData newRemoteHandData);
         HandDataStreamRecorder.Singleton.StoreHandData(senderClientId, newRemoteHandData);
-        
-           // Debug.Log("GotMessage from Client About to bounce it out on: "+GETMessageNameBroadcast());
-      
-       
+
+        // Debug.Log("GotMessage from Client About to bounce it out on: "+GETMessageNameBroadcast());
+
+
         _fastBufferWriter = new FastBufferWriter(NetworkSkeletonPoseData.GetSize(), Allocator.Temp);
         _fastBufferWriter.WriteNetworkSerializable(newRemoteHandData);
-        Debug.Log("ServerReceivingHandData type:"+newRemoteHandData.HandType);
-        NetworkManager.Singleton.CustomMessagingManager.SendNamedMessageToAll(GETMessageNameBroadcast(),  // optimization option dont send to all
+        Debug.Log("ServerReceivingHandData type:" + newRemoteHandData.HandType);
+        NetworkManager.Singleton.CustomMessagingManager.SendNamedMessageToAll(
+            GETMessageNameBroadcast(), // optimization option dont send to all
             _fastBufferWriter, NetworkDelivery.UnreliableSequenced);
         _fastBufferWriter.Dispose();
     }
 
-    
 
     // Update is called once per frame
     void Update() {
@@ -96,12 +94,18 @@ public class HandDataSender : NetworkBehaviour {
     }
 
     public void GetHandState(OVRPlugin.Step step) {
-        OVRPlugin.Hand[] temp = new OVRPlugin.Hand[] {
-            OVRPlugin.Hand.HandLeft, OVRPlugin.Hand.HandRight
+       // OVRPlugin.Hand[] temp = new OVRPlugin.Hand[] {
+      //      OVRPlugin.Hand.HandLeft, OVRPlugin.Hand.HandRight
+      //  };
+        
+        
+        OVRPlugin.Hand[] temp =  {
+             OVRPlugin.Hand.HandRight,OVRPlugin.Hand.HandLeft
         };
         foreach (OVRPlugin.Hand HandType in temp) {
             if (OVRPlugin.GetHandState(step, HandType, ref _handState)) {
                 HandConfidence = (OVRPlugin.TrackingConfidence) _handState.HandConfidence;
+
                 NetworkSkeletonPoseData networkSkeletonPoseData = new NetworkSkeletonPoseData(
                     _handState.RootPose.Position.FromVector3f(),
                     _handState.RootPose.Orientation.FromQuatf(),
@@ -109,7 +113,7 @@ public class HandDataSender : NetworkBehaviour {
                     Array.ConvertAll(_handState.BoneRotations, s => s.FromQuatf()),
                     HandType
                 );
-                
+
                 if ((_handState.Status & OVRPlugin.HandStatus.HandTracked) != 0 &&
                     HandConfidence == OVRPlugin.TrackingConfidence.High) { BoradCastHandData(networkSkeletonPoseData); }
             }
@@ -125,8 +129,7 @@ public class HandDataSender : NetworkBehaviour {
             NetworkManager.Singleton.ServerClientId,
             _fastBufferWriter,
             NetworkDelivery.UnreliableSequenced);
-      //  Debug.Log("Send message to:" + GETMessageNameServer());
-        //  HandDataStreamRecorder.Singleton.ForwardedHandData(clientID,newPose);// server only hand display
+        
         _fastBufferWriter.Dispose();
     }
 }

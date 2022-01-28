@@ -32,13 +32,13 @@ public class StartServerClientGUI : MonoBehaviour
         if (GUI.Button(new Rect(20, 60, 40, 20), "sclient A")) {
             Debug.Log("Client Started.");
             CONNECTING = true;
-            ConnectionAndSpawing.Singleton.StartAsClient("English",ParticipantOrder.A,"192.168.1.160",7777,ResponseDelegate);
+            ConnectionAndSpawing.Singleton.StartAsClient("English",ParticipantOrder.A,"192.168.1.161",7777,ResponseDelegate);
           
         }
         if (GUI.Button(new Rect(65, 60, 40, 20), "client B")) {
             Debug.Log("Client Started.");
             CONNECTING = true;
-            ConnectionAndSpawing.Singleton.StartAsClient("English",ParticipantOrder.B,"192.168.1.160",7777,ResponseDelegate);
+            ConnectionAndSpawing.Singleton.StartAsClient("English",ParticipantOrder.B,"192.168.1.161",7777,ResponseDelegate);
           
         }
     }

@@ -42,16 +42,21 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
     // Update is called once per frame
     void Update() {
         IsDataValid = true;
-      
-      //  if (IsDataValid && (Time.time - lastUpdate) > HandTimeout) { IsDataValid = false; }
+      // if (IsDataValid && Time.time < lastUpdate) { IsDataValid = false; }
     }
 
     public void GetNewData(NetworkSkeletonPoseData newRemoteHandData) {
        if(! ready) {
            return;
        }
+
+       if (newRemoteHandData.HandType != (OVRPlugin.Hand) HandType) {
+           
+           Debug.Log("Data miss match left right hand aborting!!");
+           return;
+       }
       // Debug.Log("Should be a right hand");
-        lastUpdate = Time.time;
+      lastUpdate= Time.time+HandTimeout;
         IsDataValid = true;
        // Debug.Log("Should be a right hand1");
         RootPos = newRemoteHandData.RootPos;
@@ -59,6 +64,7 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         RootScale = newRemoteHandData.RootScale;
       //  Debug.Log("Should be a right hand2");
         newRemoteHandData.BoneRotations.CopyTo(BoneRotations, 0);
+        Debug.Log("Updated Hand Data finished!");
     }
 
 
