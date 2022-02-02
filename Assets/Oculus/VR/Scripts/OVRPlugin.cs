@@ -1145,7 +1145,7 @@ public static class OVRPlugin
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Bone
 	{
-		public BoneId Id;
+		public OVRSkeleton.BoneId Id;
 		public short ParentBoneIndex;
 		public Posef Pose;
 	}

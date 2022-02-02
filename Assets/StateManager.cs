@@ -1,22 +1,16 @@
 using System;
-using MLAPI;
-using MLAPI.NetworkVariable;
 
-using MLAPI.Spawning;
+
+using Unity.Netcode;
 using System.Collections;
 using System.Collections.Generic;
-using MLAPI.Messaging;
-using MLAPI.SceneManagement;
-using Unity.Properties;
 using UnityEngine.SceneManagement;
-
 using UnityEngine;
 
 
-public class StateManager : NetworkBehaviour
-{
-    public NetworkVariable<ActionState> GlobalState = new NetworkVariable<ActionState>(
-        new NetworkVariableSettings {WritePermission = NetworkVariablePermission.ServerOnly,ReadPermission  = NetworkVariablePermission.Everyone});
+public class StateManager : NetworkBehaviour {
+    public NetworkVariable<ActionState> GlobalState =
+        new NetworkVariable<ActionState>(NetworkVariableReadPermission.Everyone);
     
     
 
