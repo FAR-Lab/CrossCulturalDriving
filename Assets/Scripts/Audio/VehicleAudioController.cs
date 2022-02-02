@@ -17,7 +17,7 @@ public class VehicleAudioController : MonoBehaviour {
     public IgnitionAudio ignitionAudio;
     public WindAudio windAudio;
 
-    private VehicleController vehicleController;
+    private NetworkVehicleController vehicleController;
 
     public AudioMixerSnapshot driveSnapshot;
     public AudioMixerSnapshot selectSnapshot;
@@ -28,7 +28,7 @@ public class VehicleAudioController : MonoBehaviour {
 
     void Awake()
     {
-        vehicleController = GetComponent<VehicleController>();
+        vehicleController = GetComponent<NetworkVehicleController>();
     }
 
     public void PlayIgnition()
@@ -56,28 +56,28 @@ public class VehicleAudioController : MonoBehaviour {
     }
 	
 	void Update () {
-        load = Mathf.Lerp(load, vehicleController.IsShifting ? 0f : vehicleController.accellInput, Time.deltaTime * 2f);
-        vehicleAudio.rpm = vehicleController.RPM;
+        load = Mathf.Lerp(load, vehicleController.IsShifting.Value ? 0f : vehicleController.accellInput.Value, Time.deltaTime * 2f);
+        vehicleAudio.rpm = vehicleController.RPM.Value;
         vehicleAudio.load = load;
 
-        var traction = vehicleController.traction + vehicleController.tractionR + vehicleController.rtraction + vehicleController.rtractionR;
-        traction = traction / 4f;
+       
+       var traction =vehicleController.traction.Value;
 
-        var accellTraction = 1f - Mathf.Clamp01(vehicleController.MotorWheelsSlip);
+        var accellTraction = 1f - Mathf.Clamp01(vehicleController.MotorWheelsSlip.Value);
         var brakeTraction = 1f - Mathf.Clamp01(-traction);
 
         roadAudio.accellTraction = accellTraction;
         roadAudio.brakeTraction = brakeTraction;
-        roadAudio.speed = vehicleController.CurrentSpeed;
-        roadAudio.surface = vehicleController.CurrentSurface;
+        roadAudio.speed = vehicleController.CurrentSpeed.Value;
+        roadAudio.surface = vehicleController.CurrentSurface.Value;
 
-        if(vehicleController.CurrentSurface != RoadSurface.Airborne && lastSurface != vehicleController.CurrentSurface)
+        if(vehicleController.CurrentSurface.Value != RoadSurface.Airborne && lastSurface != vehicleController.CurrentSurface.Value)
         {
-            lastSurface = vehicleController.CurrentSurface;
+            lastSurface = vehicleController.CurrentSurface.Value;
             PlaySurfaceBump();
         }
 
-        windAudio.speed = vehicleController.CurrentSpeed;
+        windAudio.speed = vehicleController.CurrentSpeed.Value;
 
     }
 

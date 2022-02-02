@@ -1,26 +1,20 @@
 ﻿using System;
-using MLAPI;
-using MLAPI.Messaging;
-using MLAPI.NetworkVariable;
+using  Unity.Netcode;
+
 using UnityEngine;
 using System.Collections.Generic;
 
 
 public class DeactivateOthers :NetworkBehaviour  {
-   // NetworkBehaviour
-    public List<Behaviour> DeactivateMe = new List<Behaviour>();
-    public List<Transform> AndMe = new List<Transform>();
-    Camera MyCam;
-    public List<MeshRenderer> DeactivateLocally= new List<MeshRenderer>();
-	// Use this for initialization
-    public override void NetworkStart ()
+  
+    public override void OnNetworkSpawn ()
     {
         if (!IsServer)
         {
             GetComponent<VehicleController>().enabled = false;
-            Destroy (GetComponent<Rigidbody>());
+            
+            GetComponent<ForceFeedback>().enabled = false;
             foreach (WheelCollider wc in GetComponentsInChildren<WheelCollider>())
-
             {
 	            wc.enabled = false;
             }

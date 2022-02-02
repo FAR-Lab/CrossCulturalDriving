@@ -6,7 +6,7 @@ public class DontDestroy : MonoBehaviour {
 
     void Awake()
     {
-        Debug.Log(transform.name);
+       
             DontDestroyOnLoad(gameObject);
         
     }

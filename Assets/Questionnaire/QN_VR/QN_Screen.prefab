@@ -244,7 +244,6 @@ GameObject:
   - component: {fileID: 223257151964235386}
   - component: {fileID: 114938292445200446}
   - component: {fileID: 114567478546710778}
-  - component: {fileID: 3354306409842973232}
   - component: {fileID: 114371233493075446}
   - component: {fileID: 222212222742178676}
   - component: {fileID: 114263982427416608}
@@ -339,18 +338,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &3354306409842973232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1853806982428388}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9e4b9d107d813d40b264c0fd49b0564, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114371233493075446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,21 +351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonPrefab: {fileID: 1760336582165158, guid: 36e99e288be1353488b2cf7c2926563e, type: 3}
-  overWrtieFinishedDebug: 0
-  ExtraQNOutput: 0
-  running: 0
-  totalTime: 0
-  targetTime: 3
-  QNFiles:
-  - {fileID: 4900000, guid: 39ab2fd04e99e44ac9320ace2b4c6a69, type: 3}
-  - {fileID: 4900000, guid: 0f62c0abce050fd4da157434ef6aa847, type: 3}
-  - {fileID: 4900000, guid: 9f9b013490bc2454b843643e8b0994f8, type: 3}
-  - {fileID: 4900000, guid: c764270986e6a4f9f8ae61246620b206, type: 3}
-  - {fileID: 4900000, guid: 52111da2a2777d341a828a218fdddaca, type: 3}
-  - {fileID: 4900000, guid: 1e39c934cb1d74ce08e9c015a58bc58e, type: 3}
-  - {fileID: 4900000, guid: 76e0b72ae46f1453ca9b4269ae25f3e2, type: 3}
-  - {fileID: 4900000, guid: 2fa719e1980a546a9b89abb5b2c860a5, type: 3}
-  - {fileID: 4900000, guid: 274e37b2e73f14601bc9c6057d00fab8, type: 3}
+  m_interalState: 0
 --- !u!222 &222212222742178676
 CanvasRenderer:
   m_ObjectHideFlags: 0

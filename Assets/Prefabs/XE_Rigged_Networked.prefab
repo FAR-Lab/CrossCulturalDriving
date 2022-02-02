@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 486308}
   - component: {fileID: 3317972}
   - component: {fileID: 2325464}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_L_alloy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 441820}
   - component: {fileID: 3363482}
   - component: {fileID: 2313414}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_R_alloy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,12 +175,15 @@ GameObject:
   - component: {fileID: 11415450}
   - component: {fileID: 114012480399126062}
   - component: {fileID: 11476574}
-  - component: {fileID: 5994347945075066203}
+  - component: {fileID: 3015805072074362688}
   - component: {fileID: 1452036174}
   - component: {fileID: 82318783350293580}
   - component: {fileID: 5308659446361930710}
   - component: {fileID: 1995087181796789200}
-  m_Layer: 10
+  - component: {fileID: 2823791921960522932}
+  - component: {fileID: -3837203089491521288}
+  - component: {fileID: -2906884681439060436}
+  m_Layer: 0
   m_Name: XE_Rigged_Networked
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -215,6 +218,7 @@ Transform:
   - {fileID: 4945884919592592}
   - {fileID: 4761535004510826}
   - {fileID: 4432124452030234}
+  - {fileID: 7288225826279891193}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -179.944, z: 0}
@@ -233,7 +237,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 3
 --- !u!114 &11415450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,7 +411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CameraPosition: {fileID: 4056613939988268}
-  useKeyBoard: 1
+  useKeyBoard: 0
   Left:
   - {fileID: 4234196572143992}
   - {fileID: 4118818471692194}
@@ -425,7 +429,22 @@ MonoBehaviour:
   Off: {r: 0, g: 0, b: 0, a: 1}
   SteeringInput: 0
   ThrottleInput: 0
-  selfAlignmentTorque: 0
+  IsShifting:
+    m_InternalValue: 0
+  accellInput:
+    m_InternalValue: 0
+  RPM:
+    m_InternalValue: 0
+  traction:
+    m_InternalValue: 0
+  MotorWheelsSlip:
+    m_InternalValue: 0
+  CurrentSpeed:
+    m_InternalValue: 0
+  CurrentSurface:
+    m_InternalValue: 0
+  SteeringWheel: {fileID: 4147952271443172}
+  interval: 0.5
 --- !u!114 &11476574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -445,7 +464,7 @@ MonoBehaviour:
   windAudio: {fileID: 11409220}
   driveSnapshot: {fileID: 24500003, guid: 97e149cad54f7b44e91f3cc8df036300, type: 2}
   selectSnapshot: {fileID: 24590204, guid: 97e149cad54f7b44e91f3cc8df036300, type: 2}
---- !u!114 &5994347945075066203
+--- !u!114 &3015805072074362688
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -454,16 +473,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 102736}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c114d5c7ce5bd3d4e95852009ce48ff4, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b08ceb10d7d8d3439eda3c0bf954426, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   wheels:
   - {fileID: 14670720}
   - {fileID: 14698806}
-  - {fileID: 14607232}
-  - {fileID: 14651374}
+  damperCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   weightIntensity: -5
   tireWidth: 0.25
+  springSaturation: 0.4
+  springCoeff: 0.05
+  damperAmount: 3000
 --- !u!114 &1452036174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -476,9 +520,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57df0dfd5264fdc46a24f82641972c20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DeactivateMe: []
-  AndMe: []
-  DeactivateLocally: []
 --- !u!82 &82318783350293580
 AudioSource:
   m_ObjectHideFlags: 0
@@ -587,11 +628,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NetworkInstanceId: 0
-  PrefabHash: 15058285471970327081
-  PrefabHashGenerator: XE_Rigged_Networked
+  GlobalObjectIdHash: 951099334
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &1995087181796789200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -604,42 +644,78 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FixedSendsPerSecond: 80
-  AssumeSyncedSends: 1
-  InterpolatePosition: 1
-  SnapDistance: 20
-  InterpolateServer: 1
-  MinMeters: 0.01
-  MinDegrees: 0.25
-  ExtrapolatePosition: 1
-  MaxSendsToExtrapolate: 3
-  Channel: 
-  EnableRange: 1
-  EnableNonProvokedResendChecks: 1
-  DistanceSendrate:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 500
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 1
+  CanCommitToTransform: 0
+--- !u!114 &2823791921960522932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-3837203089491521288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 8248
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &-2906884681439060436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 44637
+  prefabIdentity:
+    id: 18765
+  observedComponents:
+  - {fileID: -3837203089491521288}
+  - {fileID: 8151776957269052476}
+  - {fileID: 9165113050213923891}
+  - {fileID: 7034013229508450395}
+  - {fileID: 8578051342343282397}
+  runtimeComponents:
+  - {fileID: -3837203089491521288}
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &103102
 GameObject:
   m_ObjectHideFlags: 0
@@ -737,7 +813,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 494332}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_L_tyre_grp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -774,7 +850,8 @@ GameObject:
   m_Component:
   - component: {fileID: 466092}
   - component: {fileID: 3680431566946019116}
-  m_Layer: 10
+  - component: {fileID: 8578051342343282397}
+  m_Layer: 0
   m_Name: RL_PARENT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -808,42 +885,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FixedSendsPerSecond: 80
-  AssumeSyncedSends: 1
-  InterpolatePosition: 1
-  SnapDistance: 20
-  InterpolateServer: 0
-  MinMeters: 0.01
-  MinDegrees: 0.25
-  ExtrapolatePosition: 0
-  MaxSendsToExtrapolate: 3
-  Channel: 
-  EnableRange: 0
-  EnableNonProvokedResendChecks: 0
-  DistanceSendrate:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 500
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  SyncPositionX: 0
+  SyncPositionY: 0
+  SyncPositionZ: 0
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 10
+  RotAngleThreshold: 0.005
+  ScaleThreshold: 10
+  InLocalSpace: 1
+  Interpolate: 1
+  CanCommitToTransform: 0
+--- !u!114 &8578051342343282397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 47532
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &108036
 GameObject:
   m_ObjectHideFlags: 0
@@ -853,7 +928,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 497540}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: FL_PIVOT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -886,7 +961,7 @@ GameObject:
   - component: {fileID: 448432}
   - component: {fileID: 3359234}
   - component: {fileID: 2337132}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_L_disc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -967,7 +1042,7 @@ GameObject:
   - component: {fileID: 483098}
   - component: {fileID: 3358070}
   - component: {fileID: 2374642}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_mirror
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1048,7 +1123,7 @@ GameObject:
   - component: {fileID: 418302}
   - component: {fileID: 3340688}
   - component: {fileID: 2353926}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_headlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1127,7 +1202,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 427288}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_R_tyre_grp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1165,7 +1240,7 @@ GameObject:
   - component: {fileID: 430502}
   - component: {fileID: 3315800}
   - component: {fileID: 2350058}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_frontLogo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1246,7 +1321,7 @@ GameObject:
   - component: {fileID: 439186}
   - component: {fileID: 3314976}
   - component: {fileID: 2391668}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_frontGrill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1327,7 +1402,7 @@ GameObject:
   - component: {fileID: 426380}
   - component: {fileID: 3378224}
   - component: {fileID: 2318110}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_R_bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1408,7 +1483,7 @@ GameObject:
   - component: {fileID: 439246}
   - component: {fileID: 3357026}
   - component: {fileID: 2377980}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_R_rubber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1618,7 +1693,7 @@ GameObject:
   - component: {fileID: 492252}
   - component: {fileID: 3324040}
   - component: {fileID: 2378030}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_steering
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1699,7 +1774,7 @@ GameObject:
   - component: {fileID: 440058}
   - component: {fileID: 3328252}
   - component: {fileID: 2337472}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_windsheild
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1780,7 +1855,7 @@ GameObject:
   - component: {fileID: 457260}
   - component: {fileID: 3367170}
   - component: {fileID: 2365830}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_matt_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1861,7 +1936,7 @@ GameObject:
   - component: {fileID: 401474}
   - component: {fileID: 3366620}
   - component: {fileID: 2373226}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_R_bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1942,7 +2017,7 @@ GameObject:
   - component: {fileID: 421630}
   - component: {fileID: 3394096}
   - component: {fileID: 2342188}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_L_grill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2023,7 +2098,7 @@ GameObject:
   - component: {fileID: 444252}
   - component: {fileID: 3367518}
   - component: {fileID: 2398968}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_sideCrome
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2104,7 +2179,7 @@ GameObject:
   - component: {fileID: 466166}
   - component: {fileID: 3395772}
   - component: {fileID: 2378532}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_exhust
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2184,7 +2259,7 @@ GameObject:
   m_Component:
   - component: {fileID: 403406}
   - component: {fileID: 14651374}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: RL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2421,7 +2496,8 @@ GameObject:
   m_Component:
   - component: {fileID: 403686}
   - component: {fileID: 3047184616406425740}
-  m_Layer: 10
+  - component: {fileID: 9165113050213923891}
+  m_Layer: 0
   m_Name: FL_PARENT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2455,42 +2531,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FixedSendsPerSecond: 80
-  AssumeSyncedSends: 1
-  InterpolatePosition: 1
-  SnapDistance: 20
-  InterpolateServer: 0
-  MinMeters: 0.01
-  MinDegrees: 0.25
-  ExtrapolatePosition: 0
-  MaxSendsToExtrapolate: 3
-  Channel: 
-  EnableRange: 0
-  EnableNonProvokedResendChecks: 0
-  DistanceSendrate:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 500
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  SyncPositionX: 0
+  SyncPositionY: 0
+  SyncPositionZ: 0
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 10
+  RotAngleThreshold: 0.005
+  ScaleThreshold: 10
+  InLocalSpace: 1
+  Interpolate: 1
+  CanCommitToTransform: 0
+--- !u!114 &9165113050213923891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 126170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 27848
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &126270
 GameObject:
   m_ObjectHideFlags: 0
@@ -2502,7 +2576,7 @@ GameObject:
   - component: {fileID: 436892}
   - component: {fileID: 3365516}
   - component: {fileID: 2387298}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_L_brake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2583,7 +2657,7 @@ GameObject:
   - component: {fileID: 422720}
   - component: {fileID: 3325588}
   - component: {fileID: 2341208}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_L_disc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2664,7 +2738,7 @@ GameObject:
   - component: {fileID: 401788}
   - component: {fileID: 3310230}
   - component: {fileID: 2311196}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_sideIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2745,7 +2819,7 @@ GameObject:
   - component: {fileID: 470626}
   - component: {fileID: 3323176}
   - component: {fileID: 2325196}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_R_brake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2826,7 +2900,7 @@ GameObject:
   - component: {fileID: 449066}
   - component: {fileID: 3355690}
   - component: {fileID: 2372530}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_R_brake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2907,7 +2981,7 @@ GameObject:
   - component: {fileID: 446748}
   - component: {fileID: 3340566}
   - component: {fileID: 2332484}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_L_bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2987,7 +3061,7 @@ GameObject:
   m_Component:
   - component: {fileID: 470610}
   - component: {fileID: 6532318}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: collider
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -3030,7 +3104,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 473298}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_frontGrill_grp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3065,7 +3139,7 @@ GameObject:
   - component: {fileID: 464964}
   - component: {fileID: 3362842}
   - component: {fileID: 2357400}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_L_logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3146,7 +3220,7 @@ GameObject:
   - component: {fileID: 469826}
   - component: {fileID: 3366030}
   - component: {fileID: 2374312}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_R_rubber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3225,7 +3299,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 403096}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_tyre_grp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3261,7 +3335,7 @@ GameObject:
   - component: {fileID: 496008}
   - component: {fileID: 3378336}
   - component: {fileID: 2384498}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_R_logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3342,7 +3416,7 @@ GameObject:
   - component: {fileID: 482804}
   - component: {fileID: 3350476}
   - component: {fileID: 2314756}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_frontGrillFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3423,7 +3497,7 @@ GameObject:
   - component: {fileID: 410060}
   - component: {fileID: 3348056}
   - component: {fileID: 2370038}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_L_bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3504,7 +3578,7 @@ GameObject:
   - component: {fileID: 401786}
   - component: {fileID: 3374180}
   - component: {fileID: 2335076}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_matt_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3585,7 +3659,7 @@ GameObject:
   - component: {fileID: 458814}
   - component: {fileID: 3319188}
   - component: {fileID: 2386154}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_R_disc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3665,7 +3739,7 @@ GameObject:
   m_Component:
   - component: {fileID: 435502}
   - component: {fileID: 9509348}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_LowPoly
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3739,7 +3813,7 @@ GameObject:
   - component: {fileID: 441808}
   - component: {fileID: 3322230}
   - component: {fileID: 2311546}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_blackPaint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3820,7 +3894,7 @@ GameObject:
   - component: {fileID: 445598}
   - component: {fileID: 3351760}
   - component: {fileID: 2318338}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_blckPaint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5077,7 +5151,7 @@ GameObject:
   - component: {fileID: 469070}
   - component: {fileID: 3390546}
   - component: {fileID: 2324290}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_rubber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5422,7 +5496,7 @@ GameObject:
   m_Component:
   - component: {fileID: 407128}
   - component: {fileID: 11407528}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: IgnitionAudio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5473,7 +5547,7 @@ GameObject:
   - component: {fileID: 485580}
   - component: {fileID: 3312598}
   - component: {fileID: 2382804}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_numberPlate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5552,7 +5626,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 474926}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_L_tyre_grp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5590,7 +5664,7 @@ GameObject:
   - component: {fileID: 444594}
   - component: {fileID: 3369330}
   - component: {fileID: 2335998}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_matt_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5671,7 +5745,7 @@ GameObject:
   - component: {fileID: 418044}
   - component: {fileID: 3362902}
   - component: {fileID: 2302952}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_bodyPaint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5752,7 +5826,7 @@ GameObject:
   - component: {fileID: 485654}
   - component: {fileID: 3342092}
   - component: {fileID: 2378102}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_L_brake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5832,7 +5906,7 @@ GameObject:
   m_Component:
   - component: {fileID: 444200}
   - component: {fileID: 14670720}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: FL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5892,7 +5966,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 458584}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: RR_PIVOT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5925,7 +5999,7 @@ GameObject:
   - component: {fileID: 432868}
   - component: {fileID: 3340864}
   - component: {fileID: 2350382}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_rearLamp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6006,7 +6080,7 @@ GameObject:
   - component: {fileID: 460508}
   - component: {fileID: 3327856}
   - component: {fileID: 2363300}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_fr_bottomGrill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6085,7 +6159,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 485052}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_R_tyre_grp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6123,7 +6197,7 @@ GameObject:
   - component: {fileID: 459682}
   - component: {fileID: 3358862}
   - component: {fileID: 2338798}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_seats
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6204,7 +6278,7 @@ GameObject:
   - component: {fileID: 428680}
   - component: {fileID: 3333136}
   - component: {fileID: 2367232}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_L_logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6465,7 +6539,8 @@ GameObject:
   m_Component:
   - component: {fileID: 450442}
   - component: {fileID: 651259318629050990}
-  m_Layer: 10
+  - component: {fileID: 7034013229508450395}
+  m_Layer: 0
   m_Name: RR_PARENT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6499,42 +6574,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FixedSendsPerSecond: 80
-  AssumeSyncedSends: 1
-  InterpolatePosition: 1
-  SnapDistance: 20
-  InterpolateServer: 0
-  MinMeters: 0.01
-  MinDegrees: 0.25
-  ExtrapolatePosition: 0
-  MaxSendsToExtrapolate: 3
-  Channel: 
-  EnableRange: 0
-  EnableNonProvokedResendChecks: 0
-  DistanceSendrate:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 500
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  SyncPositionX: 0
+  SyncPositionY: 0
+  SyncPositionZ: 0
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 10
+  RotAngleThreshold: 0.005
+  ScaleThreshold: 10
+  InLocalSpace: 1
+  Interpolate: 1
+  CanCommitToTransform: 0
+--- !u!114 &7034013229508450395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 25079
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &173844
 GameObject:
   m_ObjectHideFlags: 0
@@ -6675,7 +6748,7 @@ GameObject:
   - component: {fileID: 412916}
   - component: {fileID: 3312990}
   - component: {fileID: 2330192}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_R_logo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6756,7 +6829,7 @@ GameObject:
   - component: {fileID: 483132}
   - component: {fileID: 3311168}
   - component: {fileID: 2321864}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_L_rubber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6837,7 +6910,7 @@ GameObject:
   - component: {fileID: 424836}
   - component: {fileID: 3356198}
   - component: {fileID: 2348302}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_L_rubber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7053,7 +7126,7 @@ GameObject:
   - component: {fileID: 492040}
   - component: {fileID: 3323446}
   - component: {fileID: 2342764}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_L_alloy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7133,7 +7206,8 @@ GameObject:
   m_Component:
   - component: {fileID: 430788}
   - component: {fileID: 8744925853247894645}
-  m_Layer: 10
+  - component: {fileID: 8151776957269052476}
+  m_Layer: 0
   m_Name: FR_PARENT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7167,42 +7241,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FixedSendsPerSecond: 80
-  AssumeSyncedSends: 1
-  InterpolatePosition: 1
-  SnapDistance: 20
-  InterpolateServer: 0
-  MinMeters: 0.01
-  MinDegrees: 0.25
-  ExtrapolatePosition: 0
-  MaxSendsToExtrapolate: 3
-  Channel: 
-  EnableRange: 0
-  EnableNonProvokedResendChecks: 0
-  DistanceSendrate:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 500
-      value: 20
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  SyncPositionX: 0
+  SyncPositionY: 0
+  SyncPositionZ: 0
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 10
+  RotAngleThreshold: 0.005
+  ScaleThreshold: 10
+  InLocalSpace: 1
+  Interpolate: 1
+  CanCommitToTransform: 0
+--- !u!114 &8151776957269052476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 40038
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &187614
 GameObject:
   m_ObjectHideFlags: 0
@@ -7212,7 +7284,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 405518}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: RL_PIVOT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7243,7 +7315,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 462786}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: wheels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7278,7 +7350,7 @@ GameObject:
   m_Component:
   - component: {fileID: 410254}
   - component: {fileID: 14698806}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: FR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7340,7 +7412,7 @@ GameObject:
   - component: {fileID: 410452}
   - component: {fileID: 3355532}
   - component: {fileID: 2322622}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_R_disc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7420,7 +7492,7 @@ GameObject:
   m_Component:
   - component: {fileID: 439700}
   - component: {fileID: 14607232}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: RR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7612,7 +7684,7 @@ GameObject:
   - component: {fileID: 402152}
   - component: {fileID: 3396876}
   - component: {fileID: 2356432}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_F_R_grill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7693,7 +7765,7 @@ GameObject:
   - component: {fileID: 419664}
   - component: {fileID: 3369700}
   - component: {fileID: 2305734}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_R_R_alloy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7774,7 +7846,7 @@ GameObject:
   - component: {fileID: 411636}
   - component: {fileID: 3363316}
   - component: {fileID: 2366106}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_blckPaint1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7853,7 +7925,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 454790}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: FR_PIVOT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7997,6 +8069,7 @@ GameObject:
   - component: {fileID: 4147952271443172}
   - component: {fileID: 33167106921918442}
   - component: {fileID: 23718576837862910}
+  - component: {fileID: 7749589190814487617}
   m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_steering
   m_TagString: Untagged
@@ -8068,6 +8141,33 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7749589190814487617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059675908994232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 0
+  SyncPositionY: 0
+  SyncPositionZ: 0
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 10
+  RotAngleThreshold: 0.005
+  ScaleThreshold: 10
+  InLocalSpace: 1
+  Interpolate: 0
+  CanCommitToTransform: 0
 --- !u!1 &1120682330170792
 GameObject:
   m_ObjectHideFlags: 0
@@ -8079,7 +8179,7 @@ GameObject:
   - component: {fileID: 4432124452030234}
   - component: {fileID: 20426927571715320}
   - component: {fileID: 114694302765138160}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: RightMirrorCamrea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8111,7 +8211,7 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
+  m_projectionMatrixMode: 0
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
@@ -8131,15 +8231,15 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 511
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 5246925a3f57dc740bf5815be15dfe49, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 3
+  m_TargetEye: 0
   m_HDR: 1
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
+  m_ForceIntoRT: 1
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -8155,6 +8255,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5a578309b7a24b46ba988c6dcb2838b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TargetMaterial: {fileID: 2100000, guid: 64c81bdb65d3ffe44bcc4cd22be452ce, type: 2}
+  rt: {fileID: 0}
+  width: 512
+  height: 768
+  depth: 16
+  rtf: 0
+  flipHorizontal: 1
 --- !u!1 &1184536589677604
 GameObject:
   m_ObjectHideFlags: 0
@@ -8259,7 +8366,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4056613939988268}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: CameraPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8274,7 +8381,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1194871774110550}
   m_LocalRotation: {x: -0.06540306, y: 0, z: 0, w: 0.99785894}
-  m_LocalPosition: {x: -0.39, y: 2.1, z: 0.16}
+  m_LocalPosition: {x: -0.39, y: 1.3, z: 0.16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 495970}
@@ -8326,7 +8433,7 @@ GameObject:
   - component: {fileID: 4541480518286528}
   - component: {fileID: 20936849985572802}
   - component: {fileID: 114739507899819822}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: CenterMirrorCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8358,7 +8465,7 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
+  m_projectionMatrixMode: 0
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
@@ -8378,15 +8485,15 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 511
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 9cf47bab589b9cc4c957469c6ac16a85, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 3
+  m_TargetEye: 0
   m_HDR: 0
   m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
+  m_ForceIntoRT: 1
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -8402,6 +8509,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5a578309b7a24b46ba988c6dcb2838b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TargetMaterial: {fileID: 2100000, guid: 3a7465f1a75f24546b2231bbc1c8e8d0, type: 2}
+  rt: {fileID: 0}
+  width: 384
+  height: 1308
+  depth: 16
+  rtf: 0
+  flipHorizontal: 1
 --- !u!1 &1232226947679096
 GameObject:
   m_ObjectHideFlags: 0
@@ -9160,7 +9274,7 @@ GameObject:
   - component: {fileID: 4761535004510826}
   - component: {fileID: 20251323990121438}
   - component: {fileID: 114116952434335406}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: LeftMirrorCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9174,8 +9288,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1524117855195952}
-  m_LocalRotation: {x: -0.7071068, y: 0.7071068, z: -0, w: 0}
-  m_LocalPosition: {x: -0.907, y: 1.0248, z: 0.5219}
+  m_LocalRotation: {x: -0.70710677, y: 0.7071069, z: 2.0372679e-10, w: -2.0372679e-10}
+  m_LocalPosition: {x: -0.9351, y: 1.025, z: 0.522}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 495970}
@@ -9192,7 +9306,7 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
+  m_projectionMatrixMode: 0
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
@@ -9212,15 +9326,15 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 511
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 20c43032c92a16d4db3930ed680ad1cc, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 3
+  m_TargetEye: 0
   m_HDR: 1
   m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
+  m_ForceIntoRT: 1
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -9236,6 +9350,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5a578309b7a24b46ba988c6dcb2838b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TargetMaterial: {fileID: 2100000, guid: b740340c1954871479378842c7cf0571, type: 2}
+  rt: {fileID: 0}
+  width: 512
+  height: 768
+  depth: 16
+  rtf: 0
+  flipHorizontal: 1
 --- !u!1 &1584263918984448
 GameObject:
   m_ObjectHideFlags: 0
@@ -9457,7 +9578,7 @@ GameObject:
   - component: {fileID: 224129104341735408}
   - component: {fileID: 222939219358416946}
   - component: {fileID: 114420894909833254}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10138,7 +10259,7 @@ GameObject:
   - component: {fileID: 223119520471027030}
   - component: {fileID: 114719925160339166}
   - component: {fileID: 114395153245475356}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10388,3 +10509,33 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &176327687480123085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7288225826279891193}
+  m_Layer: 0
+  m_Name: SteeringCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7288225826279891193
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176327687480123085}
+  m_LocalRotation: {x: 0.17188081, y: -0, z: -7.2759567e-12, w: 0.98511773}
+  m_LocalPosition: {x: -0.378, y: 0.8761, z: 0.5234}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 495970}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 19.794, y: 0, z: 0}
