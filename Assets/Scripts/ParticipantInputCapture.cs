@@ -61,7 +61,15 @@ public class ParticipantInputCapture : NetworkBehaviour {
         conf.Init(OffsetFileName);
         if (conf.FileAvalible()) { conf.LoadLocalOffset(out offsetPositon, out offsetRotation); }
 
-        po = ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(OwnerClientId);
+        if (IsServer)
+        {
+            po = ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(OwnerClientId);
+        }
+        else
+        {
+            po = ConnectionAndSpawing.Singleton.ParticipantOrder;
+        }
+        
     }
 
     private ParticipantOrder po = ParticipantOrder.None;

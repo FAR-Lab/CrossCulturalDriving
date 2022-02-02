@@ -14,10 +14,12 @@ using Newtonsoft.Json;
 using Unity.Collections;
 using Unity.Netcode;
 
-public class QNSelectionManager : MonoBehaviour {
+public class QNSelectionManager : MonoBehaviour
+{
     public GameObject ButtonPrefab;
 
-    public enum QNStates {
+    public enum QNStates
+    {
         IDLE,
         LOADINGSET,
         LOADINGQUESTION,
@@ -55,15 +57,20 @@ public class QNSelectionManager : MonoBehaviour {
     Transform ParentPosition;
     float up, forward;
 
-    public void ChangeLanguage(LanguageSelect lang) { m_LanguageSelect = lang; }
+    public void ChangeLanguage(LanguageSelect lang)
+    {
+        m_LanguageSelect = lang;
+    }
 
-    public void setRelativePosition(Transform t, float up_, float forward_) {
+    public void setRelativePosition(Transform t, float up_, float forward_)
+    {
         ParentPosition = t;
         up = up_;
         forward = forward_;
     }
 
-    void Start() {
+    void Start()
+    {
         selectAction = new InputAction("Select");
         selectAction.AddBinding("<Keyboard>/space");
         selectAction.AddBinding("<Joystick>/trigger");
@@ -92,7 +99,7 @@ public class QNSelectionManager : MonoBehaviour {
         CurrentSetofQuestions = new Dictionary<int, QuestionnaireQuestion>();
         nextQuestionsToAskQueue = new Queue<int>();
         sba = GetComponentInChildren<selectionBarAnimation>();
-      
+
 
 #if debug
         startAskingTheQuestionairs(FindObjectOfType<LocalVRPlayer>().transform, QNFiles.ToArray(), "Test");
@@ -101,7 +108,8 @@ public class QNSelectionManager : MonoBehaviour {
 #endif
     }
 
-    private void updateCursorPositoon(Transform currentHitTarget, RaycastResult rayRes) {
+    private void updateCursorPositoon(Transform currentHitTarget, RaycastResult rayRes)
+    {
         Vector3 temp = Camera.main.transform.position
                        + Camera.main
                            .ScreenPointToRay(new Vector3(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2, 0),
@@ -115,34 +123,46 @@ public class QNSelectionManager : MonoBehaviour {
 
     // Update is called once per frame
     public void startAskingTheQuestionairs(Transform mylocalclient, TextAsset[] list, string Condition,
-        LanguageSelect lang) {
-        if (m_interalState == QNStates.IDLE) {
+        LanguageSelect lang)
+    {
+        if (m_interalState == QNStates.IDLE)
+        {
             m_QNLogger = new QNLogger();
             m_QNLogger.Init();
             ChangeLanguage(lang);
             m_MyLocalClient = mylocalclient.GetComponent<ParticipantInputCapture>();
             transform.parent = m_MyLocalClient.GetMyCar();
             m_condition = Condition;
-            foreach (TextAsset s in list) {
+            foreach (TextAsset s in list)
+            {
                 // Debug.Log(s);
                 QuestionariesToAsk.Add(s.name, ReadString(s));
             }
 
             m_interalState = QNStates.LOADINGSET;
         }
-        else { Debug.LogError("I should really only once start the Questionnaire."); }
+        else
+        {
+            Debug.LogError("I should really only once start the Questionnaire.");
+        }
     }
 
-    void Update() {
-        if (Input.GetKeyUp(KeyCode.Q)) { m_interalState = QNStates.FINISH; }
+    void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Q))
+        {
+            m_interalState = QNStates.FINISH;
+        }
 
 
-        switch (m_interalState) {
+        switch (m_interalState)
+        {
             case QNStates.IDLE:
                 //Nothing is happening just waiting for something to happen. 
                 break;
             case QNStates.LOADINGSET:
-                if (QuestionariesToAsk.Count <= 0) {
+                if (QuestionariesToAsk.Count <= 0)
+                {
                     m_interalState = QNStates.FINISH;
                     break;
                 }
@@ -150,9 +170,14 @@ public class QNSelectionManager : MonoBehaviour {
                 string nextKey = QuestionariesToAsk.Keys.First(); //Not sure that this will work
 
                 CurrentSetofQuestions.Clear();
-                foreach (QuestionnaireQuestion q in QuestionariesToAsk[nextKey]) {
-                    if (!CurrentSetofQuestions.ContainsKey(q.ID)) { CurrentSetofQuestions.Add(q.ID, q); }
-                    else {
+                foreach (QuestionnaireQuestion q in QuestionariesToAsk[nextKey])
+                {
+                    if (!CurrentSetofQuestions.ContainsKey(q.ID))
+                    {
+                        CurrentSetofQuestions.Add(q.ID, q);
+                    }
+                    else
+                    {
                         Debug.LogError("This should not happen. We have duplicate question IDs. Please check: " +
                                        nextKey);
                     }
@@ -168,23 +193,31 @@ public class QNSelectionManager : MonoBehaviour {
             case QNStates.LOADINGQUESTION:
 
 
-                if (nextQuestionsToAskQueue.Count <= 0) {
+                if (nextQuestionsToAskQueue.Count <= 0)
+                {
                     m_interalState = QNStates.LOADINGSET;
                     break;
                 }
 
                 int NextQuestiuonID = nextQuestionsToAskQueue.Dequeue();
 
-                foreach (RectTransform r in AnswerFields) { Destroy(r.gameObject); }
+                foreach (RectTransform r in AnswerFields)
+                {
+                    Destroy(r.gameObject);
+                }
 
                 AnswerFields.Clear();
                 currentActiveQustion = CurrentSetofQuestions[NextQuestiuonID];
                 Debug.Log("Get lanauge: >" + m_LanguageSelect + "<But only have the following avalible:");
-                foreach (string s in currentActiveQustion.QuestionText.Keys) { Debug.Log(">" + s + "<"); }
+                foreach (string s in currentActiveQustion.QuestionText.Keys)
+                {
+                    Debug.Log(">" + s + "<");
+                }
 
                 QustionField.text = currentActiveQustion.QuestionText[m_LanguageSelect];
                 int i = 0;
-                foreach (ObjAnswer a in currentActiveQustion.Answers) {
+                foreach (ObjAnswer a in currentActiveQustion.Answers)
+                {
                     rayCastButton rcb = Instantiate(ButtonPrefab, this.transform).transform
                         .GetComponentInChildren<rayCastButton>();
                     rcb.initButton(a.AnswerText[m_LanguageSelect], currentActiveQustion.Answers.IndexOf(a));
@@ -203,31 +236,41 @@ public class QNSelectionManager : MonoBehaviour {
             case QNStates.RESPONSEWAIT:
                 List<RaycastResult> results = new List<RaycastResult>();
                 RaycastHit hit;
-                if (Camera.main == null) {
+                if (Camera.main == null)
+                {
                     Debug.Log("This is interesting unloading");
                     return;
                 }
 
                 Ray ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2f,
                     Camera.main.pixelHeight / 2f));
-                int layerMask = 1 << 5;
-                if (Physics.Raycast(ray, out hit, layerMask)) {
+                const int layerMask = 1 << 5;
+                if (Physics.Raycast(ray, out hit, layerMask))
+                {
                     rayCastButton rcb = null;
                     Transform objectHit = hit.transform;
                     bool onTarget = false;
-                    if (hit.transform == transform) {
+                   
+                    if (hit.transform == transform)
+                    {
                         sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
+                        
                     }
-                    else {
+                    else
+                    {
                         rcb = hit.transform.GetComponent<rayCastButton>();
-                        if (rcb != null) { onTarget = true; }
-
-                        sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
+                        if (rcb != null)
+                        {
+                            onTarget = true;
+                            sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
+                        }
+                        
                     }
+                    
+                    Debug.Log(layerMask.ToString()+"  "+hit.transform.name);
 
-                    
-                    
-                    if (m_MyLocalClient.ButtonPush() && onTarget) {
+                    if (m_MyLocalClient.ButtonPush() && onTarget)
+                    {
                         int AnswerIndex = rcb.activateNextQuestions();
 
 
@@ -235,7 +278,8 @@ public class QNSelectionManager : MonoBehaviour {
                         //  Debug.Log("To Quesstion: " + currentActiveQustion.QuestionText["English"] +
                         //"We answered: " + currentActiveQustion.Answers[AnswerIndex].AnswerText["English"]);
 
-                        foreach (int nextQ in currentActiveQustion.Answers[AnswerIndex].nextQuestionIndexQueue) {
+                        foreach (int nextQ in currentActiveQustion.Answers[AnswerIndex].nextQuestionIndexQueue)
+                        {
                             nextQuestionsToAskQueue.Enqueue(nextQ);
                         }
 
@@ -246,13 +290,14 @@ public class QNSelectionManager : MonoBehaviour {
 
                 break;
             case QNStates.FINISH:
-               
-                if (m_MyLocalClient != null && m_MyLocalClient.IsLocalPlayer) {
+
+                if (m_MyLocalClient != null && m_MyLocalClient.IsLocalPlayer)
+                {
                     m_QNLogger.DumpData(out string data);
 
                     byte[] tmp = Encoding.Unicode.GetBytes(data);
-                   
-                    Debug.Log(tmp.Length+"charcount");
+
+                    Debug.Log(tmp.Length + "charcount");
                     FastBufferWriter writer = new FastBufferWriter(tmp.Length, Allocator.Temp);
                     writer.WriteBytesSafe(tmp);
                     NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(QNLogger.qnMessageName,
@@ -262,7 +307,10 @@ public class QNSelectionManager : MonoBehaviour {
                     m_interalState = QNStates.IDLE;
                     writer.Dispose();
                 }
-                else { Debug.LogError("Did not get my local player dont know who to report back to."); }
+                else
+                {
+                    Debug.LogError("Did not get my local player dont know who to report back to.");
+                }
 
                 break;
             default:
@@ -270,8 +318,9 @@ public class QNSelectionManager : MonoBehaviour {
         }
     }
 
-    List<QuestionnaireQuestion> ReadString(TextAsset asset) {
-        Debug.Log("Trying to load text asset:"+asset.name);
+    List<QuestionnaireQuestion> ReadString(TextAsset asset)
+    {
+        Debug.Log("Trying to load text asset:" + asset.name);
         return JsonConvert.DeserializeObject<List<QuestionnaireQuestion>>(asset.text);
     }
 }
