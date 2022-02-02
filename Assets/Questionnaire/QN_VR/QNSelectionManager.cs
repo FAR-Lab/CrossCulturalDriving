@@ -121,6 +121,8 @@ public class QNSelectionManager : MonoBehaviour
         sba.updatePosition(transform.worldToLocalMatrix * temp);
     }
 
+    private Transform positioingRef;
+
     // Update is called once per frame
     public void startAskingTheQuestionairs(Transform mylocalclient, TextAsset[] list, string Condition,
         LanguageSelect lang)
@@ -131,7 +133,7 @@ public class QNSelectionManager : MonoBehaviour
             m_QNLogger.Init();
             ChangeLanguage(lang);
             m_MyLocalClient = mylocalclient.GetComponent<ParticipantInputCapture>();
-            transform.parent = m_MyLocalClient.GetMyCar();
+
             m_condition = Condition;
             foreach (TextAsset s in list)
             {
@@ -154,6 +156,10 @@ public class QNSelectionManager : MonoBehaviour
             m_interalState = QNStates.FINISH;
         }
 
+        if (ParentPosition != null)
+        {
+            transform.position = ParentPosition.position + new Vector3(0, up, -forward);
+        }
 
         switch (m_interalState)
         {
@@ -244,8 +250,9 @@ public class QNSelectionManager : MonoBehaviour
 
                 Ray ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2f,
                     Camera.main.pixelHeight / 2f));
-                const int layerMask = 1 << 5;
-                if (Physics.Raycast(ray, out hit,35f,layerMask)) {
+                LayerMask layerMask = 1 << 5;
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.UseGlobal))
+                {
                     rayCastButton rcb = null;
                     Transform objectHit = hit.transform;
                     bool onTarget = false;
@@ -253,7 +260,6 @@ public class QNSelectionManager : MonoBehaviour
                     if (hit.transform == transform)
                     {
                         sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
-
                     }
                     else
                     {
@@ -263,10 +269,10 @@ public class QNSelectionManager : MonoBehaviour
                             onTarget = true;
                             sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
                         }
-
                     }
 
-                    Debug.Log(layerMask.ToString()+"  "+hit.transform.name);
+                    Debug.Log(layerMask.ToString() + "  " + hit.transform.name);
+                    Debug.DrawLine(ray.origin, hit.point, Color.magenta);
 
                     if (m_MyLocalClient.ButtonPush() && onTarget)
                     {

@@ -71,7 +71,7 @@ public class ScenarioManager : MonoBehaviour {
             MyCar.position + MyCar.forward * 2.5f + MyCar.up * 1.5f,
             MyCar.rotation).GetComponent<QNSelectionManager>();
 
-        qnmanager.setRelativePosition(MyCar, .75f, 4f);
+        qnmanager.setRelativePosition(MyCar, 1.5f, 4.5f);
         if (QuestionairsToAsk.Length > 0) {
             qnmanager.startAskingTheQuestionairs(MyLocalClient, QuestionairsToAsk, conditionName, ConnectionAndSpawing.Singleton.lang);
         }
