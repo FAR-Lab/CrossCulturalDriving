@@ -210,8 +210,8 @@ public class QNSelectionManager : MonoBehaviour {
 
                 Ray ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2f,
                     Camera.main.pixelHeight / 2f));
-                int layerMask = 1 << 5;
-                if (Physics.Raycast(ray, out hit, layerMask)) {
+                const int layerMask = 1 << 5;
+                if (Physics.Raycast(ray, out hit,35f,layerMask)) {
                     rayCastButton rcb = null;
                     Transform objectHit = hit.transform;
                     bool onTarget = false;
