@@ -158,7 +158,7 @@ public class QNSelectionManager : MonoBehaviour
         switch (m_interalState)
         {
             case QNStates.IDLE:
-                //Nothing is happening just waiting for something to happen. 
+                //Nothing is happening just waiting for something to happen.
                 break;
             case QNStates.LOADINGSET:
                 if (QuestionariesToAsk.Count <= 0)
@@ -245,16 +245,15 @@ public class QNSelectionManager : MonoBehaviour
                 Ray ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2f,
                     Camera.main.pixelHeight / 2f));
                 const int layerMask = 1 << 5;
-                if (Physics.Raycast(ray, out hit, layerMask))
-                {
+                if (Physics.Raycast(ray, out hit,35f,layerMask)) {
                     rayCastButton rcb = null;
                     Transform objectHit = hit.transform;
                     bool onTarget = false;
-                   
+
                     if (hit.transform == transform)
                     {
                         sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
-                        
+
                     }
                     else
                     {
@@ -264,9 +263,9 @@ public class QNSelectionManager : MonoBehaviour
                             onTarget = true;
                             sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
                         }
-                        
+
                     }
-                    
+
                     Debug.Log(layerMask.ToString()+"  "+hit.transform.name);
 
                     if (m_MyLocalClient.ButtonPush() && onTarget)
@@ -345,13 +344,13 @@ public class QNSelectionManager : MonoBehaviour
         temp.Answers[0].AnswerText.Add("English", "Test Answer 1");
         temp.Answers[0].AnswerText.Add("German", "Test Antwort 1");
         temp.Answers[0].nextQuestionIndexQueue = new List<int>{2};
-        
+
         temp.Answers.Add(new ObjAnswer {index = 2});
         temp.Answers[1].AnswerText = new Dictionary<LanguageSelect, string>();
         temp.Answers[1].AnswerText.Add("English", "Test Answer 2");
         temp.Answers[1].AnswerText.Add("German", "Test Antwort 2");
         temp.Answers[1].nextQuestionIndexQueue = new List<int>{2};
-    
+
         QuestionnaireQuestion temp2 = new QuestionnaireQuestion
         {
             ID = 2,
@@ -370,13 +369,13 @@ public class QNSelectionManager : MonoBehaviour
         temp2.Answers[0].AnswerText.Add("English", "Test Answer 3");
         temp2.Answers[0].AnswerText.Add("German", "Test Antwort 3");
         temp2.Answers[0].nextQuestionIndexQueue = new List<int>{};
-        
+
         temp2.Answers.Add(new ObjAnswer {index = 2});
         temp2.Answers[1].AnswerText = new Dictionary<LanguageSelect, string>();
         temp2.Answers[1].AnswerText.Add("English", "Test Answer 4");
         temp2.Answers[1].AnswerText.Add("German", "Test Antwort 4");
         temp2.Answers[1].nextQuestionIndexQueue = new List<int>{};
-        
+
          Debug.Log("SerializeObject");
        Debug.Log( JsonConvert.SerializeObject(new List<QuestionnaireQuestion>{temp,temp2}));
         */
