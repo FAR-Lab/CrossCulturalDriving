@@ -40,16 +40,16 @@ public class StartServerClientGUI : MonoBehaviour
             this.enabled = false;
         }
 
-        if (GUI.Button(new Rect(20, 100, 80, 20), "sclient A")) {
+        if (GUI.Button(new Rect(20, 100, 80, 20), "Client A")) {
             Debug.Log("Client Started.");
             CONNECTING = true;
-            ConnectionAndSpawing.Singleton.StartAsClient("English",ParticipantOrder.A,"192.168.1.161",7777,ResponseDelegate);
+            ConnectionAndSpawing.Singleton.StartAsClient("English",ParticipantOrder.A,"192.168.1.160",7777,ResponseDelegate);
           
         }
         if (GUI.Button(new Rect(120, 100, 80, 20), "client B")) {
             Debug.Log("Client Started.");
             CONNECTING = true;
-            ConnectionAndSpawing.Singleton.StartAsClient("English",ParticipantOrder.B,"192.168.1.161",7777,ResponseDelegate);
+            ConnectionAndSpawing.Singleton.StartAsClient("English",ParticipantOrder.B,"192.168.1.160",7777,ResponseDelegate);
           
         }
     }
