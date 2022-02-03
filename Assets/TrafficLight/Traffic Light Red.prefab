@@ -138,23 +138,6 @@ LODGroup:
     renderers:
     - renderer: {fileID: 558865680804910095}
   m_Enabled: 1
---- !u!114 &4320206493409517680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7607800114908242364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9061f622b9cbb9a4aa24bd1320de378b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  off: {fileID: 2100000, guid: 5cdc8d502ea0f814a9bf7ca7fb4e9589, type: 2}
-  red: {fileID: 2100000, guid: eda6ee7f410dd4142aca765598f1c132, type: 2}
-  green: {fileID: 2100000, guid: 27507546ca8484a42b7e0e58d3012887, type: 2}
-  yellow: {fileID: 2100000, guid: fde0d27108135471a8669b6a7bd7fb8b, type: 2}
-  Object: {fileID: 7607800114908242364}
 --- !u!1 &8819548197487461144
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,6 +226,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1130163460550090250}
     m_Modifications:
+    - target: {fileID: 5806523129566313334, guid: da2b3557f9ef2a8438ae977a154bc015, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 951099334
+      objectReference: {fileID: 0}
     - target: {fileID: 5980613504688385315, guid: da2b3557f9ef2a8438ae977a154bc015, type: 3}
       propertyPath: m_Name
       value: Traffic Light
@@ -315,7 +302,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5270839969492409374, guid: da2b3557f9ef2a8438ae977a154bc015, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: da2b3557f9ef2a8438ae977a154bc015, type: 3}
 --- !u!4 &6623044654159150029 stripped
 Transform:
@@ -327,3 +315,20 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5935780658492064258, guid: da2b3557f9ef2a8438ae977a154bc015, type: 3}
   m_PrefabInstance: {fileID: 4320206494236009406}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4320206493409517680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7607800114908242364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9061f622b9cbb9a4aa24bd1320de378b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  off: {fileID: 2100000, guid: 5cdc8d502ea0f814a9bf7ca7fb4e9589, type: 2}
+  red: {fileID: 2100000, guid: eda6ee7f410dd4142aca765598f1c132, type: 2}
+  green: {fileID: 2100000, guid: 27507546ca8484a42b7e0e58d3012887, type: 2}
+  yellow: {fileID: 2100000, guid: fde0d27108135471a8669b6a7bd7fb8b, type: 2}
+  Object: {fileID: 7607800114908242364}

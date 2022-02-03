@@ -9,7 +9,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 
 [System.Serializable]
 public class AxleInfo
@@ -35,10 +34,6 @@ public class AxleInfo
 public enum RoadSurface { Tarmac, Offroad, Airborne}
 
 public class VehicleController : MonoBehaviour {
-
-    public bool isMPH = true;
-    public TMPro.TextMeshPro speedText;
-    private TMPro.TextMeshPro speedTextUnit;
 
     //all car wheel info
     public List<AxleInfo> axles;
@@ -242,12 +237,6 @@ public class VehicleController : MonoBehaviour {
         {
             axle.left.wheelDampingRate = wheelDamping;
             axle.right.wheelDampingRate = wheelDamping;
-        }
-
-        if (!isMPH) {
-            
-            speedTextUnit = speedText.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>();
-            speedTextUnit.text = "km/h" ;
         }
     }
 
@@ -494,14 +483,7 @@ public class VehicleController : MonoBehaviour {
 
     public void Update()
     {
-        if (isMPH) {
-            speedText.text = Mathf.RoundToInt(currentSpeed).ToString();
-        }
-        else
-        {
-            speedText.text = Mathf.RoundToInt(currentSpeed * 1.609f).ToString();
-                }
-
+        
         if (rb.centerOfMass != centerOfMass)
             rb.centerOfMass = centerOfMass;
 
@@ -538,7 +520,7 @@ public class VehicleController : MonoBehaviour {
 
     private void OnGUI()
     {
-       
+        /*
         GUI.Label(new Rect(10, 10, 500, 200), "GEAR " + (Mathf.RoundToInt(currentGear)));
         GUI.Label(new Rect(10, 30, 500, 200), "RPM " + Mathf.RoundToInt(currentRPM));
         GUI.Label(new Rect(10, 50, 500, 200), "MPH " + Mathf.RoundToInt(currentSpeed));
@@ -548,7 +530,7 @@ public class VehicleController : MonoBehaviour {
         GUI.Label(new Rect(10, 130, 500, 200), "TRACTIONR " + tractionR.ToString("F3"));
         GUI.Label(new Rect(10, 160, 500, 200), "TRACTION " + rtraction.ToString("F3"));
         GUI.Label(new Rect(10, 180, 500, 200), "TRACTIONR " + rtractionR.ToString("F3"));
-        
+        */
 
     }
 }
