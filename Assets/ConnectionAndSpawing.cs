@@ -604,52 +604,81 @@ public class ConnectionAndSpawing : MonoBehaviour {
     }
 
 
-    void OnGUI() {
+    void OnGUI()
+    {
         if (NetworkManager.Singleton == null && !ClientListInitDone) return;
-        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer) {
+        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer)
+        {
             GUI.Label(new Rect(5, 5, 150, 50), "Server: " + ParticipantOrder + " " +
                                                NetworkManager.Singleton.ConnectedClients.Count + " " +
                                                GetParticipantCount() + "  " +
                                                ServerState + "  " + Time.timeScale);
-            if (ServerState == ActionState.WAITINGROOM) {
+            if (ServerState == ActionState.WAITINGROOM)
+            {
                 int y = 50;
-                foreach (SceneField f in IncludedScenes) {
-                    if (GUI.Button(new Rect(5, 5 + y, 150, 25), f.SceneName)) { SwitchToLoading(f.SceneName); }
+                foreach (SceneField f in IncludedScenes)
+                {
+                    if (GUI.Button(new Rect(5, 5 + y, 150, 25), f.SceneName))
+                    {
+                        SwitchToLoading(f.SceneName);
+                    }
 
                     y += 27;
                 }
 
                 y = 50;
                 if (_OrderToClient == null) return;
-                foreach (var p in _OrderToClient.Keys) {
-                   
-                    if (GUI.Button(new Rect(200, 200 + y, 100, 25), "Calibrate " + p)) {
+                foreach (var p in _OrderToClient.Keys)
+                {
+
+                    if (GUI.Button(new Rect(200, 200 + y, 100, 25), "Calibrate " + p))
+                    {
                         ulong clientID = _OrderToClient[p];
-                        ClientRpcParams clientRpcParams = new ClientRpcParams {
-                            Send = new ClientRpcSendParams {
+                        ClientRpcParams clientRpcParams = new ClientRpcParams
+                        {
+                            Send = new ClientRpcSendParams
+                            {
                                 TargetClientIds = new ulong[] {clientID}
                             }
                         };
-                      
+
                         ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
                             .CalibrateClientRPC(clientRpcParams);
                     }
+
                     y += 50;
                 }
             }
 
-            else if (ServerState == ActionState.QUESTIONS) {
+            else if (ServerState == ActionState.QUESTIONS)
+            {
                 int y = 50;
-                foreach (ParticipantOrder f in QNFinished.Keys) {
+                foreach (ParticipantOrder f in QNFinished.Keys)
+                {
                     GUI.Label(new Rect(5, 5 + y, 150, 25), f + "  " + QNFinished[f].ToString());
                     y += 27;
                 }
             }
-        }
-        else if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost) {
-            GUI.Label(new Rect(5, 5, 150, 100), "Client: " +
-                                                ParticipantOrder + " " +
-                                                NetworkManager.Singleton.IsConnectedClient);
+            else if (ServerState == ActionState.READY)
+            {
+
+                if (GUI.Button(new Rect(20, 50, 80, 20), "Traffic Light"))
+                {
+                    Debug.Log("Traffic Light Go Green");
+                    //StartCoroutine(FindObjectOfType<TrafficLightGreen>().GoGreenClientRpc());
+                    FindObjectOfType<TrafficLightGreen>().InstantGreenClientRpc();
+                    //UpdateAllLights(FindObjectOfType<ScenarioManager>().GetStartingPositions());
+                    //GetComponent<TrafficLightGreen>().InstantGreenClientRpc();
+
+
+                }
+            }
+            else if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
+            {
+                GUI.Label(new Rect(5, 5, 150, 100), "Client: " +
+                                                    ParticipantOrder + " " +
+                                                    NetworkManager.Singleton.IsConnectedClient);
+            }
         }
     }
 
@@ -661,6 +690,18 @@ public class ConnectionAndSpawing : MonoBehaviour {
         QNFinished[po] = true;
     }
 
+    /*public void UpdateAllLights(Dictionary<ParticipantOrder, GpsController.Direction> dict) {
+        foreach (ParticipantOrder or in dict.Keys) {
+            ulong? cid = GetClientID(or);
+            if (cid != null)
+            {
+                //StartCoroutine();
+                NetworkManager.Singleton.ConnectedClients[(ulong) cid].NetworkObject.GetComponent<TrafficLightGreen>().GoGreen();
+                GetComponent<NetworkObject>().GetComponent<TrafficLightGreen>().InstantGreen();
+            }
+        }
+    }*/
+    
     #region GPSUpdate
 
     private void SetStartingGPSDirections() {
