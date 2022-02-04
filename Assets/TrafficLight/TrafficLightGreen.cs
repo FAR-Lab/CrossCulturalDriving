@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Unity.Netcode;
 
 
-public class TrafficLightGreen : MonoBehaviour
+public class TrafficLightGreen : NetworkBehaviour
 {
 
     public Material off;
@@ -18,35 +18,66 @@ public class TrafficLightGreen : MonoBehaviour
     private Renderer ren;
     private Material[] mat; // 0 = yellow, 1 = red, 2 = green
 
+    private bool Toggle = true;
     void Start()
     {
         
     }
     void Update()
     {
-        if (Input.GetKeyDown("g"))
+        /*if (!IsServer)
         {
-
-            StartCoroutine(GoGreenClientRpc());
+            return;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (Toggle)
+            {
+                StartGreenCoroutineClientRpc();
+                Toggle = false;
+            }
+            else
+            {
+                StartRedCoroutineClientRpc();
+                Toggle = true;
+            }
+        }*/
     }
 
     [ClientRpc]
-    public void InstantGreenClientRpc()
+    public void StartGreenCoroutineClientRpc()
     {
+        StartCoroutine(GoGreen());  
+    }
+    [ClientRpc]
+    public void StartRedCoroutineClientRpc()
+    {
+        StartCoroutine(GoRed());  
+    }
+    private IEnumerator GoRed()
+    {
+
         ren = Object.GetComponent<Renderer>();
         mat = ren.materials;
-        
-        mat[0] = off;
+    
+        mat[0] = yellow;
         mat[1] = off;
-        mat[2] = green;
+        mat[2] = off;
 
         ren.materials = mat;
+
+        yield return new WaitForSeconds(1);
+        
+        mat[0] = off;
+        mat[1] = red;
+        mat[2] = off;
+
+        ren.materials = mat;
+
     }
     
-    [ClientRpc]
-    public IEnumerator GoGreenClientRpc()
+    private IEnumerator GoGreen()
     {
 
         ren = Object.GetComponent<Renderer>();
@@ -66,7 +97,6 @@ public class TrafficLightGreen : MonoBehaviour
 
         ren.materials = mat;
 
-
-
     }
 }
+   
