@@ -224,14 +224,10 @@ public class ConnectionAndSpawing : MonoBehaviour {
                     Debug.Log("WARNING despawing MAIN!");
                     break;
                 case ParticipantObjectSpawnType.CAR:
-                    ClientRpcParams clientRpcParams = new ClientRpcParams {
-                        Send = new ClientRpcSendParams {
-                            TargetClientIds = new ulong[] {clientID}
-                        }
-                    };
+                   
                     if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null) {
                         ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
-                            .De_AssignCarTransform(clientRpcParams);
+                            .De_AssignCarTransform(clientID);
                     }
 
                     break;
@@ -283,11 +279,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
             //newCar.name = "XE_Rigged_Networked_" + GetOrder(clientID);
 
-            ClientRpcParams clientRpcParams = new ClientRpcParams {
-                Send = new ClientRpcSendParams {
-                    TargetClientIds = new ulong[] {clientID}
-                }
-            };
+           
 
 
             newCar.GetComponent<NetworkObject>().Spawn(true);
@@ -304,7 +296,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
                     //        clientRpcParams);
 
                     ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
-                        .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientRpcParams);
+                        .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientID);
                 }
 
                 else { Debug.LogError("Could not find player as I am spawing the CAR. Broken please fix."); }
@@ -424,6 +416,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
         
     }
 
+    private string LoadedScene = "";
     public void LoadSceneReRun(string totalPath) {
         if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsClient) {
             Debug.LogError("Dont try to load a scene for RERUN while the server is running. Pleas restart the program");
@@ -438,12 +431,21 @@ public class ConnectionAndSpawing : MonoBehaviour {
         }
         if(IncludedScenes.ConvertAll(x => x.SceneName).Contains(sceneName)) {
             Debug.Log("Found scene. Loading!");
-            SceneManager.LoadScene(sceneName);
+            if (LoadedScene == sceneName) {
+                Debug.Log("ReRunscene already loaded continuing!");
+                return;
+            }
+            
+            if (LoadedScene.Length > 0) {
+                SceneManager.UnloadSceneAsync(LoadedScene);
+            }
+
+            LoadedScene = sceneName;
+            SceneManager.LoadScene(sceneName,LoadSceneMode.Additive);
         }
         else {
             Debug.LogWarning("Did not find scene. Aborting!");
         }
-        
     }
 
     public void StartReRun() {

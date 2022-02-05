@@ -158,7 +158,7 @@ public class QNSelectionManager : MonoBehaviour
 
         if (ParentPosition != null)
         {
-            transform.position = ParentPosition.position + new Vector3(0, up, -forward);
+            transform.position = ParentPosition.position + ParentPosition.rotation* new  Vector3(0, up, forward);
         }
 
         switch (m_interalState)
