@@ -26,7 +26,7 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
     public Quaternion[] BoneRotations;
 
     private float lastUpdate = 0;
-    public float HandTimeout = 1;
+    private float HandTimeout = 2;
 
     private bool IsDataValid = false;
     private bool ready = false;
@@ -41,8 +41,8 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
 
     // Update is called once per frame
     void Update() {
-        IsDataValid = true;
-      // if (IsDataValid && Time.time < lastUpdate) { IsDataValid = false; }
+       
+      if (IsDataValid && Time.time < lastUpdate) { IsDataValid = false; }
     }
 
     public void GetNewData(NetworkSkeletonPoseData newRemoteHandData) {
@@ -56,7 +56,7 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
            return;
        }
       // Debug.Log("Should be a right hand");
-      lastUpdate= Time.time+HandTimeout;
+         lastUpdate= Time.time+HandTimeout;
         IsDataValid = true;
        // Debug.Log("Should be a right hand1");
         RootPos = newRemoteHandData.RootPos;

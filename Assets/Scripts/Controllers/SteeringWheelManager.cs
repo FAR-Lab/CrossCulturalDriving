@@ -78,7 +78,7 @@ public class SteeringWheelManager : MonoBehaviour {
     private Dictionary<ParticipantOrder, SteeringWheelData> ActiveWheels =
         new Dictionary<ParticipantOrder, SteeringWheelData>();
 
-
+    private const String FileName="ActiveWheels.conf";
     public static SteeringWheelManager Singleton { get; private set; }
     private void SetSingleton() { Singleton = this; }
 
@@ -186,17 +186,36 @@ public class SteeringWheelManager : MonoBehaviour {
         }
     }
 
-
+    private ParticipantOrder CallibrationTarget = ParticipantOrder.None;
     public void OnGUI() {
         if (ConnectionAndSpawing.Singleton.ServerState == ActionState.WAITINGROOM) {
-            //   GUISkin skin = new GUISkin();
-            // skin.font.fontSize = 16;
+
+
+            if (CallibrationTarget != ParticipantOrder.None) {
+                foreach (SteeringWheelData swd in ActiveWheels.Values) {
+                    if (swd.OtherButton) {
+
+                        switchSteeringWheels(swd.wheelIndex, CallibrationTarget);
+                        CallibrationTarget = ParticipantOrder.None;
+                        break;
+                    }
+                }
+
+                GUI.Label(new Rect(160 + 75, 10, 25 * 6, 50), "Press a button for " + CallibrationTarget.ToString());
+                return;
+            }
             List<ParticipantOrder> tmp =
                 new List<ParticipantOrder>(Enum.GetValues(typeof(ParticipantOrder)).Cast<ParticipantOrder>().ToArray());
             tmp.Remove(ParticipantOrder.None);
             int x = 75;
 
             foreach (var v in tmp) {
+                if(GUI.Button(new Rect(160 + x, 10, 25, 25), v.ToString()))
+                {
+                    CallibrationTarget = v;
+                    return;
+                }
+                
                 GUI.Label(new Rect(160 + x, 25, 25, 25), v.ToString());
                 var text = "";
                 if (ActiveWheels.ContainsKey(v)) { text = ActiveWheels[v].wheelIndex.ToString(); }
@@ -205,33 +224,38 @@ public class SteeringWheelManager : MonoBehaviour {
                 text = GUI.TextField(new Rect(150 + x, 50, 25, 25), text, 2);
                 if (prev != text) {
                     if (int.TryParse(text, out int newIndex)) {
-                        ParticipantOrder switchPartner = ParticipantOrder.None;
-                        foreach (var swd in tmp) {
-                            if (ActiveWheels.ContainsKey(swd) && ActiveWheels[swd].wheelIndex == newIndex) {
-                                switchPartner = swd;
-                                break;
-                            }
-                        }
-
-                        if (switchPartner != ParticipantOrder.None) {
-                            if (ActiveWheels.ContainsKey(v)) {
-                                (ActiveWheels[v], ActiveWheels[switchPartner]) =
-                                    (ActiveWheels[switchPartner], ActiveWheels[v]);
-                                return;
-                            }
-                            else {
-                                ActiveWheels[v] = ActiveWheels[switchPartner];
-                                ActiveWheels.Remove(switchPartner);
-                                return;
-                            }
-                        }
-                        else { text = prev; }
+                        switchSteeringWheels(newIndex, v);
+                        text = prev;
                     }
-                    else { text = prev; }
                 }
-
-
                 x += 25;
+            }
+        }
+    }
+
+    private void switchSteeringWheels(int newIndex,ParticipantOrder v) {
+        List<ParticipantOrder> tmp =
+            new List<ParticipantOrder>(Enum.GetValues(typeof(ParticipantOrder)).Cast<ParticipantOrder>().ToArray());
+        tmp.Remove(ParticipantOrder.None);
+        
+        ParticipantOrder switchPartner = ParticipantOrder.None;
+        foreach (var switchOrder in tmp) {
+            if (ActiveWheels.ContainsKey(switchOrder) && ActiveWheels[switchOrder].wheelIndex == newIndex) {
+                switchPartner = switchOrder;
+                break;
+            }
+        }
+
+        if (switchPartner != ParticipantOrder.None) {
+            if (ActiveWheels.ContainsKey(v)) {
+                (ActiveWheels[v], ActiveWheels[switchPartner]) =
+                    (ActiveWheels[switchPartner], ActiveWheels[v]);
+                return;
+            }
+            else {
+                ActiveWheels[v] = ActiveWheels[switchPartner];
+                ActiveWheels.Remove(switchPartner);
+                return;
             }
         }
     }
@@ -334,7 +358,7 @@ public class SteeringWheelManager : MonoBehaviour {
         else { return false; }
     }
     public bool GetButtonInput(ParticipantOrder po) {
-        if (ActiveWheels.ContainsKey(po)) {  Debug.Log(po.ToString()+"Requested Button it is "+ActiveWheels[po].OtherButton); return ActiveWheels[po].OtherButton;}
+        if (ActiveWheels.ContainsKey(po)) {   return ActiveWheels[po].OtherButton;}
         else { return false; }
     }
     public float GetAccelInput(ParticipantOrder po) {

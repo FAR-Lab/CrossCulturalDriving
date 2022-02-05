@@ -51,25 +51,23 @@ public class ParticipantInputCapture : NetworkBehaviour {
 
 
     public override void OnNetworkSpawn() {
-        //if (!IsLocalPlayer) {
-        //   this.enabled = false;//TODO this is a somehwat late change  // we need to figure out iof anything broke
-        // }
-        CurrentDirection.OnValueChanged += NewGpsDirection;
-        _localStateManager = GetComponent<StateManager>();
+        if (IsClient && !IsLocalPlayer) return;
+        if (IsLocalPlayer) {
+            CurrentDirection.OnValueChanged += NewGpsDirection;
+            _localStateManager = GetComponent<StateManager>();
 
-        ConfigFileLoading conf = new ConfigFileLoading();
-        conf.Init(OffsetFileName);
-        if (conf.FileAvalible()) { conf.LoadLocalOffset(out offsetPositon, out offsetRotation); }
 
-        if (IsServer)
-        {
-            po = ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(OwnerClientId);
-        }
-        else
-        {
+            ConfigFileLoading conf = new ConfigFileLoading();
+            conf.Init(OffsetFileName);
+            if (conf.FileAvalible()) { conf.LoadLocalOffset(out offsetPositon, out offsetRotation); }
             po = ConnectionAndSpawing.Singleton.ParticipantOrder;
+        }else if (IsServer) {
+            
+            po = ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(OwnerClientId); 
+            UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation,LastRot);
+            
         }
-        
+       
     }
 
     private ParticipantOrder po = ParticipantOrder.None;
@@ -94,20 +92,23 @@ public class ParticipantInputCapture : NetworkBehaviour {
             GUI.Label(new Rect(200, 5, 150, 100), "Client State" + _localStateManager.GlobalState.Value);
     }
 
-    public void AssignCarTransform(NetworkVehicleController MyCar, ClientRpcParams clientRpcParams) {
+    public void AssignCarTransform(NetworkVehicleController MyCar, ulong targetClient) {
         if (IsServer) {
             NetworkedVehicle = MyCar;
-            AssignCarTransformClientRPC(MyCar.NetworkObject, clientRpcParams);
+            _transform = NetworkedVehicle.transform.Find("CameraPosition");
+            AssignCarTransformClientRPC(MyCar.NetworkObject, targetClient);
         }
     }
 
     [ClientRpc]
-    private void AssignCarTransformClientRPC(NetworkObjectReference MyCar, ClientRpcParams clientRpcParams = default) {
+    private void AssignCarTransformClientRPC(NetworkObjectReference MyCar, ulong targetClient) {
         if (MyCar.TryGet(out NetworkObject targetObject)) {
-            NetworkedVehicle = targetObject.transform.GetComponent<NetworkVehicleController>();
+            if (targetClient == OwnerClientId) {
+                NetworkedVehicle = targetObject.transform.GetComponent<NetworkVehicleController>();
+                Debug.Log("Tried to get a new car. Its my Car!");
+            }
 
             _transform = NetworkedVehicle.transform.Find("CameraPosition");
-            Debug.Log("Tried to get a new car. hopefully its my car!");
         }
         else {
             Debug.LogWarning(
@@ -116,15 +117,15 @@ public class ParticipantInputCapture : NetworkBehaviour {
     }
 
 
-    public void De_AssignCarTransform(ClientRpcParams clientRpcParams) {
+    public void De_AssignCarTransform(ulong targetClient) {
         if (IsServer) {
             NetworkedVehicle = null;
-            De_AssignCarTransformClientRPC(clientRpcParams);
+            De_AssignCarTransformClientRPC(targetClient);
         }
     }
 
     [ClientRpc]
-    private void De_AssignCarTransformClientRPC(ClientRpcParams clientRpcParams = default) {
+    private void De_AssignCarTransformClientRPC(ulong targetClient) {
         NetworkedVehicle = null;
         _transform = null;
         DontDestroyOnLoad(gameObject);
@@ -180,13 +181,18 @@ public class ParticipantInputCapture : NetworkBehaviour {
             var transform1 = transform;
             var transform2 = _transform;
             transform1.rotation = transform2.rotation * offsetRotation;
-            if (!init) {
+            if (!init && IsLocalPlayer) {
                 LastRot = transform1.rotation;
                 init = true;
+                ShareOffsetServerRPC(offsetPositon, offsetRotation,LastRot); 
             }
 
             transform1.position = transform2.position +
                                   ((transform1.rotation * Quaternion.Inverse(LastRot)) * offsetPositon);
+
+            if (IsServer) {
+                Debug.Log("Updating relative positon on server with: "+offsetPositon.ToString()+" and "+offsetRotation.ToString() );
+            }
         }
     }
 
@@ -198,6 +204,27 @@ public class ParticipantInputCapture : NetworkBehaviour {
         ConfigFileLoading conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
         conf.StoreLocalOffset(offsetPositon, offsetRotation);
+        ShareOffsetServerRPC(offsetPositon, offsetRotation,LastRot);
+    }
+
+    [ServerRpc]
+    public void ShareOffsetServerRPC(Vector3 offsetPositon, Quaternion offsetRotation,Quaternion InitRotation) {
+        UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation,InitRotation);
+        this.offsetPositon = offsetPositon;
+        this.offsetRotation = offsetRotation;
+        LastRot=InitRotation;
+        Debug.Log(offsetPositon.ToString()+offsetRotation.ToString());
+    }
+
+    [ClientRpc]
+    public void UpdateOffsetRemoteClientRPC(Vector3 _offsetPositon, Quaternion _offsetRotation,Quaternion InitRotation) {
+        if (IsLocalPlayer) return;
+
+        offsetPositon = _offsetPositon;
+        offsetRotation = _offsetRotation;
+        LastRot = InitRotation;
+        init = true;
+        Debug.Log("Updated Callibrated offsets based on remote poisiton");
     }
 
     public Transform GetMyCar() { return NetworkedVehicle.transform; }
