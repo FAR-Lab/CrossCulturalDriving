@@ -190,9 +190,9 @@ public class ParticipantInputCapture : NetworkBehaviour {
             transform1.position = transform2.position +
                                   ((transform1.rotation * Quaternion.Inverse(LastRot)) * offsetPositon);
 
-            if (IsServer) {
-                Debug.Log("Updating relative positon on server with: "+offsetPositon.ToString()+" and "+offsetRotation.ToString() );
-            }
+          //  if (IsServer) {
+             //   Debug.Log("Updating relative positon on server with: "+offsetPositon.ToString()+" and "+offsetRotation.ToString() );
+          //  }
         }
     }
 
@@ -213,7 +213,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
         this.offsetPositon = offsetPositon;
         this.offsetRotation = offsetRotation;
         LastRot=InitRotation;
-        Debug.Log(offsetPositon.ToString()+offsetRotation.ToString());
+       // Debug.Log(offsetPositon.ToString()+offsetRotation.ToString());
     }
 
     [ClientRpc]
