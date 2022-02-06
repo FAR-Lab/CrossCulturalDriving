@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class QNLogger {
     public static string qnMessageName = "QNDATA";
-    public static char sep = ';'; //Separator for data values.
+    public static char sep = '\n'; //Separator for data values.
 
     private string output = "";
    
@@ -16,7 +16,6 @@ public class QNLogger {
 
         output += String.Format("{0:yyyymmdd-HHmmss}-{1}.txt", System.DateTime.Now,
             ConnectionAndSpawing.Singleton.ParticipantOrder.ToString());
-
         output += sep;
 
     }
