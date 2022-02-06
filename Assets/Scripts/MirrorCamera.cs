@@ -24,7 +24,7 @@ public class MirrorCamera : MonoBehaviour {
         rt = new RenderTexture(width, height, depth, rtf);
         rt.Create();
         rt.name = "MirrorCameraTexture"+ transform.name;
-        Debug.Log("Create render texture"+rt.name);
+     
         
         Material mat    = new Material(ReferenceMaterial);
         mat.SetTexture("_MainTex", rt, RenderTextureSubElement.Color);

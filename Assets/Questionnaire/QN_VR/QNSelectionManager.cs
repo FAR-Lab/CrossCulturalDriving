@@ -300,11 +300,14 @@ public class QNSelectionManager : MonoBehaviour
                 {
                     m_QNLogger.DumpData(out string data);
 
-                    byte[] tmp = Encoding.Unicode.GetBytes(data);
 
-                    Debug.Log(tmp.Length + "charcount");
-                    FastBufferWriter writer = new FastBufferWriter(tmp.Length, Allocator.Temp);
-                    writer.WriteBytesSafe(tmp);
+                    QNResultMessage message = new QNResultMessage();
+                    message.message = data;
+                    FastBufferWriter writer = new FastBufferWriter(message.GetSize(), Allocator.Temp);
+                    Debug.Log("The message is" + message.GetSize() + " While the buffer has" + writer.Capacity);
+                    writer.WriteNetworkSerializable(message);
+                    
+                    
                     NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(QNLogger.qnMessageName,
                         NetworkManager.Singleton.ServerClientId, writer, NetworkDelivery.Reliable);
 

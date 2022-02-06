@@ -43,12 +43,12 @@ public class HandDataSender : NetworkBehaviour {
                 .GetComponent<HandDataStreamerReader>();
 
 
-            Debug.Log("Client Registering CustomMessage Receive for:" + GETMessageNameBroadcast());
+            Debug.Log("Client Registering CustomMessage Receive for: " + GETMessageNameBroadcast());
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(
                 GETMessageNameBroadcast(), ClientReceivingHandData);
         }
         else if (IsServer) {
-            Debug.Log("Server Registering CustomMessage Receive for:" + GETMessageNameServer());
+            Debug.Log("Server Registering CustomMessage Receive for: " + GETMessageNameServer());
             NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(
                 GETMessageNameServer(), ServerReceivingHandData);
         }
