@@ -7,10 +7,11 @@ using System.Collections;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine.Rendering;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class MirrorCamera : MonoBehaviour {
     Camera cam;
-    public Material TargetMaterial;
+    public Material ReferenceMaterial;
+    public MeshRenderer TargetRenderer;
     public RenderTexture rt;
     public int width = 256;
     public int height = 256;
@@ -22,7 +23,13 @@ public class MirrorCamera : MonoBehaviour {
         cam = GetComponent<Camera>();
         rt = new RenderTexture(width, height, depth, rtf);
         rt.Create();
-        TargetMaterial.SetTexture("_MainTex", rt, RenderTextureSubElement.Color);
+        rt.name = "MirrorCameraTexture"+ transform.name;
+     
+        
+        Material mat    = new Material(ReferenceMaterial);
+        mat.SetTexture("_MainTex", rt, RenderTextureSubElement.Color);
+        TargetRenderer.material = mat;
+        
         cam.forceIntoRenderTexture = true;
         cam.targetTexture = rt;
         cam.stereoTargetEye = StereoTargetEyeMask.None;

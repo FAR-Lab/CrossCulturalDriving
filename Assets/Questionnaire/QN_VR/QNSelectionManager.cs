@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using Newtonsoft.Json;
 using Unity.Collections;
-using Unity.Netcode;
+using Unity.Netcode; 
 
 public class QNSelectionManager : MonoBehaviour
 {
@@ -158,7 +158,7 @@ public class QNSelectionManager : MonoBehaviour
 
         if (ParentPosition != null)
         {
-            transform.position = ParentPosition.position + new Vector3(0, up, -forward);
+            transform.position = ParentPosition.position + ParentPosition.rotation* new  Vector3(0, up, forward);
         }
 
         switch (m_interalState)
@@ -300,11 +300,14 @@ public class QNSelectionManager : MonoBehaviour
                 {
                     m_QNLogger.DumpData(out string data);
 
-                    byte[] tmp = Encoding.Unicode.GetBytes(data);
 
-                    Debug.Log(tmp.Length + "charcount");
-                    FastBufferWriter writer = new FastBufferWriter(tmp.Length, Allocator.Temp);
-                    writer.WriteBytesSafe(tmp);
+                    QNResultMessage message = new QNResultMessage();
+                    message.message = data;
+                    FastBufferWriter writer = new FastBufferWriter(message.GetSize(), Allocator.Temp);
+                    Debug.Log("The message is" + message.GetSize() + " While the buffer has" + writer.Capacity);
+                    writer.WriteNetworkSerializable(message);
+                    
+                    
                     NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(QNLogger.qnMessageName,
                         NetworkManager.Singleton.ServerClientId, writer, NetworkDelivery.Reliable);
 

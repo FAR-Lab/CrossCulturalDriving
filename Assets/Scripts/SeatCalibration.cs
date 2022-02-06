@@ -32,7 +32,7 @@ public class SeatCalibration : MonoBehaviour {
 
     void Start() { OriginalPosition = transform.position; }
 
-
+#if UNITY_EDITOR
     void OnGUI() {
         GUIStyle gs = new GUIStyle();
         gs.fontSize = 30;
@@ -70,6 +70,7 @@ public class SeatCalibration : MonoBehaviour {
 
         GUI.Label(new Rect(610, 10, 600, 300), displayString, gs);
     }
+#endif
 
 
     private Transform cam;
@@ -114,24 +115,24 @@ public class SeatCalibration : MonoBehaviour {
             case SearCalibrationState.STARTCALIBRATING:
                 OVRPlugin.RecenterTrackingOrigin(OVRPlugin.RecenterFlags.Default);
                 Quaternion rotation = Quaternion.FromToRotation(cam.forward, steeringWheelCenter.parent.forward);
-                Debug.Log("rotation.eulerAngles.y"+Quaternion.Euler(0,rotation.eulerAngles.y, 0));
-                
-                myPic.SetNewRotationOffset(Quaternion.Euler(0,rotation.eulerAngles.y, 0));
-                callibrationState= SearCalibrationState.CALIBRATING;
+                Debug.Log("rotation.eulerAngles.y" + Quaternion.Euler(0, rotation.eulerAngles.y, 0));
+
+                myPic.SetNewRotationOffset(Quaternion.Euler(0, rotation.eulerAngles.y, 0));
+                callibrationState = SearCalibrationState.CALIBRATING;
                 callibrationTimer = 5f;
                 break;
             case SearCalibrationState.CALIBRATING:
 
                 if (HandModelL.IsDataHighConfidence && HandModelR.IsDataHighConfidence) {
                     // if this does not work we might need to look further for getting the right bone
-                    Vector3 A = HandModelL.Bones[9].Transform.position;//HandModelL.transform.position;
-                    Vector3 B = HandModelR.Bones[9].Transform.position;//HandModelR.transform.position;
+                    Vector3 A = HandModelL.Bones[9].Transform.position; //HandModelL.transform.position;
+                    Vector3 B = HandModelR.Bones[9].Transform.position; //HandModelR.transform.position;
                     Vector3 AtoB = B - A;
-                   
+
                     Vector3 transformDifference = (A + (AtoB * 0.5f)) - steeringWheelCenter.position;
-                 
+
                     myPic.SetNewPositionOffset(-transformDifference);
-                    Debug.Log("transformDifference"+(-transformDifference).ToString());
+                    Debug.Log("transformDifference" + (-transformDifference).ToString());
                 }
 
                 if (callibrationTimer > 0) { callibrationTimer -= Time.deltaTime; }

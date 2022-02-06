@@ -26,6 +26,14 @@ public class DisableComponents : NetworkBehaviour
             
             foreach(var c in GetComponentsInChildren<Camera>()){c.enabled = false;}
             GetComponentInChildren<AudioListener>().enabled = false;
+            
+            foreach (OVRCustomSkeleton tf in GetComponentsInChildren<OVRCustomSkeleton>()) {
+                tf.gameObject.SetActive(false);
+            }
+            foreach (OVRControllerHelper tf in GetComponentsInChildren<OVRControllerHelper>()) {
+                tf.gameObject.SetActive(false);
+            }
+            
            
         }
 

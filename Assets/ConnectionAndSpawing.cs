@@ -224,14 +224,10 @@ public class ConnectionAndSpawing : MonoBehaviour {
                     Debug.Log("WARNING despawing MAIN!");
                     break;
                 case ParticipantObjectSpawnType.CAR:
-                    ClientRpcParams clientRpcParams = new ClientRpcParams {
-                        Send = new ClientRpcSendParams {
-                            TargetClientIds = new ulong[] {clientID}
-                        }
-                    };
+                   
                     if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null) {
                         ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
-                            .De_AssignCarTransform(clientRpcParams);
+                            .De_AssignCarTransform(clientID);
                     }
 
                     break;
@@ -285,11 +281,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
             //newCar.name = "XE_Rigged_Networked_" + GetOrder(clientID);
 
-            ClientRpcParams clientRpcParams = new ClientRpcParams {
-                Send = new ClientRpcSendParams {
-                    TargetClientIds = new ulong[] {clientID}
-                }
-            };
+           
 
 
             newCar.GetComponent<NetworkObject>().Spawn(true);
@@ -297,19 +289,20 @@ public class ConnectionAndSpawing : MonoBehaviour {
             if (!fakeCare) {
                 newCar.GetComponent<NetworkVehicleController>().AssignClient(clientID, GetOrder(clientID));
 
-
+#if SPAWNDEBUG
                 Debug.Log("Assigning car to a new partcipant with clinetID:" + clientID.ToString() + " =>" +
                           newCar.GetComponent<NetworkObject>().NetworkObjectId);
+#endif
                 if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null) {
                     // ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
                     //  .AssignCarTransformClientRPC(newCar.GetComponent<NetworkObject>(), GetOrder(clientID), lang,
                     //        clientRpcParams);
 
                     ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
-                        .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientRpcParams);
+                        .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientID);
                 }
 
-                else { Debug.LogError("Could not find player as I am spawing the CAR. Broken please fix."); }
+                else { Debug.LogError("Could not find player as I am spawning the CAR. Broken please fix."); }
             }
 
             ClientObjects[clientID].Add(ParticipantObjectSpawnType.CAR, newCar.GetComponent<NetworkObject>());
@@ -377,7 +370,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
         GetComponent<QNDataStorageServer>().enabled = true;
         SetupServerFunctionality();
         m_ReRunManager.SetRecordingFolder(pairName);
-        Debug.Log("Starting Server for pair: "+pairName);
+        Debug.Log("Starting Server for session: "+pairName);
     }
 
     
@@ -388,16 +381,24 @@ public class ConnectionAndSpawing : MonoBehaviour {
     private bool SuccessFullyConnected = false;
 
     private void ClientDisconnected_client(ulong ClientID) {
-        if (!SuccessFullyConnected) {
-            ReponseHandler.Invoke(ClienConnectionResponse.FAILED);
+        Debug.Log(SuccessFullyConnected);
+        if (SuccessFullyConnected) {
+            Debug.Log("Quitting due to disconnection.");
+            Application.Quit();
         }
         else {
-            Application.Quit();
+            ReponseHandler.Invoke(ClienConnectionResponse.FAILED);
+            Debug.Log("Retrying connection");
         }
         
     }
-    private void ClientConnected_client(ulong ClientID) { ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS);
+    private void ClientConnected_client(ulong ClientID) {
+        if ( ClientID != NetworkManager.Singleton.LocalClient.ClientId) return;
+        
         SuccessFullyConnected = true;
+        ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS);
+        Debug.Log(SuccessFullyConnected+" CHECK HERE");
+      
     }
     void SetupClientFunctionality() {
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected_client;
@@ -426,6 +427,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
         
     }
 
+    private string LoadedScene = "";
     public void LoadSceneReRun(string totalPath) {
         if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsClient) {
             Debug.LogError("Dont try to load a scene for RERUN while the server is running. Pleas restart the program");
@@ -440,12 +442,21 @@ public class ConnectionAndSpawing : MonoBehaviour {
         }
         if(IncludedScenes.ConvertAll(x => x.SceneName).Contains(sceneName)) {
             Debug.Log("Found scene. Loading!");
-            SceneManager.LoadScene(sceneName);
+            if (LoadedScene == sceneName) {
+                Debug.Log("ReRunscene already loaded continuing!");
+                return;
+            }
+            
+            if (LoadedScene.Length > 0) {
+                SceneManager.UnloadSceneAsync(LoadedScene);
+            }
+
+            LoadedScene = sceneName;
+            SceneManager.LoadScene(sceneName,LoadSceneMode.Additive);
         }
         else {
             Debug.LogWarning("Did not find scene. Aborting!");
         }
-        
     }
 
     public void StartReRun() {
@@ -483,6 +494,10 @@ public class ConnectionAndSpawing : MonoBehaviour {
         ServerState = ActionState.LOADING;
         LocalLoadScene(name);
         LastLoadedScene = name;
+    }
+
+    public string GetLoadedScene() {
+        return LastLoadedScene;
     }
 
     private string LastLoadedScene = "";
@@ -744,4 +759,6 @@ public class ConnectionAndSpawing : MonoBehaviour {
         if (_ClientToOrder.ContainsKey(clientid)) return _ClientToOrder[clientid];
         else return ParticipantOrder.None;
     }
+    
+  
 }
