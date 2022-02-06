@@ -19,6 +19,8 @@ public class ScenarioManager : MonoBehaviour {
     public bool ready { get; private set; } // property
     private Dictionary<ParticipantOrder, Pose> MySpawnPositions;
 
+
+
     private Transform MyLocalClient;
    
 
@@ -51,6 +53,7 @@ public class ScenarioManager : MonoBehaviour {
             return null;
         }
     }
+    
 
     private void GetSpawnPoints() {
         if (MySpawnPositions == null || MySpawnPositions.Count == 0) {
@@ -61,6 +64,7 @@ public class ScenarioManager : MonoBehaviour {
             }
         }
     }
+    
 
     public void RunQuestionairNow(Transform MyLocalClient_) {
         MyLocalClient = MyLocalClient_;
