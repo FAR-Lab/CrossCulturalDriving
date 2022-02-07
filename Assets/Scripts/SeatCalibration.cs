@@ -8,13 +8,13 @@ using UnityEngine.XR;
 public class SeatCalibration : MonoBehaviour {
     public enum SearCalibrationState {
         NONE,
-        LOAD,
         STARTCALIBRATING,
         CALIBRATING,
         FINISHED,
         READY,
         ERROR,
-        DEFAULT
+        DEFAULT,
+        FAILED
     }
 
     public OVRCustomSkeleton HandModelL;
@@ -22,10 +22,7 @@ public class SeatCalibration : MonoBehaviour {
 
     public Transform steeringWheelCenter;
 
-    float yRotationCorection = 0;
-    float _accumelatedYError = 0;
-
-    SearCalibrationState callibrationState = 0;
+    SearCalibrationState callibrationState = SearCalibrationState.NONE;
 
     private Vector3 OriginalPosition;
 
@@ -39,10 +36,6 @@ public class SeatCalibration : MonoBehaviour {
         gs.normal.textColor = Color.white;
         string displayString = "";
         switch (callibrationState) {
-            case SearCalibrationState.LOAD:
-                displayString = "Loaded!";
-                gs.normal.textColor = Color.green;
-                break;
             case SearCalibrationState.STARTCALIBRATING:
                 displayString = "Starting Callibration!";
                 gs.normal.textColor = Color.green;
@@ -94,6 +87,7 @@ public class SeatCalibration : MonoBehaviour {
     }
 
     private float callibrationTimer = 0;
+    int ReTryCount = 0;
 
     void Update() {
         if (cam == null ||
@@ -111,7 +105,7 @@ public class SeatCalibration : MonoBehaviour {
 
         switch (callibrationState) {
             case SearCalibrationState.NONE: break;
-            case SearCalibrationState.LOAD: break;
+          
             case SearCalibrationState.STARTCALIBRATING:
                 OVRPlugin.RecenterTrackingOrigin(OVRPlugin.RecenterFlags.Default);
                 Quaternion rotation = Quaternion.FromToRotation(cam.forward, steeringWheelCenter.parent.forward);
@@ -130,6 +124,10 @@ public class SeatCalibration : MonoBehaviour {
                     Vector3 AtoB = B - A;
 
                     Vector3 transformDifference = (A + (AtoB * 0.5f)) - steeringWheelCenter.position;
+                    if (transformDifference.magnitude > 100) {
+                        Debug.Log(transformDifference.magnitude);
+                        callibrationState = SearCalibrationState.ERROR;
+                    }
 
                     myPic.SetNewPositionOffset(-transformDifference);
                     Debug.Log("transformDifference" + (-transformDifference).ToString());
@@ -144,7 +142,25 @@ public class SeatCalibration : MonoBehaviour {
                 callibrationState = SearCalibrationState.READY;
                 break;
             case SearCalibrationState.READY: break;
-            case SearCalibrationState.ERROR: break;
+            case SearCalibrationState.ERROR:
+                if (ReTryCount > 10) {
+                    if (!myPic.DeleteCallibrationFile()) {
+                        Debug.LogWarning("Could not delete calibration file. The data in that file is probably corrupt. Please consider removing the file manually.");
+                    }
+                    Debug.LogError("Had 10 retries calibrating the play. Did not work. Quitting.");
+                    Application.Quit();
+                }
+                else {
+                    Debug.Log("Encountered a Calibration Error. Resetting Offsets and trying again try: " +
+                              ReTryCount.ToString());
+
+                    myPic.SetNewRotationOffset(Quaternion.identity);
+                    myPic.SetNewPositionOffset(Vector3.zero);
+                    ReTryCount++;
+                    callibrationState = SearCalibrationState.STARTCALIBRATING;
+                }
+
+                break;
             case SearCalibrationState.DEFAULT: break;
             default: throw new ArgumentOutOfRangeException();
         }

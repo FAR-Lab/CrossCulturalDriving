@@ -97,6 +97,8 @@ public class ParticipantInputCapture : NetworkBehaviour {
             NetworkedVehicle = MyCar;
             _transform = NetworkedVehicle.transform.Find("CameraPosition");
             AssignCarTransformClientRPC(MyCar.NetworkObject, targetClient);
+            m_Speedometer = NetworkedVehicle.GetComponentInChildren<Speedometer>();
+            Debug.Log(m_Speedometer);
         }
     }
 
@@ -105,10 +107,13 @@ public class ParticipantInputCapture : NetworkBehaviour {
         if (MyCar.TryGet(out NetworkObject targetObject)) {
             if (targetClient == OwnerClientId) {
                 NetworkedVehicle = targetObject.transform.GetComponent<NetworkVehicleController>();
+                
                 Debug.Log("Tried to get a new car. Its my Car!");
             }
 
             _transform = NetworkedVehicle.transform.Find("CameraPosition");
+            m_Speedometer = NetworkedVehicle.GetComponentInChildren<Speedometer>();
+            
         }
         else {
             Debug.LogWarning(
@@ -175,6 +180,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
 
     private Quaternion LastRot = Quaternion.identity;
     private bool init = false;
+    Speedometer m_Speedometer;
 
     private void LateUpdate() {
         if (_transform != null) {
@@ -193,6 +199,10 @@ public class ParticipantInputCapture : NetworkBehaviour {
           //  if (IsServer) {
              //   Debug.Log("Updating relative positon on server with: "+offsetPositon.ToString()+" and "+offsetRotation.ToString() );
           //  }
+        }
+
+        if (m_Speedometer != null) {
+            m_Speedometer.UpdateSpeed(NetworkedVehicle.CurrentSpeed.Value);
         }
     }
 
@@ -228,4 +238,9 @@ public class ParticipantInputCapture : NetworkBehaviour {
     }
 
     public Transform GetMyCar() { return NetworkedVehicle.transform; }
+    public bool DeleteCallibrationFile() { 
+        ConfigFileLoading conf = new ConfigFileLoading();
+        conf.Init(OffsetFileName);
+       return conf.DeleteFile();
+    }
 }
