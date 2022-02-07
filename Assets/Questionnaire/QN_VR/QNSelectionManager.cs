@@ -101,25 +101,14 @@ public class QNSelectionManager : MonoBehaviour
         sba = GetComponentInChildren<selectionBarAnimation>();
 
 
-#if debug
+#if DEBUGQN
         startAskingTheQuestionairs(FindObjectOfType<LocalVRPlayer>().transform, QNFiles.ToArray(), "Test");
         changeLanguage("English");
         setRelativePosition(FindObjectOfType<LocalVRPlayer>().transform, 1, 2);
 #endif
     }
 
-    private void updateCursorPositoon(Transform currentHitTarget, RaycastResult rayRes)
-    {
-        Vector3 temp = Camera.main.transform.position
-                       + Camera.main
-                           .ScreenPointToRay(new Vector3(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2, 0),
-                               Camera.MonoOrStereoscopicEye.Mono).direction.normalized
-                       * rayRes.distance;
-
-        Debug.DrawLine(Camera.main.transform.position, temp, Color.red);
-        temp -= transform.position;
-        sba.updatePosition(transform.worldToLocalMatrix * temp);
-    }
+ 
 
     private Transform positioingRef;
 
@@ -156,8 +145,8 @@ public class QNSelectionManager : MonoBehaviour
             m_interalState = QNStates.FINISH;
         }
 
-        if (ParentPosition != null)
-        {
+        if (ParentPosition != null) {
+            transform.rotation = ParentPosition.rotation;
             transform.position = ParentPosition.position + ParentPosition.rotation* new  Vector3(0, up, forward);
         }
 

@@ -97,8 +97,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
             NetworkedVehicle = MyCar;
             _transform = NetworkedVehicle.transform.Find("CameraPosition");
             AssignCarTransformClientRPC(MyCar.NetworkObject, targetClient);
-            m_Speedometer = NetworkedVehicle.GetComponentInChildren<Speedometer>();
-            Debug.Log(m_Speedometer);
+           
         }
     }
 
@@ -112,7 +111,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
             }
 
             _transform = NetworkedVehicle.transform.Find("CameraPosition");
-            m_Speedometer = NetworkedVehicle.GetComponentInChildren<Speedometer>();
+           
             
         }
         else {
@@ -180,7 +179,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
 
     private Quaternion LastRot = Quaternion.identity;
     private bool init = false;
-    Speedometer m_Speedometer;
+  
 
     private void LateUpdate() {
         if (_transform != null) {
@@ -201,9 +200,7 @@ public class ParticipantInputCapture : NetworkBehaviour {
           //  }
         }
 
-        if (m_Speedometer != null) {
-            m_Speedometer.UpdateSpeed(NetworkedVehicle.CurrentSpeed.Value);
-        }
+       
     }
 
 

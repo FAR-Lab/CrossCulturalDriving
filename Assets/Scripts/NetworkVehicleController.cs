@@ -39,7 +39,7 @@ public class NetworkVehicleController : NetworkBehaviour {
 
     private ulong CLID;
 
-
+    Speedometer m_Speedometer;
 
     /// <summary>
     /// SoundRelevant Variables
@@ -63,6 +63,8 @@ public class NetworkVehicleController : NetworkBehaviour {
         traction.Value=(controller.traction + controller.tractionR + controller.rtraction + controller.rtractionR)/4.0f;
         MotorWheelsSlip.Value = controller.MotorWheelsSlip;
         CurrentSpeed.Value = controller.CurrentSpeed;
+
+        
         CurrentSurface.Value = controller.CurrentSurface;
     }
 
@@ -81,8 +83,12 @@ public class NetworkVehicleController : NetworkBehaviour {
 
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
+        m_Speedometer = GetComponentInChildren<Speedometer>();
+        CurrentSpeed.OnValueChanged += NewSpeedRecieved;
         if (IsServer) { controller = GetComponent<VehicleController>(); }
     }
+
+    private void NewSpeedRecieved(float previousvalue, float newvalue) {if(m_Speedometer!=null) m_Speedometer.UpdateSpeed(newvalue); }
 
     private void Start() {
         indicaterStage = 0;
