@@ -1,36 +1,92 @@
 fileFormatVersion: 2
 guid: d3e96af7de5335240be3fe2de45b954e
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: //RootNode
-    100002: _0indust02:door
-    100004: _0indust02:groundfloor
-    100006: _0indust02:lightbricks
-    100008: _0indust02:roof
-    100010: _0indust02:window
-    400000: //RootNode
-    400002: _0indust02:door
-    400004: _0indust02:groundfloor
-    400006: _0indust02:lightbricks
-    400008: _0indust02:roof
-    400010: _0indust02:window
-    2300000: _0indust02:door
-    2300002: _0indust02:groundfloor
-    2300004: _0indust02:lightbricks
-    2300006: _0indust02:roof
-    2300008: _0indust02:window
-    3300000: _0indust02:door
-    3300002: _0indust02:groundfloor
-    3300004: _0indust02:lightbricks
-    3300006: _0indust02:roof
-    3300008: _0indust02:window
-    4300000: _0indust02:lightbricks
-    4300002: _0indust02:window
-    4300004: _0indust02:roof
-    4300006: _0indust02:groundfloor
-    4300008: _0indust02:door
-    9500000: //RootNode
+  serializedVersion: 20200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: _0indust02:door
+  - first:
+      1: 100004
+    second: _0indust02:groundfloor
+  - first:
+      1: 100006
+    second: _0indust02:lightbricks
+  - first:
+      1: 100008
+    second: _0indust02:roof
+  - first:
+      1: 100010
+    second: _0indust02:window
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: _0indust02:door
+  - first:
+      4: 400004
+    second: _0indust02:groundfloor
+  - first:
+      4: 400006
+    second: _0indust02:lightbricks
+  - first:
+      4: 400008
+    second: _0indust02:roof
+  - first:
+      4: 400010
+    second: _0indust02:window
+  - first:
+      23: 2300000
+    second: _0indust02:door
+  - first:
+      23: 2300002
+    second: _0indust02:groundfloor
+  - first:
+      23: 2300004
+    second: _0indust02:lightbricks
+  - first:
+      23: 2300006
+    second: _0indust02:roof
+  - first:
+      23: 2300008
+    second: _0indust02:window
+  - first:
+      33: 3300000
+    second: _0indust02:door
+  - first:
+      33: 3300002
+    second: _0indust02:groundfloor
+  - first:
+      33: 3300004
+    second: _0indust02:lightbricks
+  - first:
+      33: 3300006
+    second: _0indust02:roof
+  - first:
+      33: 3300008
+    second: _0indust02:window
+  - first:
+      43: 4300000
+    second: _0indust02:lightbricks
+  - first:
+      43: 4300002
+    second: _0indust02:window
+  - first:
+      43: 4300004
+    second: _0indust02:roof
+  - first:
+      43: 4300006
+    second: _0indust02:groundfloor
+  - first:
+      43: 4300008
+    second: _0indust02:door
+  - first:
+      95: 9500000
+    second: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -58,10 +114,10 @@ ModelImporter:
       name: _0indust02_windowF
     second: {fileID: 2100000, guid: 8e1b31688aacf634794f1022408ca0da, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 2
     materialName: 0
     materialSearch: 1
-    materialLocation: 0
+    materialLocation: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -90,34 +146,45 @@ ModelImporter:
     globalScale: 0.01
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 0
     importBlendShapes: 1
     importCameras: 0
     importLights: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 1
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 0
-    previousCalculatedGlobalScale: 0.01
-    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 4
     normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -127,13 +194,17 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 0.01
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 0
+    hasExtraRoot: 1
     skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 0
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

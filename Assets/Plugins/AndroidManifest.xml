@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="29" android:compileSdkVersionCodename="10" android:installLocation="auto" package="REDACTED" platformBuildVersionCode="29" platformBuildVersionName="10">
+  <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true" android:xlargeScreens="true"/>
+  <uses-feature android:glEsVersion="0x00030000"/>
+  <supports-gl-texture android:name="GL_KHR_texture_compression_astc_ldr"/>
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+  <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+  <uses-feature android:name="android.hardware.microphone" android:required="false"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+  <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+  <uses-feature android:name="android.hardware.touchscreen.multitouch" android:required="false"/>
+  <uses-feature android:name="android.hardware.touchscreen.multitouch.distinct" android:required="false"/>
+  <uses-feature android:name="oculus.software.overlay_keyboard" android:required="false"/>
+  <uses-feature android:name="android.hardware.vr.headtracking" android:required="true" android:version="1"/>
+  <uses-feature android:name="oculus.software.handtracking" android:required="false"/>
+  <uses-permission android:name="com.oculus.permission.HAND_TRACKING"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <application android:allowBackup="false" android:extractNativeLibs="true" android:icon="@mipmap/app_icon" android:label="@string/app_name" android:networkSecurityConfig="@xml/network_sec_config" android:requestLegacyExternalStorage="true">
+    <activity android:configChanges="navigation|orientation|screenLayout|screenSize|uiMode" android:hardwareAccelerated="false" android:launchMode="singleTask" android:name="com.unity3d.player.UnityPlayerActivity" android:screenOrientation="landscape" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+        <category android:name="com.oculus.intent.category.VR"/>
+      </intent-filter>
+      <meta-data android:name="unityplayer.UnityActivity" android:value="true"/>
+      <meta-data android:name="android.notch_support" android:value="true"/>
+      <meta-data android:name="com.oculus.vr.focusaware" android:value="true"/>
+      <meta-data android:name="android.notch_support" android:value="true"/>
+    </activity>
+    <meta-data android:name="unity.splash-mode" android:value="0"/>
+    <meta-data android:name="unity.splash-enable" android:value="true"/>
+    <meta-data android:name="notch.config" android:value="portrait|landscape"/>
+    <meta-data android:name="unity.build-id" android:value="f9d86e1d-da2b-4f34-ac63-2b099cfad14d"/>
+    <meta-data android:name="com.samsung.android.vr.application.mode" android:value="vr_only"/>
+    <meta-data android:name="com.unity.xr.oculus.LowOverheadMode" android:value="false"/>
+    <meta-data android:name="com.oculus.supportedDevices" android:value="quest|quest2"/>
+    <meta-data android:name="com.oculus.handtracking.frequency" android:value="LOW"/>
+  </application>
+</manifest>

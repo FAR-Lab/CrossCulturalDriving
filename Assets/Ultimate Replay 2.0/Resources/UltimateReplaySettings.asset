@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c21c693a7772e248bced9b1e01cc7f3, type: 3}
+  m_Name: UltimateReplaySettings
+  m_EditorClassIdentifier: 
+  defaultReplayPreparer:
+    skipTypes:
+    - assemblyQualifiedTypeName: UltimateReplay.ReplayObject, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    - assemblyQualifiedTypeName: UltimateReplay.ReplayBehaviour, Assembly-CSharp,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    - assemblyQualifiedTypeName: UnityEngine.Camera, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    - assemblyQualifiedTypeName: UnityEngine.AudioSource, UnityEngine.AudioModule,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    - assemblyQualifiedTypeName: UnityEngine.ParticleSystem, UnityEngine.ParticleSystemModule,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    - assemblyQualifiedTypeName: MirrorCamera, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    preparerSettings:
+    - componentPreparerType:
+        assemblyQualifiedTypeName: UnityEngine.Animator, UnityEngine.AnimationModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      enabled: 1
+    - componentPreparerType:
+        assemblyQualifiedTypeName: UnityEngine.Behaviour, UnityEngine.CoreModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      enabled: 1
+    - componentPreparerType:
+        assemblyQualifiedTypeName: UnityEngine.Collider, UnityEngine.PhysicsModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      enabled: 1
+    - componentPreparerType:
+        assemblyQualifiedTypeName: UnityEngine.Collider2D, UnityEngine.Physics2DModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      enabled: 1
+    - componentPreparerType:
+        assemblyQualifiedTypeName: UnityEngine.Rigidbody, UnityEngine.PhysicsModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      enabled: 1
+    - componentPreparerType:
+        assemblyQualifiedTypeName: UnityEngine.Rigidbody2D, UnityEngine.Physics2DModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      enabled: 1
+  recordOptions:
+    recordFPS: 15
+    recordUpdateMethod: 0
+  playbackOptions:
+    playbackEndBehaviour: 2
+    playbackFPS: -1
+    playbackUpdateMethod: 0
+  prefabs:
+    prefabs:
+    - {fileID: 4178240877513323452, guid: 580bdbbad0ed7714ea9cb545f404aaa3, type: 3}
+    - {fileID: -2906884681439060436, guid: 76bfb64261b6b4eb080dcd0e2fa84572, type: 3}
