@@ -31,10 +31,13 @@ public class ScenarioManager : MonoBehaviour {
     public GpsController.Direction StartingDirectionParticipantE;
     public GpsController.Direction StartingDirectionParticipantF;
 
+
+    
     void Start() {
         qnmanager = null;
         GetSpawnPoints();
         ready = true;
+
     }
 
 

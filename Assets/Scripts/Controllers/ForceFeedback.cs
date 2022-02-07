@@ -28,7 +28,7 @@ public class ForceFeedback : MonoBehaviour {
     bool changedtoQuestionair = false;
 
 
-    float forcelerperQuestionair = -1;
+   
     ActionState previousACtionstate;
 
     private ParticipantOrder _participantOrder;

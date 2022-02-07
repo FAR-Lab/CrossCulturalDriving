@@ -96,7 +96,6 @@ public class SteeringWheelManager : MonoBehaviour {
 
     void Start() {
         FFBGain = 1.0f;
-      //  Debug.Log("SteeringWheelController - Startup");
     }
 
     public void Init() {

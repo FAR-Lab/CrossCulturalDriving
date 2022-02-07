@@ -29,8 +29,18 @@ using UnityEngine;
     }
 }
 
+//From https://answers.unity.com/questions/1034235/how-to-write-text-from-left-to-right.html
+class StringExtension
+{
+    public static string Reverse(string s)
+    {
+        char[] charArray = s.ToCharArray();
+        Array.Reverse(charArray);
+        return new string(charArray);
+    }
+}
 
-    
+
 //This object represent multiply answers for a question with the option to define a queue for the next questions in line
 
 public class ObjAnswer{

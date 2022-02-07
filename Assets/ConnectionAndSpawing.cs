@@ -14,7 +14,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
     public GameObject PlayerPrefab;
     public GameObject CarPrefab;
     public GameObject VRUIStartPrefab;
-    private GameObject[] TrafficLights;
+   
     
     public List<SceneField> IncludedScenes = new List<SceneField>();
     public string WaitingRoomSceneName;
@@ -368,6 +368,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
     public void StartAsServer(string pairName) {
         SteeringWheelManager.Singleton.enabled = true;
         GetComponent<QNDataStorageServer>().enabled = true;
+        GetComponent<TrafficLightSupervisor>().enabled = true;
         SetupServerFunctionality();
         m_ReRunManager.SetRecordingFolder(pairName);
         Debug.Log("Starting Server for session: "+pairName);
@@ -679,15 +680,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
             else if (ServerState == ActionState.READY)
             {
 
-                if (GUI.Button(new Rect(20, 50, 80, 20), "TL to Green"))
-                {
-                    SetTrafficLightsGreen(true);
-                }
-                if (GUI.Button(new Rect(20, 75, 80, 20), "TL to Red"))
-                {
-                    SetTrafficLightsGreen(false);
-                }
-                else if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
+                 if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
                 {
                     GUI.Label(new Rect(5, 5, 150, 100), "Client: " +
                                                         ParticipantOrder + " " +
@@ -697,24 +690,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
         }
     }
 
-    private void SetTrafficLightsGreen(bool toGreen)
-    {
-        TrafficLights = GameObject.FindGameObjectsWithTag("TrafficLight");
-
-        foreach (GameObject oneLight in TrafficLights)
-        {
-            if (toGreen)
-            {
-                Debug.Log(oneLight.name + "Go Green");
-                oneLight.GetComponent<TrafficLightGreen>().StartGreenCoroutineClientRpc();
-            }
-            else
-            {
-                Debug.Log(oneLight.name + "Go Red");
-                oneLight.GetComponent<TrafficLightGreen>().StartRedCoroutineClientRpc();
-            }
-        }
-    }
+   
     private Dictionary<ParticipantOrder, bool> QNFinished;
     private bool ClientListInitDone = false;
 

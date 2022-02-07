@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 using Newtonsoft.Json;
 using Unity.Collections;
-using Unity.Netcode; 
+using Unity.Netcode;
 
 public class QNSelectionManager : MonoBehaviour
 {
@@ -271,17 +271,15 @@ public class QNSelectionManager : MonoBehaviour
                         }
                     }
 
-                    Debug.Log(layerMask.ToString() + "  " + hit.transform.name);
-                    Debug.DrawLine(ray.origin, hit.point, Color.magenta);
 
-                    if (m_MyLocalClient.ButtonPush() && onTarget)
-                    {
+                    if (m_MyLocalClient.ButtonPush() && onTarget) {
+
                         int AnswerIndex = rcb.activateNextQuestions();
 
 
                         m_QNLogger.AddNewDataPoint(currentActiveQustion, AnswerIndex, m_LanguageSelect);
-                        //  Debug.Log("To Quesstion: " + currentActiveQustion.QuestionText["English"] +
-                        //"We answered: " + currentActiveQustion.Answers[AnswerIndex].AnswerText["English"]);
+                          Debug.Log("To Question: " + currentActiveQustion.QuestionText["English"] +
+                        "We answered: " + currentActiveQustion.Answers[AnswerIndex].AnswerText["English"]);
 
                         foreach (int nextQ in currentActiveQustion.Answers[AnswerIndex].nextQuestionIndexQueue)
                         {
@@ -290,7 +288,7 @@ public class QNSelectionManager : MonoBehaviour
 
                         m_interalState = QNStates.LOADINGQUESTION;
                     }
-                    //  sba.setPercentageSelection(Mathf.Clamp01(totalTime / targetTime));
+
                 }
 
                 break;
@@ -306,8 +304,8 @@ public class QNSelectionManager : MonoBehaviour
                     FastBufferWriter writer = new FastBufferWriter(message.GetSize(), Allocator.Temp);
                     Debug.Log("The message is" + message.GetSize() + " While the buffer has" + writer.Capacity);
                     writer.WriteNetworkSerializable(message);
-                    
-                    
+
+
                     NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(QNLogger.qnMessageName,
                         NetworkManager.Singleton.ServerClientId, writer, NetworkDelivery.Reliable);
 

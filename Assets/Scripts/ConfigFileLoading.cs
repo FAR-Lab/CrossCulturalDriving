@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ConfigFileLoading {
-    public string ending = ".conf";
+    public static string ending = ".conf";
 
     private string m_path;
 
-    private char m_seperator = '\t';
+    private static char m_seperator = '\t';
     // Start is called before the first frame update
 
     private bool ready;
@@ -20,9 +20,7 @@ public class ConfigFileLoading {
         ready = true;
     }
 
-    public bool FileAvalible() {
-        return File.Exists(m_path);
-    }
+    public bool FileAvalible() { return File.Exists(m_path); }
 
     public void LoadLocalOffset(out Vector3 pos, out Quaternion rot) {
         bool error = false;
@@ -75,5 +73,13 @@ public class ConfigFileLoading {
         }
 
         writer.Close();
+    }
+
+    public bool DeleteFile() {
+        if (ready) {
+            File.Delete(m_path);
+            return true;
+        }
+        else { return false; }
     }
 }
