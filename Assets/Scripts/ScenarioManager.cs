@@ -34,7 +34,9 @@ public class ScenarioManager : MonoBehaviour {
 
     
     void Start() {
-        qnmanager = null;
+        qnmanager  = Instantiate(
+            QuestionairPrefab).GetComponent<QNSelectionManager>();
+        qnmanager.gameObject.SetActive(false);
         GetSpawnPoints();
         ready = true;
 
@@ -73,11 +75,8 @@ public class ScenarioManager : MonoBehaviour {
         MyLocalClient = MyLocalClient_;
 
         Transform MyCar = MyLocalClient.GetComponent<ParticipantInputCapture>().GetMyCar();
-        qnmanager = Instantiate(
-            QuestionairPrefab,
-            MyCar.position + MyCar.forward * 2.5f + MyCar.up * 1.5f,
-            MyCar.rotation).GetComponent<QNSelectionManager>();
-
+       
+        qnmanager.gameObject.SetActive(true);
         qnmanager.setRelativePosition(MyCar, 1.5f, 4.5f);
         if (QuestionairsToAsk.Length > 0) {
             qnmanager.startAskingTheQuestionairs(MyLocalClient, QuestionairsToAsk, conditionName, ConnectionAndSpawing.Singleton.lang);

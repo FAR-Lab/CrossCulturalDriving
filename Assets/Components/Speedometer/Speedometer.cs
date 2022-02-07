@@ -12,14 +12,16 @@ public class Speedometer : MonoBehaviour
     private GameObject speedTextUnit;
     public float mySpeed;
     public GameObject speedPointer;
-    private Vector3 Rotation;
-    private Vector3 OriginalRotation;
+    private RectTransform speedPointerTransform;
+    private float zRotation;
+    private float OriginalRotation;
 
     public void OnEnable()
     {
         speedTextTMP = speedText.gameObject.GetComponent<TextMeshProUGUI>();
-        Rotation = speedPointer.transform.eulerAngles;
-        OriginalRotation = speedPointer.transform.eulerAngles;
+        speedPointerTransform = speedPointer.GetComponent<RectTransform>();
+        zRotation = speedPointerTransform.localEulerAngles.z;
+        OriginalRotation = zRotation;
 
 
         if (!isMPH) {
@@ -33,17 +35,17 @@ public class Speedometer : MonoBehaviour
 
     public void UpdateSpeed(float speed)
     {
-        Rotation.z = OriginalRotation.z - (speed * 1.5f);
+        zRotation = OriginalRotation - (speed*3.6f* 1.5f);
 
-        speedPointer.transform.eulerAngles = Rotation;
+        speedPointerTransform.localEulerAngles = new Vector3(0,0,zRotation);
 
         if (isMPH)
         {
-            speedTextTMP.text = Mathf.RoundToInt(speed / 1.609f).ToString();
+            speedTextTMP.text = Mathf.RoundToInt(speed * 2.23694f).ToString();
         }
         else
         {
-            speedTextTMP.text = Mathf.RoundToInt(speed).ToString();
+            speedTextTMP.text = Mathf.RoundToInt(speed*3.6f).ToString();
         }
     }
 }
