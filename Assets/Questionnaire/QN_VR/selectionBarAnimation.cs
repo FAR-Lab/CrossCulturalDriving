@@ -18,7 +18,7 @@ public class selectionBarAnimation : MonoBehaviour {
         m_RectTransform = GetComponent<RectTransform>();
 
         icon = GetComponent<Image>(); // the main image with the circle loading bar;
-        
+        icon.fillAmount = 1f;
     }
 	
 	// Update is called once per frame
