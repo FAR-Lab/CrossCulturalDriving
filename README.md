@@ -12,7 +12,7 @@ Current version is running the inputs for the Logitech G29 with the Logitech SDK
 and comment out the G29 code and uncomment the relevant labeled sections in the OnCreate() and OnUpdate() functions. To use the G29 input systems, you will need to install and run
 Logitech Gaming Software and Logitech G Hub and also CLOSE them both before entering play mode(otherwise it will not run and will crash on exiting play mode). Make sure the wheel shows up in Logitech G Hub before closing G Hub. To use the Oculus Quest 2 headset, open Oculus Link through the desktop and also open it on the Quest 2 and leave both open.
 
-##Notes
+## Notes
 These notes concern the simulator in development and are subject to change.
 ###What to keep in mind while running a study
 #### Keycodes
@@ -34,10 +34,10 @@ The questionnaire can be clicked with the round steering wheel button and head p
 #### IP 
 The servers local IP is set in the participants VR-UI. Ensure that no firewall is blocking local network access. 
 
-###What to keep in mind while developing a scenario
+### What to keep in mind while developing a scenario
 The individual scenarios need to contain the ScenarioManager prefab. SpawnPoints denote the starting positions of the participants. Trigger Boxes are the end zones of the scenario and start of the questionnaire. 
 RoadNetworks can be built with theEasyRoads3D assets. The networked traffic light prefab will change the status for all participants at once. 
 Scenes need to be included in the build and included in the Connection and Spawning script (inside Network Manager on the GameManagment Scene)
 
-###Analysis
+### Analysis
 Rerun .replay files are automatically stored on the server path: `C:\Users\<USERNAME>\AppData\LocalLow\<USERNAME>\XCDriving\test`
