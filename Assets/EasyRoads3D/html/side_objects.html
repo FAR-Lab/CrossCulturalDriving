@@ -1,0 +1,553 @@
+<html>
+<head>
+		<title>EasyRoads3D v3 Manual</title>
+<link rel="stylesheet" type="text/css" href="style.css" />    
+</head>
+
+	<body>
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="12"><img src="../images/topLeft.jpg" width="76" height="62"></td>
+    <td valign="top" class="style7" style="background:url(../images/topMiddle.jpg);padding-top:16px;padding-left:25px">EasyRoads3D V3 Manual</td>
+    <td width="257" align="right"><img src="../images/topRight.jpg" width="257" height="62"></td>
+  </tr>
+</table>
+<table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
+<tr>
+	    <td><a href="intersections.html"><img src="../images/previousTop.jpg" width="97" height="20" border="0"></a></td>
+	    <td align="right"><a href="terrain_control.html"><img src="../images/nextTop.jpg" width="73" height="20" border="0"></a></td>
+      </tr>
+	  <tr>
+	    <td height="35" valign="bottom"><a href="../manualv3.html"><img src="../images/home.jpg" width="130" height="20" border="0"></a></td>
+	    <td align="right">&nbsp;</td>
+      </tr>
+	  <tr>
+	    <td colspan="2" class="style1"><p>&nbsp;</p>
+	      <p class="header1" style="color:#000">EasyRoads3D Side Objects <span class="style21">[Pro]</span>
+	      <hr>
+	      <p class="header2">INTRODUCTION<a name="soIntro" id="addmarkers"></a></p>
+	      <p>EasyRoads3D includes and additional feature that makes it possible to add additional objects to the road network called Side Objects. These objects can be generated along the full length of the road object or they can be activated for specific <a href="scene.html#markerSideObjectSettings" class="link">marker sections</a>. </p>
+	      <p>There are three side object types:</p>
+	      <p>1)  Mesh Type of Side Objects, these side objects are instantiated along the road. Examples are lampposts, rock formations, road decals or tree lines. </p>
+	      <p>2) The procedural Side Object type. This side object is based on a prefab  that will be reconstructed and repeated along the road. Examples are guard rails, walls or power lines. </p>
+	      <p>3) The Shape type of side object. This side object type is generated in a similar way as the procedural side object but in this case the side object will be generated according a 2D shape defined in the Shape editor window. This too can be walls and other examples are  dust strips, terrain detail mesh overlays or even rivers.	This is possible because the side objects system is a framework by itself, it can also be used to create other elements in your scene not road related.</p>
+	      <p>Starting from v3.2 specific side object sections like guard rails in road bends, retaining walls, bridges and tunnels can also be generated <a href="#autoGenerate" class="link">automatically</a> based on a set of rules and the terrain profile in that area. Tunnels for example will be created when the height difference from the road to the terrain  is higher then a specific value, the Tunnel Threshold Height. Bridges will be created when the height different between the terrain and the road is lower then the specified threshold height. Guard rails and props like sharp turn signs  will be created when the road bends at an angle higher then the specified bend threshold angle  or when the terrain on the road edges is lower then the specified threshold height. Or retaining walls will be created when the terrain is lower on one  side of the road then the specified threshold height  or when road sections overlap.	      </p>
+	      <p>New side objects can be created and existing side objects can be edited in the Side Object Manager. The Side Objects Manager in v3 can be accessed through the Inspector toolbar, the 2nd tab from the right <img src="../images/so_tab.jpg" width="85" height="30" style="vertical-align: middle"></p>
+	      <p><strong>Note:</strong> EasyRoads3D also includes an option to snap markers to specific objects. This can be used with your own assets / prefabs that should not necessarily follow the road but that do interact with the road, for example bridge prefabs. More is available at the <a href="#markerSnap" class="link">bottom of this page</a></p>
+	      <p><span class="style6">Tip:</span> When a road object is selected in the scene and when the currently selected side object in the Side Object Manager is active on this road then a Refresh icon is displayed in the bottom right corner of the Scene View window. This can be used yo quickly visualize changes for this side object on the selected road. The &quot;Update Active Scene Instances&quot; button at the bottom will update this side object on all roads.</p>
+	      <p class="style21">&nbsp;</p>
+<p class="header2">Main Side Object Settings and Options</p>
+<p class="style1">The Side Object controls in the Inspector are displayed based on the side object type and which options are active. Below all situations are covered. We will start with the main side object settings.</p>
+<p class="style1"><span class="style21"><img src="../images/mainSOsettings.jpg" width="517" height="670"></span></p>
+<p class="style1"><strong><br>
+  Buttons:</strong></p>
+<ul>
+  <li><span class="propertyStyle"><strong>Create New Side Object:</strong></span> Click this button to add a new side object</li>
+  <li><strong class="propertyStyle">Add Project Side Objects:</strong> All new side objects in a scene are stored both in the scene as in the assets folder (/Assets/EasyRoads3D/Resources/ERSideObjectsLog). This button will be active when there are side objects available in the assets folder that are not yet added to this  scene. The button will open the side object importer window with a list of all available side objects. This way you can keep the scene specific side objects list clear and concise.</li>
+  <li><span class="propertyStyle">Import Side Objects:</span> Importing side objects from another project is supported. After importing the side object unity package (see below in Export Side Objects), Click this&quot;Import Side Objects&quot; button. The Side Object Import window will open. Drop the prefab with side object presets (see below in Export Side Objects) in the window. All side objects will be listed, you can chose which side objects to import [<a href="http://easyroads3d.com/tutorials/so_import_export.php" class="link"><strong>website tutorial</strong></a>]</li>
+  <li><span class="propertyStyle"><strong>Manage Project  Side Objects:</strong></span> Click this button to remove side objects permanantly from the project</li>
+  <li><strong class="propertyStyle">Export Side Objects:</strong> Click this button to export side objects. The  side objects that should be exported can be selected. After clicking the Export button you will be asked to set a location and name for the created prefab. This should be inside the assets folder. This prefab including all the dependencies will be exported to a unity package [<a href="http://easyroads3d.com/tutorials/so_import_export.php" class="link"><strong>website tutorial</strong></a>]<br>
+    <br>
+  </li>
+  </ul>
+<p class="style1"><strong>Side Objects Toolbar:</strong></p>
+Side objects can be categorized in 7 tabs. Some of these tabs also show category specific settings, for example the bridges tab which is both for bridges and tunnels.
+
+<p class="style1"><strong>Selected Side Object:</strong></p>
+The side object for which all controls are displayed.
+<ul>
+  <li><span class="propertyStyle"><strong>Delete Side Object</strong>:</span> Click this button remove the side object from the list. It will also remove the side object from all road objects</li>
+  <li><strong class="propertyStyle">Dupicate Side Object:</strong> Use this to create a copy of the selected side object. This is useful to create for example left and right of the road variations of a side object
+  </li>
+</ul>
+
+<p class="style1"><strong>General Settings:</strong></p>
+<ul>
+
+  <li><strong class="propertyStyle">Side Object Name:</strong> The name of the side object</li>
+  <li><strong class="propertyStyle">Side Object Type:</strong> The side object type. As mentioned above in the introduction three different side object types are available. The Inspector will update depending on the selected side object type. The options are explained further below</li>
+  <li><strong class="propertyStyle">Layer:</strong> You can set the layer to which the generated gameobject should be assigned</li>
+  <li><span class="propertyStyle">Tag:</span> The  tag for this side object</li>
+  <li><strong class="propertyStyle">Static:</strong> Check this when the generated gameobject should be marked as static</li>
+  <li><span class="propertyStyle">Scale:</span> This option is available for procedural and Shape type of side objects</li>
+  <li><span class="propertyStyle">Cast Shadows:</span> This is displayed for Shape and Procedural side object types. Mesh type of side objects involve instances of the source mesh for which Cast Shadows is already set directly.</li>
+  <li><strong class="propertyStyle">Default active state for each marker:</strong> uncheck this for side objects that should only be active on a small selection of markers. It will save time setting up the active/inactive state per marker. This can also be set for this side object on road types and directly on roads</li>
+  <li><span class="propertyStyle">Category Tab:</span> In which tab this side object will be displayed</li>
+  <li><span class="propertyStyle">Auto Generate:<a name="autoGenerate"></a></span> Side objects can be auto generated based on rules and the terrain profile. Marking the side object as &quot;Auto Generate&quot; will automatically generate the side objects  when the side object is active on a road type or individual road. It will still be possible to deactivate this setting in both cases. The rules are side object category specific<br>
+    <strong><br>
+    Barriers<br>
+    </strong><span class="style21"><img src="../images/autoGenerateBarriers.jpg" width="517" height="114"></span><br>
+    <br>
+<ul>
+  <li><span class="propertyStyle">Auto Generate:</span> By default this side object will be auto generated based on the below set of rules</li>
+  <li><span class="propertyStyle">Road Bend Threshold Angle:</span> This barrier side object will be generated for road bends latger then the specified angle</li>
+  <li><span class="propertyStyle">Terrain Threshold Height:</span> This barrier side object will appear when the height differerence between the terrain and the left or right side of the road is larger then the specified height.</li>
+  <li><span class="propertyStyle">Start / End Offset:</span> The calculated barrier side object start / end position will be adjusted according this value.</li>
+</ul>
+ <strong><br>
+    Walls<br>
+    </strong><span class="style21"><img src="../images/autoGenerateWalls.jpg" width="522" height="201"></span><br>
+    <br>
+<ul>
+  <li><span class="propertyStyle">Retaining Wall:</span> When marked as a retaining the wall the side object will affect terrain deformation/ The indent position will move to the road edge and the terrain nect to the road will not be affected</li>
+  <li><span class="propertyStyle">Auto Generate:</span> By default this side object will be auto generated based on the below set of rules</li>
+  <li><span class="propertyStyle">Terrain Threshold Height:</span> This retaining wall side object will appear when the height differerence between the terrain and the left or right side of the road is larger then the specified height.</li>
+  <li><span class="propertyStyle">Start / End Offset:</span> The calculated barrier side object start / end position will be adjusted according this value.</li>
+  <li><span class="propertyStyle">Maximum Slope Angle :</span> The Minimum and Maximum allowed slope for this retaining wall to appear. This can for example be useful for stepped walls and avoid these walls from being selected in areas where the road angle is too steep for the stepped wall prefab to accurately follow the road.</li>
+  <li><span class="propertyStyle">Continue Barriers and Props: </span>Auto generated barriers (like guard rails) and props with rules that match the terrain profile will by default not be generated on retaining wall sections. Toggle on this checkbox when auto generated barriers actually should continue on sections where this retaining will be created</li>
+  <li><span class="propertyStyle">Generate Other Side Objects:</span> It is possible to link other side objects to this side object. Whenever this side object is auto generated, the linked side object will be created over the same section with additional offset options relative to the start and end. The offset control will appear after selecting a side object from the list <br>
+    <br>
+  </li>
+</ul>
+    <strong>Bridges &amp; Tunnels</strong><br>
+    <span class="style21"><img src="../images/autoGenerateBridges.jpg" width="520" height="216"></span><br>
+    <br>
+    <ul>
+    	<li><span class="propertyStyle">Bridge Object:</span> Toggle on this checkbox for Bridge type of side objects</li>
+    	<li><span class="propertyStyle">Auto Generate:</span> By default this side object will be auto generated based on the below set of rules</li>
+        <li><span class="propertyStyle">Terrain Threshold Height:</span> This bridge side object will appear when the height differerence between the terrain and the road is larger then the specified height</li>
+        <li><span class="propertyStyle">Start / End Offset Threshold Height:</span> Interpolate backwards / forwards and start / end the bridge where the height difference with the terrain is smaller then this value</li>
+        <li><span class="propertyStyle">Continue Barriers:</span> Auto generated barriers like guard rails with rules that match the terrain profile will by default not be generated on bridge sections. Toggle on this checkbox when auto generated barriers actually should continue on sections where this bridge will be created</li>
+        <li><span class="propertyStyle">Generate Other Side Objects: </span>It is possible to link other side objects to this side object. Whenever this side object is auto generated, the linked side object will be created over the same section with additional offset options relative to the start and end. The offset control will appear after selecting a side object from the list </li>
+        <li><span class="propertyStyle">Tunnel Object:</span> When toggled on the below controls will display</li>
+     </ul><br>
+
+     <span class="style21"><img src="../images/autoGenerateTunnels.jpg" width="521" height="366"></span><br>
+     <br>
+     <ul>
+  <li><span class="propertyStyle">Bridge Object:</span> The previously covered bridge controls further above will display</li>
+  <li><span class="propertyStyle">Tunnel Object:</span> Toggle on this checkbox for Tunnel type of side objects, the below controls will display</li>
+  <li><span class="propertyStyle">Auto Generate:</span> By default this side object will be auto generated based on the below set of rules</li>
+  <li><span class="propertyStyle">Cut Holes:</span> In Unity 2019.3 and newer versions this will cut holes in the terrain at the start and end of the tunnel. This feature is in <em>Preview</em> status, the results highly depend on the terrains heightmapscale (terrain size vs terrain heightmap resolution) currently the system is optimized for standard heightmapscales like heightmap resolution 513 and terrain size 500x500 or 1000x1000</li>
+  <li><span class="propertyStyle">Flatten Terrain Sideways:</span> This will adjust the roads Indent values so the terrain will smoothly flatten more outwards at the terrain start and end. A value of 1 represents the position at the outer part of the tunnel</li>
+  <li><span class="propertyStyle">Tunnel Start Hole Offset:</span> The minimum distance between the start of the tunnel and the point where terrain holes will be created</li>
+  <li><span class="propertyStyle">Tunnel End Hole Offset:</span> The minimum distance between the end of the tunnel and the point where terrain holes will be created </li>
+  <li><span class="propertyStyle">Terrain Threshold Height:</span> This tunnel side object will appear when the height differerence between the terrain and the road is larger then the specified height.</li>
+  <li><span class="propertyStyle">Tunnel Start Offset:</span> This can be used to fine tune the position at the start of the tunnel relative to the position that matches the Terrain Threshold Height value. This value is customizable and can be fine tuned in the Scene View window per tunnel instance <a href="autoGenerate" class="link">by clicking the tunnel object</a></li>
+  <li><span class="propertyStyle">Tunnel End Offset:</span> This can be used to fine tune the position at the end of the tunnel relative to the position that matches the Terrain Threshold Height value. This value is customizable and can be fine tuned in the Scene View window per tunnel instance <a href="autoGenerate" class="link">by clicking the tunnel object</a></li>
+  <li><span class="propertyStyle">Snap to Terrain :</span> This option will be visible when the source prefab has vertex colors assigned. Vertex positions will be adjusted forwards / backwards in the direction of the road based on the green value and the distance to the terrain. The vertex will fully snap to the terrain when the green value is 1</li>
+  <li><span class="propertyStyle">Generate Other Side Objects: </span>It is possible to link other side objects to this side object. Whenever this side object is auto generated, the linked side object will be created over the same section with additional offset options relative to the start and end. The offset control will appear after selecting a side object from the list <br>
+    <br>
+    <strong>Note:</strong> As seen above for the &quot;Snap to Terrain control&quot;, individual vertex positions can be manipulated so the tunnel blends better with the terrain shape. This is usually done for tunnel parts that represent terrain and should blend with the terrain.     So the green vertex color is used to move vertices fowards / backwards in the direction of the road. The Blue color is used to snap vertices downwards. This can be used to snap outer vertices downwards. A value of 1 will snap the vertex to the ground It is used on the Rock tunnel example. The red color is also used, it is used to blend outer vertices with the terrain. It is automatically calculated<br>
+    <br>
+    <strong>Note: </strong>For tunnels to work well, the start and end sections of the  tunnel prefab must be large enough to cover the holes in the terrain. This depends on the terrains heightmapscale (terrain size vs heightmap resolution). The included tunnel examples in the demo package has been tested on terrains with an heightmapscale up to about 4 (2000x2000 terrain , heightmap resolution 513). <br>
+    <br>
+When there is still a little bit of terrain visible, like at the start of the tunnel in the demo package. There are two quick ways to fix that. Either paint the hole manually, or use a small brush size, using the &quot;Set Height&quot; terrain tool get the height at the center of the road and paint  the visible terrain cell at that height. <br>
+  </li>
+     </ul>
+
+    <strong><br>
+    Props</strong><br>
+    Side objects in the Props tab can also be auto generated. Think example of sharp turn direction posts in road bends.<br>
+    <br>
+    <span class="style21"><img src="../images/autoGenerateProps.jpg" width="522" height="120"></span><br>
+    <br>
+    <ul>
+    	<li><span class="propertyStyle">Auto Generate:</span> By default this side object will be auto generated based on the below set of rules</li>
+        <li><span class="propertyStyle">Road Bend Threshold Angle:</span> This  side object will be generated for road bend angles stronger then the specified angle</li>
+        <li><span class="propertyStyle">Start / End Offset:</span> Interpolate the calculated start / end positions backwards / forwards and calculate the final start / end position of the side object according this offset value</li>
+        <li><span class="propertyStyle">Inactive for other side object sections:</span> When toggled on this side object will not be generated on sections already covering retaining wall, bridge or tunnel sections. This can be useful to avoid this side object to be generated in unwanted positions floating in the air or interfering with other side objects</li>
+     </ul><br>
+  </li>
+</ul>
+<p>The Inspector wil continue with controls that are side object type specific. All three types are covered below.</p>
+<p class="header2">&nbsp;</p>
+<p class="header2">Side Object Types:</p>
+<p class="style1">- <a href="#meshObject" class="link">Mesh Object</a></p>
+<p class="style1">- <a href="#shapeObject" class="link">Shape Object</a></p>
+<p class="style1">- <a href="#proceduralmesh" class="link">Procedural Mesh Object</a></p>
+<p class="style1">&nbsp;</p>
+<p class="style21">Mesh Object:<a name="meshObject" id="meshObject"></a></p>
+<p class="style1">This side object type can be used to instantiate objects along the track, objects such as lampposts, trees, rock formations, seperate unconnected mesh based fence objects, barriers, etc.</p>
+<p class="style1"><img src="../images/soMeshInspector.jpg" width="538" height="741"></p>
+<p class="style1">&nbsp;</p>
+<ul>
+  <li><strong class="propertyStyle">Source Object:</strong><strong></strong> Drag the gameobject / prefab you want to use for this side object in this slotslot</li>
+  <ul>
+    <li><strong class="propertyStyle">Prefab Childs:</strong> This feature is enabled when more then 1 child object exists in the prefab. So the correct way to use this feature is to setup your prefab in a way that all individual objects are childs of the parent prefab. You have 3 options: <br>
+  - 
+  All: this will instantiate all child objects per new instance<br>
+  - Child Sequence: this will go through all child objects according the child index and instantiate a single child object per instance<br>
+  - Random Mesh: 
+  this will randomly select a child object per instance. If you want specific objects to be instantiated more often, simply duplicate them in the prefab so there is more chance that they will be chosen.</li>
+    <li><strong class="propertyStyle">Terrain Vegetation: </strong>The combobox will show all tree prototypes currently added to the terrain object. Selecting one of the prototypes will move the associated prefab to the Source Object slot. When switching to Build Mode, all instantiated trees will be added to the terrain vegetation data with all the the advantages of for example tree billboarding, etc. </li>
+  </ul>
+  
+  <li><strong class="propertyStyle"> Minimum Scale:</strong> The minimum  scale for each instance. A value of 1 represents the original scale of the source prefab</li>
+  <li><strong class="propertyStyle">Maximum Scale:</strong> The maximum  scale for each instance. A value of 1 represents the original scale of the source prefab</li>
+</ul>
+<p class="style1"><strong>Control Settings:</strong></p>
+<ul>
+
+  <li><strong class="propertyStyle">Position:</strong> This will move the object sideways relative to the selected to the selected option from the dropdown. Options are:<br>
+1. Relative to center of the road<br>
+2. 
+  Relative to the left side of the road<br>
+3. Relative to the right side of the road <br>
+<br>
+When the position is relative to the left or right side of the road the side object can be marked as &quot;Dual Sided&quot;. This means the object can be used for both sides of the road. For the other side of the road the object Alignment can either be displayed rotated &quot;Rotate 180 Degrees&quot; or mirrored, &quot;Mirror&quot; in the dropdown. When <strong>Synch Left Right</strong> is active, tthe left and the right side will align, also in road bends. This is useful for example for lamp posts<br>
+<br>
+  </li>
+  <li><strong class="propertyStyle">Distance between objects:</strong> The distance between instantiated objects</li>
+  <ul>
+  		<li><strong class="propertyStyle">Random Distance:</strong> This will add a random distance between 0 and the entered value</li>
+  		<li><span class="propertyStyle">Average by Road Length:</span> By default this is switched on. &quot;Distance between Objects&quot; will be recalculated so the  last instance is positioned at the end of the track. When switching &quot;Average by Road Length&quot; off the exact &quot;Distance between Objects&quot; value will be used.</li>
+  	</ul>
+  <li><strong class="propertyStyle">X Position:</strong> This will move the object sideways relative to the default position<br>
+  </li>
+  <li><strong class="propertyStyle">Random X Position:</strong> This will add an additional random offset to the X Position value.</li>
+  <li><strong class="propertyStyle">Y Position: </strong>This will move the object upwards</li>
+  <li><strong class="propertyStyle">Y-axis Rotation:</strong> This controls the rotation on the y-axis. Options are &quot;Follow Road&quot;, &quot;Fixed&quot; and &quot;Random&quot;.</li>
+  <ul>
+  	<li><strong class="propertyStyle">Add Rotation Angle: </strong>This will add the entered value to the caluclated rotation value and can be used to fine tune the rotation of side objects that are for example used in bends.</li>
+  </ul>
+  <li><strong class="propertyStyle">Mesh Bounds Alignment:</strong> By default objects are rotated based on the forward direction at that point. This works well for side objects with a small bounding box sizes on the X and Z axis, lampposts etc. but less accurate for objects with a bigger bounding box on the X and Z axis, for example individual fence objects. Switching on this option will align the instantiated object exactly according the size of the object.</li>
+  <li><span class="propertyStyle">End Connection Object: </span>This is active when Mesh Bounda Alignment is active. This can for example be a post added at the end of a fence formed by fence prefabs.</li>
+  <li><span class="propertyStyle">Default Start Offset:</span> The start offset can be set for each section directly on the road after selecting the first marker. Here it is possible to set a default start offset.</li>
+  <li><span class="propertyStyle">Default End Offset: </span>The end offset can be set for each section directly on the road after selecting the second last marker. Here it is possible to set a default end offset.<br>
+  </li>
+  <li><strong class="propertyStyle">Snap to Terrain:</strong> By default the Y position of side objects are aligned with the road at that position. This will work fine for side objects near the road and will also build these side objects correctly when active on bridge segments. For side objects like fences etc., especially when using the above Sideways Distance option per marker to move the object towards and away from the road, you usually want to snap the side object to the terrain. That is what this option does. For non road related objects, the status of &quot;Snap to Terrain&quot; in the settings of that object has priority.</li>
+  <li><strong class="propertyStyle">Alignment:</strong> you can align side objects with the terrain, options are:<br>
+    - 
+  None<br>
+  - Terrain Normal <br>
+  - 
+  Path Forward<br>
+  - 
+  Path Normal<br>
+  <strong class="style6">Note:</strong> When using the Sideways Distance option (per marker), a new spline shape will be created. This means that the connection with the road shape is lost, therefore the Path Forward and Path Normal options will no longer work accurately. The Terrain Normal option however is almost identical and will only have different results outside areas where the terrain is not flattened according the road shape.<br>
+  <br>
+  When &quot;None&quot; is selected and &quot;Mesh Bounds Alignment&quot; (see above) is toggled on, the second dropdown will control the alignment according the terrain height covered by this instance which is useful to align for example paryicular types fences and walls with the terrain.<br>
+  - Lowest Point: The instance Y position will match the lowest terrain point<br>
+  - Highest Point: The instance Y position will match the highest terrain point<br>
+  - 
+Average height: The instance Y position will match the average height<br>
+<br>
+  </li>
+  <li><span class="propertyStyle">Random Rotatian Angle:</span> This will rotate the object on the x-axis<br>
+  </li>
+  <li><strong class="propertyStyle">Combine Objects:</strong> Depending on the used materials, this will combine all instantiated objects into a single object</li>
+  <li><strong class="propertyStyle">Update Active Scene Instances:</strong> This button is located at the bottom in the Inspector and will be enabled after changes. Click this button to auto update all scene instances of the selected side object</li>
+</ul>
+<p class="style1">&nbsp;</p>
+<p class="style1"><strong>Bridge Object:</strong><a name="bridgeObject" id="bridgeObject"></a></p>
+<p class="style1">-------------------------------------------------------------------------------------- <br>
+  [Obsolete:] Instead of using static bridge meshes as side objects, in v3.2 it is recommended to add MarkerSnap controllers to these static prefabs. Road markers can be attached quickly to these MarkerSnap controllers so the road perfectly aligns with the bridge.<em> [Add link to new MarkerSnap controller  in the Connections section]</em><br>
+  --------------------------------------------------------------------------------------</p>
+<p class="style1">This is useful for bridges that should not adapt to the road shape, like standard motorway bridges. This type of side object is based on a fixed bridge model. When the Mesh Object type is selected and Bridge Object is toggled on, mesh bridge specific controls are displayed:</p>
+<p class="style1"><img src="../images/meshBridge.jpg" width="488" height="293"></p>
+<ul>
+  <li><strong class="propertyStyle">Source Object: </strong>Drag the bridge gameobject / prefab you want to use for this side object in the corresponding slot</li>
+  <ul>
+  	<li><span class="propertyStyle">Prefab Childs:</span> This is opional. It can be used to randomly select a bridge prefab. Note that the base structure should be similar (height and length)  for accurate results.</li>
+	</ul>
+</ul>
+<p class="style1"><strong>Control Settings:</strong></p>
+<ul>
+  <li><span class="propertyStyle">X Position:</span> You can use this to fine tune the final position.</li>
+  <li><span class="propertyStyle">Y Position:</span> You can use this to fine tune the final position.</li>
+  <li><span class="propertyStyle">Bridge Height:</span> The height difference between the markers of the top road and the markers of the bottom road.</li>
+  <li><span class="propertyStyle">Marker Spline Control:</span> The controller type of the marker for which this side object will be switched on. generally you want to use Straight XYZ for this. When activating the bridge side object for a marker the corresponding controller type will be updated automatically.</li>
+  <li><span class="propertyStyle">Deformation Level Distance:</span> The distance over which the terrain should be flattened from the road height to the original terrain height. This will automatically update the corresponding Start Level Distance and End Level Distance of the selected marker.</li>
+  <li><span class="propertyStyle">Marker Indent Distance:</span> This will automatically update the Indent values of the selected marker and the next marker according this value. This is a quick way to add variation to the terrain deformation near the bridge.</li>
+  <li><span class="propertyStyle">Marker Surrounding Distance:</span> This will automatically update the Surrounding values of the selected marker and the next marker according this value. This is a quick way to add variation to the terrain deformation near the bridge.</li>
+</ul>
+<p class="style1">The buttons on the right of each control will be active when a road marker is selected with this side object active. Additional you can select the next marker and the corresponding markers of the road that passes underneath the bridge. When all these buttons are selected all buttons will be active and the values will be auto calculated from the current marker setup in the scene.</p>
+<p class="style1">So to set this up it is recommended to create two roads crossing each other on a flat terrain. Activate the side object for the top road, position the next marker exactly at the &quot;Bridge End&quot; position, select both markers and raise them to the correct height relative to the bottom road. Select the bottom two markers as well, all buttons in the Side Object Manager are active, ou can now click the buttons to set the values.</p>
+<p class="style1">To activate the Get Length button you can also temporarily add child objects to the source prefab at the exact marker positions, name these child objects &quot;marker1&quot; and &quot;marker2&quot;. The Get Length button will be active. This is a more precise way to set the Bridge Length value. Afterwards you can remove these temprary child objects from the prefab. </p>
+<p class="style1">When activating this bridge in the scene and selecting the same 4 markers you will see all the required alignment buttons in the Inspector (just below the toolbar) to quickly and accurately align the roads instantly so the bridge perfectly fits.</p>
+<p class="style1">&nbsp;</p>
+<p class="style1"><strong>Shape Object:</strong> <a name="shapeObject"></a></p>
+<p class="style1">This side object will procedurally create shapes along the track based on the 2D shape defined in the 2D Shape Editor window. This can be used to create for example retaining walls or river side objects including both the shape of river beds set to deform the terrain accordingly and the river surface mesh itself.</p>
+<p class="style1"><img src="../images/soShapeInspector.jpg" width="522" height="671"></p>
+<p class="style1">&nbsp;</p>
+<ul>
+  <li><strong class="propertyStyle">Target Object:</strong> Optionally a target prefab can be selected. This prefab will be instantiated and the procedurally created shape will be added to the mesh asset of this prefab. This is useful if you want to create a shape with additional scripts attached. You can for example drag one of the Unity water prefabs to this slot and define a simple horizontal shape simulating the water surface. The final object will have all the water scripts and materials automatically attached</li>
+  <li><strong class="propertyStyle">Material:</strong> The material that should be used for this side object. This is not required when a Target Object is assigned above with already materials set up.</li>
+  <li><strong class="propertyStyle">Start  Object:</strong> This can be used to attach a start game object to the shape. In v3 it is recommended to use the Procedural Mesh Object for side objects also including Start / End objects</li>
+  <li><strong class="propertyStyle">Connection Object:</strong> This object will be instantiate at each new section.</li>
+  <li><strong class="propertyStyle">End  Object:</strong> This can be used to attach an end game object to the shape. In v3 it is recommended to use the Procedural Mesh Object for side objects also including Start / End objects</li>
+  <!--<li><strong class="propertyStyle">Controller Type:</strong> (inactive) This controls the geometry structure and positioning, the options are &quot;Clamp Left&quot;, &quot;Clamp Right&quot; and &quot;Spline Controller&quot;. &quot;Clamp Left&quot; and &quot;Clamp Right&quot; will create geometry based on the resolution and vertice positions of the road geometry. &quot;Clamp Left&quot; will create the geometry at the left side of the road,  &quot;Clamp Right&quot; will create the geometry at the right side of the road. When &quot;Spline Controller&quot; is selected the geometry will be created according the spline curve and the Geometery Resolution value below.</li>-->
+  <li><strong class="propertyStyle">Open Shape Editor Window:</strong> This will open the editor window which you can use to define the shape of the side object. See below or <a href="#shapeditor" class="link">Click here</a> for more info.</li>
+</ul>
+<p class="style1"><strong>Control Settings:</strong></p>
+<ul>  
+  
+  <li><span class="propertyStyle">Clamp to Road Geometry:</span> Each section will be build matching the road geometry resolution. This is useful when the side object should exactly follow the road the shape, also in bends. For example kerbs on race tracks</li>
+ 
+ 
+ <li><strong class="propertyStyle">Geometry Resolution: </strong>The distance between vertex rows, this controls the resolution of the geometry.</li>
+  <li><strong class="propertyStyle">Position:</strong> This will move the object sideways relative to the selected to the selected option from the dropdown. Options are:<br>
+    1. Relative to center of the road<br>
+    2. 
+    Relative to the left side of the road<br>
+    3. Relative to the right side of the road<br>
+    <br>
+    When the position is relative to the left or right side of the road the side object can be marked as &quot;Dual Sided&quot;. This means the object can be used for both sides of the road. For the other side of the road the object can either be displayed rotated &quot;Rotate 180 Degrees&quot; or mirrored, &quot;Mirror&quot; in the dropdown<br>
+    <br>
+  </li>
+  <li><strong class="propertyStyle">X Position:</strong> This will move the object sideways relative to the above selected default position</li>
+  <li><strong class="propertyStyle">Y Position: </strong>This will move the object upwards</li>
+  <li><span class="propertyStyle">Default Start Offset:</span> The start offset can be set for each section directly on the road after selecting the first marker. Here it is possible to set a default start offset.</li>
+  <li><span class="propertyStyle">Default End Offset: </span>The end offset can be set for each section directly on the road after selecting the second last marker. Here it is possible to set a default end offset.</li>
+  <li><strong class="propertyStyle">Snap to Terrain:</strong> By default the Y position of side objects are aligned with the road at that position. This will work fine for side objects near the road and will also build these side objects correctly when active on bridge segments. For side objects like fences etc., especially when using the marker specific X Position option to move the object towards and away from the road, you usually want to snap the side object to the terrain. That is what this option does. For non road related objects, Snap to Terrain can be set in the object settings.</li>
+  <li><strong class="propertyStyle">Alignment:</strong> (inactive) you can align side objects with the terrain, options are:<br>
+    - 
+    None<br>
+    - Terrain Normal<br>
+    - 
+    Path Forward<br>
+    - 
+    Path Normal<br>
+    <strong class="style6">Note:</strong> When using the Sideways Distance option (per marker), a new spline shape will be created. This means that the connectio with the road shape is lost, therefore the Path Forward and Path Normal options will no longer work accurately. The Terrain Normal option however is almost identical and will only have different results outside areas where the terrain is not flattened according the road shape.<br>
+    <br>
+  </li>
+  <li><span class="propertyStyle">UV Tiling: </span>The UV Distribution along the shape</li>
+  <li><span class="propertyStyle">Flip UVs:</span> Flip the UVs sideways</li>
+  <li><span class="propertyStyle">Clamp V:</span> The UVs will be distributen along the track so they end at a rounded value. Optionally the target value can be defined in decimals in the 0..1 range.</li>
+  <li><strong class="propertyStyle">Combine Section:</strong> Depending on the used materials, this will combine all instantiated objects into a single object</li>
+  <li><strong class="propertyStyle">Add Mesh Collider:</strong> Activate this option to automatically add a mesh collider to the generated mesh</li>
+  <li><strong class="propertyStyle">Update Active Scene Instances:</strong> This button is located at the bottom in the Inspector and will be enabled after changes. Click this button to auto update all scene instances of the selected side object</li>
+</ul>
+<p class="style1">&nbsp;</p>
+<p class="style1"><strong>Procedural Mesh Object:</strong><a name="proceduralmesh"></a></p>
+<p>As mentioned in the side objects introduction, this side object type will procedurally create a mesh based on a prefab (Source Object) created outside Unity. </p>
+<p>This side object type can be used to create side objects such as fences, walls, guard rails but also complex bridges.</p>
+<p>The source object model can be created in a way that it includes a start, middle and end section. Only the middle section will be repeated. The Start, Middle and End segments can be defined in the Mesh Editor Window. </p>
+<p>&nbsp;</p>
+<p><img src="../images/soProceduralMeshInspector.jpg" width="523" height="779"></p>
+<p class="style1">&nbsp;</p>
+<ul>
+  <li><strong class="propertyStyle">Source Object:</strong> Drag the source mesh game object / prefab to this slot. Additional info is displayed when the Source Object is set up using <a href="#namingConvention" class="link">naming conventions</a>. Side object specific data will be extracted automatically.<br>
+    <br>
+    <img src="../images/namingConvention.jpg" width="519" height="107"><br>
+    <br>
+  </li>
+  <li><strong class="propertyStyle">Start  Object:</strong> This can be used to attach a start game object to the shape. In v3 it is recommended to use the Procedural Mesh Object for side objects also including Start / End objects</li>
+  <li><strong class="propertyStyle">Connection Object:</strong> This object will be instantiate at each new section.</li>
+  <li><strong class="propertyStyle">End  Object:</strong> This can be used to attach an end game object to the shape. In v3 it is recommended to use the Procedural Mesh Object for side objects also including Start / End objects</li>
+  <li><strong class="propertyStyle">Open Mesh Editor Window:</strong> This will open the editor window used to prepare the source mesh for the side objects system. See below or <a href="#mesheditor" class="link">Click here</a> for more info<br>
+<br>
+  </li>
+</ul>
+<p class="style1"><strong>Control Settings:</strong></p>
+<ul>  
+
+  <li><span class="propertyStyle">Clamp to Road Geometry:</span> Each section will be build matching the road geometry resolution. For this to work well the Source Object size should be similar to the road resolution</li>
+  <li><strong class="propertyStyle">Position:</strong> This will move the object sideways relative to the selected to the selected option from the dropdown. Options are:<br>
+1. Relative to center of the road<br>
+2. 
+    Relative to the left side of the road<br>
+3. Relative to the right side of the road<br>
+<br>
+When the position is relative to the left or right side of the road the side object can be marked as &quot;Dual Sided&quot;. This means the object can be used for both sides of the road. For the other side of the road the object can either be displayed rotated &quot;Rotate 180 Degrees&quot; or mirrored, &quot;Mirror&quot; in the dropdown<br>
+<br>
+  </li>
+  <li><strong class="propertyStyle">X Position:</strong>This will move the object sideways relative to the above selected default position</li>
+  <li><strong class="propertyStyle">Random X Position:</strong> This will add an additional random offset to the X Position value.</li>
+  <li><span class="propertyStyle">Min / Max Distance: </span>The distance over which the random position change will take place.</li>
+  <li><strong class="propertyStyle">Y Position: </strong>This will move the object upwards</li>
+  <li><strong class="propertyStyle">Random Y Position:</strong> This will add an additional random offset to the Y Position value.</li>
+  <li><span class="propertyStyle">Min / Max Distance: </span>The distance over which the random position change will take place.</li>
+  <li><span class="propertyStyle">Default Start Offset:</span> The start offset can be set for each section directly on the road after selecting the first marker. Here it is possible to set a default start offset.</li>
+  <li><span class="propertyStyle">Default End Offset: </span>The end offset can be set for each section directly on the road after selecting the second last marker. Here it is possible to set a default end offset.</li>
+  <li><strong class="propertyStyle">Snap to Terrain:</strong> By default the Y position of side objects are aligned with the road at that position. This will work fine for side objects near the road and will also build these side objects correctly when active on bridge segments. For side objects like fences etc., especially when using the above Sideways Distance option per marker to move the object towards and away from the road, you usually want to snap the side object to the terrain. That is what this option does. For non road related objects, Snap to Terrain can be set in the object settings.</li>
+  <li><strong class="propertyStyle">Alignment:</strong> side objects can be aligned  with the terrain, options are:<br>
+    - 
+    None<br>
+    - Terrain Normal<br>
+    - 
+    Path Forward<br>
+    - 
+    Path Normal<br>
+    <strong class="style6">Note:</strong> When using the Sideways Distance option (per marker), a new spline shape will be created. This means that the connectio with the road shape is lost, therefore the Path Forward and Path Normal options will no longer work accurately. The Terrain Normal option however is almost identical and will only have different results outside areas where the terrain is not flattened according the road shape.<br>
+    <br>
+  </li>
+  <li><span class="propertyStyle">Random Rotatian Angle:</span> This will rotate the object on the x-axis</li>
+  <li><span class="propertyStyle">Min / Max Distance: </span>The distance over which the random rotation change will take place.</li>
+  <li><strong class="propertyStyle">Combine Section:</strong> Depending on the used materials, this will combine all instantiated objects into a single object<br>
+  </li>
+  <li><strong class="propertyStyle">Add Mesh Collider:</strong> The MeshCollider componentwill be added.</li>
+  <li><span class="propertyStyle">Add Box Collider:</span> Box colliders will be added matching the bounds of eaxh segment, </li>
+  <ul> 
+    <li><span class="propertyStyle">Collider Scale: </span>This is active for Box Colliders, the  scale of the  boxes can be set</li>
+  </ul>
+  <li><strong class="propertyStyle">Update Active Scene Instances:</strong> This button is located at the bottom in the Inspector and will be enabled after changes. Click this button to auto update all scene instances of the selected side object</li>
+</ul>
+<p class="style1">&nbsp;</p>
+<p class="style1"><span class="style6">Tip:</span> Use the H Key to toggle on/off the display of side object handles in Scene View</p>
+<p class="style1"><a name="shapeditor"></a></p>
+<p class="style1"><span class="header2">Shape Editor Window:</span></p>
+<p class="style1">The shape editor window is used to define shapes in 2D space for<a href="#shapeObject" class="link"> Shape type</a> of side objects and will open after clicking the <strong>Open Shape Editor Window</strong> button in the Inspector which is displayed at the bottom in the General Settings. </p>
+<p class="style1">&nbsp;</p>
+<p class="style1"><img src="../images/shapeEditor.jpg" width="981" height="786"></p>
+<p class="style1">&nbsp;</p>
+<p class="style1">Double click on the stage to add points (or Ctrl + double click to insert points). After adding the second point, points will connect.</p>
+<ul>
+  <li><span class="propertyStyle">Trace Object:</span> Optionally a model can be used to extract the shape, the focus point for traceable vertices is at z = 0</li>
+  <li><span class="propertyStyle">Trace on: </span>Depending on how the model was imported in Unity it may be necessary to change the orientation</li>
+  <li><strong class="propertyStyle">Selected Index:</strong> The index of the selected point. When a node is selected the below options are available</li>
+  <ul>
+  	<li><strong class="propertyStyle">X / Y:</strong> The X and Y values of the selected point. The fields are editable for precise values</li>
+  	<li><span class="propertyStyle">Terrain Snap Weight:</span> This will lerp corresponding vertices between the original position and the terrain height to the terrain. A value of 1 will snap the vertices to the terrain</li>
+ 	 <li><span class="propertyStyle">Vertex Color:</span> The generated meshes will include vertex color info which can be used in the attached shader. Here you can optionally set the vertex color for each shape point.</li>
+ 	 <li><span class="propertyStyle">Hard Edge:</span> This will create hard edge at the selected vertex</li>
+  </ul>
+  <li><strong class="propertyStyle">Close Geometry:</strong> This will connect the last point to the first</li>
+  <li><span class="propertyStyle">Create Start / End Caps:</span> This will close the mesh at the start and end of the generated mesh. Both the start and end shape will be visible in the UV Editor window that can be opened through the &quot;UV Editor&quot; button further below</li>
+  <li><span class="propertyStyle">Clamp UVs:</span> Clamp the UVs between 0..1, also when vertices snap to the terrain</li>
+  <li><span class="propertyStyle">Clamp UV4:</span> Add additional UV coordinates in uv4 and Keep the same UV distribution also when vertices snap to the terrain. This is useful for custom shaders and meshes that clamp to the terrain resulting in irregular shapes</li>
+  <li><span class="propertyStyle">UVs Relative to Terrain:</span> The main UV set will be created relative to the terrain bounds</li>
+  <li><span class="propertyStyle">Blend Terrain in UVs:</span> This option is active for terrain surface overlays which can be set in the Side Object Manager. The UVs will be calculated taking into account vertex colors. The alpha channel</li>
+  <li><span class="propertyStyle">Preserve Node Direction: </span>This is active when vertices have a Terrain Snap Weight value. The new vertex position will be calculated in the original direction instead of straight downwards</li>
+</ul>
+<p class="style1"><strong>Buttons:</strong></p>
+<ul>
+  <li><strong class="propertyStyle">Mirror Horizontally:</strong> This will mirror the points on the Y axis</li>
+  <li><strong class="propertyStyle">Mirrow vertically:</strong> This will mirror the points on the X axis</li>
+  <li><strong class="propertyStyle">Flip Faces:</strong> Click this button if it turns out the normals point in the opposite direction</li>
+  <li><span class="propertyStyle">UV Editor:</span> This will open the <a href="#uvEditorShapeSO" class="link">UV Editor window</a> for fine tuning or customizing the UVs. A material must be assigned first to this side objects, otherwise this option will be disabled</li>
+  <li><strong class="propertyStyle">Apply:</strong> This will save changes and update all exisiting scene instances</li>
+</ul>
+<p class="style1">The stage can be dragged b ypressing the left button and moving the mouse. Zoom in and out using the scrollwheel or Shift+click+drag, hold Shift to select and move multiple roads</p>
+<p class="propertyStyle"><strong>Shortcuts:</strong></p>
+<p class="style1"><span class="propertyStyle">R Key:</span> This will center the stage<br> 
+  <span class="propertyStyle">Z Key:</span> This will zoom the stage so the the bounding box of the entered points is completely visible <br>
+  <span class="propertyStyle">Scrollwheel: </span>Zoom in / out<br>
+  <span class="propertyStyle">Ctrl + Double Click:</span> Insert a node<br>
+  <span class="propertyStyle">Del key:</span> Delete the selected node<br>
+  <span class="propertyStyle">Shift + Select Node:</span> multiple node selection </p>
+<p class="style1"><br>
+  <span class="header2">UV Editor</span><a name="uvEditorShapeSO"></a> </p>
+<p class="style1">UVs for Shape type of side objects are automarically calculated based on the distance between nodes and the UV settings in the Shape Editor window covered above. The main texture of the side object material will be displayed as a reference. </p>
+<p class="style1">The node positions are represented with black vertical lines. The black dots at the bottom can be selected, it will turn green, and dragged horizontal to fine tune the UVs.</p>
+<p class="style1">When the shape side object is set up to include Start / End caps (above in the Shape Editor Editor window), these shapes will be visualized as well including controls to position, scale, rotate the shape so the UVs match the texture.</p>
+<p class="style1"><img src="../images/UVEditorShapeSO.jpg" width="968" height="720"></p>
+<p class="style1">&nbsp;</p>
+<ul>
+  <li><strong class="propertyStyle">No Node Selected:</strong> When a node is selected the U position can be entered manually</li>
+  <li><strong class="propertyStyle">Hard Edge Padding:</strong> Optionally padding can be added at hard edges. The value is relative to 0..1</li>
+  <li><span class="propertyStyle">Reset UVs:</span> This will recalculate the UVs by distance</li>
+  <li><strong class="propertyStyle">Reset UVs Relative to Most Right:</strong> This will do the same as above but relative to the most right node. That way it is possible to keep room available on the right of the texture especially for the start / end caps<br>
+    <br>
+    When Start / End Caps are created the below controls will be visible, one set for the start cap and one set for the end cap.<br>
+    <br>
+  </li>
+  <li><span class="propertyStyle">Scale:</span> The shape of the cap will be visualized. The scale option can be used to scale the shape up or down </li>
+  <li><strong class="propertyStyle">X Pos:</strong> This slider moves the shape horizontally</li>
+  <li><span class="propertyStyle">Y Pos:</span> This moves the shape vertically</li>
+  <li><span class="propertyStyle">Rotation: </span>This rotates the shape</li>
+  <li><span class="propertyStyle">Color:</span> The color of the shape outline</li>
+</ul>
+<p class="style1">&nbsp;</p>
+<p class="style1"><a name="mesheditor" id="mesheditor"></a></p>
+<p class="style1"><span class="header2">Mesh Editor Window:</span></p>
+<p class="style1">The mesh editor window is used to prepare the geometry structure for <a href="#proceduralmesh" class="link">Procedural Mesh Object</a> type of side objects and will open after clicking the <strong>Open Mesh Editor Window</strong> button in the Inspector.</p>
+<p class="style1">&nbsp;</p>
+<p class="style1"><img src="../images/meshEditor.jpg" width="910" height="642"></p>
+<p class="style1">&nbsp;</p>
+<p class="style1">The full mesh structure can be used for each segment or you can split the mesh in start and / or end segments and middle segments. </p>
+<ul>
+  <li><strong class="propertyStyle">Source Object:</strong> The mesh that will be used as the base for this side object</li>
+  <li><strong class="propertyStyle">Trace on:</strong> Depending on how the model is imported by Unity you may have to rotate the object. <br>
+    <span class="style6">Tip:</span> The best way at the moment to handle this is by dragging the game object in the scene and look in the Inspector. Did Unity auto apply rotation values? In this case it is recommended to create a new prefab, add the model as a child to this prefab and apply the same rotation values to this child object in the prefab. Assign the new prefab as the source object. Check the demo project, the used assets are .obj files. Unity applies a 180 degree rotation on the Y-axis. That is why prefabs are used with the original mesh as the child, the child has a 180 degree rotation on the Y-axis.</li>
+  <li><strong class="propertyStyle">Mirror Horizontally:</strong> You can use this to, for example, quickly create left / right versions of side objects like guard railings. Simply duplicate the side object in the Inspector, open the editor window, check &quot;Mirror Horizontally&quot; and click the Apply button.</li>
+  <li><strong class="propertyStyle">Include Start Segment:</strong> Activate this checkbox to add a start segment.</li>
+  <li><strong class="propertyStyle">Start Segment Offset:</strong> This defines where the geometry should be split between the start and middle segment. The best way to do this is on the stage. Drag one of the blue bottom handles to the edge between the start and middle segment. The handles will snap to vertices within the snapping range.</li>
+  <li><strong class="propertyStyle">Smooth Normals:</strong> Activate this to generate smooth normals between segments.</li>
+  <li><strong class="propertyStyle">Incl. Start Edge Triangles:</strong> Sometimes you want the triangles exactly on the start edge to be part of the middle segment. Activating this checkbox will do that</li>
+  <li><strong class="propertyStyle">Incl. End Edge Triangles:</strong> Sometimes you want the triangles exactly on the end edge to be part of the middle segment. Activating this checkbox will do that</li>
+  <li><strong class="propertyStyle">Include End Segment:</strong> Activate this checkbox to add an end segment</li>
+  <li><strong class="propertyStyle">End Segment Offset:</strong> This defines where the geometry should be split between the middle and the end segment. The best way to do this is on the stage Drag one of the blue top handles to the edge between the end and middle segment. The handles will snap to vertices within the snapping range</li>
+  <li><strong class="propertyStyle">Smooth Normals:</strong> Activate this to generate smooth normals between segments</li>
+  <li><strong class="propertyStyle">Adjust To Road Width:</strong> Side objects such as bridges will adjust to the width of the road after activating the <strong>Active</strong> checkbox</li>
+  <li><strong class="propertyStyle">Offset:</strong> The offset value <span style="padding-bottom: 15px">offset defines the position of the left and right edge of the road on this side object</span>. The best way to set the offset is to horizontally drag the blue handle that become visible on the stage after activating this option</li>
+  <li><strong class="propertyStyle">Build Test Meshes: </strong>This will generate test objects of the start / middle / end segments in the scene. It is useful to check whether the segments are generated correctly. The segments are located in a new temporary game object &quot;tmp folder&quot; as a child of the main road network game object. These objects will be deleted automatically after clicking the <strong>Apply</strong> or <strong>Close</strong> button</li>
+  <li><strong class="propertyStyle">Apply:</strong> this will save the changes and auto update all existing instances in the scene</li>
+  <li><strong class="propertyStyle">Close:</strong> This will close the editor window</li>
+</ul>
+<p class="style1">&nbsp;</p>
+<p class="style1">Procdural Mesh Editor: Start Segment Offset. For the best results, this requires vertices on the edges to be at the same Z position. If you do not get the expected results, you can verify this by doing the snapping from the other side, does it indeed result in different geometry? In that case it is recommended to double check the vertex positions in your modelling app. <br>
+  <br>
+  For Start Sections it is recommended (depending on the geometry complexity) to drag the handles to above the snapping point, then move downwards until it snaps to the desired edge.</p>
+<p class="style1">For End Sections it is recommended (depending on the geometry complexity) to drag the handles to below the snapping point, then move upwards until it snaps to the desired edge.</p>
+<p class="style1"><span class="style6">Tip:</span> Start with simple objects to get familiar with the system and try all the different settings. Also, for the Procedural Mesh Objects  start with simple meshes to get familiar with the Procedural Mesh Object system and check the set up of the meshes  in the demo project have a look at the  how start / end offsets are defined in the Mesh Editor Window.<br>
+  <br>
+  <br>
+  <strong>Procedural Side Object Naming Convention</strong><a name="namingConvention"></a></p>
+<p class="style1">Starting from v3.2 Procedural side objects can also be set up using naming conventions. When a Source Object uses naming conventions there will be summary of the details.</p>
+<p class="style1">This is currently possible for <strong>Start, End and Middle sections</strong>. Ending the name of each object that represents these three sections respectively with <strong>_start, _middle or _end</strong> will automatcially split the object and generate the side object accordingly starting with the _start object followed by repeated _middle object sections and ending with the _end object.<br>
+</p>
+<p class="style1"><img src="../images/namingConventionStartEnd.jpg" width="209" height="208"><br>
+</p>
+<p class="style1">The above example is the Source prefab of the &quot;Concrete Tunnel&quot; example in the demo package. It includes a start, middle and end section for the tunnel section. And it includes a start and end section for the terrain detail section. The Source Object will automatically extract all 3 sections for both sections.</p>
+<p class="style1">Apart from being able to already set up the sections in your modelling app another advantage of this approach is that start and end sections can overlap the middle section. This give additional control over more complex meshes.</p>
+<p class="style1">By default procedural side objects do<strong> cast shadows</strong>. This can be switched off in the General Settings, this will also be swicthed off for source prefabs with the <strong>_castShadowsOff</strong> in the name.</p>
+<p class="style1">Also supported are the <strong>_stepDown</strong> and <strong>_stepUp</strong> naming conventions. The system will detect height differences between the main child objects and these stepped versions. This height difference will be displayed in the summary. When using a stepped setup side object sections will be generated at a fixed height. Once the difference between the spline height and the current section height surpasses this step height difference, the respective stepped child will be inserted and a new side object section will start at this new height. An example of this in the demo package is the &quot;Stepped Wall&quot; side object.</p>
+<p class="style1">The <strong>_terrain</strong> naming convention can be used for tunnel sections that should snap to the terrain in forward direction. This is used for the rock sections on both the Concrete Tunnel and the Rock Tunnel examples in the demo package. The system will assign vertex colors, the green channel is used for this. The more outwards the vertex, the stronger the green value, the stronger the terrain snap weight. For exact precision this information can also be provided directly in the vertex color data of the source prefab.</p>
+<p class="style1">In v3.2.x it will also be possible to add childs for different LOD levels. LOD groups will be created automatically.</p>
+<p class="style1">&nbsp;</p>
+<p class="header2">Side Objects workflow across scenes</p>
+<p>All Side Objects used in a project are stored in the assets folder. All side objects used in a scene are stored in the scene data. </p>
+<p>After creating a new scene and adding a Road Network object, the system will check whether side objects are available in the project, in that case you will be asked whether you want to add these side objects to the newly created Road Network Object. If you select No, you will still be able to import all these side objects or a selection of the project side objects. Manually importing a selection of the project side objects will help to keep the side objects list clear and concise.</p>
+<p>After making changes to a side object, the associated side object in the project folder will be updated as well. When selecting the Road Network in a scene, the system will check for side object changes and will update the scene side object data. At this moment the scene itself is not updated, you can do this manually. In a next update you will be asked whether you want to update the scene in this case.<br>
+  <br>
+</p>
+<p class="header2">Side objects workflow in the scene</p>
+<p>There are two ways to add side objects to roads in the scene. </p>
+<p>Side objects can be activated for roads in the scene. This is done in the Inspector in the <a href="scene.html#sideObjects" class="link">Side Object Section </a>of the selected road.</p>
+<p>The second option is to auto activate <a href="general_settings.html#roadtypes" class="link">side objects for road types</a> in General Settings &gt; Road Types. These side objects will be  activated automatically for new instances of this road type. It will still be possible to deactivate any of these side objects for a specific road by selecting that road (click one of the blue marker handles) and uncheck the specific side object in the  <a href="scene.html#sideObjects" class="link">Side Objects Section</a> for the selected road.</p>
+<p>After activating a side object for a road the default settings will be used set in the Side Object Manager which we covered above. A selection of controls can be fine tuned. When a side object is activated the foldout arrow will appear which will open and <a href="scene.html#sideObjects" class="link">display all options</a>.</p>
+<p>After selecting a marker  activated side objects can be fine tuned in several ways for that marker section. Select the marker and select the side object you want to change from the dropdown. A number of marker specific options will be <a href="scene.html#markerSideObjectSettings" class="link">available</a>.</p>
+<p><strong><a name="autoGenerate"></a>Auto Generated Side Objects</strong> will be created automatically according the set of rules and the terrain profile. Sometimes you may want to ignore certain auto generated sections or perhaps change the selected side object when multiple similar side objects are active for this road. This can be done by clicking the generated object. This will show Instance specific controls in the top left of the Scene View window.<br>
+</p>
+<p><img src="../images/soSceneViewUI.jpg" width="447" height="202"><br>
+</p>
+<p>The close icon in the top right can be used to close the window. This can be useful when an auto generated side object was accidentally clicked. Pressing somewhere else in the scene will also close the window but in some situations, for instance when multiple markers are selected, you would want to avoid that. The multiple marker selection will also be lost when clicking in the scene.</p>
+<p>The road name will be displayed and the name and status of the side object section</p>
+<ul>
+  <li><strong class="propertyStyle">Active:</strong> This can be toggled off. The side object will still visible (transparent) so it can still be selected, but in Build Mode this section will be ignored</li>
+  <li><span class="propertyStyle">Side Object:</span> Another side object can be selected from the dropdown when multiple side objects exist for this section</li>
+  <li><span class="propertyStyle">Keep Selected:</span> The system will select the best match based on the terrain profile and the rules set for each side object. It is still possible above to select one of the other available side objects. This &quot;Keep Selected&quot; option can be used to force the currently selected side object to be used after road  changes in this area.</li>
+  </ul>
+<p><strong>Note:</strong> Activating this side object per marker is still supported for side objects that are marked as auto generated</p>
+<p><strong>Note:</strong> Auto generated side objects will inherit possibly adjusted marker X Position values for this side objects type</p>
+<p><strong>Note:</strong> The <a href="scene.html#followTerrainContours" class="link">Follow Terrain Contours</a> option will interfere with auto generated side objects like bridges and tunnels. Turn of <a href="scene.html#followTerrainContoursMarkers" class="link">Follow Terrain Contours</a> for the involved markers will generate the bridges and tunnels in these sections. </p>
+<p class="style1">&nbsp;</p>
+<p class="style1"><span class="header2">Marker Snap Connectors</span><a name="markerSnapConnector" id="markerSnapConnector"></a></p>
+<p class="style1">Marker Snap Objects can be used in the scene as connection points for road markers. Moving the road marker towards these objects will snap the road marker to this object. when within snapping range. It is a quick way to aligned roads with other objects such as bridge objects not generated through the side object system.</p>
+<p class="style1">By adding these Marker Snap Connectors to strategic positons to the bridge prefab in the project folder new scene instances will be ready and setup after dropping them in the scene.</p>
+<p class="style1">The Marker Snap Connector prefab is located in /Assets/EasyRoads3D/Prefab Sources/Additional Prefabs/ERMarkerSnapConnector/<br>
+</p>
+<p class="style1"><img src="../images/markerSnapConnector.jpg" width="827" height="233"></p>
+<p class="style1">&nbsp;</p>
+<p class="style1">This prefab can be selected and duplicated. The duplicate can then be added to the specific prefab. Multiple marker snap connectors can be added to a single prefab.</p>
+<p class="style1">A bridge for example can have four marker snap connectors, and example of this is the Motorway_2L_bridge_prefab in the demo scene.</p>
+<p class="style1">Optionally marker specific controls can be set automatically after being attached to a specific Marker Snap Connector.<br>
+</p>
+<p class="style1"><img src="../images/markerSnapConnectorInsp.jpg" width="550" height="208"><br>
+  <br>
+</p>
+<ul>
+  <li><strong class="propertyStyle">Terrain Deformation Control:</strong> Terrain Deformation will be switched off for the marker snapped to this object. This can be used for roads on bridge prefabs where the terrain should not be adjusted</li>
+  <li><span class="propertyStyle">Marker Indent:</span> The left and right marker indent values (the distance over which the terrain will be leveled at the same height as the road) the road edge and the edge of the terrain) will auto adjust. This gives more control over terrain deformation if appropriate</li>
+  <li><span class="propertyStyle">Marker Surrounding:</span>The left and right marker surrounding values  (the distance over which the terrain will be leveled gradually from the new height to the original terrain height) will auto adjust. This gives more control over terrain deformation if appropriate</li>
+</ul>
+<p class="style1">&nbsp;</p>
+<p class="header2">Side object examples and Tutorials</p>
+<p class="style1">A wide range of side object examples are available in the additional <a href="https://assetstore.unity.com/packages/tools/terrain/easyroads3d-demo-project-105045" target="_blank" class="link"><strong>free demo package</strong></a> including <a href="http://www.easyroads3d.com/tutorials.php" target="_blank" class="link"><strong>tutorials</strong></a> on our <a href="http://easyroads3d.com/" target="_blank" class="link"><strong>website</strong></a></p>
+<p class="style1">&nbsp;</p>
+<p class="style1">&nbsp;</p>
+<p class="style21">&nbsp;</p>
+<p>&nbsp;</p></td>
+</tr>
+	  <tr>
+	    <td><a href="intersections.html"><img src="../images/previousBtm.jpg" width="89" height="20" border="0"></a></td>
+	    <td align="right"><a href="terrain_control.html"><img src="../images/nextBtm.jpg" width="70" height="20" border="0"></a></td>
+      </tr>
+    </table>
+	<p>&nbsp;</p>
+    </body>
+	
+</html>
+
