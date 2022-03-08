@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using OVR.OpenVR;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine.Networking;
 using UnityEngine;
 
@@ -32,6 +33,8 @@ public class ScenarioManager : MonoBehaviour {
     public GpsController.Direction StartingDirectionParticipantF;
 
 
+    public List<RerunCameraIdentifier.CameraSetup> CameraSetups;
+    
     
     void Start() {
         qnmanager  = Instantiate(
@@ -39,10 +42,32 @@ public class ScenarioManager : MonoBehaviour {
         qnmanager.gameObject.SetActive(false);
         GetSpawnPoints();
         ready = true;
+        
+        if (ConnectionAndSpawing.Singleton.ServerisRunning ||
+            ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
+        {
+            foreach(RerunCameraIdentifier c in FindObjectsOfType<RerunCameraIdentifier>())
+            { 
+                int arraypos = (int) c.myNumber - 1;
+                if (arraypos > 0 && arraypos < CameraSetups.Count)
+                {
+                    if (CameraSetups[arraypos].CameraMode == RerunCameraIdentifier.CameraSetup.CameraState.Fixed)
+                    {
+                        
+                    }
+                    else if (CameraSetups[arraypos].CameraMode == RerunCameraIdentifier.CameraSetup.CameraState.Followone)
+                    {
+                       // c.SetFollowMode(CameraSetups[arraypos].);
+                        
+                    }
+                }
+            }
+        }
 
     }
 
 
+    
     void Update() {
      
     }
@@ -94,3 +119,4 @@ public class ScenarioManager : MonoBehaviour {
         };
     }
 }
+

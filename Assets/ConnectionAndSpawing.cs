@@ -10,12 +10,13 @@ using UnityEditor;
 using UnityEngine.SceneManagement;
 
 
-public class ConnectionAndSpawing : MonoBehaviour {
+public class ConnectionAndSpawing : MonoBehaviour
+{
     public GameObject PlayerPrefab;
     public GameObject CarPrefab;
     public GameObject VRUIStartPrefab;
-   
-    
+
+
     public List<SceneField> IncludedScenes = new List<SceneField>();
     public string WaitingRoomSceneName;
     public bool ServerisRunning;
@@ -29,8 +30,8 @@ public class ConnectionAndSpawing : MonoBehaviour {
     private bool ParticipantOrder_Set = false;
     private ScenarioManager CurrentScenarioManager;
     private RerunManager m_ReRunManager;
-    
-    
+
+
     public ActionState ServerState { get; private set; }
     public LanguageSelect lang { private set; get; }
 
@@ -40,7 +41,8 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     #region ParticipantMapping
 
-    enum ParticipantObjectSpawnType {
+    enum ParticipantObjectSpawnType
+    {
         MAIN,
         CAR,
         PEDESTRIAN,
@@ -56,11 +58,16 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     private bool initalSceneLoaded = false;
 
-    private bool AddParticipant(ParticipantOrder or, ulong id) {
+    private bool AddParticipant(ParticipantOrder or, ulong id)
+    {
         bool outval = false;
-        if (_OrderToClient == null) { initDicts(); }
+        if (_OrderToClient == null)
+        {
+            initDicts();
+        }
 
-        if (!_OrderToClient.ContainsKey(or)) {
+        if (!_OrderToClient.ContainsKey(or))
+        {
             _OrderToClient.Add(or, id);
             _ClientToOrder.Add(id, or);
 
@@ -74,52 +81,91 @@ public class ConnectionAndSpawing : MonoBehaviour {
         return outval;
     }
 
-    private void RemoveParticipant(ulong id) {
+    private void RemoveParticipant(ulong id)
+    {
         ParticipantOrder or = GetOrder(id);
-        if (_OrderToClient.ContainsKey(or) && _ClientToOrder.ContainsKey(id)) {
+        if (_OrderToClient.ContainsKey(or) && _ClientToOrder.ContainsKey(id))
+        {
             _OrderToClient.Remove(or);
             _ClientToOrder.Remove(id);
             ClientObjects.Remove(id);
         }
     }
 
-    private void initDicts() {
+    private void initDicts()
+    {
         _OrderToClient = new Dictionary<ParticipantOrder, ulong>();
         _ClientToOrder = new Dictionary<ulong, ParticipantOrder>();
         ClientListInitDone = true;
     }
 
-    private ulong? GetClientID(ParticipantOrder or) {
-        if (_OrderToClient == null) { initDicts(); }
+    private ulong? GetClientID(ParticipantOrder or)
+    {
+        if (_OrderToClient == null)
+        {
+            initDicts();
+        }
 
-        if (CheckOrder(or)) { return _OrderToClient[or]; }
-        else { return null; }
+        if (CheckOrder(or))
+        {
+            return _OrderToClient[or];
+        }
+        else
+        {
+            return null;
+        }
     }
 
-    private bool CheckOrder(ParticipantOrder or) {
-        if (_OrderToClient == null) { initDicts(); }
+    private bool CheckOrder(ParticipantOrder or)
+    {
+        if (_OrderToClient == null)
+        {
+            initDicts();
+        }
 
         return _OrderToClient.ContainsKey(or);
     }
 
-    private bool CheckClientID(ulong id) {
-        if (_OrderToClient == null) { initDicts(); }
+    private bool CheckClientID(ulong id)
+    {
+        if (_OrderToClient == null)
+        {
+            initDicts();
+        }
 
         return _ClientToOrder.ContainsKey(id);
     }
 
-    private ParticipantOrder GetOrder(ulong id) {
-        if (_OrderToClient == null) { initDicts(); }
+    private ParticipantOrder GetOrder(ulong id)
+    {
+        if (_OrderToClient == null)
+        {
+            initDicts();
+        }
 
-        if (CheckClientID(id)) { return _ClientToOrder[id]; }
-        else { return ParticipantOrder.None; }
+        if (CheckClientID(id))
+        {
+            return _ClientToOrder[id];
+        }
+        else
+        {
+            return ParticipantOrder.None;
+        }
     }
 
-    private int GetParticipantCount() {
-        if (_ClientToOrder == null || _OrderToClient == null) { return -1; }
+    private int GetParticipantCount()
+    {
+        if (_ClientToOrder == null || _OrderToClient == null)
+        {
+            return -1;
+        }
 
-        if (_ClientToOrder.Count == _OrderToClient.Count) { return _ClientToOrder.Count; }
-        else {
+        if (_ClientToOrder.Count == _OrderToClient.Count)
+        {
+            return _ClientToOrder.Count;
+        }
+        else
+        {
             Debug.LogError(
                 "Our Participant Connection has become inconsistent. This is bad. Please restart and tell david!");
             return -1;
@@ -132,10 +178,16 @@ public class ConnectionAndSpawing : MonoBehaviour {
     #region SingeltonManagment
 
     public static ConnectionAndSpawing Singleton { get; private set; }
-    private void SetSingleton() { Singleton = this; }
 
-    private void OnEnable() {
-        if (Singleton != null && Singleton != this) {
+    private void SetSingleton()
+    {
+        Singleton = this;
+    }
+
+    private void OnEnable()
+    {
+        if (Singleton != null && Singleton != this)
+        {
             Destroy(gameObject);
             return;
         }
@@ -144,8 +196,12 @@ public class ConnectionAndSpawing : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    private void OnDestroy() {
-        if (Singleton != null && Singleton == this) { Singleton = null; }
+    private void OnDestroy()
+    {
+        if (Singleton != null && Singleton == this)
+        {
+            Singleton = null;
+        }
     }
 
     #endregion
@@ -153,7 +209,8 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
     #region SpawingAndConnecting
 
-    void SetupServerFunctionality() {
+    void SetupServerFunctionality()
+    {
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
         NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected;
         NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
@@ -167,9 +224,9 @@ public class ConnectionAndSpawing : MonoBehaviour {
         SteeringWheelManager.Singleton.Init(); //TODO enable steering wheel
     }
 
-   
 
-    private void LocalLoadScene(string name) {
+    private void LocalLoadScene(string name)
+    {
         DestroyAllClientObjects(new List<ParticipantObjectSpawnType> {ParticipantObjectSpawnType.CAR});
 
         //PreviousScene = ActiveScene;
@@ -177,14 +234,19 @@ public class ConnectionAndSpawing : MonoBehaviour {
         NetworkManager.Singleton.SceneManager.LoadScene(name, LoadSceneMode.Single);
     }
 
-    private void SceneEvent(SceneEvent sceneEvent) {
-        switch (sceneEvent.SceneEventType) {
+    private void SceneEvent(SceneEvent sceneEvent)
+    {
+        switch (sceneEvent.SceneEventType)
+        {
             case SceneEventType.Load:
             case SceneEventType.Unload: break;
             case SceneEventType.Synchronize: break;
             case SceneEventType.ReSynchronize: break;
             case SceneEventType.LoadEventCompleted:
-                if (ServerState == ActionState.LOADING) { SwitchToReady(); }
+                if (ServerState == ActionState.LOADING)
+                {
+                    SwitchToReady();
+                }
 
                 break;
             case SceneEventType.UnloadEventCompleted:
@@ -200,32 +262,45 @@ public class ConnectionAndSpawing : MonoBehaviour {
     }
     // DestroyAllClientObjects_OfType(ParticipantObjectSpawnType TypeToDestroy)// TODO would make implementing more features easier
 
-    private void DestroyAllClientObjects(List<ParticipantObjectSpawnType> TypesToDestroy) {
+    private void DestroyAllClientObjects(List<ParticipantObjectSpawnType> TypesToDestroy)
+    {
         bool destroyMain = TypesToDestroy.Contains(ParticipantObjectSpawnType.MAIN);
-        if (destroyMain) { TypesToDestroy.Remove(ParticipantObjectSpawnType.MAIN); }
+        if (destroyMain)
+        {
+            TypesToDestroy.Remove(ParticipantObjectSpawnType.MAIN);
+        }
 
-        foreach (ulong id in ClientObjects.Keys) {
-            foreach (ParticipantObjectSpawnType enumval in TypesToDestroy) {
+        foreach (ulong id in ClientObjects.Keys)
+        {
+            foreach (ParticipantObjectSpawnType enumval in TypesToDestroy)
+            {
                 {
                     DespawnObjectOfType(id, enumval);
                 }
             }
 
-            if (destroyMain) { DespawnObjectOfType(id, ParticipantObjectSpawnType.MAIN); }
+            if (destroyMain)
+            {
+                DespawnObjectOfType(id, ParticipantObjectSpawnType.MAIN);
+            }
         }
     }
 
-    private void DespawnObjectOfType(ulong clientID, ParticipantObjectSpawnType oType) {
-        if (ClientObjects[clientID].ContainsKey(oType)) {
+    private void DespawnObjectOfType(ulong clientID, ParticipantObjectSpawnType oType)
+    {
+        if (ClientObjects[clientID].ContainsKey(oType))
+        {
             Debug.Log("Removing for:" + clientID + " object:" + oType);
             NetworkObject no = ClientObjects[clientID][oType];
-            switch (oType) {
+            switch (oType)
+            {
                 case ParticipantObjectSpawnType.MAIN:
                     Debug.Log("WARNING despawing MAIN!");
                     break;
                 case ParticipantObjectSpawnType.CAR:
-                   
-                    if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null) {
+
+                    if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null)
+                    {
                         ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
                             .De_AssignCarTransform(clientID);
                     }
@@ -241,59 +316,68 @@ public class ConnectionAndSpawing : MonoBehaviour {
     }
 
 
-    public enum ClienConnectionResponse {
+    public enum ClienConnectionResponse
+    {
         SUCCESS,
         FAILED
     };
 
-   
 
-
-    private void ClientDisconnected(ulong ClientID) {
-        foreach (var obj in ClientObjects[ClientID].Values) { obj.Despawn(true); }
+    private void ClientDisconnected(ulong ClientID)
+    {
+        foreach (var obj in ClientObjects[ClientID].Values)
+        {
+            obj.Despawn(true);
+        }
 
         RemoveParticipant(ClientID);
     }
 
-    private void ClientConnected(ulong ClientID) {
+    private void ClientConnected(ulong ClientID)
+    {
         //      if (! NetworkManager.Singleton.IsServer) return;
 //      if(SceneSwitchingFinished) SpawnAPlayer(ClientID);
     }
 
-    private bool _prepareSpawing(ulong clientID, out Pose? tempPose) {
+    private bool _prepareSpawing(ulong clientID, out Pose? tempPose)
+    {
         bool success = true;
         tempPose = GetScenarioManager().GetStartPose(GetOrder(clientID));
-        if (tempPose == null) { success = false; }
+        if (tempPose == null)
+        {
+            success = false;
+        }
 
         return success;
     }
 
-   
-    
-    private bool SpawnACar(ulong clientID) {
+
+    private bool SpawnACar(ulong clientID)
+    {
         ParticipantOrder temp = GetOrder(clientID);
         if (temp == ParticipantOrder.None) return false;
 
-        if (_prepareSpawing(clientID, out Pose? tempPose)) {
+        if (_prepareSpawing(clientID, out Pose? tempPose))
+        {
             var newCar =
                 Instantiate(CarPrefab,
                     tempPose.Value.position, tempPose.Value.rotation);
 
             //newCar.name = "XE_Rigged_Networked_" + GetOrder(clientID);
 
-           
-
 
             newCar.GetComponent<NetworkObject>().Spawn(true);
 
-            if (!fakeCare) {
+            if (!fakeCare)
+            {
                 newCar.GetComponent<NetworkVehicleController>().AssignClient(clientID, GetOrder(clientID));
 
 #if SPAWNDEBUG
                 Debug.Log("Assigning car to a new partcipant with clinetID:" + clientID.ToString() + " =>" +
                           newCar.GetComponent<NetworkObject>().NetworkObjectId);
 #endif
-                if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null) {
+                if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null)
+                {
                     // ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
                     //  .AssignCarTransformClientRPC(newCar.GetComponent<NetworkObject>(), GetOrder(clientID), lang,
                     //        clientRpcParams);
@@ -302,7 +386,10 @@ public class ConnectionAndSpawing : MonoBehaviour {
                         .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientID);
                 }
 
-                else { Debug.LogError("Could not find player as I am spawning the CAR. Broken please fix."); }
+                else
+                {
+                    Debug.LogError("Could not find player as I am spawning the CAR. Broken please fix.");
+                }
             }
 
             ClientObjects[clientID].Add(ParticipantObjectSpawnType.CAR, newCar.GetComponent<NetworkObject>());
@@ -313,11 +400,13 @@ public class ConnectionAndSpawing : MonoBehaviour {
         return false;
     }
 
-    private bool SpawnAPlayer(ulong clientID, bool persistent) {
+    private bool SpawnAPlayer(ulong clientID, bool persistent)
+    {
         ParticipantOrder temp = GetOrder(clientID);
         if (temp == ParticipantOrder.None) return false;
 
-        if (_prepareSpawing(clientID, out Pose? tempPose)) {
+        if (_prepareSpawing(clientID, out Pose? tempPose))
+        {
             tempPose ??= Pose.identity;
 
             var newPlayer =
@@ -332,9 +421,11 @@ public class ConnectionAndSpawing : MonoBehaviour {
         return false;
     }
 
-    private ScenarioManager GetScenarioManager() {
+    private ScenarioManager GetScenarioManager()
+    {
         CurrentScenarioManager = FindObjectOfType<ScenarioManager>();
-        if (CurrentScenarioManager == null) {
+        if (CurrentScenarioManager == null)
+        {
             Debug.LogError(
                 "Tried to find a scenario manager(probably to spawn cars), but they was nothing. Did you load your scenario(subscene)?");
         }
@@ -344,13 +435,15 @@ public class ConnectionAndSpawing : MonoBehaviour {
 
 
     private void ApprovalCheck(byte[] connectionData, ulong clientId,
-        NetworkManager.ConnectionApprovedDelegate callback) {
+        NetworkManager.ConnectionApprovedDelegate callback)
+    {
         bool approve = false;
         ParticipantOrder temp = (ParticipantOrder) connectionData[0];
 
         approve = AddParticipant(temp, clientId);
 
-        if (!approve) {
+        if (!approve)
+        {
             Debug.Log("Participant Order " + connectionData +
                       " tried to join, but we already have a participant with that order. " +
                       "Try to change the -po commandline argument of the participant that is" +
@@ -365,178 +458,219 @@ public class ConnectionAndSpawing : MonoBehaviour {
     #endregion
 
 
-    public void StartAsServer(string pairName) {
+    public void StartAsServer(string pairName)
+    {
         SteeringWheelManager.Singleton.enabled = true;
         GetComponent<QNDataStorageServer>().enabled = true;
         GetComponent<TrafficLightSupervisor>().enabled = true;
         SetupServerFunctionality();
         m_ReRunManager.SetRecordingFolder(pairName);
-        Debug.Log("Starting Server for session: "+pairName);
+        Debug.Log("Starting Server for session: " + pairName);
     }
 
-    
-    
-    
+
     public delegate void ReponseDelegate(ClienConnectionResponse response);
+
     private ReponseDelegate ReponseHandler;
     private bool SuccessFullyConnected = false;
 
-    private void ClientDisconnected_client(ulong ClientID) {
+    private void ClientDisconnected_client(ulong ClientID)
+    {
         Debug.Log(SuccessFullyConnected);
-        if (SuccessFullyConnected) {
+        if (SuccessFullyConnected)
+        {
             Debug.Log("Quitting due to disconnection.");
             Application.Quit();
         }
-        else {
+        else
+        {
             ReponseHandler.Invoke(ClienConnectionResponse.FAILED);
             Debug.Log("Retrying connection");
         }
-        
     }
-    private void ClientConnected_client(ulong ClientID) {
-        if ( ClientID != NetworkManager.Singleton.LocalClient.ClientId) return;
-        
+
+    private void ClientConnected_client(ulong ClientID)
+    {
+        if (ClientID != NetworkManager.Singleton.LocalClient.ClientId) return;
+
         SuccessFullyConnected = true;
         ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS);
-        Debug.Log(SuccessFullyConnected+" CHECK HERE");
-      
+        Debug.Log(SuccessFullyConnected + " CHECK HERE");
     }
-    void SetupClientFunctionality() {
+
+    void SetupClientFunctionality()
+    {
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected_client;
         NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected_client;
     }
-    
-    
-    private void SetParticipantOrder(ParticipantOrder val) {
+
+
+    private void SetParticipantOrder(ParticipantOrder val)
+    {
         NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] {(byte) val}; // assigning ID
         _participantOrder = val;
         ParticipantOrder_Set = true;
     }
 
-    private void Setlanguage(LanguageSelect lang_) { lang = lang_; }
+    private void Setlanguage(LanguageSelect lang_)
+    {
+        lang = lang_;
+    }
 
-    public void StartAsClient(LanguageSelect lang_, ParticipantOrder val, string ip, int port, ReponseDelegate result) {
+    public void StartAsClient(LanguageSelect lang_, ParticipantOrder val, string ip, int port, ReponseDelegate result)
+    {
         SetupClientFunctionality();
         ReponseHandler += result;
         SetupTransport(ip, port);
         Setlanguage(lang_);
         SetParticipantOrder(val);
         Debug.Log("Starting as Client");
-       
+
         NetworkManager.Singleton.StartClient();
-       
-        
     }
 
     private string LoadedScene = "";
-    public void LoadSceneReRun(string totalPath) {
-        if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsClient) {
+
+    public void LoadSceneReRun(string totalPath)
+    {
+        if (NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsClient)
+        {
             Debug.LogError("Dont try to load a scene for RERUN while the server is running. Pleas restart the program");
             Application.Quit();
         }
+
         var fileName = System.IO.Path.GetFileName(totalPath);
         var sceneNameList = fileName.Split('_');
         var sceneName = sceneNameList[0];
-        Debug.Log("Scene Name"+sceneName);
-        foreach (var v in IncludedScenes) {
+        Debug.Log("Scene Name" + sceneName);
+        foreach (var v in IncludedScenes)
+        {
             Debug.Log(v.SceneName);
         }
-        if(IncludedScenes.ConvertAll(x => x.SceneName).Contains(sceneName)) {
+
+        if (IncludedScenes.ConvertAll(x => x.SceneName).Contains(sceneName))
+        {
             Debug.Log("Found scene. Loading!");
-            if (LoadedScene == sceneName) {
-                Debug.Log("ReRunscene already loaded continuing!");
+            if (LoadedScene == sceneName)
+            {
+                Debug.Log("ReRun scene already loaded continuing!");
                 return;
             }
-            
-            if (LoadedScene.Length > 0) {
+
+            if (LoadedScene.Length > 0)
+            {
                 SceneManager.UnloadSceneAsync(LoadedScene);
             }
 
             LoadedScene = sceneName;
-            SceneManager.LoadScene(sceneName,LoadSceneMode.Additive);
+            SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+          
         }
-        else {
+        else
+        {
             Debug.LogWarning("Did not find scene. Aborting!");
         }
     }
 
-    public void StartReRun() {
+    public void StartReRun()
+    {
         ServerState = ActionState.RERUN;
 
         m_ReRunManager.RegisterPreLoadHandler(LoadSceneReRun);
         NetworkManager.Singleton.enabled = false;
         GetComponent<OVRManager>().enabled = false;
-        FindObjectOfType<RerunGUI>().enabled=true;
-        FindObjectOfType<RerunInputManager>().enabled=true;
-      
+        FindObjectOfType<RerunGUI>().enabled = true;
+        FindObjectOfType<RerunInputManager>().enabled = true;
     }
-    private void SetupTransport(string ip = "127.0.0.1", int port = 7777) {
+
+    private void SetupTransport(string ip = "127.0.0.1", int port = 7777)
+    {
         NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ip;
         NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectPort = port;
     }
 
-    private void ServerHasStarted() {
+    private void ServerHasStarted()
+    {
         ServerisRunning = true;
         SwitchToWaitingRoom();
     }
 
     #region StateChangeCalls
 
-    private void SwitchToWaitingRoom() {
-        if (m_ReRunManager.IsRecording()) {
+    private void SwitchToWaitingRoom()
+    {
+        if (m_ReRunManager.IsRecording())
+        {
             m_ReRunManager.StopRecording();
-            Debug.LogWarning("I stoped Recording as I was loaded back to the Waitingroom. Recording should have stopped at the switch to the Questionnaire stage.");
+            Debug.LogWarning(
+                "I stoped Recording as I was loaded back to the Waitingroom. Recording should have stopped at the switch to the Questionnaire stage.");
         }
+
         ServerState = ActionState.WAITINGROOM;
         LocalLoadScene(WaitingRoomSceneName);
     }
 
-    private void SwitchToLoading(string name) {
+    private void SwitchToLoading(string name)
+    {
         ServerState = ActionState.LOADING;
         LocalLoadScene(name);
         LastLoadedScene = name;
     }
 
-    public string GetLoadedScene() {
+    public string GetLoadedScene()
+    {
         return LastLoadedScene;
     }
 
     private string LastLoadedScene = "";
-    private void SwitchToReady() { ServerState = ActionState.READY; }
 
-    
-    
-    private void SwitchToDriving() {
-        
+    private void SwitchToReady()
+    {
+        ServerState = ActionState.READY;
+    }
+
+
+    private void SwitchToDriving()
+    {
         ServerState = ActionState.DRIVE;
         m_ReRunManager.BeginRecording(LastLoadedScene);
     }
 
-    public void SwitchToQN() {
-        
+    public void SwitchToQN()
+    {
         Debug.Log("Stopping Driving and Stopping the recording.");
         m_ReRunManager.StopRecording();
-        
+
         ServerState = ActionState.QUESTIONS;
         QNFinished = new Dictionary<ParticipantOrder, bool>();
-        foreach (ParticipantOrder po in _OrderToClient.Keys) { QNFinished.Add(po, false); }
+        foreach (ParticipantOrder po in _OrderToClient.Keys)
+        {
+            QNFinished.Add(po, false);
+        }
 
-        foreach (ulong client in ClientObjects.Keys) {
-            foreach (NetworkVehicleController no in FindObjectsOfType<NetworkVehicleController>()) {
+        foreach (ulong client in ClientObjects.Keys)
+        {
+            foreach (NetworkVehicleController no in FindObjectsOfType<NetworkVehicleController>())
+            {
                 no.transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 no.transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             }
         }
 
-        foreach (ulong clinet in NetworkManager.Singleton.ConnectedClients.Keys) {
+        foreach (ulong clinet in NetworkManager.Singleton.ConnectedClients.Keys)
+        {
             ParticipantInputCapture inCapture =
                 NetworkManager.Singleton.ConnectedClients[clinet].PlayerObject
                     .GetComponent<ParticipantInputCapture>();
-            if (inCapture != null) { inCapture.StartQuestionnaireClientRpc(); }
+            if (inCapture != null)
+            {
+                inCapture.StartQuestionnaireClientRpc();
+            }
         }
     }
 
-    private void SwitchToPostQN() {
+    private void SwitchToPostQN()
+    {
         ServerState = ActionState.POSTQUESTIONS;
         SwitchToWaitingRoom();
     }
@@ -544,63 +678,79 @@ public class ConnectionAndSpawing : MonoBehaviour {
     #endregion
 
     private bool retry = true;
-    private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response) { }
 
-    
+    private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response)
+    {
+    }
 
-   
-    void Start() {
-        if (Application.platform == RuntimePlatform.Android ) {
-           // StartAsClient("English", ParticipantOrder.A, "192.168.1.160", 7777, ResponseDelegate);
 
-           Instantiate(VRUIStartPrefab);
+    void Start()
+    {
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            // StartAsClient("English", ParticipantOrder.A, "192.168.1.160", 7777, ResponseDelegate);
+
+            Instantiate(VRUIStartPrefab);
             Debug.Log("Started Client");
         }
 
-        if (FindObjectsOfType<RerunManager>().Length > 1) {
-            Debug.LogError("We found more than 1 RerunManager. This is not support. Check your Hiracy" );
+        if (FindObjectsOfType<RerunManager>().Length > 1)
+        {
+            Debug.LogError("We found more than 1 RerunManager. This is not support. Check your Hiracy");
             Application.Quit();
         }
+
         m_ReRunManager = FindObjectOfType<RerunManager>();
-        if (m_ReRunManager == null) {
-            Debug.LogError("Did not find a ReRunManager. Need exactly 1. Quitting!" );
+        if (m_ReRunManager == null)
+        {
+            Debug.LogError("Did not find a ReRunManager. Need exactly 1. Quitting!");
             Application.Quit();
         }
-        
     }
 
     // Update is called once per frame
-    void Update() {
-        if (NetworkManager.Singleton.IsServer) {
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D)) {
+    void Update()
+    {
+        if (NetworkManager.Singleton.IsServer)
+        {
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
+            {
                 DestroyAllClientObjects(new List<ParticipantObjectSpawnType> {ParticipantObjectSpawnType.CAR});
             }
 
-            switch (ServerState) {
+            switch (ServerState)
+            {
                 case ActionState.DEFAULT: break;
                 case ActionState.WAITINGROOM: break;
                 case ActionState.LOADING: break;
                 case ActionState.READY:
-                    if (Input.GetKeyUp(KeyCode.Return)) {
+                    if (Input.GetKeyUp(KeyCode.Return))
+                    {
                         SwitchToDriving();
                         SetStartingGPSDirections();
                     }
 
                     break;
                 case ActionState.DRIVE:
-                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q)) {
+                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q))
+                    {
                         Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
                         SwitchToPostQN();
                     }
-                    else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Q)) {
+                    else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Q))
+                    {
                         SwitchToQN();
                     }
 
                     break;
                 case ActionState.QUESTIONS:
-                    if (!QNFinished.ContainsValue(false)) { SwitchToPostQN(); }
+                    if (!QNFinished.ContainsValue(false))
+                    {
+                        SwitchToPostQN();
+                    }
 
-                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q)) {
+                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q))
+                    {
                         Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
                         SwitchToPostQN();
                     }
@@ -608,13 +758,17 @@ public class ConnectionAndSpawing : MonoBehaviour {
                     break;
                 case ActionState.POSTQUESTIONS: break;
                 case ActionState.RERUN:
-                    if (!NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient) {
+                    if (!NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient)
+                    {
                         this.enabled = false;
                     }
-                    else {
-                        Debug.LogError("We where running as either client or server while in ReRun mode. This is not supported! I am Quitting");
+                    else
+                    {
+                        Debug.LogError(
+                            "We where running as either client or server while in ReRun mode. This is not supported! I am Quitting");
                         Application.Quit();
                     }
+
                     break;
                 default: throw new ArgumentOutOfRangeException();
             }
@@ -648,7 +802,6 @@ public class ConnectionAndSpawing : MonoBehaviour {
                 if (_OrderToClient == null) return;
                 foreach (var p in _OrderToClient.Keys)
                 {
-
                     if (GUI.Button(new Rect(200, 200 + y, 100, 25), "Calibrate " + p))
                     {
                         ulong clientID = _OrderToClient[p];
@@ -679,8 +832,7 @@ public class ConnectionAndSpawing : MonoBehaviour {
             }
             else if (ServerState == ActionState.READY)
             {
-
-                 if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
+                if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
                 {
                     GUI.Label(new Rect(5, 5, 150, 100), "Client: " +
                                                         ParticipantOrder + " " +
@@ -690,26 +842,31 @@ public class ConnectionAndSpawing : MonoBehaviour {
         }
     }
 
-   
+
     private Dictionary<ParticipantOrder, bool> QNFinished;
     private bool ClientListInitDone = false;
 
-    public void FinishedQuestionair(ulong clientID) {
+    public void FinishedQuestionair(ulong clientID)
+    {
         ParticipantOrder po = GetOrder(clientID);
         QNFinished[po] = true;
     }
 
-   
+
     #region GPSUpdate
 
-    private void SetStartingGPSDirections() {
+    private void SetStartingGPSDirections()
+    {
         UpdateAllGPS(FindObjectOfType<ScenarioManager>().GetStartingPositions());
     }
 
-    public void UpdateAllGPS(Dictionary<ParticipantOrder, GpsController.Direction> dict) {
-        foreach (ParticipantOrder or in dict.Keys) {
+    public void UpdateAllGPS(Dictionary<ParticipantOrder, GpsController.Direction> dict)
+    {
+        foreach (ParticipantOrder or in dict.Keys)
+        {
             ulong? cid = GetClientID(or);
-            if (cid != null) {
+            if (cid != null)
+            {
                 NetworkManager.Singleton.ConnectedClients[(ulong) cid].PlayerObject
                     .GetComponent<ParticipantInputCapture>().CurrentDirection.Value = dict[or];
             }
@@ -719,22 +876,23 @@ public class ConnectionAndSpawing : MonoBehaviour {
     #endregion
 
 
-    public List<ulong> GetClientList() {
+    public List<ulong> GetClientList()
+    {
         if (_ClientToOrder == null) return null;
         return _ClientToOrder.Keys.ToList();
     }
 
-    public Transform GetMainClientObject(ulong senderClientId) {
+    public Transform GetMainClientObject(ulong senderClientId)
+    {
         if (!ClientObjects.ContainsKey(senderClientId)) return null;
         return ClientObjects[senderClientId].ContainsKey(ParticipantObjectSpawnType.MAIN)
             ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
             : null;
     }
 
-    public ParticipantOrder GetParticipantOrderClientId(ulong clientid) {
+    public ParticipantOrder GetParticipantOrderClientId(ulong clientid)
+    {
         if (_ClientToOrder.ContainsKey(clientid)) return _ClientToOrder[clientid];
         else return ParticipantOrder.None;
     }
-    
-  
 }
