@@ -12,7 +12,13 @@ public class SimpleServerCameraScript : MonoBehaviour {
       
     }
 
-    void Start() { NetworkManager.Singleton.OnClientConnectedCallback += DisableMe; }
+    void Start()
+    {
+        NetworkManager.Singleton.OnClientConnectedCallback += DisableMe; 
+      
+        
+    }
+
 
     private void DisableMe(ulong obj) {
         if (NetworkManager.Singleton.IsClient) { Destroy(gameObject); }
@@ -22,3 +28,4 @@ public class SimpleServerCameraScript : MonoBehaviour {
 // Update is called once per frame
     void Update() { }
 }
+

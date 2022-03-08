@@ -183,6 +183,7 @@ GameObject:
   - component: {fileID: 2823791921960522932}
   - component: {fileID: -3837203089491521288}
   - component: {fileID: -2906884681439060436}
+  - component: {fileID: -2568685145942801040}
   m_Layer: 0
   m_Name: XE_Rigged_Networked
   m_TagString: Player
@@ -444,6 +445,7 @@ MonoBehaviour:
     m_InternalValue: 0
   CurrentSurface:
     m_InternalValue: 0
+  MyOrder: 0
   SteeringWheel: {fileID: 4147952271443172}
   interval: 0.5
 --- !u!114 &11476574
@@ -717,6 +719,23 @@ MonoBehaviour:
   - {fileID: -3837203089491521288}
   isPrefab: 1
   prefabType: 1
+--- !u!114 &-2568685145942801040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102736}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d05991eb58cd02b4db8eb7fb42aa3d2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 20077
+  replayObject:
+    reference: {fileID: 0}
+  participantOrder: 0
 --- !u!1 &103102
 GameObject:
   m_ObjectHideFlags: 0
