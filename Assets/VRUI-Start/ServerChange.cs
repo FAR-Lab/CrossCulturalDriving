@@ -42,7 +42,7 @@ public class ServerChange : MonoBehaviour
     private void Start()
     {
 
-        m_path = Application.persistentDataPath + "\\" + FileName;
+        m_path = Application.persistentDataPath + "/" + FileName;
         ready = true;
 
         ParticipantDropdown.options.Clear();
@@ -72,7 +72,7 @@ public class ServerChange : MonoBehaviour
         {
             LanguageDropdown.options.Add(new TMP_Dropdown.OptionData() { text = item });
         }
-
+        
         LoadConf();
 
      
@@ -144,70 +144,73 @@ public class ServerChange : MonoBehaviour
 
 
     void LoadConf()
-    {
+    {   
+        if (File.Exists(m_path)){
          Dictionary<string, string> dict = LoadDict();
 
-        if (dict.ContainsKey("participant") && dict.ContainsKey("server") && dict.ContainsKey("language"))
-        {
-            ParticipantIDString = dict["participant"];
-            ServerIPString = dict["server"];
-            LanguageString = dict["language"];
+         if (dict.ContainsKey("participant") && dict.ContainsKey("server") && dict.ContainsKey("language"))
+         {
+             ParticipantIDString = dict["participant"];
+             ServerIPString = dict["server"];
+             LanguageString = dict["language"];
 
-            switch (ParticipantIDString)
-            {
-                case "A":
-                    ParticipantDropdown.value = 0;
-                    break;
+             switch (ParticipantIDString)
+             {
+                 case "A":
+                     ParticipantDropdown.value = 0;
+                     break;
 
-                case "B":
-                    ParticipantDropdown.value = 1;
-                    break;
+                 case "B":
+                     ParticipantDropdown.value = 1;
+                     break;
 
-                case "C":
-                    ParticipantDropdown.value = 2;
-                    break;
+                 case "C":
+                     ParticipantDropdown.value = 2;
+                     break;
 
-                case "D":
-                    ParticipantDropdown.value = 3;
-                    break;
+                 case "D":
+                     ParticipantDropdown.value = 3;
+                     break;
 
-                case "E":
-                    ParticipantDropdown.value = 4;
-                    break;
+                 case "E":
+                     ParticipantDropdown.value = 4;
+                     break;
 
-                case "F":
-                    ParticipantDropdown.value = 5;
-                    break;
+                 case "F":
+                     ParticipantDropdown.value = 5;
+                     break;
 
-                default:
-                    Debug.LogError("ServerChange could not find a matching particpant ID");
-                    break;
-            }
+                 default:
+                     Debug.LogError("ServerChange could not find a matching particpant ID");
+                     break;
+             }
 
-            switch (LanguageString)
-            {
-                case "English":
-                    LanguageDropdown.value = 0;
-                    break;
+             switch (LanguageString)
+             {
+                 case "English":
+                     LanguageDropdown.value = 0;
+                     break;
 
-                case "Hebrew":
-                    LanguageDropdown.value = 1;
-                    break;
+                 case "Hebrew":
+                     LanguageDropdown.value = 1;
+                     break;
 
-                case "Chinese":
-                    LanguageDropdown.value = 2;
-                    break;
+                 case "Chinese":
+                     LanguageDropdown.value = 2;
+                     break;
 
-                case "German":
-                    LanguageDropdown.value = 3;
-                    break;
+                 case "German":
+                     LanguageDropdown.value = 3;
+                     break;
 
-                default:
-                    Debug.LogError("ServerChange could not find a matching language ");
-                    break;
-            }
-
-
+                 default:
+                     Debug.LogError("ServerChange could not find a matching language ");
+                     break;
+             }
+         }
+         else
+         {
+             Debug.LogError("Participant configuration file corrupted");         }
         }
 
         else {
