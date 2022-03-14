@@ -24,3 +24,26 @@ public enum ParticipantOrder : byte {
     F = (byte) 'f',
     None = (byte) '-'
 };
+
+
+
+public struct FElem
+{
+    public static readonly ParticipantOrder[] AllPossPart =
+    {
+        ParticipantOrder.A, ParticipantOrder.B, ParticipantOrder.C, ParticipantOrder.D, ParticipantOrder.E,
+        ParticipantOrder.F
+    };
+}
+
+
+/*
+public static class TextExtension
+{
+    public static SafeBu(this TextAsset val)
+    {
+        
+    }
+}
+
+*/

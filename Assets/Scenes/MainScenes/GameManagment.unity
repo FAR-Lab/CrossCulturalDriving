@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -430,10 +430,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1852203067}
     m_Modifications:
-    - target: {fileID: 250151055235014260, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
-      propertyPath: _DontDestroyOnLoad
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1286891131255837244, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -478,14 +474,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1747018596572333044, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1747018596572333045, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2751920820005047154, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
       propertyPath: isPrefab
       value: 0
@@ -494,17 +482,9 @@ PrefabInstance:
       propertyPath: prefabType
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 2751920820005047157, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7380854540259579330, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
       propertyPath: m_Name
       value: Rerun-XC
-      objectReference: {fileID: 0}
-    - target: {fileID: 7380854540259579330, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
@@ -525,6 +505,7 @@ GameObject:
   - component: {fileID: 1852203068}
   - component: {fileID: 1852203069}
   - component: {fileID: 1852203066}
+  - component: {fileID: 1852203070}
   m_Layer: 0
   m_Name: ReRunComponents
   m_TagString: Untagged
@@ -610,3 +591,16 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1852203070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852203065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 579ff639bc69ee84ab55412feba19fcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myNumber: 4
