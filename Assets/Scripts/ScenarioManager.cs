@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using OVR.OpenVR;
 using Unity.Netcode;
 using UnityEditor;
@@ -8,7 +9,7 @@ using UnityEngine.Networking;
 using UnityEngine;
 
 public class ScenarioManager : MonoBehaviour {
-    public TextAsset[] QuestionairsToAsk;
+    public TextAsset  QuestionairToAsk;
 
     public string conditionName;
 
@@ -33,7 +34,7 @@ public class ScenarioManager : MonoBehaviour {
     public GpsController.Direction StartingDirectionParticipantF;
 
 
-    public List<RerunCameraIdentifier.CameraSetup> CameraSetups;
+    public List<CameraSetupXC> CameraSetups;
     
     
     void Start() {
@@ -46,22 +47,7 @@ public class ScenarioManager : MonoBehaviour {
         if (ConnectionAndSpawing.Singleton.ServerisRunning ||
             ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
         {
-            foreach(RerunCameraIdentifier c in FindObjectsOfType<RerunCameraIdentifier>())
-            { 
-                int arraypos = (int) c.myNumber - 1;
-                if (arraypos > 0 && arraypos < CameraSetups.Count)
-                {
-                    if (CameraSetups[arraypos].CameraMode == RerunCameraIdentifier.CameraSetup.CameraState.Fixed)
-                    {
-                        
-                    }
-                    else if (CameraSetups[arraypos].CameraMode == RerunCameraIdentifier.CameraSetup.CameraState.Followone)
-                    {
-                       // c.SetFollowMode(CameraSetups[arraypos].);
-                        
-                    }
-                }
-            }
+           
         }
 
     }
@@ -98,13 +84,14 @@ public class ScenarioManager : MonoBehaviour {
 
     public void RunQuestionairNow(Transform MyLocalClient_) {
         MyLocalClient = MyLocalClient_;
-
         Transform MyCar = MyLocalClient.GetComponent<ParticipantInputCapture>().GetMyCar();
        
         qnmanager.gameObject.SetActive(true);
         qnmanager.setRelativePosition(MyCar, 1.5f, 4.5f);
-        if (QuestionairsToAsk.Length > 0) {
-            qnmanager.startAskingTheQuestionairs(MyLocalClient, QuestionairsToAsk, conditionName, ConnectionAndSpawing.Singleton.lang);
+        if (QuestionairToAsk !=null) {
+            Debug.Log("about to setup QN");
+            qnmanager.startAskingTheQuestionairs(MyLocalClient, conditionName, ConnectionAndSpawing.Singleton.lang);
+            Debug.Log("Started asking questions!");
         }
     }
 
@@ -118,5 +105,22 @@ public class ScenarioManager : MonoBehaviour {
             {ParticipantOrder.F, StartingDirectionParticipantF}
         };
     }
+
+    public TextAsset GetQuestionFile()
+    {
+        return QuestionairToAsk;
+    }
+    
+   public List<QuestionnaireQuestion>   ReadString(string asset)
+    {
+        return JsonConvert.DeserializeObject<List<QuestionnaireQuestion>>(asset);
+    }
+
+   public List<QuestionnaireQuestion> GetQuestionObject()
+   {
+       return ReadString(QuestionairToAsk.text);
+   }
+
+   
 }
 

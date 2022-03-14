@@ -25,6 +25,8 @@ public enum ParticipantOrder : byte {
     None = (byte) '-'
 };
 
+
+
 public struct FElem
 {
     public static readonly ParticipantOrder[] AllPossPart =
@@ -33,3 +35,15 @@ public struct FElem
         ParticipantOrder.F
     };
 }
+
+
+/*
+public static class TextExtension
+{
+    public static SafeBu(this TextAsset val)
+    {
+        
+    }
+}
+
+*/

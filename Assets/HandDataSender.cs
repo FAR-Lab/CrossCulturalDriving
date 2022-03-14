@@ -34,7 +34,7 @@ public class HandDataSender : NetworkBehaviour {
         base.OnNetworkSpawn();
 
         if (!this.enabled) return;
-        if (IsLocalPlayer) { Debug.Log("Nothing to register I am sending!"); }
+        if (IsLocalPlayer) { Debug.Log("Nothing to register I am sending! under the following address"+GETMessageNameServer() ); }
         else if (!IsServer) {
             Debug.Log("Registering hand callback on a client!");
             leftHand = Instantiate(LeftHandReader_Prefab, transform)

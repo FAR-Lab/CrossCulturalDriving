@@ -238,13 +238,13 @@ public class NetworkVehicleController : NetworkBehaviour  {
 
 
     private void SceneManager_OnSceneEvent(SceneEvent sceneEvent) {
-        Debug.Log("SceneManager_OnSceneEvent called with event:" + sceneEvent.SceneEventType.ToString());
+     //   Debug.Log("SceneManager_OnSceneEvent called with event:" + sceneEvent.SceneEventType.ToString());
         switch (sceneEvent.SceneEventType) {
             case SceneEventType.SynchronizeComplete: {
-                Debug.Log("Scene event change by Client: " + sceneEvent.ClientId);
+              //  Debug.Log("Scene event change by Client: " + sceneEvent.ClientId);
                 if (sceneEvent.ClientId == CLID) {
-                    Debug.Log("Server: " + IsServer.ToString() + "  IsClient: " + IsClient.ToString() +
-                              "  IsHost: " + IsHost.ToString());
+                   // Debug.Log("Server: " + IsServer.ToString() + "  IsClient: " + IsClient.ToString() +
+                            //  "  IsHost: " + IsHost.ToString());
                     //SetPlayerParent(sceneEvent.ClientId);
                 }
 

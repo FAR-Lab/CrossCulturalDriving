@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Rerun;
 using UnityEngine;
+using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UNET;
 using UnityEditor;
@@ -18,7 +19,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
 
     public List<SceneField> IncludedScenes = new List<SceneField>();
-    public string WaitingRoomSceneName;
+    public static string WaitingRoomSceneName = "WaitingRoom";
     public bool ServerisRunning;
     private GameObject myStateManager;
 
@@ -33,7 +34,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
 
     public ActionState ServerState { get; private set; }
-    public LanguageSelect lang { private set; get; }
+    public string lang { private set; get; }
 
 
     public bool RunAsServer;
@@ -421,7 +422,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         return false;
     }
 
-    private ScenarioManager GetScenarioManager()
+    public ScenarioManager GetScenarioManager()
     {
         CurrentScenarioManager = FindObjectOfType<ScenarioManager>();
         if (CurrentScenarioManager == null)
@@ -461,13 +462,16 @@ public class ConnectionAndSpawing : MonoBehaviour
     public void StartAsServer(string pairName)
     {
         SteeringWheelManager.Singleton.enabled = true;
-        GetComponent<QNDataStorageServer>().enabled = true;
+        m_QNDataStorageServer = GetComponent<QNDataStorageServer>();
+        m_QNDataStorageServer.enabled = true;
+
         GetComponent<TrafficLightSupervisor>().enabled = true;
         SetupServerFunctionality();
         m_ReRunManager.SetRecordingFolder(pairName);
         Debug.Log("Starting Server for session: " + pairName);
     }
 
+    private QNDataStorageServer m_QNDataStorageServer;
 
     public delegate void ReponseDelegate(ClienConnectionResponse response);
 
@@ -512,12 +516,12 @@ public class ConnectionAndSpawing : MonoBehaviour
         ParticipantOrder_Set = true;
     }
 
-    private void Setlanguage(LanguageSelect lang_)
+    private void Setlanguage(string lang_)
     {
         lang = lang_;
     }
 
-    public void StartAsClient(LanguageSelect lang_, ParticipantOrder val, string ip, int port, ReponseDelegate result)
+    public void StartAsClient(string lang_, ParticipantOrder val, string ip, int port, ReponseDelegate result)
     {
         SetupClientFunctionality();
         ReponseHandler += result;
@@ -564,7 +568,6 @@ public class ConnectionAndSpawing : MonoBehaviour
 
             LoadedScene = sceneName;
             SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
-          
         }
         else
         {
@@ -634,7 +637,9 @@ public class ConnectionAndSpawing : MonoBehaviour
     {
         ServerState = ActionState.DRIVE;
         m_ReRunManager.BeginRecording(LastLoadedScene);
+        m_QNDataStorageServer.StartScenario(LastLoadedScene,m_ReRunManager.GetRecordingFolder());
     }
+
 
     public void SwitchToQN()
     {
@@ -657,20 +662,18 @@ public class ConnectionAndSpawing : MonoBehaviour
             }
         }
 
-        foreach (ulong clinet in NetworkManager.Singleton.ConnectedClients.Keys)
+        foreach (ulong p in ClientObjects.Keys)
         {
-            ParticipantInputCapture inCapture =
-                NetworkManager.Singleton.ConnectedClients[clinet].PlayerObject
-                    .GetComponent<ParticipantInputCapture>();
-            if (inCapture != null)
-            {
-                inCapture.StartQuestionnaireClientRpc();
-            }
+            ClientObjects[p][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
+                .StartQuestionairClientRPC();
         }
+
+        m_QNDataStorageServer.StartQn(GetScenarioManager());
     }
 
     private void SwitchToPostQN()
     {
+        m_QNDataStorageServer.StopScenario(m_ReRunManager.GetCurrentFilePath());
         ServerState = ActionState.POSTQUESTIONS;
         SwitchToWaitingRoom();
     }
@@ -890,9 +893,52 @@ public class ConnectionAndSpawing : MonoBehaviour
             : null;
     }
 
+    public Transform GetMainClientObject(ParticipantOrder po)
+    {
+        if (!_OrderToClient.Keys.Contains(po)) return null;
+        ulong senderClientId = _OrderToClient[po];
+        if (!ClientObjects.ContainsKey(senderClientId)) return null;
+        return ClientObjects[senderClientId].ContainsKey(ParticipantObjectSpawnType.MAIN)
+            ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
+            : null;
+    }
+    
+    public Transform GetMainClientCameraObject(ParticipantOrder po)
+    {
+        if (!_OrderToClient.Keys.Contains(po)) return null;
+        ulong senderClientId = _OrderToClient[po];
+        if (!ClientObjects.ContainsKey(senderClientId)) return null;
+        Transform returnVal = ClientObjects[senderClientId].ContainsKey(ParticipantObjectSpawnType.MAIN)
+            ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
+            : null;
+        return returnVal.FindChildRecursive("CenterEyeAnchor");
+    }
+
     public ParticipantOrder GetParticipantOrderClientId(ulong clientid)
     {
         if (_ClientToOrder.ContainsKey(clientid)) return _ClientToOrder[clientid];
         else return ParticipantOrder.None;
+    }
+
+    public List<ParticipantOrder> GetCurrentlyConnectedClients()
+    {
+        return new List<ParticipantOrder>(_OrderToClient.Keys);
+    }
+
+    public void QNNewDataPoint(ParticipantOrder po, int id, int answerIndex, string lang)
+    {
+        if (m_QNDataStorageServer != null)
+        {
+            m_QNDataStorageServer.NewDatapointfromClient(po, id, answerIndex, lang);
+        }
+    }
+
+    public void SendNewQuestionToParticipant(ParticipantOrder participantOrder, NetworkedQuestionnaireQuestion outval)
+    {
+        if (_OrderToClient.ContainsKey(participantOrder))
+        {
+            ClientObjects[_OrderToClient[participantOrder]][ParticipantObjectSpawnType.MAIN]
+                .GetComponent<ParticipantInputCapture>().RecieveNewQuestionClientRPC(outval);
+        }
     }
 }
