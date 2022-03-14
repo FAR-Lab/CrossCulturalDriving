@@ -171,6 +171,11 @@ public class NetworkVehicleController : NetworkBehaviour  {
     float steeringAngle;
     public Transform SteeringWheel;
 
+
+    public ParticipantOrder getParticipantOrder()
+    {
+        return _participantOrder;
+    }
     void Update() {
         if (!IsServer) return;
        
