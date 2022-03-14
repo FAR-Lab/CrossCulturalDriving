@@ -14,7 +14,16 @@ Logitech Gaming Software and Logitech G Hub and also CLOSE them both before ente
 
 ## Notes
 These notes concern the simulator in development and are subject to change.
-###What to keep in mind while running a study
+### Setup
+Git: 
+Once you pulled the repository you need to initialize the submodule ReRun:
+`git submodule update --init --recursive`
+
+Unity:
+import the necessary third party packages:
+[Runtime File Browser](https://assetstore.unity.com/packages/tools/gui/runtime-file-browser-113006)
+
+### What to keep in mind while running a study
 #### Keycodes
 
 | Key combination | Effect                            |
