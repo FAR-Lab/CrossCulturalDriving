@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UltimateReplay;
 public class VehicleReplayComponent : ReplayBehaviour
 {
     
-    [ReplayVar]
+ 
     public char participantOrder;
     // Start is called before the first frame update
     void Start()
