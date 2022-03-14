@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 public class QNTrigger : MonoBehaviour
 {
     private ScenarioManager scenMen;
+
+    public ParticipantOrder StartingId;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,11 +39,24 @@ public class QNTrigger : MonoBehaviour
     {
         if (NetworkManager.Singleton.IsServer)
         {
-            Debug.Log("On trigger enter with from the server detected."+other.transform.parent.name);
-            
-            if (other.transform.GetComponentInParent<NetworkVehicleController>() != null)
+            if (StartingId == ParticipantOrder.None)
+            {        
+                if (other.transform.GetComponentInParent<NetworkVehicleController>() != null)
+
+                {
+                    Debug.Log("Found a car so I am telling the server to switch to QNs");
+
+
+                    ConnectionAndSpawing.Singleton.SwitchToQN();
+                }
+            }
+            else if (other.transform.GetComponentInParent<NetworkVehicleController>().getParticipantOrder() == StartingId)
             {
-                Debug.Log("Found a car so I am telling the server to switch to QNs");
+              
+                Debug.Log("Found the matching car so I am telling the server to switch to QNs");
+
+                
+                
                 ConnectionAndSpawing.Singleton.SwitchToQN();
             }
         }
