@@ -1,13 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using OVR.OpenVR;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine.Networking;
 using UnityEngine;
 
 public class ScenarioManager : MonoBehaviour {
-    public TextAsset[] QuestionairsToAsk;
+    public TextAsset  QuestionairToAsk;
 
     public string conditionName;
 
@@ -32,6 +34,8 @@ public class ScenarioManager : MonoBehaviour {
     public GpsController.Direction StartingDirectionParticipantF;
 
 
+    public List<CameraSetupXC> CameraSetups;
+    
     
     void Start() {
         qnmanager  = Instantiate(
@@ -39,10 +43,17 @@ public class ScenarioManager : MonoBehaviour {
         qnmanager.gameObject.SetActive(false);
         GetSpawnPoints();
         ready = true;
+        
+        if (ConnectionAndSpawing.Singleton.ServerisRunning ||
+            ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
+        {
+           
+        }
 
     }
 
 
+    
     void Update() {
      
     }
@@ -73,13 +84,14 @@ public class ScenarioManager : MonoBehaviour {
 
     public void RunQuestionairNow(Transform MyLocalClient_) {
         MyLocalClient = MyLocalClient_;
-
         Transform MyCar = MyLocalClient.GetComponent<ParticipantInputCapture>().GetMyCar();
        
         qnmanager.gameObject.SetActive(true);
         qnmanager.setRelativePosition(MyCar, 1.5f, 4.5f);
-        if (QuestionairsToAsk.Length > 0) {
-            qnmanager.startAskingTheQuestionairs(MyLocalClient, QuestionairsToAsk, conditionName, ConnectionAndSpawing.Singleton.lang);
+        if (QuestionairToAsk !=null) {
+            Debug.Log("about to setup QN");
+            qnmanager.startAskingTheQuestionairs(MyLocalClient, conditionName, ConnectionAndSpawing.Singleton.lang);
+            Debug.Log("Started asking questions!");
         }
     }
 
@@ -93,4 +105,22 @@ public class ScenarioManager : MonoBehaviour {
             {ParticipantOrder.F, StartingDirectionParticipantF}
         };
     }
+
+    public TextAsset GetQuestionFile()
+    {
+        return QuestionairToAsk;
+    }
+    
+   public List<QuestionnaireQuestion>   ReadString(string asset)
+    {
+        return JsonConvert.DeserializeObject<List<QuestionnaireQuestion>>(asset);
+    }
+
+   public List<QuestionnaireQuestion> GetQuestionObject()
+   {
+       return ReadString(QuestionairToAsk.text);
+   }
+
+   
 }
+

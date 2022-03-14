@@ -10,9 +10,10 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
+using UltimateReplay;
 
 
-public class NetworkVehicleController : NetworkBehaviour {
+public class NetworkVehicleController : NetworkBehaviour  {
     public Transform CameraPosition;
 
     private VehicleController controller;
@@ -54,6 +55,8 @@ public class NetworkVehicleController : NetworkBehaviour {
 
     public NetworkVariable<float> CurrentSpeed;
     public NetworkVariable<RoadSurface> CurrentSurface;
+
+ 
     
     void UpdateSounds() {
         if (controller == null) return;
@@ -85,7 +88,11 @@ public class NetworkVehicleController : NetworkBehaviour {
         base.OnNetworkSpawn();
         m_Speedometer = GetComponentInChildren<Speedometer>();
         CurrentSpeed.OnValueChanged += NewSpeedRecieved;
-        if (IsServer) { controller = GetComponent<VehicleController>(); }
+        if (IsServer)
+        {
+            controller = GetComponent<VehicleController>();
+            GetComponent<VehicleReplayComponent>().enabled = true;
+        }
     }
 
     private void NewSpeedRecieved(float previousvalue, float newvalue) {if(m_Speedometer!=null) m_Speedometer.UpdateSpeed(newvalue); }
@@ -223,6 +230,7 @@ public class NetworkVehicleController : NetworkBehaviour {
             NetworkManager.SceneManager.OnSceneEvent += SceneManager_OnSceneEvent;
             CLID = CLID_;
             _participantOrder = _participantOrder_;
+            GetComponent<VehicleReplayComponent>().participantOrder = (char) _participantOrder;
             GetComponent<ForceFeedback>()?.Init(transform.GetComponent<Rigidbody>(), _participantOrder);
         }
         else { Debug.LogWarning("Tried to execute something that should never happen. "); }
@@ -230,13 +238,13 @@ public class NetworkVehicleController : NetworkBehaviour {
 
 
     private void SceneManager_OnSceneEvent(SceneEvent sceneEvent) {
-        Debug.Log("SceneManager_OnSceneEvent called with event:" + sceneEvent.SceneEventType.ToString());
+     //   Debug.Log("SceneManager_OnSceneEvent called with event:" + sceneEvent.SceneEventType.ToString());
         switch (sceneEvent.SceneEventType) {
             case SceneEventType.SynchronizeComplete: {
-                Debug.Log("Scene event change by Client: " + sceneEvent.ClientId);
+              //  Debug.Log("Scene event change by Client: " + sceneEvent.ClientId);
                 if (sceneEvent.ClientId == CLID) {
-                    Debug.Log("Server: " + IsServer.ToString() + "  IsClient: " + IsClient.ToString() +
-                              "  IsHost: " + IsHost.ToString());
+                   // Debug.Log("Server: " + IsServer.ToString() + "  IsClient: " + IsClient.ToString() +
+                            //  "  IsHost: " + IsHost.ToString());
                     //SetPlayerParent(sceneEvent.ClientId);
                 }
 
