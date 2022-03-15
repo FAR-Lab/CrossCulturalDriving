@@ -109,7 +109,7 @@ namespace UltimateReplay.Serializers
 
             // Check if material was available
             if (Application.isPlaying == true && materialIndexes[0] == -1)
-                Debug.LogWarningFormat("Replay material change cannot be recorded. The specified '{0}' does not exist in the 'Available Materials' collection. The default material will be used during playback!", activeMaterial);
+              Debug.LogWarningFormat("Replay material change cannot be recorded. The specified '{0}' does not exist in the 'Available Materials' collection. The default material will be used during playback!", activeMaterial);
         }
 
         public void SetActiveMaterials(IList<Material> possibleMaterials, Material[] activeMaterials)

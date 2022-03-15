@@ -11,9 +11,11 @@ using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
 using UltimateReplay;
+using UnityEngine.Serialization;
 
 
-public class NetworkVehicleController : NetworkBehaviour  {
+public class NetworkVehicleController : NetworkBehaviour
+{
     public Transform CameraPosition;
 
     private VehicleController controller;
@@ -23,16 +25,12 @@ public class NetworkVehicleController : NetworkBehaviour  {
     public Transform[] Left;
     public Transform[] Right;
     public Transform[] BrakeLightObjects;
-    public Material baseMaterial;
 
-    private Material materialOn;
-    private Material materialOff;
-    private Material materialBrake;
+    public Material IndicatorOn;
+    public Material LightsOff;
+    public Material BrakelightsOn;
 
 
-    public Color BrakeColor;
-    public Color On;
-    public Color Off;
     private AudioSource HonkSound;
     public float SteeringInput;
     public float ThrottleInput;
@@ -45,7 +43,6 @@ public class NetworkVehicleController : NetworkBehaviour  {
     /// <summary>
     /// SoundRelevant Variables
     /// </summary>
-
     public NetworkVariable<bool> IsShifting;
 
     public NetworkVariable<float> accellInput;
@@ -56,113 +53,165 @@ public class NetworkVehicleController : NetworkBehaviour  {
     public NetworkVariable<float> CurrentSpeed;
     public NetworkVariable<RoadSurface> CurrentSurface;
 
- 
-    
-    void UpdateSounds() {
+
+    void UpdateSounds()
+    {
         if (controller == null) return;
         IsShifting.Value = controller.IsShifting;
         accellInput.Value = controller.accellInput;
         RPM.Value = controller.RPM;
-        traction.Value=(controller.traction + controller.tractionR + controller.rtraction + controller.rtractionR)/4.0f;
+        traction.Value = (controller.traction + controller.tractionR + controller.rtraction + controller.rtractionR) /
+                         4.0f;
         MotorWheelsSlip.Value = controller.MotorWheelsSlip;
         CurrentSpeed.Value = controller.CurrentSpeed;
 
-        
+
         CurrentSurface.Value = controller.CurrentSurface;
     }
 
 
-    
-    public void StartTheCar() {
+    public void StartTheCar()
+    {
         GetComponent<VehicleAudioController>().PlayIgnition();
         StartTheCarClientRpc();
-
     }
 
     [ClientRpc]
-    public void StartTheCarClientRpc() {
-       GetComponent<VehicleAudioController>().PlayIgnition();
+    public void StartTheCarClientRpc()
+    {
+        GetComponent<VehicleAudioController>().PlayIgnition();
     }
 
-    public override void OnNetworkSpawn() {
+    public override void OnNetworkSpawn()
+    {
         base.OnNetworkSpawn();
         m_Speedometer = GetComponentInChildren<Speedometer>();
         CurrentSpeed.OnValueChanged += NewSpeedRecieved;
         if (IsServer)
         {
             controller = GetComponent<VehicleController>();
-            GetComponent<VehicleReplayComponent>().enabled = true;
+            GetComponent<ParticipantOrderReplayComponent>().enabled = true;
         }
     }
 
-    private void NewSpeedRecieved(float previousvalue, float newvalue) {if(m_Speedometer!=null) m_Speedometer.UpdateSpeed(newvalue); }
+    private void NewSpeedRecieved(float previousvalue, float newvalue)
+    {
+        if (m_Speedometer != null) m_Speedometer.UpdateSpeed(newvalue);
+    }
 
-    private void Start() {
+    private void Start()
+    {
         indicaterStage = 0;
-        //Generating a new material for on/off;
-        materialOn = new Material(baseMaterial);
-        materialOn.SetColor("_Color", On);
-        materialOff = new Material(baseMaterial);
-        materialOff.SetColor("_Color", Off);
-        materialBrake = new Material(baseMaterial);
-        materialBrake.SetColor("_Color", BrakeColor);
-
 
         HonkSound = GetComponent<AudioSource>();
 
-        foreach (Transform t in Left) { t.GetComponent<MeshRenderer>().material = materialOff; }
-
-        foreach (Transform t in Right) { t.GetComponent<MeshRenderer>().material = materialOff; }
-
-        foreach (Transform t in BrakeLightObjects) { t.GetComponent<MeshRenderer>().material = materialOff; }
-    }
-
-
-    [ClientRpc]
-    public void TurnOnLeftClientRpc(bool Leftl_) {
-        if (Leftl_) {
-            foreach (Transform t in Left) { t.GetComponent<MeshRenderer>().material = materialOn; }
+        foreach (Transform t in Left)
+        {
+            t.GetComponent<MeshRenderer>().material = LightsOff;
         }
-        else {
-            foreach (Transform t in Left) { t.GetComponent<MeshRenderer>().material = materialOff; }
-        }
-    }
 
-    [ClientRpc]
-    public void TurnOnRightClientRpc(bool Rightl_) {
-        if (Rightl_) {
-            foreach (Transform t in Right) { t.GetComponent<MeshRenderer>().material = materialOn; }
+        foreach (Transform t in Right)
+        {
+            t.GetComponent<MeshRenderer>().material = LightsOff;
         }
-        else {
-            foreach (Transform t in Right) { t.GetComponent<MeshRenderer>().material = materialOff; }
-        }
-    }
 
-    [ClientRpc]
-    public void TurnOnBrakeLightClientRpc(bool Active) {
-        if (Active) {
-            foreach (Transform t in BrakeLightObjects) { t.GetComponent<MeshRenderer>().material = materialBrake; }
-        }
-        else {
-            foreach (Transform t in BrakeLightObjects) { t.GetComponent<MeshRenderer>().material = materialOff; }
+        foreach (Transform t in BrakeLightObjects)
+        {
+            t.GetComponent<MeshRenderer>().material = LightsOff;
         }
     }
 
 
     [ClientRpc]
-    public void HonkMyCarClientRpc() {
+    public void TurnOnLeftClientRpc(bool Leftl_)
+    {
+        TurnOnLeft(Leftl_);
+    }
+    
+    private void TurnOnLeft(bool Leftl_)
+    {
+        if (Leftl_)
+        {
+            foreach (Transform t in Left)
+            {
+                t.GetComponent<MeshRenderer>().material = IndicatorOn;
+            }
+        }
+        else
+        {
+            foreach (Transform t in Left)
+            {
+                t.GetComponent<MeshRenderer>().material = LightsOff;
+            }
+        }
+    }
+
+    [ClientRpc]
+    public void TurnOnRightClientRpc(bool Rightl_)
+    {
+        TurnOnRight(Rightl_);
+    }
+    private void TurnOnRight(bool Rightl_)
+    {
+        if (Rightl_)
+        {
+            foreach (Transform t in Right)
+            {
+                t.GetComponent<MeshRenderer>().material = IndicatorOn;
+            }
+        }
+        else
+        {
+            foreach (Transform t in Right)
+            {
+                t.GetComponent<MeshRenderer>().material = LightsOff;
+            }
+        }
+    }
+
+    [ClientRpc]
+    public void TurnOnBrakeLightClientRpc(bool Active)
+    {
+        TurnOnBrakeLight(Active);
+    }
+    
+    private void TurnOnBrakeLight(bool Active)
+    {
+        if (Active)
+        {
+            foreach (Transform t in BrakeLightObjects)
+            {
+                t.GetComponent<MeshRenderer>().material = BrakelightsOn;
+            }
+        }
+        else
+        {
+            foreach (Transform t in BrakeLightObjects)
+            {
+                t.GetComponent<MeshRenderer>().material = LightsOff;
+            }
+        }
+    }
+
+
+    [ClientRpc]
+    public void HonkMyCarClientRpc()
+    {
         Debug.Log("HonkMyCarClientRpc");
         HonkSound.Play();
     }
 
-    private void LateUpdate() {
-        if (IsServer && controller != null) {
+    private void LateUpdate()
+    {
+        if (IsServer && controller != null)
+        {
             controller.steerInput = SteeringInput;
             controller.accellInput = ThrottleInput;
         }
     }
 
-    private void OnGUI() {
+    private void OnGUI()
+    {
         GUI.Box(new Rect(200, 100, 300, 30), "IsServer: " + IsServer.ToString() + "  IsHost: " + IsHost.ToString() +
                                              "  IsClient: " +
                                              IsClient.ToString());
@@ -171,32 +220,48 @@ public class NetworkVehicleController : NetworkBehaviour  {
     float steeringAngle;
     public Transform SteeringWheel;
 
-    void Update() {
+    void Update()
+    {
         if (!IsServer) return;
-       
-        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.DRIVE) {
-            if (SteeringWheelManager.Singleton == null || useKeyBoard) {
+
+        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.DRIVE)
+        {
+            if (SteeringWheelManager.Singleton == null || useKeyBoard)
+            {
                 SteeringInput = Input.GetAxis("Horizontal");
                 ThrottleInput = Input.GetAxis("Vertical");
             }
-            else {
+            else
+            {
                 SteeringInput = SteeringWheelManager.Singleton.GetSteerInput(_participantOrder);
                 ThrottleInput = SteeringWheelManager.Singleton.GetAccelInput(_participantOrder);
-               
+
                 SteeringWheel.RotateAround(SteeringWheel.position, SteeringWheel.up,
                     steeringAngle - SteeringInput * -450f);
                 steeringAngle = SteeringInput * -450f;
             }
 
-            bool TempLeft = SteeringWheelManager.Singleton.GetLeftIndicatorInput(_participantOrder); //Input.GetButton("indicateLeft");
-            bool TempRight =SteeringWheelManager.Singleton.GetRightIndicatorInput(_participantOrder);// Input.GetButton("indicateRight");
-            if (TempLeft || TempRight) {
+            bool TempLeft =
+                SteeringWheelManager.Singleton
+                    .GetLeftIndicatorInput(_participantOrder); //Input.GetButton("indicateLeft");
+            bool TempRight =
+                SteeringWheelManager.Singleton
+                    .GetRightIndicatorInput(_participantOrder); // Input.GetButton("indicateRight");
+            if (TempLeft || TempRight)
+            {
                 DualButtonDebounceIndicator = true;
-                if (TempLeft) { LeftIndicatorDebounce = true; }
+                if (TempLeft)
+                {
+                    LeftIndicatorDebounce = true;
+                }
 
-                if (TempRight) { RightIndicatorDebounce = true; }
+                if (TempRight)
+                {
+                    RightIndicatorDebounce = true;
+                }
             }
-            else if (DualButtonDebounceIndicator && !TempLeft && !TempRight) {
+            else if (DualButtonDebounceIndicator && !TempLeft && !TempRight)
+            {
                 startBlinking(LeftIndicatorDebounce, RightIndicatorDebounce);
                 DualButtonDebounceIndicator = false;
                 LeftIndicatorDebounce = false;
@@ -206,18 +271,24 @@ public class NetworkVehicleController : NetworkBehaviour  {
             UpdateIndicator();
 
 
-            if (SteeringWheelManager.Singleton.GetButtonInput(_participantOrder)) { HonkMyCar(); }
+            if (SteeringWheelManager.Singleton.GetButtonInput(_participantOrder))
+            {
+                HonkMyCar();
+            }
 
-            if (ThrottleInput < 0 && !breakIsOn) {
+            if (ThrottleInput < 0 && !breakIsOn)
+            {
                 BrakeLightChangedServerRpc(true);
                 breakIsOn = true;
             }
-            else if (ThrottleInput >= 0 && breakIsOn) {
+            else if (ThrottleInput >= 0 && breakIsOn)
+            {
                 BrakeLightChangedServerRpc(false);
                 breakIsOn = false;
             }
         }
-        else if (ConnectionAndSpawing.Singleton.ServerState == ActionState.QUESTIONS) {
+        else if (ConnectionAndSpawing.Singleton.ServerState == ActionState.QUESTIONS)
+        {
             SteeringInput = 0;
             ThrottleInput = -1;
         }
@@ -225,26 +296,35 @@ public class NetworkVehicleController : NetworkBehaviour  {
         UpdateSounds();
     }
 
-    public void AssignClient(ulong CLID_, ParticipantOrder _participantOrder_) {
-        if (IsServer) {
+    public void AssignClient(ulong CLID_, ParticipantOrder _participantOrder_)
+    {
+        if (IsServer)
+        {
             NetworkManager.SceneManager.OnSceneEvent += SceneManager_OnSceneEvent;
             CLID = CLID_;
             _participantOrder = _participantOrder_;
-            GetComponent<VehicleReplayComponent>().participantOrder = (char) _participantOrder;
+            GetComponent<ParticipantOrderReplayComponent>().SetParticipantOrder(_participantOrder);
             GetComponent<ForceFeedback>()?.Init(transform.GetComponent<Rigidbody>(), _participantOrder);
         }
-        else { Debug.LogWarning("Tried to execute something that should never happen. "); }
+        else
+        {
+            Debug.LogWarning("Tried to execute something that should never happen. ");
+        }
     }
 
 
-    private void SceneManager_OnSceneEvent(SceneEvent sceneEvent) {
-     //   Debug.Log("SceneManager_OnSceneEvent called with event:" + sceneEvent.SceneEventType.ToString());
-        switch (sceneEvent.SceneEventType) {
-            case SceneEventType.SynchronizeComplete: {
-              //  Debug.Log("Scene event change by Client: " + sceneEvent.ClientId);
-                if (sceneEvent.ClientId == CLID) {
-                   // Debug.Log("Server: " + IsServer.ToString() + "  IsClient: " + IsClient.ToString() +
-                            //  "  IsHost: " + IsHost.ToString());
+    private void SceneManager_OnSceneEvent(SceneEvent sceneEvent)
+    {
+        //   Debug.Log("SceneManager_OnSceneEvent called with event:" + sceneEvent.SceneEventType.ToString());
+        switch (sceneEvent.SceneEventType)
+        {
+            case SceneEventType.SynchronizeComplete:
+            {
+                //  Debug.Log("Scene event change by Client: " + sceneEvent.ClientId);
+                if (sceneEvent.ClientId == CLID)
+                {
+                    // Debug.Log("Server: " + IsServer.ToString() + "  IsClient: " + IsClient.ToString() +
+                    //  "  IsHost: " + IsHost.ToString());
                     //SetPlayerParent(sceneEvent.ClientId);
                 }
 
@@ -259,14 +339,22 @@ public class NetworkVehicleController : NetworkBehaviour  {
     private bool breakIsOn;
 
     [ServerRpc]
-    private void BrakeLightChangedServerRpc(bool newvalue) { TurnOnBrakeLightClientRpc(newvalue); }
+    private void BrakeLightChangedServerRpc(bool newvalue)
+    {
+        TurnOnBrakeLightClientRpc(newvalue);
+        TurnOnBrakeLight(newvalue);
+    }
 
-    
-    public void HonkMyCar() {
-        
-       if(HonkSound.isPlaying){return;}
+
+    public void HonkMyCar()
+    {
+        if (HonkSound.isPlaying)
+        {
+            return;
+        }
+
         HonkSound.Play();
-      //  Debug.Log("HonkMyCarServerRpc");
+        //  Debug.Log("HonkMyCarServerRpc");
         HonkMyCarClientRpc();
     }
 
@@ -289,20 +377,25 @@ public class NetworkVehicleController : NetworkBehaviour  {
     private ParticipantOrder _participantOrder;
 
 
-    void startBlinking(bool left, bool right) {
+    void startBlinking(bool left, bool right)
+    {
         indicaterStage = 1;
-        if (left == right == true) {
-            if (LeftIsActuallyOn != true || RightIsActuallyOn != true) {
+        if (left == right == true)
+        {
+            if (LeftIsActuallyOn != true || RightIsActuallyOn != true)
+            {
                 LeftIsActuallyOn = true;
                 RightIsActuallyOn = true;
             }
-            else if (LeftIsActuallyOn == RightIsActuallyOn == true) {
+            else if (LeftIsActuallyOn == RightIsActuallyOn == true)
+            {
                 RightIsActuallyOn = false;
                 LeftIsActuallyOn = false;
             }
         }
 
-        if (left != right) {
+        if (left != right)
+        {
             if (LeftIsActuallyOn == RightIsActuallyOn ==
                 true) // When we are returning from the hazard lights we make sure that not the inverse thing turns on 
             {
@@ -310,61 +403,82 @@ public class NetworkVehicleController : NetworkBehaviour  {
                 RightIsActuallyOn = false;
             }
 
-            if (left) {
-                if (!LeftIsActuallyOn) {
+            if (left)
+            {
+                if (!LeftIsActuallyOn)
+                {
                     LeftIsActuallyOn = true;
                     RightIsActuallyOn = false;
                 }
-                else { LeftIsActuallyOn = false; }
+                else
+                {
+                    LeftIsActuallyOn = false;
+                }
             }
 
-            if (right) {
-                if (!RightIsActuallyOn) {
+            if (right)
+            {
+                if (!RightIsActuallyOn)
+                {
                     LeftIsActuallyOn = false;
                     RightIsActuallyOn = true;
                 }
-                else { RightIsActuallyOn = false; }
+                else
+                {
+                    RightIsActuallyOn = false;
+                }
             }
         }
     }
 
 
-    void UpdateIndicator() {
-        if (indicaterStage == 1) {
+    void UpdateIndicator()
+    {
+        if (indicaterStage == 1)
+        {
             indicaterStage = 2;
             indicaterTimer = interval;
             ActualLightOn = false;
         }
-        else if (indicaterStage == 2 || indicaterStage == 3) {
+        else if (indicaterStage == 2 || indicaterStage == 3)
+        {
             indicaterTimer += Time.deltaTime;
 
-            if (indicaterTimer > interval) {
+            if (indicaterTimer > interval)
+            {
                 indicaterTimer = 0;
                 ActualLightOn = !ActualLightOn;
-                if (ActualLightOn) {
+                if (ActualLightOn)
+                {
                     LeftIndicatorChanged(LeftIsActuallyOn);
                     RightIndicatorChanged(RightIsActuallyOn);
                 }
-                else {
+                else
+                {
                     RightIndicatorChanged(false);
                     LeftIndicatorChanged(false);
                 }
             }
 
-            if (indicaterStage == 2) {
+            if (indicaterStage == 2)
+            {
                 if (SteeringWheelManager.Singleton != null &&
-                    Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(_participantOrder) * -450f) > 90) {
+                    Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(_participantOrder) * -450f) > 90)
+                {
                     indicaterStage = 3;
                 }
             }
-            else if (indicaterStage == 3) {
+            else if (indicaterStage == 3)
+            {
                 if (SteeringWheelManager.Singleton != null &&
-                    Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(_participantOrder) * -450f) < 10) {
+                    Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(_participantOrder) * -450f) < 10)
+                {
                     indicaterStage = 4;
                 }
             }
         }
-        else if (indicaterStage == 4) {
+        else if (indicaterStage == 4)
+        {
             indicaterStage = 0;
             ActualLightOn = false;
             LeftIsActuallyOn = false;
@@ -375,9 +489,21 @@ public class NetworkVehicleController : NetworkBehaviour  {
         }
     }
 
-    private void RightIndicatorChanged(bool newvalue) { TurnOnRightClientRpc(newvalue); }
+    private void RightIndicatorChanged(bool newvalue)
+    {
+        if(!IsServer)
+        {
+            return;
+        }
+        TurnOnRight(newvalue);
+        TurnOnRightClientRpc(newvalue);
+    }
 
-    private void LeftIndicatorChanged(bool newvalue) { TurnOnLeftClientRpc(newvalue); }
+    private void LeftIndicatorChanged(bool newvalue)
+    {
+        TurnOnLeft(newvalue);
+        TurnOnLeftClientRpc(newvalue);
+    }
 
     #endregion
 }
