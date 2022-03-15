@@ -49,11 +49,12 @@ public class HandDataStreamRecorder : MonoBehaviour {
         
         if (HandClinets.ContainsKey(senderClientId)) {
             HandClinets[senderClientId][newRemoteHandData.HandType].GetNewData(newRemoteHandData);
+         //   Debug.Log("Updated hand data for "+senderClientId);
         }
         else {
             HandDataStreamerReader leftHand = null;
             HandDataStreamerReader rightHand = null;
-
+          //  Debug.Log("Creating new hands for  "+senderClientId);
             if (NetworkManager.Singleton.IsServer) {
                 var _tr = ConnectionAndSpawing.Singleton.GetMainClientObject(senderClientId);
                 if (_tr == null) {

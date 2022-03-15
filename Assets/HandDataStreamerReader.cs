@@ -19,7 +19,7 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
 
     private OVRSkeleton.IOVRSkeletonDataProvider _iovrSkeletonDataProviderImplementation;
 
-
+    private SkinnedMeshRenderer m_SkinnedMeshRenderer;
     public Vector3 RootPos;
     public Quaternion RootRot;
     public float RootScale;
@@ -37,12 +37,21 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         for (int i = 0; i < 24; i++) { BoneRotations[i] = new Quaternion(); }
 
         ready = true;
+        m_SkinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
     }
 
     // Update is called once per frame
     void Update() {
-       
-      if (IsDataValid && Time.time < lastUpdate) { IsDataValid = false; }
+
+        if (IsDataValid && Time.time > lastUpdate + HandTimeout)
+        {
+            IsDataValid = false;
+        }
+    }
+
+    private void LateUpdate()
+    {
+        m_SkinnedMeshRenderer.enabled = IsDataValid;
     }
 
     public void GetNewData(NetworkSkeletonPoseData newRemoteHandData) {
@@ -56,7 +65,7 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
            return;
        }
       // Debug.Log("Should be a right hand");
-         lastUpdate= Time.time+HandTimeout;
+         lastUpdate= Time.time;
         IsDataValid = true;
        // Debug.Log("Should be a right hand1");
         RootPos = newRemoteHandData.RootPos;
@@ -99,7 +108,7 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         return data;
     }
     public OVRSkeleton.SkeletonPoseData GetSkeletonPoseData() {
-        // Debug.Log("GetSkeletonPoseData");
+        // 
         var data = new OVRSkeleton.SkeletonPoseData();
 
         data.IsDataValid = IsDataValid;
@@ -109,6 +118,7 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
             data.BoneRotations = Array.ConvertAll(BoneRotations, s => s.ToQuatf());
             data.IsDataHighConfidence =
                 true; // this is obviusly not communicate but we do not send data if thats false.
+           // Debug.Log("GetSkeletonPoseData");
         }
 
         // Debug.Log("Sending Skelton Data" + IsDataValid);

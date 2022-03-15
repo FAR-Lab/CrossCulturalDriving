@@ -1,32 +1,35 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Oculus.Platform;
 using Rerun;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class QNDataStorageServer : MonoBehaviour
 {
+    public static string LogLanguage = "English";
     public static int StartingID = 1;
 
     private Dictionary<int, QuestionnaireQuestion> activeQuestionList;
 
     private Dictionary<ParticipantOrder, int> participantAnswerStatus;
+    private Dictionary<ParticipantOrder, DateTime> LastParticipantStartTimes;
 
     private ScenarioLog CurrentScenarioLog;
 
     // Start is called before the first frame update
     void Start()
     {
-        
         activeQuestionList = new Dictionary<int, QuestionnaireQuestion>();
     }
 
 
-    public void StartScenario(string name,string sessionName)
+    public void StartScenario(string name, string sessionName)
     {
         CurrentScenarioLog = new ScenarioLog(name, sessionName);
     }
@@ -36,9 +39,11 @@ public class QNDataStorageServer : MonoBehaviour
     {
         if (sManager == null) return;
         participantAnswerStatus = new Dictionary<ParticipantOrder, int>();
+        LastParticipantStartTimes = new Dictionary<ParticipantOrder, DateTime>();
         foreach (ParticipantOrder po in ConnectionAndSpawing.Singleton.GetCurrentlyConnectedClients())
         {
             participantAnswerStatus.Add(po, 0);
+            LastParticipantStartTimes.Add(po, new DateTime());
         }
 
         if (activeQuestionList != null) activeQuestionList.Clear();
@@ -48,6 +53,7 @@ public class QNDataStorageServer : MonoBehaviour
             //Debug.Log("Adding Question:"+q.QuestionText["English"]);
         }
     }
+
     public void NewDatapointfromClient(ParticipantOrder po, int id, int answerIndex, string lang)
     {
         if (id > -1) //special question ID used to initialze the process
@@ -62,25 +68,37 @@ public class QNDataStorageServer : MonoBehaviour
                 CurrentScenarioLog.QuestionResults.Add(id, new QuestionLog(activeQuestionList[id]));
             }
 
-            CurrentScenarioLog.QuestionResults[id].ParticipantsReponse.Add((char) po, answerIndex);
+         
+
+            CurrentScenarioLog.QuestionResults[id].ParticipantsReponse.Add((char) po,
+                new QuestionLog.ParticipantsAnswerReponse
+                {
+                    AnswerId = answerIndex,
+                    AnswerText = activeQuestionList[id].Answers.First(s => s.index == answerIndex)
+                        .AnswerText[LogLanguage],
+                    StartTimeQuestion = LastParticipantStartTimes[po],
+                    StopTimeQuestion = DateTime.Now
+                });
+
             Debug.Log("There should be some storage code here: " + po + id.ToString() + "  " + answerIndex.ToString());
         }
 
+
         SendNewQuestion(po, lang);
     }
-    
+
 
     public void StopScenario(string filePath)
     {
         CurrentScenarioLog.Stop();
-        
+
         string fullPath = filePath
                           + "Scenario-" + CurrentScenarioLog.ScenarioName + '_'
-                          + "sessionName-" + CurrentScenarioLog.sessionName + '_'
+                          + "sessionName-" + CurrentScenarioLog.participantComboName + '_'
                           + System.DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".json";
         string s = JsonConvert.SerializeObject(CurrentScenarioLog);
-        
-        System.IO.File.WriteAllText(fullPath,  s);
+
+        System.IO.File.WriteAllText(fullPath, s);
     }
 
     private void SendNewQuestion(ParticipantOrder p, string lang)
@@ -106,12 +124,12 @@ public class QNDataStorageServer : MonoBehaviour
             participantAnswerStatus[p] = val;
             outval = activeQuestionList[val].GenerateNetworkVersion(lang);
             Debug.Log("Found Another question to send " + val.ToString());
+            LastParticipantStartTimes[p]=DateTime.Now;
         }
 
         ConnectionAndSpawing.Singleton.SendNewQuestionToParticipant(p, outval);
     }
 
-   
 
 /*
     private void DataStorage(ulong senderclientid, FastBufferReader messagepayload)
@@ -140,22 +158,48 @@ public class QNDataStorageServer : MonoBehaviour
 public struct QuestionLog
 {
     public int ID { get; set; }
-    public Dictionary<char, int> ParticipantsReponse { get; set; }
+    
     public string Scenario_ID { get; set; }
+    
+    public string QuestionText { get; set; }
+   
     public string SA_atoms { get; set; } //This property can be used to filter a group of questions
     public string SA_Level { get; set; } //The level of the question based on SAGAT model
     public string Awareness_to { get; set; }
 
+    public Dictionary<char, ParticipantsAnswerReponse> ParticipantsReponse { get; set; }
+
+    public struct ParticipantsAnswerReponse
+    {
+        public int AnswerId;
+        public string AnswerText;
+        public DateTime StartTimeQuestion;
+        public DateTime StopTimeQuestion;
+
+
+        public void FinalUpdate(int answerId, string answerText)
+        {
+            StopTimeQuestion = DateTime.Now;
+            AnswerId = answerId;
+            AnswerText = answerText;
+        }
+
+        public void SetStartTimeQuestion(DateTime now)
+        {
+            StartTimeQuestion = now;
+        }
+    }
+
     public QuestionLog(QuestionnaireQuestion qIn)
     {
         ID = qIn.ID;
-        ParticipantsReponse = new Dictionary<char, int>();
+        QuestionText = qIn.QuestionText[QNDataStorageServer.LogLanguage];
         Scenario_ID = qIn.Scenario_ID;
         SA_atoms = qIn.SA_atoms;
         SA_Level = qIn.SA_Level;
         Awareness_to = qIn.Awareness_to;
+        ParticipantsReponse = new Dictionary<char, ParticipantsAnswerReponse>();
     }
-    
 }
 
 public struct ScenarioLog
@@ -173,11 +217,7 @@ public struct ScenarioLog
     public string ScenarioName { get; set; }
 
     public string
-        sessionName
-    {
-        get;
-        set;
-    } //I didn't use the term pair to have the flexability for more than 2 participant
+        participantComboName { get; set; } //I didn't use the term pair to have the flexability for more than 2 participant
 
     public Dictionary<string, string>
         facts
@@ -188,20 +228,20 @@ public struct ScenarioLog
 
     public Dictionary<int, QuestionLog> QuestionResults { get; set; }
 
-    public ScenarioLog(string name,string sessionName_)
+    public ScenarioLog(string name, string participantComboName_)
     {
-        startTime=DateTime.Now;
-        endTime=DateTime.MaxValue;
+        startTime = DateTime.Now;
+        endTime = DateTime.MaxValue;
         participantTriggeredQuestionnaire = '-';
         ScenarioName = name;
-        sessionName = sessionName_;
+        participantComboName = participantComboName_;
         facts = new Dictionary<string, string>();
         QuestionResults = new Dictionary<int, QuestionLog>();
     }
 
     public void Stop()
     {
-        endTime=DateTime.Now;
+        endTime = DateTime.Now;
     }
 }
 

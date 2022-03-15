@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using Oculus.Platform;
 using Rerun;
 using Unity.Netcode;
 using UnityEngine;
 using Application = UnityEngine.Application;
+using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 
 public class SimpleServerCameraScript : MonoBehaviour
 {
@@ -16,26 +19,66 @@ public class SimpleServerCameraScript : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    void Start()
+    void OnEnable()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += DisableMe;
         NetworkManager.Singleton.OnServerStarted += StartingAsServer;
-        //ConnectionAndSpawing.Singleton.OnLevelChange += 
+        
+        SceneManager.sceneLoaded += LoadUnityAction;
+        SceneManager.sceneUnloaded += UnloadUnityAction;
+        
+
+    }
+    
+    void OnDisable()
+    {
+      
+        SceneManager.sceneLoaded -= LoadUnityAction;
+        SceneManager.sceneUnloaded -= UnloadUnityAction;
+       
+    }
+
+    private bool initFinished = false;
+
+    private void UnloadUnityAction(Scene arg0)
+    {
+        if (!initFinished)
+        {
+            setupCameras();
+            initFinished = true;
+        }
+        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
+        {
+            DelinkCameras();
+        }
+       
+    }
+
+    private void LoadUnityAction(Scene arg0, LoadSceneMode arg1)
+    {
+        if (!initFinished)
+        {
+            setupCameras();
+            initFinished = true;
+        }
+        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN && arg0.name!=ConnectionAndSpawing.WaitingRoomSceneName)
+        {
+            LinkCameras();
+        }
     }
 
 
     private Dictionary<RerunCameraIdentifier.CameraNumber, RerunCameraIdentifier> m_Cameras;
 
-    private void StartingAsServer()
+    private void setupCameras()
     {
         FindObjectOfType<RerunPlaybackCameraManager>()?.EnableCameras();
-        NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;
         m_Cameras = new Dictionary<RerunCameraIdentifier.CameraNumber, RerunCameraIdentifier>();
         foreach (RerunCameraIdentifier v in FindObjectsOfType<RerunCameraIdentifier>())
         {
             if (m_Cameras.ContainsKey(v.myNumber))
             {
-                Debug.LogError("multiple Camreas with the same idetefier please fix in the Inspects dropdown.");
+                Debug.LogError("multiple Cameras with the same identifier please fix in the Inspects dropdown.");
             }
             else
             {
@@ -43,7 +86,42 @@ public class SimpleServerCameraScript : MonoBehaviour
             }
         }
     }
+    private void StartingAsServer()
+    {
+        if (NetworkManager.Singleton.SceneManager != null)
+        {
+            NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;
+            setupCameras();
+        }
+    }
 
+    private void DelinkCameras()
+    {
+        foreach (RerunCameraIdentifier cam in m_Cameras.Values)
+        {
+            cam.DelinkFollowTransforms();
+        }
+    }
+
+    private void LinkCameras()
+    {
+        string scene =ConnectionAndSpawing.Singleton.GetLoadedScene();
+        if (scene != ConnectionAndSpawing.WaitingRoomSceneName)
+        {
+            ScenarioManager tmp = ConnectionAndSpawing.Singleton.GetScenarioManager();
+            if (tmp == null) return;
+            foreach (CameraSetupXC cameraSetupXc in tmp.CameraSetups)
+            {
+                if (m_Cameras.ContainsKey(cameraSetupXc.targetNumber))
+                {
+                    Transform val =
+                        ConnectionAndSpawing.Singleton.GetMainClientCameraObject(cameraSetupXc.ParticipantToFollow);
+                    ApplyValues(cameraSetupXc, m_Cameras[cameraSetupXc.targetNumber],val);
+                }
+            }
+                 
+        }
+    }
 
     private void SceneEvent(SceneEvent sceneEvent)
     {
@@ -52,33 +130,15 @@ public class SimpleServerCameraScript : MonoBehaviour
             case SceneEventType.Load:
                 break;
             case SceneEventType.Unload:
-                foreach (RerunCameraIdentifier cam in m_Cameras.Values)
-                {
-                    cam.DelinkFollowTransforms();
-                }
+             DelinkCameras();
                 break;
             case SceneEventType.Synchronize:
                 break;
             case SceneEventType.ReSynchronize:
                 break;
             case SceneEventType.LoadEventCompleted:
-                string scene =ConnectionAndSpawing.Singleton.GetLoadedScene();
-                if (scene != ConnectionAndSpawing.WaitingRoomSceneName)
-                {
-                    ScenarioManager tmp = ConnectionAndSpawing.Singleton.GetScenarioManager();
-                    if (tmp == null) return;
-                    foreach (CameraSetupXC cameraSetupXc in tmp.CameraSetups)
-                    {
-                        if (m_Cameras.ContainsKey(cameraSetupXc.targetNumber))
-                        {
-                            Transform val =
-                                ConnectionAndSpawing.Singleton.GetMainClientCameraObject(cameraSetupXc.ParticipantToFollow);
-                            ApplyValues(cameraSetupXc, m_Cameras[cameraSetupXc.targetNumber],val);
-                        }
-                    }
-                 
-                }
-                
+
+                LinkCameras();
                 break;
             case SceneEventType.UnloadEventCompleted:
                 break;
