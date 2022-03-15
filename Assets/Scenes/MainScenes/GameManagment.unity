@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -250,7 +250,6 @@ MonoBehaviour:
     m_SceneName: NewIntersection
   - m_SceneAsset: {fileID: 102900000, guid: 1857194ba51c6144f801330ef898c0c1, type: 3}
     m_SceneName: Scenario1
-  WaitingRoomSceneName: WaitingRoom
   ServerisRunning: 0
   RunAsServer: 1
 --- !u!114 &476093111
@@ -604,3 +603,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myNumber: 4
+  FollowTransform: {fileID: 0}
