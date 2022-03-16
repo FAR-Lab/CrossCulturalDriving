@@ -127,7 +127,7 @@ public class NetworkVehicleController : NetworkBehaviour
     {
         TurnOnLeft(Leftl_);
     }
-    
+
     private void TurnOnLeft(bool Leftl_)
     {
         if (Leftl_)
@@ -174,7 +174,7 @@ public class NetworkVehicleController : NetworkBehaviour
     {
         TurnOnBrakeLight(Active);
     }
-    
+
     private void TurnOnBrakeLight(bool Active)
     {
         if (Active)
@@ -220,8 +220,12 @@ public class NetworkVehicleController : NetworkBehaviour
     float steeringAngle;
     public Transform SteeringWheel;
 
-    void Update()
+
+    public ParticipantOrder getParticipantOrder()
     {
+        return _participantOrder;
+    }
+    void Update() {
         if (!IsServer) return;
 
         if (ConnectionAndSpawing.Singleton.ServerState == ActionState.DRIVE)
@@ -397,7 +401,7 @@ public class NetworkVehicleController : NetworkBehaviour
         if (left != right)
         {
             if (LeftIsActuallyOn == RightIsActuallyOn ==
-                true) // When we are returning from the hazard lights we make sure that not the inverse thing turns on 
+                true) // When we are returning from the hazard lights we make sure that not the inverse thing turns on
             {
                 LeftIsActuallyOn = false;
                 RightIsActuallyOn = false;
