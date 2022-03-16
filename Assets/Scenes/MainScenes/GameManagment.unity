@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -246,11 +246,34 @@ MonoBehaviour:
   CarPrefab: {fileID: 102736, guid: 76bfb64261b6b4eb080dcd0e2fa84572, type: 3}
   VRUIStartPrefab: {fileID: 8770236260572045539, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
   IncludedScenes:
-  - m_SceneAsset: {fileID: 102900000, guid: 51d43d9fb4f066f43832b0b5d5fcee97, type: 3}
-    m_SceneName: NewIntersection
-  - m_SceneAsset: {fileID: 102900000, guid: 1857194ba51c6144f801330ef898c0c1, type: 3}
-    m_SceneName: Scenario1
-  WaitingRoomSceneName: WaitingRoom
+  - m_SceneAsset: {fileID: 102900000, guid: 464edbfd3c9a779428dbce010dfb2d64, type: 3}
+    m_SceneName: NewPractice
+  - m_SceneAsset: {fileID: 102900000, guid: 7968dc8a7830bb74184d7c8f71b24880, type: 3}
+    m_SceneName: CP1
+  - m_SceneAsset: {fileID: 102900000, guid: 4cae8bb6f47783041bb55912f5d09411, type: 3}
+    m_SceneName: CP2
+  - m_SceneAsset: {fileID: 102900000, guid: 8dcded08f5bd70f44ac950c369742378, type: 3}
+    m_SceneName: CP3
+  - m_SceneAsset: {fileID: 102900000, guid: 291322d0e00d47f42807627df6520839, type: 3}
+    m_SceneName: CP4
+  - m_SceneAsset: {fileID: 102900000, guid: 430d95bf4be5bea41bb92d96e9a3f8c5, type: 3}
+    m_SceneName: CP5
+  - m_SceneAsset: {fileID: 102900000, guid: 81120dcaae9473d4a8cc85ff8a019dc1, type: 3}
+    m_SceneName: CP6
+  - m_SceneAsset: {fileID: 102900000, guid: 18c4af42f2117fb46a34a2531e1db926, type: 3}
+    m_SceneName: CP7
+  - m_SceneAsset: {fileID: 102900000, guid: d665ace070443714b8fc83a88fecf361, type: 3}
+    m_SceneName: NI1
+  - m_SceneAsset: {fileID: 102900000, guid: 996aeccf4c20bbf4196bfeb5a638b18c, type: 3}
+    m_SceneName: NI2
+  - m_SceneAsset: {fileID: 102900000, guid: 7fbe635b38d21594a9f4b397208445b9, type: 3}
+    m_SceneName: NSI1
+  - m_SceneAsset: {fileID: 102900000, guid: 2a7838c0f9261414b8e78bf6fe2e2b8a, type: 3}
+    m_SceneName: NSI2
+  - m_SceneAsset: {fileID: 102900000, guid: 037735af4327b56478c01e2dbb57cb01, type: 3}
+    m_SceneName: NSI3
+  - m_SceneAsset: {fileID: 102900000, guid: 2ae6061700a020c47ad9df3fffa9ed41, type: 3}
+    m_SceneName: NewMerging
   ServerisRunning: 0
   RunAsServer: 1
 --- !u!114 &476093111
@@ -604,3 +627,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myNumber: 4
+  FollowTransform: {fileID: 0}
