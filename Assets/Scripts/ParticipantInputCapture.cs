@@ -9,6 +9,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using UltimateReplay;
 using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -83,16 +84,21 @@ public class ParticipantInputCapture : NetworkBehaviour
                 conf.LoadLocalOffset(out offsetPositon, out offsetRotation);
             }
 
-            po = ConnectionAndSpawing.Singleton.ParticipantOrder;
+            m_participantOrder = ConnectionAndSpawing.Singleton.ParticipantOrder;
         }
         else if (IsServer)
         {
-            po = ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(OwnerClientId);
+            m_participantOrder = ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
+            GetComponent<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder);
         }
+
+     
     }
 
-    private ParticipantOrder po = ParticipantOrder.None;
+    private ParticipantOrder m_participantOrder = ParticipantOrder.None;
+    
+    
     public NetworkVariable<bool> ButtonPushed; // This is only active during QN time 
 
 
@@ -199,7 +205,7 @@ public class ParticipantInputCapture : NetworkBehaviour
 
         if (IsServer)
         {
-            ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(po);
+            ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
         }
     }
 
@@ -340,7 +346,7 @@ public class ParticipantInputCapture : NetworkBehaviour
     public void SendQNAnswerServerRPC(int id, int answerIndex,string lang)
     {
         if (!IsServer) return;
-        ConnectionAndSpawing.Singleton.QNNewDataPoint(po,id,answerIndex,lang);
+        ConnectionAndSpawing.Singleton.QNNewDataPoint(m_participantOrder,id,answerIndex,lang);
         
     }
     

@@ -70,7 +70,7 @@ public class HandDataSender : NetworkBehaviour {
 
     public void ServerReceivingHandData(ulong senderClientId, FastBufferReader messagePayload) {
         if (!IsServer) return;
-        // Debug.Log("Bouncing Hand Data for:" + senderClientId.ToString());
+        //Debug.Log("Bouncing Hand Data for:" + senderClientId.ToString());
         messagePayload.ReadNetworkSerializable<NetworkSkeletonPoseData>(
             out NetworkSkeletonPoseData newRemoteHandData);
         HandDataStreamRecorder.Singleton.StoreHandData(senderClientId, newRemoteHandData);
@@ -124,6 +124,7 @@ public class HandDataSender : NetworkBehaviour {
     public void BoradCastHandData(NetworkSkeletonPoseData newPose) {
         _fastBufferWriter = new FastBufferWriter(NetworkSkeletonPoseData.GetSize(), Allocator.Temp);
         _fastBufferWriter.WriteNetworkSerializable(newPose);
+      //  Debug.Log("Sending HandData" + OwnerClientId);
         NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
             GETMessageNameServer(),
             NetworkManager.Singleton.ServerClientId,

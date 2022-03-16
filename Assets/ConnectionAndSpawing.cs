@@ -584,6 +584,8 @@ public class ConnectionAndSpawing : MonoBehaviour
         GetComponent<OVRManager>().enabled = false;
         FindObjectOfType<RerunGUI>().enabled = true;
         FindObjectOfType<RerunInputManager>().enabled = true;
+        
+        
     }
 
     private void SetupTransport(string ip = "127.0.0.1", int port = 7777)
@@ -653,14 +655,12 @@ public class ConnectionAndSpawing : MonoBehaviour
             QNFinished.Add(po, false);
         }
 
-        foreach (ulong client in ClientObjects.Keys)
-        {
+        
             foreach (NetworkVehicleController no in FindObjectsOfType<NetworkVehicleController>())
             {
                 no.transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 no.transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             }
-        }
 
         foreach (ulong p in ClientObjects.Keys)
         {
@@ -868,10 +868,13 @@ public class ConnectionAndSpawing : MonoBehaviour
         foreach (ParticipantOrder or in dict.Keys)
         {
             ulong? cid = GetClientID(or);
-            if (cid != null)
+            if (cid != null && ClientObjects.ContainsKey((ulong)cid))
             {
-                NetworkManager.Singleton.ConnectedClients[(ulong) cid].PlayerObject
+                ClientObjects[(ulong)cid][ParticipantObjectSpawnType.MAIN]
                     .GetComponent<ParticipantInputCapture>().CurrentDirection.Value = dict[or];
+                ClientObjects[(ulong)cid][ParticipantObjectSpawnType.CAR]
+                    .GetComponentInChildren<GpsController>().SetDirection( dict[or]);
+                
             }
         }
     }
@@ -902,16 +905,36 @@ public class ConnectionAndSpawing : MonoBehaviour
             ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
             : null;
     }
-    
+
     public Transform GetMainClientCameraObject(ParticipantOrder po)
     {
-        if (!_OrderToClient.Keys.Contains(po)) return null;
-        ulong senderClientId = _OrderToClient[po];
-        if (!ClientObjects.ContainsKey(senderClientId)) return null;
-        Transform returnVal = ClientObjects[senderClientId].ContainsKey(ParticipantObjectSpawnType.MAIN)
-            ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
-            : null;
-        return returnVal.FindChildRecursive("CenterEyeAnchor");
+        if (ServerState == ActionState.RERUN)
+        {
+            foreach (ParticipantInputCapture pic in FindObjectsOfType<ParticipantInputCapture>())
+            {
+                if (pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder() ==  po)
+                {
+                    Debug.Log("Found the correct participant order trying to find eye anchor");
+                    return pic.transform.FindChildRecursive("CenterEyeAnchor");;
+                }
+                else
+                {
+                    Debug.Log(po.ToString()+pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder());
+                }
+            }
+            Debug.LogWarning("Never found eye anchor");
+            return null;
+        }
+        else
+        {
+            if (!_OrderToClient.Keys.Contains(po)) return null;
+            ulong senderClientId = _OrderToClient[po];
+            if (!ClientObjects.ContainsKey(senderClientId)) return null;
+            Transform returnVal = ClientObjects[senderClientId].ContainsKey(ParticipantObjectSpawnType.MAIN)
+                ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
+                : null;
+            return returnVal.FindChildRecursive("CenterEyeAnchor");
+        }
     }
 
     public ParticipantOrder GetParticipantOrderClientId(ulong clientid)
@@ -940,5 +963,10 @@ public class ConnectionAndSpawing : MonoBehaviour
             ClientObjects[_OrderToClient[participantOrder]][ParticipantObjectSpawnType.MAIN]
                 .GetComponent<ParticipantInputCapture>().RecieveNewQuestionClientRPC(outval);
         }
+    }
+
+    public RerunManager GetReRunManager()
+    {
+        return m_ReRunManager;
     }
 }
