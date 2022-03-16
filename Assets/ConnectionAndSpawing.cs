@@ -868,10 +868,13 @@ public class ConnectionAndSpawing : MonoBehaviour
         foreach (ParticipantOrder or in dict.Keys)
         {
             ulong? cid = GetClientID(or);
-            if (cid != null)
+            if (cid != null && ClientObjects.ContainsKey((ulong)cid))
             {
-                NetworkManager.Singleton.ConnectedClients[(ulong) cid].PlayerObject
+                ClientObjects[(ulong)cid][ParticipantObjectSpawnType.MAIN]
                     .GetComponent<ParticipantInputCapture>().CurrentDirection.Value = dict[or];
+                ClientObjects[(ulong)cid][ParticipantObjectSpawnType.CAR]
+                    .GetComponentInChildren<GpsController>().SetDirection( dict[or]);
+                
             }
         }
     }
@@ -919,7 +922,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                     Debug.Log(po.ToString()+pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder());
                 }
             }
-            Debug.Log("Never found eye anchor");
+            Debug.LogWarning("Never found eye anchor");
             return null;
         }
         else

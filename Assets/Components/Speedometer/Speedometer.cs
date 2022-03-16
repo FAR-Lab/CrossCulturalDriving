@@ -1,22 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UltimateReplay;
+using UnityEngine.UI;
 
-public class Speedometer : MonoBehaviour
+public class Speedometer : ReplayBehaviour
 {
-
+    
+    [ReplayVar(false)]
     public bool isMPH = true;
     public GameObject speedText;
+
+
     private TextMeshProUGUI speedTextTMP;
+
+
     private GameObject speedTextUnit;
-    public float mySpeed;
+    [ReplayVar(false)] public float mySpeed;
     public GameObject speedPointer;
     private RectTransform speedPointerTransform;
+
+
     private float zRotation;
     private float OriginalRotation;
 
-    public void OnEnable()
+    public void Start()
     {
         speedTextTMP = speedText.gameObject.GetComponent<TextMeshProUGUI>();
         speedPointerTransform = speedPointer.GetComponent<RectTransform>();
@@ -24,20 +34,45 @@ public class Speedometer : MonoBehaviour
         OriginalRotation = zRotation;
 
 
-        if (!isMPH) {
+        if (!isMPH)
+        {
             speedTextUnit.gameObject.GetComponent<TextMeshProUGUI>().text = "km/h";
         }
+        
+        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
+        {
+            UpdateSpeed(mySpeed, true);
+            GetComponentInChildren<Canvas>().enabled = true;
+            foreach (var b in GetComponentsInChildren<Image>())
+            {
+                b.enabled= true;
+            }
+            foreach (var b in GetComponentsInChildren<TextMeshProUGUI>())
+            {
+                b.enabled= true;
+            }
+        }
     }
-/*    public void Update() {
-        UpdateSpeed(mySpeed);
-    }*/
 
-
-    public void UpdateSpeed(float speed)
+    private void Update()
     {
-        zRotation = OriginalRotation - (speed*3.6f* 1.5f);
+        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
+        {
+            UpdateSpeed(mySpeed, true);
+           
+        }
+    }
 
-        speedPointerTransform.localEulerAngles = new Vector3(0,0,zRotation);
+
+    public void UpdateSpeed(float speed, bool IsReplaying = false)
+    {
+        if (!IsReplaying)
+        {
+            mySpeed = speed;
+        }
+
+        zRotation = OriginalRotation - (speed * 3.6f * 1.5f);
+        speedPointerTransform.localEulerAngles = new Vector3(0, 0, zRotation);
 
         if (isMPH)
         {
@@ -45,7 +80,7 @@ public class Speedometer : MonoBehaviour
         }
         else
         {
-            speedTextTMP.text = Mathf.RoundToInt(speed*3.6f).ToString();
+            speedTextTMP.text = Mathf.RoundToInt(speed * 2.23694f).ToString();
         }
     }
 }
