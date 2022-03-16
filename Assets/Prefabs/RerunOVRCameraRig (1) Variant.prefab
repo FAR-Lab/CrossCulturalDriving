@@ -848,11 +848,49 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4471618475864336876, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
   m_PrefabInstance: {fileID: 572650666192083537}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4178240877513323452 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4471618475864336877, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
+  m_PrefabInstance: {fileID: 572650666192083537}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4178240877513323451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4178240876274048904 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4471618474683254233, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
   m_PrefabInstance: {fileID: 572650666192083537}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3759113537250930120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4178240876274048904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54c9647dc784a46bca664910f182491e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.001
+  ScaleThreshold: 0.01
+  InLocalSpace: 1
+  Interpolate: 1
+  CanCommitToTransform: 0
 --- !u!114 &1460402939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -897,6 +935,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GlobalState:
     m_InternalValue: 0
+--- !u!114 &3145245106016198740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4178240877513323451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d05991eb58cd02b4db8eb7fb42aa3d2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 25872
+  replayObject:
+    reference: {fileID: 4178240877513323452}
+  participantOrder: 0
 --- !u!114 &4328049338844713181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -942,30 +997,3 @@ MonoBehaviour:
   HandModelL: {fileID: 0}
   HandModelR: {fileID: 0}
   steeringWheelCenter: {fileID: 0}
---- !u!114 &3759113537250930120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4178240876274048904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54c9647dc784a46bca664910f182491e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 0
-  SyncScaleY: 0
-  SyncScaleZ: 0
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.001
-  ScaleThreshold: 0.01
-  InLocalSpace: 1
-  Interpolate: 1
-  CanCommitToTransform: 0

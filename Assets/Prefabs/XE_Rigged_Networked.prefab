@@ -250,8 +250,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 847c2b67554b89044a7596c841668e25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   axles:
   - left: {fileID: 14670720}
     right: {fileID: 14698806}
@@ -399,7 +399,7 @@ MonoBehaviour:
   tractionR: 0
   rtraction: 0
   rtractionR: 0
-  roadType: 
+  roadType:
 --- !u!114 &114012480399126062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -410,8 +410,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b04d65719d2133409ece3889b7d53b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   CameraPosition: {fileID: 4056613939988268}
   useKeyBoard: 1
   Left:
@@ -425,10 +425,9 @@ MonoBehaviour:
   BrakeLightObjects:
   - {fileID: 4687071616256480}
   - {fileID: 4517584874631780}
-  baseMaterial: {fileID: 2100000, guid: 18932c5ce280264449e6b23d71a5659c, type: 2}
-  BrakeColor: {r: 1, g: 0, b: 0, a: 1}
-  On: {r: 1, g: 0.39810425, b: 0, a: 1}
-  Off: {r: 0, g: 0, b: 0, a: 1}
+  IndicatorOn: {fileID: 2100000, guid: 18932c5ce280264449e6b23d71a5659c, type: 2}
+  LightsOff: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  BrakelightsOn: {fileID: 2100000, guid: aba1567518bd82f45bfdc4dcb8073d27, type: 2}
   SteeringInput: 0
   ThrottleInput: 0
   IsShifting:
@@ -457,8 +456,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37b7c9eeca268cd479d004842dd37d3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   vehicleAudio: {fileID: 11464764}
   roadAudio: {fileID: 11459530}
   collisionAudio: {fileID: 11480730}
@@ -476,8 +475,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b08ceb10d7d8d3439eda3c0bf954426, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   wheels:
   - {fileID: 14670720}
   - {fileID: 14698806}
@@ -520,8 +519,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57df0dfd5264fdc46a24f82641972c20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!82 &82318783350293580
 AudioSource:
   m_ObjectHideFlags: 0
@@ -628,9 +627,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
+  m_Name:
+  m_EditorClassIdentifier:
+  GlobalObjectIdHash: 1939876251
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
@@ -644,8 +643,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1
@@ -671,8 +670,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!114 &-3837203089491521288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -683,10 +682,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   replayIdentity:
-    id: 2962
+    id: 37799
   replayObject:
     reference: {fileID: -2906884681439060436}
   positionFlags: 263
@@ -702,14 +701,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   replayIdentity:
-    id: 42578
+    id: 56620
   prefabIdentity:
     id: 18765
   observedComponents:
   - {fileID: -3837203089491521288}
+  - {fileID: 970540891917129789}
+  - {fileID: 8936397578460589732}
+  - {fileID: 7968716553797442403}
+  - {fileID: 1096293693385778882}
+  - {fileID: 1803061317899769591}
+  - {fileID: 625100045180378700}
+  - {fileID: 7613879703585723116}
+  - {fileID: 2658499546327427399}
+  - {fileID: 8711070800191810835}
+  - {fileID: 8376937105620564092}
   - {fileID: 8151776957269052476}
   - {fileID: 9165113050213923891}
   - {fileID: 7034013229508450395}
@@ -725,11 +734,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 102736}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d05991eb58cd02b4db8eb7fb42aa3d2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   replayIdentity:
     id: 20077
   replayObject:
@@ -778,8 +787,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 382ba3fd6aa348541a1c6670dd49e8c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   engineLoad: {fileID: 11429216}
   engineNoLoad: {fileID: 11411666}
   exhaustLoad: {fileID: 11440488}
@@ -902,8 +911,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   SyncPositionX: 0
   SyncPositionY: 0
   SyncPositionZ: 0
@@ -929,10 +938,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   replayIdentity:
-    id: 47716
+    id: 11782
   replayObject:
     reference: {fileID: -2906884681439060436}
   positionFlags: 263
@@ -2209,8 +2218,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fc2c7aa223a3c74ea41b0cf52a20b7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   wind: {fileID: 8297354}
   speed: 0
   speedCurve:
@@ -2386,8 +2395,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   SyncPositionX: 0
   SyncPositionY: 0
   SyncPositionZ: 0
@@ -2413,10 +2422,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   replayIdentity:
-    id: 4333
+    id: 61434
   replayObject:
     reference: {fileID: -2906884681439060436}
   positionFlags: 263
@@ -3655,7 +3664,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
-  m_WarningMessage: 
+  m_WarningMessage:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
@@ -3788,8 +3797,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 002501532768efb40bd792fe46bd5dd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   tireSounds:
   - clip: {fileID: 8300000, guid: 816ea71883f58cb408d80f523baa3975, type: 3}
     usesSpeedCurve: 1
@@ -4957,8 +4966,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf546a654ddf49f41b22e7328bf59670, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   group: {fileID: 24386092, guid: 03b6c5296ce0f5944aa64ac2bb8763ce, type: 2}
   volumeParamName: EngineNoLoadVol
   samples:
@@ -5092,8 +5101,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf546a654ddf49f41b22e7328bf59670, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   group: {fileID: 24341506, guid: 03b6c5296ce0f5944aa64ac2bb8763ce, type: 2}
   volumeParamName: EngineLoadVol
   samples:
@@ -5222,8 +5231,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 74f90c7dd7657df49a9fbe133c7542d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   engineClip: {fileID: 8300000, guid: 01022119bd2a6ae469c6b958869f5f21, type: 3}
   enginePosition: {fileID: 173844}
   exhaustClip: {fileID: 8300000, guid: de912f4efcbf9894abfd15c84183119e, type: 3}
@@ -5923,8 +5932,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a40a724c5d240b94eb523685e7f2fc7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   sidesHard:
   - {fileID: 8300000, guid: d7744c724ccdff04cb9a55a4f0c83b1a, type: 3}
   - {fileID: 8300000, guid: f6a7abff7dc656744a532e93542f2d27, type: 3}
@@ -6105,8 +6114,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   SyncPositionX: 0
   SyncPositionY: 0
   SyncPositionZ: 0
@@ -6132,10 +6141,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   replayIdentity:
-    id: 26889
+    id: 26276
   replayObject:
     reference: {fileID: -2906884681439060436}
   positionFlags: 263
@@ -6554,8 +6563,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf546a654ddf49f41b22e7328bf59670, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   group: {fileID: 24397278, guid: 03b6c5296ce0f5944aa64ac2bb8763ce, type: 2}
   volumeParamName: ExhaustNoLoadVol
   samples:
@@ -6772,8 +6781,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   SyncPositionX: 0
   SyncPositionY: 0
   SyncPositionZ: 0
@@ -6799,10 +6808,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   replayIdentity:
-    id: 53914
+    id: 19726
   replayObject:
     reference: {fileID: -2906884681439060436}
   positionFlags: 263
@@ -7117,8 +7126,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf546a654ddf49f41b22e7328bf59670, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   group: {fileID: 24300014, guid: 03b6c5296ce0f5944aa64ac2bb8763ce, type: 2}
   volumeParamName: ExhaustLoadVol
   samples:
@@ -7521,6 +7530,7 @@ GameObject:
   - component: {fileID: 4687071616256480}
   - component: {fileID: 33942427316095084}
   - component: {fileID: 23261190955339692}
+  - component: {fileID: 1096293693385778882}
   m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_rearLamp
   m_TagString: Untagged
@@ -7569,7 +7579,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8f64a8999eaf57640b32c7fcc45ac064, type: 3}
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7591,6 +7601,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1096293693385778882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047169499736000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  replayIdentity:
+    id: 33024
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  observedRenderer: {fileID: 23261190955339692}
+  defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  - {fileID: 2100000, guid: 18932c5ce280264449e6b23d71a5659c, type: 2}
+  - {fileID: 2100000, guid: aba1567518bd82f45bfdc4dcb8073d27, type: 2}
+  recordFlags: 1
 --- !u!1 &1059675908994232
 GameObject:
   m_ObjectHideFlags: 0
@@ -7603,6 +7636,7 @@ GameObject:
   - component: {fileID: 33167106921918442}
   - component: {fileID: 23718576837862910}
   - component: {fileID: 7749589190814487617}
+  - component: {fileID: 2658499546327427399}
   m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_steering
   m_TagString: Untagged
@@ -7686,8 +7720,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   SyncPositionX: 0
   SyncPositionY: 0
   SyncPositionZ: 0
@@ -7703,6 +7737,25 @@ MonoBehaviour:
   InLocalSpace: 1
   Interpolate: 0
   CanCommitToTransform: 0
+--- !u!114 &2658499546327427399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059675908994232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  replayIdentity:
+    id: 38817
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  positionFlags: 0
+  rotationFlags: 271
+  scaleFlags: 0
 --- !u!1 &1120682330170792
 GameObject:
   m_ObjectHideFlags: 0
@@ -7788,8 +7841,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5a578309b7a24b46ba988c6dcb2838b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   ReferenceMaterial: {fileID: 2100000, guid: 3a7465f1a75f24546b2231bbc1c8e8d0, type: 2}
   TargetRenderer: {fileID: 23767021041498426}
   rt: {fileID: 0}
@@ -8043,8 +8096,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5a578309b7a24b46ba988c6dcb2838b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   ReferenceMaterial: {fileID: 2100000, guid: 3a7465f1a75f24546b2231bbc1c8e8d0, type: 2}
   TargetRenderer: {fileID: 23387448993188222}
   rt: {fileID: 0}
@@ -8226,6 +8279,7 @@ GameObject:
   - component: {fileID: 4517584874631780}
   - component: {fileID: 33794941141872114}
   - component: {fileID: 23366822252624480}
+  - component: {fileID: 625100045180378700}
   m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_rearLamp.003
   m_TagString: Untagged
@@ -8274,7 +8328,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8f64a8999eaf57640b32c7fcc45ac064, type: 3}
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8296,6 +8350,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &625100045180378700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1266092379427974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  replayIdentity:
+    id: 22633
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  observedRenderer: {fileID: 23366822252624480}
+  defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  - {fileID: 2100000, guid: 18932c5ce280264449e6b23d71a5659c, type: 2}
+  - {fileID: 2100000, guid: aba1567518bd82f45bfdc4dcb8073d27, type: 2}
+  recordFlags: 1
 --- !u!1 &1278206751594194
 GameObject:
   m_ObjectHideFlags: 0
@@ -8341,6 +8418,7 @@ GameObject:
   - component: {fileID: 4118818471692194}
   - component: {fileID: 33330723806528174}
   - component: {fileID: 23353113586693306}
+  - component: {fileID: 970540891917129789}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -8389,7 +8467,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: db5adb169560f444ca5c65cc3570defa, type: 2}
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8411,6 +8489,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &970540891917129789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281013638782804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  replayIdentity:
+    id: 49500
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  observedRenderer: {fileID: 23353113586693306}
+  defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  - {fileID: 2100000, guid: 18932c5ce280264449e6b23d71a5659c, type: 2}
+  - {fileID: 2100000, guid: aba1567518bd82f45bfdc4dcb8073d27, type: 2}
+  recordFlags: 1
 --- !u!1 &1336821869942954
 GameObject:
   m_ObjectHideFlags: 0
@@ -8505,8 +8606,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 20e324be72a329e40ab591ca27d3abd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   CameraPos: {fileID: 4056613939988268}
   LowerTarget: {fileID: 4068532366695228}
   minIn: 1.3
@@ -8522,6 +8623,7 @@ GameObject:
   - component: {fileID: 4209998301786090}
   - component: {fileID: 33890579515818312}
   - component: {fileID: 23357028160542600}
+  - component: {fileID: 8376937105620564092}
   m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_headlightRIGHT
   m_TagString: Untagged
@@ -8570,7 +8672,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b5271716b70406948a6b9fe709fda1d5, type: 2}
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8592,6 +8694,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8376937105620564092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391340066061090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  replayIdentity:
+    id: 48595
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  observedRenderer: {fileID: 23357028160542600}
+  defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  - {fileID: 2100000, guid: 18932c5ce280264449e6b23d71a5659c, type: 2}
+  - {fileID: 2100000, guid: aba1567518bd82f45bfdc4dcb8073d27, type: 2}
+  recordFlags: 1
 --- !u!1 &1416469510461964
 GameObject:
   m_ObjectHideFlags: 0
@@ -8698,6 +8823,7 @@ GameObject:
   - component: {fileID: 4234196572143992}
   - component: {fileID: 33141764451615214}
   - component: {fileID: 23107828148067610}
+  - component: {fileID: 8711070800191810835}
   m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_headlightLEFT
   m_TagString: Untagged
@@ -8746,7 +8872,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: db5adb169560f444ca5c65cc3570defa, type: 2}
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8768,6 +8894,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8711070800191810835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1447330453008390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  replayIdentity:
+    id: 49907
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  observedRenderer: {fileID: 23107828148067610}
+  defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  - {fileID: 2100000, guid: 18932c5ce280264449e6b23d71a5659c, type: 2}
+  - {fileID: 2100000, guid: aba1567518bd82f45bfdc4dcb8073d27, type: 2}
+  recordFlags: 1
 --- !u!1 &1486978001494232
 GameObject:
   m_ObjectHideFlags: 0
@@ -8885,8 +9034,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5a578309b7a24b46ba988c6dcb2838b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   ReferenceMaterial: {fileID: 2100000, guid: 3a7465f1a75f24546b2231bbc1c8e8d0, type: 2}
   TargetRenderer: {fileID: 23100646099633464}
   rt: {fileID: 0}
@@ -8906,6 +9055,7 @@ GameObject:
   - component: {fileID: 4588777382977856}
   - component: {fileID: 33069675483288044}
   - component: {fileID: 23378663467087764}
+  - component: {fileID: 1803061317899769591}
   m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_rearLamp.002
   m_TagString: Untagged
@@ -8954,7 +9104,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8f64a8999eaf57640b32c7fcc45ac064, type: 3}
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8976,6 +9126,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1803061317899769591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1584263918984448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  replayIdentity:
+    id: 63652
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  observedRenderer: {fileID: 23378663467087764}
+  defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  - {fileID: 2100000, guid: 18932c5ce280264449e6b23d71a5659c, type: 2}
+  - {fileID: 2100000, guid: aba1567518bd82f45bfdc4dcb8073d27, type: 2}
+  recordFlags: 1
 --- !u!1 &1653442060744658
 GameObject:
   m_ObjectHideFlags: 0
@@ -9161,8 +9334,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -9323,8 +9496,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7e1a0269243a4776b4ae02fc98569ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
+  replayIdentity:
+    id: 6883
+  replayObject:
+    reference: {fileID: 0}
+  recordingDirection: 6
   straightImage: {fileID: 21300000, guid: 743fe25641158457fa75db8ccc7f0586, type: 3}
   leftImage: {fileID: 21300000, guid: 3527fda2ef88844c5a126250e32da1d3, type: 3}
   rightImage: {fileID: 21300000, guid: 809fa677957ff4eac87d28289cc550b7, type: 3}
@@ -9556,6 +9734,7 @@ GameObject:
   - component: {fileID: 4539859283853042}
   - component: {fileID: 33343484527130894}
   - component: {fileID: 23325350253942988}
+  - component: {fileID: 7613879703585723116}
   m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_rearLamp.004
   m_TagString: Untagged
@@ -9604,7 +9783,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8f64a8999eaf57640b32c7fcc45ac064, type: 3}
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9626,6 +9805,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7613879703585723116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1802007213767614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  replayIdentity:
+    id: 17100
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  observedRenderer: {fileID: 23325350253942988}
+  defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  - {fileID: 2100000, guid: 18932c5ce280264449e6b23d71a5659c, type: 2}
+  - {fileID: 2100000, guid: aba1567518bd82f45bfdc4dcb8073d27, type: 2}
+  recordFlags: 1
 --- !u!1 &1815802205751382
 GameObject:
   m_ObjectHideFlags: 0
@@ -9637,6 +9839,7 @@ GameObject:
   - component: {fileID: 4273479095473004}
   - component: {fileID: 33951239484031896}
   - component: {fileID: 23276408013039158}
+  - component: {fileID: 8936397578460589732}
   m_Layer: 0
   m_Name: Cube.001
   m_TagString: Untagged
@@ -9685,7 +9888,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b5271716b70406948a6b9fe709fda1d5, type: 2}
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9707,6 +9910,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8936397578460589732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1815802205751382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  replayIdentity:
+    id: 46452
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  observedRenderer: {fileID: 23276408013039158}
+  defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  - {fileID: 2100000, guid: 18932c5ce280264449e6b23d71a5659c, type: 2}
+  - {fileID: 2100000, guid: aba1567518bd82f45bfdc4dcb8073d27, type: 2}
+  recordFlags: 1
 --- !u!1 &1816534560324986
 GameObject:
   m_ObjectHideFlags: 0
@@ -9858,8 +10084,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
@@ -9870,7 +10096,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &114395153245475356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9881,8 +10107,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_IgnoreReversedGraphics: 1
   m_BlockingObjects: 0
   m_BlockingMask:
@@ -10011,6 +10237,7 @@ GameObject:
   - component: {fileID: 873903906929419035}
   - component: {fileID: 2526153204407524654}
   - component: {fileID: 365435026594160890}
+  - component: {fileID: 7968716553797442403}
   m_Layer: 0
   m_Name: XE_lowPoly_mdl:XE_rearLamp_inner_normals
   m_TagString: Untagged
@@ -10059,7 +10286,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -2937026224492627587, guid: a3d6657ee6d095e468ae122de01cabd7, type: 3}
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10081,6 +10308,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7968716553797442403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576917525193150109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e94db3f2f38574845af458cf07a54d76, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  replayIdentity:
+    id: 42836
+  replayObject:
+    reference: {fileID: -2906884681439060436}
+  observedRenderer: {fileID: 365435026594160890}
+  defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  availableMaterials:
+  - {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
+  - {fileID: 2100000, guid: 18932c5ce280264449e6b23d71a5659c, type: 2}
+  - {fileID: 2100000, guid: aba1567518bd82f45bfdc4dcb8073d27, type: 2}
+  recordFlags: 1
 --- !u!1 &2239973883504348307
 GameObject:
   m_ObjectHideFlags: 0
@@ -10836,6 +11086,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.401
       objectReference: {fileID: 0}
+    - target: {fileID: 4708535730622906503, guid: 4a0ad53fde7baf543984ea94fa302bad, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a0ad53fde7baf543984ea94fa302bad, type: 3}
 --- !u!224 &8520537421985924948 stripped
@@ -10904,7 +11158,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 9ee5bf4744f1eeb44aabf72999fb5099, type: 3}
       propertyPath: m_Materials.Array.data[0]
-      value: 
+      value:
       objectReference: {fileID: 2100000, guid: 5868dabd62f9f694e8e039f9e531b7fd, type: 2}
     - target: {fileID: 919132149155446097, guid: 9ee5bf4744f1eeb44aabf72999fb5099, type: 3}
       propertyPath: m_Name
