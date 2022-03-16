@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class GpsController : MonoBehaviour {
 
-    public enum Direction { Straight, Left, Right, Stop, Hurry ,Loading,None };
+    public enum Direction { Straight, Left, Right, Stop, Hurry ,Loading,None, StartRight, StartStraight };
 
-    public Sprite straightImage, leftImage, rightImage, StopImage, HurryImage, LoadingImage;
+    public Sprite straightImage, leftImage, rightImage, StopImage, HurryImage, LoadingImage, StartRightImage, StartSraightImage;
     AudioSource GpsAudioPlayer;
 
     public Sprite HurryImageEnglish, StopImageEnglish, LoadingImageEnglish;
@@ -59,6 +59,10 @@ public class GpsController : MonoBehaviour {
                 {
                     return HurryImageEnglish;
                 }
+            case Direction.StartStraight:
+                return StartSraightImage;
+            case Direction.StartRight:
+                return StartRightImage;
             default:
                 return null;
         }
