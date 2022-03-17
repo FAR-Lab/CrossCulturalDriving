@@ -19,9 +19,11 @@ public class ConnectionAndSpawing : MonoBehaviour
 
 
     public List<SceneField> IncludedScenes = new List<SceneField>();
+    public string LastLoadedVisualScene;
     public static string WaitingRoomSceneName = "WaitingRoom";
     public bool ServerisRunning;
     private GameObject myStateManager;
+
 
     private ParticipantOrder _participantOrder = ParticipantOrder.None;
 
@@ -37,7 +39,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     public string lang { private set; get; }
 
 
-    public bool RunAsServer;
+ //   public bool RunAsServer;
     public static bool fakeCare = false;
 
     #region ParticipantMapping
@@ -230,9 +232,24 @@ public class ConnectionAndSpawing : MonoBehaviour
     {
         DestroyAllClientObjects(new List<ParticipantObjectSpawnType> {ParticipantObjectSpawnType.CAR});
 
-        //PreviousScene = ActiveScene;
-        //  ActiveScene = name;
+
         NetworkManager.Singleton.SceneManager.LoadScene(name, LoadSceneMode.Single);
+    }
+
+    private void LoadSceneVisuals()
+    {
+        
+        var tmp = GetScenarioManager();
+        if (tmp != null && tmp.VisualSceneToUse != null && tmp.VisualSceneToUse.SceneName.Length > 0)
+        {
+            LastLoadedVisualScene = tmp.VisualSceneToUse.SceneName;
+            NetworkManager.Singleton.SceneManager.LoadScene(tmp.VisualSceneToUse.SceneName, LoadSceneMode.Additive);
+            ServerState = ActionState.LOADINGVISUALS;
+        }
+        else
+        {
+            SwitchToReady();
+        }
     }
 
     private void SceneEvent(SceneEvent sceneEvent)
@@ -244,17 +261,30 @@ public class ConnectionAndSpawing : MonoBehaviour
             case SceneEventType.Synchronize: break;
             case SceneEventType.ReSynchronize: break;
             case SceneEventType.LoadEventCompleted:
-                if (ServerState == ActionState.LOADING)
+                if (ServerState == ActionState.LOADINGSCENARIO)
                 {
-                    SwitchToReady();
+                    LoadSceneVisuals();
                 }
+                else if (ServerState == ActionState.LOADINGVISUALS)
+
+            {
+                SwitchToReady();
+            }
 
                 break;
             case SceneEventType.UnloadEventCompleted:
                 break;
             case SceneEventType.LoadComplete:
-                // SpawnAPlayer(sceneEvent.ClientId);
-                SpawnACar(sceneEvent.ClientId);
+                if (ServerState == ActionState.LOADINGVISUALS || ServerState == ActionState.WAITINGROOM)
+                {
+                    SpawnACar(sceneEvent.ClientId);
+                }
+                else
+                {
+                    Debug.Log("A client Finished loading But we are not gonna Spawn cause the visuals are missing!" +
+                              "");
+                }
+
                 break;
             case SceneEventType.UnloadComplete: break;
             case SceneEventType.SynchronizeComplete: break;
@@ -584,8 +614,6 @@ public class ConnectionAndSpawing : MonoBehaviour
         GetComponent<OVRManager>().enabled = false;
         FindObjectOfType<RerunGUI>().enabled = true;
         FindObjectOfType<RerunInputManager>().enabled = true;
-        
-        
     }
 
     private void SetupTransport(string ip = "127.0.0.1", int port = 7777)
@@ -617,7 +645,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     private void SwitchToLoading(string name)
     {
-        ServerState = ActionState.LOADING;
+        ServerState = ActionState.LOADINGSCENARIO;
         LocalLoadScene(name);
         LastLoadedScene = name;
     }
@@ -639,7 +667,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     {
         ServerState = ActionState.DRIVE;
         m_ReRunManager.BeginRecording(LastLoadedScene);
-        m_QNDataStorageServer.StartScenario(LastLoadedScene,m_ReRunManager.GetRecordingFolder());
+        m_QNDataStorageServer.StartScenario(LastLoadedScene, m_ReRunManager.GetRecordingFolder());
     }
 
 
@@ -655,12 +683,12 @@ public class ConnectionAndSpawing : MonoBehaviour
             QNFinished.Add(po, false);
         }
 
-        
-            foreach (NetworkVehicleController no in FindObjectsOfType<NetworkVehicleController>())
-            {
-                no.transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
-                no.transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-            }
+
+        foreach (NetworkVehicleController no in FindObjectsOfType<NetworkVehicleController>())
+        {
+            no.transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            no.transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        }
 
         foreach (ulong p in ClientObjects.Keys)
         {
@@ -725,7 +753,8 @@ public class ConnectionAndSpawing : MonoBehaviour
             {
                 case ActionState.DEFAULT: break;
                 case ActionState.WAITINGROOM: break;
-                case ActionState.LOADING: break;
+                case ActionState.LOADINGSCENARIO: break;
+                case ActionState.LOADINGVISUALS: break;
                 case ActionState.READY:
                     if (Input.GetKeyUp(KeyCode.Return))
                     {
@@ -868,13 +897,12 @@ public class ConnectionAndSpawing : MonoBehaviour
         foreach (ParticipantOrder or in dict.Keys)
         {
             ulong? cid = GetClientID(or);
-            if (cid != null && ClientObjects.ContainsKey((ulong)cid))
+            if (cid != null && ClientObjects.ContainsKey((ulong) cid))
             {
-                ClientObjects[(ulong)cid][ParticipantObjectSpawnType.MAIN]
+                ClientObjects[(ulong) cid][ParticipantObjectSpawnType.MAIN]
                     .GetComponent<ParticipantInputCapture>().CurrentDirection.Value = dict[or];
-                ClientObjects[(ulong)cid][ParticipantObjectSpawnType.CAR]
-                    .GetComponentInChildren<GpsController>().SetDirection( dict[or]);
-                
+                ClientObjects[(ulong) cid][ParticipantObjectSpawnType.CAR]
+                    .GetComponentInChildren<GpsController>().SetDirection(dict[or]);
             }
         }
     }
@@ -912,16 +940,19 @@ public class ConnectionAndSpawing : MonoBehaviour
         {
             foreach (ParticipantInputCapture pic in FindObjectsOfType<ParticipantInputCapture>())
             {
-                if (pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder() ==  po)
+                if (pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder() == po)
                 {
                     Debug.Log("Found the correct participant order trying to find eye anchor");
-                    return pic.transform.FindChildRecursive("CenterEyeAnchor");;
+                    return pic.transform.FindChildRecursive("CenterEyeAnchor");
+                    ;
                 }
                 else
                 {
-                    Debug.Log(po.ToString()+pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder());
+                    Debug.Log(po.ToString() +
+                              pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder());
                 }
             }
+
             Debug.LogWarning("Never found eye anchor");
             return null;
         }
