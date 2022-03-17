@@ -39,7 +39,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     public string lang { private set; get; }
 
 
- //   public bool RunAsServer;
+    //   public bool RunAsServer;
     public static bool fakeCare = false;
 
     #region ParticipantMapping
@@ -238,7 +238,6 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     private void LoadSceneVisuals()
     {
-        
         var tmp = GetScenarioManager();
         if (tmp != null && tmp.VisualSceneToUse != null && tmp.VisualSceneToUse.SceneName.Length > 0)
         {
@@ -256,27 +255,31 @@ public class ConnectionAndSpawing : MonoBehaviour
     {
         switch (sceneEvent.SceneEventType)
         {
-            case SceneEventType.Load:
+            case SceneEventType.Load: break;
             case SceneEventType.Unload: break;
             case SceneEventType.Synchronize: break;
             case SceneEventType.ReSynchronize: break;
             case SceneEventType.LoadEventCompleted:
+                Debug.Log("Load event!" + sceneEvent.ClientId + ServerState.ToString());
                 if (ServerState == ActionState.LOADINGSCENARIO)
                 {
                     LoadSceneVisuals();
                 }
                 else if (ServerState == ActionState.LOADINGVISUALS)
 
-            {
-                SwitchToReady();
-            }
+                {
+                    SwitchToReady();
+                }
 
                 break;
             case SceneEventType.UnloadEventCompleted:
                 break;
             case SceneEventType.LoadComplete:
-                if (ServerState == ActionState.LOADINGVISUALS || ServerState == ActionState.WAITINGROOM)
+                Debug.Log("Load completed!" + sceneEvent.ClientId + ServerState.ToString());
+                if (ServerState == ActionState.READY || ServerState == ActionState.LOADINGVISUALS ||
+                    ServerState == ActionState.WAITINGROOM)
                 {
+                    Debug.Log("Trying to Spawn A Car!");
                     SpawnACar(sceneEvent.ClientId);
                 }
                 else
