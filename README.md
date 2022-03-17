@@ -28,8 +28,10 @@ import the necessary third party packages:
 
 | Key combination | Effect                            |
 |-----------------|-----------------------------------|
-|⇧ Shift +  ↵ Enter | Switch into driving mode |
+|↵ Enter | Switch into driving mode |
 |⇧ Shift +  Q  | Switch back into the waiting room |
+|Ctrl + Q | Display SA Questions |
+|0,1,2,3,4 | Switch between the views in the server |
 
 
 #### Calibration
