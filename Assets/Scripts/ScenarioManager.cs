@@ -16,7 +16,7 @@ public class ScenarioManager : MonoBehaviour {
     // Use this for initialization
     public GameObject QuestionairPrefab;
 
-   
+    public SceneField VisualSceneToUse;
     QNSelectionManager qnmanager;
     public bool ready { get; private set; } // property
     private Dictionary<ParticipantOrder, Pose> MySpawnPositions;
