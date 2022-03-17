@@ -6,7 +6,8 @@ using UnityEngine;
 public enum ActionState {
     DEFAULT,
     WAITINGROOM,
-    LOADING,
+    LOADINGSCENARIO,
+    LOADINGVISUALS,
     READY,
     DRIVE,
     QUESTIONS,
