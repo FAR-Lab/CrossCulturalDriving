@@ -65,13 +65,25 @@ public class QuestionnaireQuestion
     public string SA_Level { get; set; } //The level of the question based on SAGAT model
     public string Awareness_to { get; set; }
 
-    public List<Char> Participent { get; set; }
+    public List<Char> Participant { get; set; }
     public Dictionary<string, string> QuestionText { get; set; }
 
     public List<ObjAnswer> Answers { get; set; }
 
 
     private List<ParticipantOrder> AllParticipents;
+
+    private int InteralTrackingID;
+
+    public int getInteralID()
+    {
+        return InteralTrackingID;
+    }
+
+    public void setInternalID(int inval)
+    {
+        InteralTrackingID = inval;
+    }
 
     public string GetQuestionText(string lang)
     {
@@ -105,7 +117,7 @@ public class QuestionnaireQuestion
     public void init()
     {
         AllParticipents = new List<ParticipantOrder>();
-        foreach (char c in Participent)
+        foreach (char c in Participant)
         {
             switch (c)
             {
@@ -167,7 +179,7 @@ public class QuestionnaireQuestion
                 lang + " id:" + ID);
         }
 
-        outVal.ID = ID;
+        outVal.ID = getInteralID();
         outVal.reply = replyType.NEWQUESTION;
         Debug.Log(outVal);
         return outVal;

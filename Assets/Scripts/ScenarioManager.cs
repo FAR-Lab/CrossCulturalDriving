@@ -118,7 +118,18 @@ public class ScenarioManager : MonoBehaviour {
 
    public List<QuestionnaireQuestion> GetQuestionObject()
    {
-       return ReadString(QuestionairToAsk.text);
+       
+       List<QuestionnaireQuestion> outval=ReadString(QuestionairToAsk.text);
+
+       int startCounter = 0;
+       foreach (QuestionnaireQuestion q in outval)
+       {
+           q.setInternalID(startCounter);
+           startCounter++;
+       }
+
+
+       return outval;
    }
 
    

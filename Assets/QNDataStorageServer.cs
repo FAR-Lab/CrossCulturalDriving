@@ -40,18 +40,29 @@ public class QNDataStorageServer : MonoBehaviour
         if (sManager == null) return;
         participantAnswerStatus = new Dictionary<ParticipantOrder, int>();
         LastParticipantStartTimes = new Dictionary<ParticipantOrder, DateTime>();
-        foreach (ParticipantOrder po in ConnectionAndSpawing.Singleton.GetCurrentlyConnectedClients())
-        {
-            participantAnswerStatus.Add(po, 0);
-            LastParticipantStartTimes.Add(po, new DateTime());
-        }
 
+        bool first = true;
+        int StartID = -1;
         if (activeQuestionList != null) activeQuestionList.Clear();
         foreach (QuestionnaireQuestion q in sManager.GetQuestionObject())
         {
-            activeQuestionList.Add(q.ID, q);
+            if (first)
+            {
+                first = false;
+                StartID = q.getInteralID() - 1;// Start ID to move forward.
+            }
+            activeQuestionList.Add(q.getInteralID(), q);
             //Debug.Log("Adding Question:"+q.QuestionText["English"]);
         }
+        
+        
+        foreach (ParticipantOrder po in ConnectionAndSpawing.Singleton.GetCurrentlyConnectedClients())
+        {
+            participantAnswerStatus.Add(po, StartID);
+            LastParticipantStartTimes.Add(po, new DateTime());
+        }
+
+        
     }
 
     public void NewDatapointfromClient(ParticipantOrder po, int id, int answerIndex, string lang)
