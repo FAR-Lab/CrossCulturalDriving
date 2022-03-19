@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.NetworkInformation;
 using Rerun;
 using UnityEngine;
@@ -8,13 +9,16 @@ using UnityEngine.UI;
 using Unity.Netcode;
 
 
-public class TrafficLightController : NetworkBehaviour {
-    enum materialID : int {
+
+
+public class TrafficLightController : MonoBehaviour
+{
+    enum materialID : int
+    {
         MID = 0,
         TOP = 1,
         BOTTOM = 2
     }
-
 
     public Material off;
     public Material red;
@@ -26,74 +30,49 @@ public class TrafficLightController : NetworkBehaviour {
 
 
     private Renderer LightRenderer;
-    private bool TrafficLightOutOfServic = false;
+    private bool IdleState = false;
 
 
     public TrafficLightSupervisor.trafficLightStatus StartinTrafficlightStatus;
+    public ParticipantOrder participantAssociation;
 
-    void Start() {
+    void Start()
+    {
         LightRenderer = LightSurfaces.GetComponent<Renderer>();
-        switch (StartinTrafficlightStatus) {
+        InteralGraphicsUpdate(StartinTrafficlightStatus);
+    }
+
+    private void InteralGraphicsUpdate(TrafficLightSupervisor.trafficLightStatus inval)
+    {
+        switch (inval)
+        {
             case TrafficLightSupervisor.trafficLightStatus.IDLE:
-                TrafficLightOutOfServic = true;
+                IdleState = true;
                 StartCoroutine(GoIdle());
                 break;
             case TrafficLightSupervisor.trafficLightStatus.RED:
+                IdleState = false;
                 StartCoroutine(GoRed());
                 break;
             case TrafficLightSupervisor.trafficLightStatus.GREEN:
                 StartCoroutine(GoGreen());
+                IdleState = false;
                 break;
             default: throw new ArgumentOutOfRangeException();
         }
     }
 
-    void Update() { }
+    public void UpdatedTrafficlight(TrafficLightSupervisor.trafficLightStatus newval)
 
-
-    public void StartGreenCoroutine() {
-        if (!IsServer) return;
-        StartCoroutine(GoGreen());
-        StartGreenCoroutineClientRpc();
-    }
-
-    [ClientRpc]
-    private void StartGreenCoroutineClientRpc() { StartCoroutine(GoGreen()); }
-
-    public void StartRedCoroutine() {
-        if (!IsServer) return;
-        StartCoroutine(GoRed());
-        StartRedCoroutineClientRpc();
+    {
+       
+            InteralGraphicsUpdate(newval);
+          
     }
 
 
-    [ClientRpc]
-    private void StartRedCoroutineClientRpc() { StartCoroutine(GoRed()); }
-
-
-    public void ToggleOOSCoroutine() {
-        if (!IsServer) return;
-        if (TrafficLightOutOfServic) { TrafficLightOutOfServic = false; }
-        else {
-            TrafficLightOutOfServic = true;
-            StartCoroutine(GoIdle());
-        }
-
-        ToggleOOSCoroutineClientRpc();
-    }
-
-
-    [ClientRpc]
-    private void ToggleOOSCoroutineClientRpc() {
-        if (TrafficLightOutOfServic) { TrafficLightOutOfServic = false; }
-        else {
-            TrafficLightOutOfServic = true;
-            StartCoroutine(GoIdle());
-        }
-    }
-
-
-    private IEnumerator GoRed() {
+    private IEnumerator GoRed()
+    {
         Material[] mat = LightRenderer.materials;
         mat[(int) materialID.MID] = yellow;
         mat[(int) materialID.TOP] = off;
@@ -110,10 +89,12 @@ public class TrafficLightController : NetworkBehaviour {
         LightRenderer.materials = mat;
     }
 
-    private IEnumerator GoIdle() {
+    private IEnumerator GoIdle()
+    {
         Material[] mat = LightRenderer.materials;
         bool tmp = false;
-        while (TrafficLightOutOfServic) {
+        while (IdleState)
+        {
             mat[(int) materialID.MID] = tmp ? yellow : off;
             mat[(int) materialID.TOP] = off;
             mat[(int) materialID.BOTTOM] = off;
@@ -130,7 +111,8 @@ public class TrafficLightController : NetworkBehaviour {
         LightRenderer.materials = mat;
     }
 
-    private IEnumerator GoGreen() {
+    private IEnumerator GoGreen()
+    {
         Material[] mat = LightRenderer.materials;
         mat[(int) materialID.MID] = yellow;
         mat[(int) materialID.TOP] = off;

@@ -82,6 +82,8 @@ public class ServerChange : MonoBehaviour
         LanguageDropdown.onValueChanged.AddListener(delegate { LanguageDropdownItemSelected(ParticipantDropdown); });
 
         serverIPField.onValueChanged.AddListener(delegate { IPCHanged(); });
+        
+        
        
     }
 
@@ -188,7 +190,7 @@ public class ServerChange : MonoBehaviour
              switch (LanguageString)
              {
                  case "English":
-                     LanguageDropdown.value = 0;
+                     LanguageDropdown.value = 0; //TODO This is bad form. We should not directly reference the index but rather dynamically find the index. 
                      break;
 
                  case "Hebrew":
