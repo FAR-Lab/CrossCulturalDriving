@@ -617,6 +617,29 @@ public class ConnectionAndSpawing : MonoBehaviour
         GetComponent<OVRManager>().enabled = false;
         FindObjectOfType<RerunGUI>().enabled = true;
         FindObjectOfType<RerunInputManager>().enabled = true;
+
+        SceneManager.sceneLoaded += VisualsceneLoadReRun;
+    }
+
+    private void VisualsceneLoadReRun(Scene arg0, LoadSceneMode arg1)
+    {
+        if (arg0.name == LoadedScene)
+        {
+            var tmp = GetScenarioManager();
+            if (tmp != null && tmp.VisualSceneToUse != null && tmp.VisualSceneToUse.SceneName.Length > 0)
+            {
+                if (tmp.VisualSceneToUse.SceneName != LastLoadedVisualScene)
+                {
+                    if (LastLoadedVisualScene.Length > 0)
+                    {
+                        SceneManager.UnloadSceneAsync(LastLoadedVisualScene);
+                    }
+
+                    LastLoadedVisualScene = tmp.VisualSceneToUse.SceneName;
+                    SceneManager.LoadScene(tmp.VisualSceneToUse.SceneName, LoadSceneMode.Additive);
+                }
+            }
+        }
     }
 
     private void SetupTransport(string ip = "127.0.0.1", int port = 7777)
@@ -951,12 +974,12 @@ public class ConnectionAndSpawing : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log(po.ToString() +
-                              pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder());
+                 //   Debug.Log(po.ToString() +
+                     //         pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder());
                 }
             }
 
-            Debug.LogWarning("Never found eye anchor");
+            Debug.LogWarning("Never found eye anchor for participant: "+po);
             return null;
         }
         else

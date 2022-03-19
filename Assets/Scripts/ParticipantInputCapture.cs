@@ -85,6 +85,7 @@ public class ParticipantInputCapture : NetworkBehaviour
             }
 
             m_participantOrder = ConnectionAndSpawing.Singleton.ParticipantOrder;
+            
         }
         else if (IsServer)
         {
@@ -94,6 +95,19 @@ public class ParticipantInputCapture : NetworkBehaviour
         }
 
      
+    }
+
+
+[ClientRpc]
+    public void UpdateTrafficLightsClientRPC(TrafficLightSupervisor.trafficLightStatus msg)
+    {
+        if (!IsLocalPlayer || IsServer) return;
+        foreach (var tmp in FindObjectsOfType<TrafficLightController>())
+        {
+           
+            tmp.UpdatedTrafficlight(msg);
+
+        }
     }
 
     private ParticipantOrder m_participantOrder = ParticipantOrder.None;
