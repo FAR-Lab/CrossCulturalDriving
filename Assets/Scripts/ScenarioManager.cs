@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using OVR.OpenVR;
@@ -7,6 +8,7 @@ using Unity.Netcode;
 using UnityEditor;
 using UnityEngine.Networking;
 using UnityEngine;
+using Application = UnityEngine.Application;
 
 public class ScenarioManager : MonoBehaviour {
     public TextAsset  QuestionairToAsk;
@@ -116,10 +118,26 @@ public class ScenarioManager : MonoBehaviour {
         return JsonConvert.DeserializeObject<List<QuestionnaireQuestion>>(asset);
     }
 
+
+   public static string OverwriteQNDataFolderName = "QN_Updates";
    public List<QuestionnaireQuestion> GetQuestionObject()
    {
+       string p = Path.Combine(Application.persistentDataPath, OverwriteQNDataFolderName);
+       string file = Path.Combine(Application.persistentDataPath, OverwriteQNDataFolderName,QuestionairToAsk.name+".json");
+      Debug.Log(file);
+       if (!Directory.Exists(p))
+       {
+           Directory.CreateDirectory(p);
+       }
+       if (!File.Exists(file))
+       {
+           File.WriteAllText(file,QuestionairToAsk.text);
+           
+       }
        
-       List<QuestionnaireQuestion> outval=ReadString(QuestionairToAsk.text);
+       
+       
+       List<QuestionnaireQuestion> outval=ReadString(File.ReadAllText(file));
 
        int startCounter = 0;
        foreach (QuestionnaireQuestion q in outval)

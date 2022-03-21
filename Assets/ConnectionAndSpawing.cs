@@ -770,10 +770,10 @@ public class ConnectionAndSpawing : MonoBehaviour
     {
         if (NetworkManager.Singleton.IsServer)
         {
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
-            {
-                DestroyAllClientObjects(new List<ParticipantObjectSpawnType> {ParticipantObjectSpawnType.CAR});
-            }
+            //if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
+          //  {
+          //      DestroyAllClientObjects(new List<ParticipantObjectSpawnType> {ParticipantObjectSpawnType.CAR});
+          //  }
 
             switch (ServerState)
             {
@@ -782,20 +782,25 @@ public class ConnectionAndSpawing : MonoBehaviour
                 case ActionState.LOADINGSCENARIO: break;
                 case ActionState.LOADINGVISUALS: break;
                 case ActionState.READY:
-                    if (Input.GetKeyUp(KeyCode.Return))
+                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
                     {
                         SwitchToDriving();
                         SetStartingGPSDirections();
                     }
-
-                    break;
-                case ActionState.DRIVE:
-                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q))
+                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W))
                     {
                         Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
                         SwitchToPostQN();
                     }
-                    else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Q))
+
+                    break;
+                case ActionState.DRIVE:
+                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W))
+                    {
+                        Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
+                        SwitchToPostQN();
+                    }
+                    else if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q))
                     {
                         SwitchToQN();
                     }
@@ -807,7 +812,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                         SwitchToPostQN();
                     }
 
-                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q))
+                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W))
                     {
                         Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
                         SwitchToPostQN();
