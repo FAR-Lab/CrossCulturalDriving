@@ -397,13 +397,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerPrefab: {fileID: 4178240877513323451, guid: 580bdbbad0ed7714ea9cb545f404aaa3, type: 3}
   CarPrefab: {fileID: 102736, guid: 76bfb64261b6b4eb080dcd0e2fa84572, type: 3}
+  VRUIStartPrefab: {fileID: 0}
   IncludedScenes:
   - m_SceneAsset: {fileID: 102900000, guid: 51d43d9fb4f066f43832b0b5d5fcee97, type: 3}
     m_SceneName: Scenario 1
-  WaitingRoomSceneName: WaitingRoom
+  LastLoadedVisualScene: 
   ServerisRunning: 0
-  ServerState: 0
-  RunAsServer: 1
 --- !u!114 &1399476199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -536,6 +535,30 @@ PrefabInstance:
     - target: {fileID: 8770236260572045540, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770236260829420962, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
+      propertyPath: m_text
+      value: Save config
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770236260829420962, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
+      propertyPath: m_margin.x
+      value: -22.603024
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770236260829420962, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
+      propertyPath: m_margin.z
+      value: -31.994892
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770236261583774060, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StoreConfiguration
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770236261583774061, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
+      propertyPath: m_Color.g
+      value: 0.83764714
+      objectReference: {fileID: 0}
+    - target: {fileID: 8770236261583774061, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9607843
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
