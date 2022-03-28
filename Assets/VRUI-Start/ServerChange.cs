@@ -5,6 +5,7 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 using System;
+using UnityEngine.SceneManagement;
 
 public class ServerChange : MonoBehaviour
 {
@@ -95,10 +96,15 @@ public class ServerChange : MonoBehaviour
         ServerIPTextBox.text = "IP: " + ServerIPString;
     }
 
-    public void StartStudy() {
+    public void StoreConfiguration() {
 
         StoreConf(ParticipantIDString, ServerIPString, LanguageString);
+        Debug.Log("Store configuration file and shut down.");
+        Application.Quit();        
+    }
 
+    private void AutoStartStudy()
+    {
         ServerConnectionStatusTextBox.text = "Trying to establish a connection";
         if (Enum.TryParse<ParticipantOrder>(ParticipantIDString, out ParticipantOrder myParticipant))
         { ConnectionAndSpawing.Singleton.StartAsClient(LanguageString, myParticipant, ServerIPString, 7777, ResponseDelegate);
@@ -110,7 +116,6 @@ public class ServerChange : MonoBehaviour
             Debug.LogError("ServerChange could not find a matching particpant ID");
             ServerConnectionStatusTextBox.text = "No Matching Participant ID Enum";
         }
-
     }
 
     private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response)
@@ -209,6 +214,9 @@ public class ServerChange : MonoBehaviour
                      Debug.LogError("ServerChange could not find a matching language ");
                      break;
              }
+
+             AutoStartStudy();
+             
          }
          else
          {
