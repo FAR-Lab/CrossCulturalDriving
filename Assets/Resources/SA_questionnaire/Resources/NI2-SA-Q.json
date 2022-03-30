@@ -1,962 +1,869 @@
 [
-  {
-    "ID": 1,
-	"Scenario_ID": "NI2-9",
-    "SA_atoms": "Speed",
-    "SA_Level": "Perception",
-	"Awareness_to": "Myself",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "While overtaking the stopped car, what was your speed?",
-      "Hebrew": "בזמן שהתקרבת לצומת, מה הייתה המהירות שלך?"
+    {
+        "ID": 1,
+        "Scenario_ID": "NI2-9",
+        "SA_atoms": "Speed",
+        "SA_Level": "Perception",
+        "Awareness_to": "Myself",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "While overtaking the stopped car, what was your speed?",
+            "Hebrew": "מה הייתה המהירות שלך בזמן שהתקרבת אל הרכב שעצר?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "High speed",
+                    "Hebrew": "מהירה"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "Normal speed",
+                    "Hebrew": "נורמאלית"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "Slow speed",
+                    "Hebrew": "איטית"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "High speed",
-          "Hebrew": "מהירות גבוהה"
-        }
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "Normal speed",
-          "Hebrew": "מהירות נמוכה"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "Slow speed",
-          "Hebrew": "מהירות רגילה"
-        }
-
-      },
-	  {
-        "index": 4,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-
-    ]
-  },
-  {
-    "ID": 1,
-	"Scenario_ID": "NI2-4",
-    "SA_atoms": "Speed",
-    "SA_Level": "Perception",
-	"Awareness_to": "Myself",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "While approaching the stopped car, what was your speed?",
-      "Hebrew": "בזמן שהתקרבת לצומת, מה הייתה המהירות שלך?"
+    {
+        "ID": 1,
+        "Scenario_ID": "NI2-4",
+        "SA_atoms": "Speed",
+        "SA_Level": "Perception",
+        "Awareness_to": "Myself",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "While approaching the stopped car, what was your speed?",
+            "Hebrew": "מה הייתה המהירות שלך בזמן שעקפת את הרכב שעצר?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "High speed",
+                    "Hebrew": "מהירה"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "Normal speed",
+                    "Hebrew": "נורמאלית"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "Slow speed",
+                    "Hebrew": "איטית"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "High speed",
-          "Hebrew": "מהירות גבוהה"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "Normal speed",
-          "Hebrew": "מהירות נמוכה"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "Slow speed",
-          "Hebrew": "מהירות רגילה"
-        }
-
-      },
-	  {
-        "index": 4,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-
-    ]
-  },  
-  {
-    "ID": 2,
-	"Scenario_ID": "NI2-15",
-    "SA_atoms": "Signaling",
-    "SA_Level": "Perception",
-	"Awareness_to": "Other driver",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "Did the other driver use their signaling lights? ",
-      "Hebrew": "בזמן שהתקרבת לצומת, האם הרכב בשני אותת?"
+    {
+        "ID": 2,
+        "Scenario_ID": "NI2-15",
+        "SA_atoms": "Signaling",
+        "SA_Level": "Perception",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "Did the other driver use their signaling lights? ",
+            "Hebrew": "האם הנהג השני אותת?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "Yes",
+                    "Hebrew": "כן"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "No",
+                    "Hebrew": "לא"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "Yes",
-          "Hebrew": "כן"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "No",
-          "Hebrew": "לא"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-
-    ]
-  },  
-  {
-    "ID": 4,
-	"Scenario_ID": "NI2-1",
-    "SA_atoms": "Location",
-    "SA_Level": "Perception",
-	"Awareness_to": "Other driver",
-	"Participant": ["A", "B"],
-    "QuestionText": {
-      "English": "Where was the other driver when you approached the stopped car?",
-      "Hebrew": "בזמן שהתקרבת לצומת, איפה היה הרכב השני?"
+    {
+        "ID": 4,
+        "Scenario_ID": "NI2-1",
+        "SA_atoms": "Location",
+        "SA_Level": "Perception",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "Where was the other driver when you approached the stopped car?",
+            "Hebrew": "היכן היה הנהג השני כאשר התקרבת לרכב שעצר?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "On the opposite lane in front of me",
+                    "Hebrew": "בנתיב הנגדי מולי"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "On the opposite lane behind me",
+                    "Hebrew": "בנתיב הנגדי מאחורי"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "On the opposite lane behind me",
+                    "Hebrew": "בנתיב שלי מלפני"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "In my lane behind me",
+                    "Hebrew": "בנתיב שלי מאחורי"
+                }
+            },
+            {
+                "index": 5,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            },
+            {
+                "index": 6,
+                "AnswerText": {
+                    "English": "I didn't see any other car",
+                    "Hebrew": "לא ראיתי רכב נוסף"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "On the opposite lane",
-          "Hebrew": "בנתיב הנגדי משמאלי"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "Behind me",
-          "Hebrew": "בנתיב האנכי מימני"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "In front of me",
-          "Hebrew": "בנתיב האנכי משמאלי"
-        }
-
-      },
-	  {
-        "index": 4,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      },
-	  {
-        "index": 5,
-        "AnswerText": {
-          "English": "I didn't see any other vehicle",
-          "Hebrew": "לא ראיתי רכב נוסף על הכביש"
-        }
-
-      }
-
-    ]
-  },
-  {
-    "ID": 4,
-	"Scenario_ID": "NI2-2",
-    "SA_atoms": "Location",
-    "SA_Level": "Perception",
-	"Awareness_to": "Environment",
-	"Participant": ["A", "B"],
-    "QuestionText": {
-      "English": "Where was the stopped car located when you approached it?",
-      "Hebrew": "בזמן שהתקרבת לצומת, איפה היה הרכב השני?"
+    {
+        "ID": 4,
+        "Scenario_ID": "NI2-2",
+        "SA_atoms": "Location",
+        "SA_Level": "Perception",
+        "Awareness_to": "Environment",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "Where was the stopped car located when you approached it?",
+            "Hebrew": "בזמן שהתקרבת לצומת, איפה היה הרכב השני?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "On the opposite lane",
+                    "Hebrew": "בנתיב הנגדי"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "In my lane",
+                    "Hebrew": "בנתיב שלי"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "On the opposite lane",
-          "Hebrew": "בנתיב הנגדי משמאלי"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "In my lane",
-          "Hebrew": "בנתיב האנכי מימני"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "In front of me",
-          "Hebrew": "בנתיב האנכי משמאלי"
-        }
-
-      },
-	  {
-        "index": 4,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-      }
-    ]
-  },
-  {
-    "ID": 5,
-	"Scenario_ID": "NI2-22",
-    "SA_atoms": "Location",
-    "SA_Level": "Comprehension",
-	"Awareness_to": "Other driver",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "What did the location of the other vehicle & the stopped car mean?",
-      "Hebrew": "מה ההשלכות למיקום של הרכב השני?"
+    {
+        "ID": 5,
+        "Scenario_ID": "NI2-22",
+        "SA_atoms": "Location",
+        "SA_Level": "Comprehension",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "What did the location of the other vehicle & the stopped car mean?",
+            "Hebrew": "מה הייתה המשמעות של הרכב השני והרכב שעצר?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "My lane was blocked",
+                    "Hebrew": "הנתיב שלי חסום"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "I need to wait for the other vehicle to overtake the stopped car",
+                    "Hebrew": "אני צריך להמתין עד שהנהג השני יעקוף את הרכב שעצר"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "There was no other vehicle",
+                    "Hebrew": "לא היה רכב נוסף"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I am not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "My lane was blocked",
-          "Hebrew": "רכב נוסף מתקרב לצומת"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "I need to wait for the other vehicle to overtake the stopped car",
-          "Hebrew": "רכב נוסף מתקרב לצומת"
-        }
-      },
-      {
-        "index": 3,
-        "AnswerText": {
-          "English": "There was no other vehicle",
-          "Hebrew": "רכב נוסף מתקרב לצומת"
-        }
-
-      },
-      {
-        "index": 4,
-        "AnswerText": {
-          "English": "I am not sure",
-          "Hebrew": "אין רכב נוסף שמתקרב לצומת"
-        }
-
-      }
-    ]
-  },
-  {
-    "ID": 6,
-	"Scenario_ID": "NI2-3",
-    "SA_atoms": "Location",
-    "SA_Level": "Projection",
-	"Awareness_to": "Other driver",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "Given the location of the stopped car, what could have happened next?",
-      "Hebrew": "בהינתן המקום של הרכב השני, מה חשבת שעלול לקרות?"
+    {
+        "ID": 9,
+        "Scenario_ID": "NI2-8",
+        "SA_atoms": "Speed",
+        "SA_Level": "Perception",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "While approaching the stopped car, what was the other driver's speed?",
+            "Hebrew": "מה הייתה המהירות של הנהג השני בזמן שהתקרבת לרכב העוצר?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "High speed",
+                    "Hebrew": "מהירה"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "Normal speed",
+                    "Hebrew": "נורמאלית"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "Slow speed",
+                    "Hebrew": "איטית"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "I would have changed lane",
-          "Hebrew": "הרכב השני יחצה את הצומת"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "I would have changed my speed",
-          "Hebrew": "הרכב השני לא יחצה את הצומת"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "I am not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-    ]
-  },  
-  {
-    "ID": 9,
-	"Scenario_ID": "NI2-8",
-    "SA_atoms": "Speed",
-    "SA_Level": "Perception",
-	"Awareness_to": "Other driver",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "While approaching the stopped car, what was the other driver's speed?",
-      "Hebrew": "בזמן שהתקרבת לצומת, מה היית המהירות של הרכב השני?"
+    {
+        "ID": 9,
+        "Scenario_ID": "NI2-14",
+        "SA_atoms": "Speed",
+        "SA_Level": "Perception",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "B"
+        ],
+        "QuestionText": {
+            "English": "While the other driver overtook the stopped car, what was your speed?",
+            "Hebrew": "מה הייתה המהירות שלך בזמן שהנהג השני עקף את הרכב שעצר?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "High speed",
+                    "Hebrew": "מהירה"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "Normal speed",
+                    "Hebrew": "נורמאלית"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "Slow speed",
+                    "Hebrew": "איטית"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "High speed",
-          "Hebrew": "מהירות גבוהה"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "Normal speed",
-          "Hebrew": "מהירות נמוכה"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "Slow speed",
-          "Hebrew": "מהירות רגילה"
-        }
-
-      },
-	  {
-        "index": 4,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-
-    ]
-  },
-  {
-    "ID": 9,
-	"Scenario_ID": "NI2-14",
-    "SA_atoms": "Speed",
-    "SA_Level": "Perception",
-	"Awareness_to": "Other driver",
-	"Participant": ["B"],
-    "QuestionText": {
-      "English": "While the other driver overtook the stopped car, what was your speed?",
-      "Hebrew": "בזמן שהתקרבת לצומת, מה היית המהירות של הרכב השני?"
+    {
+        "ID": 10,
+        "Scenario_ID": "NI2-21",
+        "SA_atoms": "Speed",
+        "SA_Level": "Comprehension",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "While approaching the stopped car, what did the other driver's speed mean?",
+            "Hebrew": "מה הייתה משמעות המהירות של הנהג השני בזמן שהתקרבת אל הרכב שעצר?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "They were slowing down",
+                    "Hebrew": "הוא האט"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "They were accelerating",
+                    "Hebrew": "הוא האיץ"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "They didn't change their speed",
+                    "Hebrew": "הוא לא שינה את המהירות שלו"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "High speed",
-          "Hebrew": "מהירות גבוהה"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "Normal speed",
-          "Hebrew": "מהירות נמוכה"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "Slow speed",
-          "Hebrew": "מהירות רגילה"
-        }
-
-      },
-	  {
-        "index": 4,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-    ]
-  },  
-  {
-    "ID": 10,
-	"Scenario_ID": "NI2-21",
-    "SA_atoms": "Speed",
-    "SA_Level": "Comprehension",
-	"Awareness_to": "Other driver",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "While approaching the stopped car, what did the other driver's speed mean?",
-      "Hebrew": "בזמן שהתקרבת לצומת, מה היו ההשלכות של מהירות הרכב השני?"
+    {
+        "ID": 11,
+        "Scenario_ID": "NI2-5",
+        "SA_atoms": "Speed",
+        "SA_Level": "Comprehension",
+        "Awareness_to": "Myself",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "While approaching the stopped car, what were you trying to do with your speed?",
+            "Hebrew": "מה שינית במהירות שלך בזמן שהתקרבת לרכב העוצר?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "I was slowing down",
+                    "Hebrew": "האטתי"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "I was accelerating",
+                    "Hebrew": "האצתי"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I didn't changed my speed",
+                    "Hebrew": "לא שיניתי את המהירות שלי"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "They were slowing down",
-          "Hebrew": "הוא האט"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "They were accelerating",
-          "Hebrew": "הוא האיץ"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "They didn't change their speed",
-          "Hebrew": "הוא לא שינה את המהירות שלו"
-        }
-
-      },
-	  {
-        "index": 4,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-
-    ]
-  },  
-  {
-    "ID": 11,
-	"Scenario_ID": "NI2-5",
-    "SA_atoms": "Speed",
-    "SA_Level": "Comprehension",
-	"Awareness_to": "Myself",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "While approaching the stopped car, what were you trying to do with your speed?",
-      "Hebrew": "בזמן שהתקרבת לצומת, מה היו ההשלכות של המהירות בה נסעת?"
+    {
+        "ID": 11,
+        "Scenario_ID": "NI2-10",
+        "SA_atoms": "Speed",
+        "SA_Level": "Comprehension",
+        "Awareness_to": "Myself",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "While overtaking the stopped car, what were you trying to do with your speed?",
+            "Hebrew": "מה שינית במהירות שלך בזמן שעקפת את הרכב שעצר?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "I was slowing down",
+                    "Hebrew": "האטתי"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "I was accelerating",
+                    "Hebrew": "האצתי"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I didn't changed my speed",
+                    "Hebrew": "לא שיניתי את המהירות שלי"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "I was slowing down",
-          "Hebrew": "הוא האט"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "I was accelerating",
-          "Hebrew": "הוא האיץ"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "I didn't changed my speed",
-          "Hebrew": "הוא לא שינה את המהירות שלו"
-        }
-
-      },
-	  {
-        "index": 4,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-
-    ]
-  },
-  {
-    "ID": 11,
-	"Scenario_ID": "NI2-10",
-    "SA_atoms": "Speed",
-    "SA_Level": "Comprehension",
-	"Awareness_to": "Myself",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "While overtaking the stopped car, what were you trying to do with your speed?",
-      "Hebrew": "בזמן שהתקרבת לצומת, מה היו ההשלכות של המהירות בה נסעת?"
+    {
+        "ID": 11,
+        "Scenario_ID": "NI2-15",
+        "SA_atoms": "Speed",
+        "SA_Level": "Comprehension",
+        "Awareness_to": "Myself",
+        "Participant": [
+            "B"
+        ],
+        "QuestionText": {
+            "English": "While the other driver overtook the stopped car, what were you trying to do with your speed?",
+            "Hebrew": "מה שינית במהירות שלך בזמן שהנהג השני עקף את הרכב שעצר?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "I was slowing down",
+                    "Hebrew": "האטתי"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "I was accelerating",
+                    "Hebrew": "האצתי"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I didn't changed my speed",
+                    "Hebrew": "לא שיניתי את המהירות שלי"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "I was slowing down",
-          "Hebrew": "הוא האט"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "I was accelerating",
-          "Hebrew": "הוא האיץ"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "I didn't changed my speed",
-          "Hebrew": "הוא לא שינה את המהירות שלו"
-        }
-
-      },
-	  {
-        "index": 4,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-
-    ]
-  },
-  {
-    "ID": 11,
-	"Scenario_ID": "NI2-15",
-    "SA_atoms": "Speed",
-    "SA_Level": "Comprehension",
-	"Awareness_to": "Myself",
-	"Participant": ["B"],
-    "QuestionText": {
-      "English": "While the other driver overtook the stopped car, what were you trying to do with your speed?",
-      "Hebrew": "בזמן שהתקרבת לצומת, מה היו ההשלכות של המהירות בה נסעת?"
+    {
+        "ID": 15,
+        "Scenario_ID": "NI2-18",
+        "SA_atoms": "Speed",
+        "SA_Level": "Projection",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A"
+        ],
+        "QuestionText": {
+            "English": "Based on the other drivers's speed while overtaking the stopped car, what could have happened next?",
+            "Hebrew": "בהתחשב במהירות של הנהג השני בזמן שעקף את הרכב שעצר, מה היה עשוי לקרות?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "The other driver would have tailed me",
+                    "Hebrew": "הנהג השני היה נצמד אליי"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "There was no other driver",
+                    "Hebrew": "לא היה נהג נוסף"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "I was slowing down",
-          "Hebrew": "הוא האט"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "I was accelerating",
-          "Hebrew": "הוא האיץ"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "I didn't changed my speed",
-          "Hebrew": "הוא לא שינה את המהירות שלו"
-        }
-
-      },
-	  {
-        "index": 4,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-
-    ]
-  },
-  {
-    "ID": 12,
-	"Scenario_ID": "NI2-23",
-    "SA_atoms": "Speed",
-    "SA_Level": "Projection",
-	"Awareness_to": "Myself",
-	"Participant": ["B"],
-    "QuestionText": {
-      "English": "Considering your speed, when the second vehicle overtook the stopped car, what could have happened next?",
-      "Hebrew": "בהינתן המהירות שלך, מה חשבת שעשוי לקרות?"
+    {
+        "ID": 16,
+        "Scenario_ID": "NI2-19",
+        "SA_atoms": "Heading",
+        "SA_Level": "Projection",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "Based on the sequence of events, did you feel a collision could have happened?",
+            "Hebrew": "בהתחשב ברצף האירועים, האם חשת שעשויה להיות התנגשות?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "Yes",
+                    "Hebrew": "כן"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "No",
+                    "Hebrew": "לא"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "I would have stopped",
-          "Hebrew": "התכוונתי לעצור"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "I would have slown down and let the other driver finish their overtake",
-          "Hebrew": "התכוונתי להמשיך ישר לתוך הצומת"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "I am not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-      }
-    ]
-  },
-  {
-    "ID": 15,
-	"Scenario_ID": "NI2-18",
-    "SA_atoms": "Speed",
-    "SA_Level": "Projection",
-	"Awareness_to": "Other driver",
-	"Participant": ["A"],
-    "QuestionText": {
-      "English": "Based on the other drivers's speed while overtaking the stopped car, what could have happened next?",
-      "Hebrew": "בהינתן מהירות הרכב השני בזמן שהתקרבת לצומת, מה חשבת שעשוי לקרות?"
+    {
+        "ID": 18,
+        "Scenario_ID": "NI2-6",
+        "SA_atoms": "Signaling",
+        "SA_Level": "Perception",
+        "Awareness_to": "Myself",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "While approaching the stopped car, did you use your signaling lights?",
+            "Hebrew": "בזמן שהתקרבת לרכב העוצר, האם השתמשת באורות האיתות?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "Yes",
+                    "Hebrew": "כן"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "No",
+                    "Hebrew": "לא"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "The other driver would have tailed me",
-          "Hebrew": "הרכב יעצור"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "There was no other driver",
-          "Hebrew": "הרכב ימשיך באותה מהירות ויכנס לצומת"
-        }
-
-      },	  
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-      }
-
-    ]
-  },
-  {
-    "ID": 16,
-	"Scenario_ID": "NI2-19",
-    "SA_atoms": "Heading",
-    "SA_Level": "Projection",
-	"Awareness_to": "Other driver",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "Based on the sequence of events, did you feel a collision could have happened?",
-      "Hebrew": "בהינתן רצף האירועים, האם חשבת שעשויה לקרות התנגשות?"
+    {
+        "ID": 18,
+        "Scenario_ID": "NI2-13",
+        "SA_atoms": "Signaling",
+        "SA_Level": "Perception",
+        "Awareness_to": "Myself",
+        "Participant": [
+            "B"
+        ],
+        "QuestionText": {
+            "English": "While overtaking the stopped car, did you use your signaling lights?",
+            "Hebrew": "בזמן שהעקפת את הרכב שעצר, האם השתמשת באורות האיתות?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "Yes",
+                    "Hebrew": "כן"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "No",
+                    "Hebrew": "לא"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "Yes",
-          "Hebrew": "כן"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "No",
-          "Hebrew": "לא"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-
-    ]
-  },  
-  {
-    "ID": 18,
-	"Scenario_ID": "NI2-6",
-    "SA_atoms": "Signaling",
-    "SA_Level": "Perception",
-	"Awareness_to": "Myself",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "While approaching the stopped car, did you use your signaling lights?",
-      "Hebrew": "האם השתמשת באיתות בזמן שהתקרבת לצומת?"
+    {
+        "ID": 21,
+        "Scenario_ID": "NI2-16",
+        "SA_atoms": "Speed",
+        "SA_Level": "Comprehension",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A"
+        ],
+        "QuestionText": {
+            "English": "What did the other driver mean when they signaled?",
+            "Hebrew": "למה התכוון הנהג השני כאשר הוא אותת?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "They didn't use any signaling",
+                    "Hebrew": "הוא לא אותת"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "They wanted to signal their intention to change heading",
+                    "Hebrew": "הוא רצה לסמן את הכוונה שלו לשנות כיוון"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "There was no other driver",
+                    "Hebrew": "לא היה נהג נוסף"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "Yes",
-          "Hebrew": "כן"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "No",
-          "Hebrew": "לא"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-
-    ]
-  },
-  {
-    "ID": 18,
-	"Scenario_ID": "NI2-13",
-    "SA_atoms": "Signaling",
-    "SA_Level": "Perception",
-	"Awareness_to": "Myself",
-	"Participant": ["B"],
-    "QuestionText": {
-      "English": "While overtaking the stopped car, did you use your signaling lights?",
-      "Hebrew": "האם השתמשת באיתות בזמן שהתקרבת לצומת?"
+    {
+        "ID": 22,
+        "Scenario_ID": "NI2-7",
+        "SA_atoms": "Signaling",
+        "SA_Level": "Comprehension",
+        "Awareness_to": "Myself",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "What did you mean when you signaled?",
+            "Hebrew": "למה התכוונתה כשהשתמשת האורות האיתות?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "I didn't use any signaling",
+                    "Hebrew": "לא השתמשתי באורות האיתות"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "I wanted to change lanes",
+                    "Hebrew": "רציתי לשנות נתיבים"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "Yes",
-          "Hebrew": "כן"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "No",
-          "Hebrew": "לא"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-
-    ]
-  },
-  {
-    "ID": 21,
-	"Scenario_ID": "NI2-16",
-    "SA_atoms": "Speed",
-    "SA_Level": "Comprehension",
-	"Awareness_to": "Other driver",
-	"Participant": ["A"],
-    "QuestionText": {
-      "English": "What did the other driver mean when they signaled?",
-      "Hebrew": "בזמן שהתקרבת לצומת, לאיזה כיוון הרכב שלך פנה?"
+    {
+        "ID": 23,
+        "Scenario_ID": "NI2-12",
+        "SA_atoms": "Lane",
+        "SA_Level": "Perception",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "Where was the other vehicle when you overtook the stopped car?",
+            "Hebrew": "היכן היה הרכב השני כאשר עקפת את הרכב שעצר?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "On the opposite lane in front of me",
+                    "Hebrew": "בנתיב הנגדי מולי"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "On the opposite lane behind me",
+                    "Hebrew": "בנתיב הנגדי מאחורי"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "On the opposite lane behind me",
+                    "Hebrew": "בנתיב שלי מלפני"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "In my lane behind me",
+                    "Hebrew": "בנתיב שלי מאחורי"
+                }
+            },
+            {
+                "index": 5,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            },
+            {
+                "index": 6,
+                "AnswerText": {
+                    "English": "I didn't see any other car",
+                    "Hebrew": "לא ראיתי רכב נוסף"
+                }
+            }
+        ]
     },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "They didn't use any signaling",
-          "Hebrew": "לימין"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "They wanted to signal their intention to change heading",
-          "Hebrew": "לשמאל"
-        }
-
-      },
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "There was no other driver",
-          "Hebrew": "ישר"
-        }
-
-      },
-	  {
-        "index": 4,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-      }
-    ]
-  },
-  {
-    "ID": 22,
-	"Scenario_ID": "NI2-7",
-    "SA_atoms": "Signaling",
-    "SA_Level": "Comprehension",
-	"Awareness_to": "Myself",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "What did you mean when you signaled?",
-      "Hebrew": "מי הראשון שנכנס לצומת?"
-    },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "I didn't use any signaling",
-          "Hebrew": "אני"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "I wanted to change lanes",
-          "Hebrew": "הרכב השני"
-        }
-
-      },	  
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-
-      }
-
-    ]
-  },
-  {
-    "ID": 23,
-	"Scenario_ID": "NI2-12",
-    "SA_atoms": "Lane",
-    "SA_Level": "Perception",
-	"Awareness_to": "Other driver",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "Where was the other vehicle when you overtook the stopped car?",
-      "Hebrew": "מי הראשון שנכנס לצומת?"
-    },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "On the opposite lane",
-          "Hebrew": "אני"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "Behind me",
-          "Hebrew": "הרכב השני"
-        }
-
-      },	  
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "In front of me",
-          "Hebrew": "אני לא בטוח"
-        }
-      },
-        {
-        "index": 4,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-      },
-        {
-        "index": 5,
-        "AnswerText": {
-          "English": "I didn't see any other vehicle",
-          "Hebrew": "אני לא בטוח"
-        }
-        }
-    ]
-  },
-  {
-    "ID": 24,
-	"Scenario_ID": "NI2-11",
-    "SA_atoms": "Lane",
-    "SA_Level": "Perception",
-	"Awareness_to": "Myself",
-	"Participant": ["A","B"],
-    "QuestionText": {
-      "English": "Which lane were you in when you overtook the stopped car?",
-      "Hebrew": "מי הראשון שנכנס לצומת?"
-    },
-    "Answers": [
-      {
-        "index": 1,
-        "AnswerText": {
-          "English": "I never left my lane",
-          "Hebrew": "אני"
-        }
-
-      },
-      {
-        "index": 2,
-        "AnswerText": {
-          "English": "On the opposite lane",
-          "Hebrew": "הרכב השני"
-        }
-
-      },	  
-	  {
-        "index": 3,
-        "AnswerText": {
-          "English": "I'm not sure",
-          "Hebrew": "אני לא בטוח"
-        }
-      }
-    ]
-  }
+    {
+        "ID": 24,
+        "Scenario_ID": "NI2-11",
+        "SA_atoms": "Lane",
+        "SA_Level": "Perception",
+        "Awareness_to": "Myself",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "Which lane were you in when you overtook the stopped car?",
+            "Hebrew": "באיזה נתיב היית  כאשר עקפת את הרכב שעצר?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "I never left my lane",
+                    "Hebrew": "מעולם לא עזבתי את הנתיב שלי"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "On the opposite lane",
+                    "Hebrew": "בנתיב הנגדי"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
+    }
 ]
