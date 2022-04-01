@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using Rerun;
+using UltimateReplay;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Netcode;
+using UnityEngine.SocialPlatforms;
 
 
-
-
-public class TrafficLightController : MonoBehaviour
+public class TrafficLightController : ReplayBehaviour
 {
     enum materialID : int
     {
@@ -36,14 +36,45 @@ public class TrafficLightController : MonoBehaviour
     public TrafficLightSupervisor.trafficLightStatus StartinTrafficlightStatus;
     public ParticipantOrder participantAssociation;
 
+
+    [ReplayVar(false)] public int LightRecordedState;
+
+
+    private int _replayLastVal = -1;
+
+
     void Start()
     {
         LightRenderer = LightSurfaces.GetComponent<Renderer>();
         InteralGraphicsUpdate(StartinTrafficlightStatus);
+        _replayLastVal = (int) StartinTrafficlightStatus;
+    }
+
+    private void Update()
+    {
+        if (NetworkManager.Singleton.IsClient) return;
+
+
+        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
+        {
+           
+            if (_replayLastVal != LightRecordedState)
+            {
+                Debug.Log("PlayingBack Variable");
+                _replayLastVal = LightRecordedState;
+
+                InteralGraphicsUpdate((TrafficLightSupervisor.trafficLightStatus) LightRecordedState);
+            }
+        }
     }
 
     private void InteralGraphicsUpdate(TrafficLightSupervisor.trafficLightStatus inval)
     {
+        if (ConnectionAndSpawing.Singleton.ServerState != ActionState.RERUN)
+        {
+            LightRecordedState = (int) inval;
+        }
+
         switch (inval)
         {
             case TrafficLightSupervisor.trafficLightStatus.IDLE:
@@ -65,9 +96,7 @@ public class TrafficLightController : MonoBehaviour
     public void UpdatedTrafficlight(TrafficLightSupervisor.trafficLightStatus newval)
 
     {
-       
-            InteralGraphicsUpdate(newval);
-          
+        InteralGraphicsUpdate(newval);
     }
 
 

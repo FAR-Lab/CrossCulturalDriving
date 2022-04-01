@@ -8,7 +8,7 @@ public class TrafficLightSupervisor : MonoBehaviour
 {
     private TrafficLightController[] m_TrafficLightControllers;
 
-    public enum trafficLightStatus :byte
+    public enum trafficLightStatus :int
     {
         IDLE,
         RED,
