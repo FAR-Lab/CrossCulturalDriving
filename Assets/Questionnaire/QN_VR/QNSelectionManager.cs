@@ -5,6 +5,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -172,14 +173,14 @@ public class QNSelectionManager : MonoBehaviour
 
                 AnswerFields.Clear();
 
-                QustionField.text = currentActiveQustion.QuestionText;
+                QustionField.text = SetText(currentActiveQustion.QuestionText);
                 int i = 0;
                 
                 foreach (int a in currentActiveQustion.Answers.Keys)
                 {
                     rayCastButton rcb = Instantiate(ButtonPrefab, this.transform).transform
                         .GetComponentInChildren<rayCastButton>();
-                    rcb.initButton(currentActiveQustion.Answers[a], a);
+                    rcb.initButton(SetText(currentActiveQustion.Answers[a]), a);
                     RectTransform rtrans = rcb.transform.parent.GetComponentInParent<RectTransform>();
                     AnswerFields.Add(rtrans);
                     Vector2 tempVector = new Vector2(rtrans.anchoredPosition.x,
@@ -281,7 +282,10 @@ public class QNSelectionManager : MonoBehaviour
         }
     }
 
-  
+    private string SetText(string text)
+    {
+        return m_LanguageSelect.Contains("Hebrew") ? StringExtension.Reverse(text) : text;
+    }
 }
 
 
