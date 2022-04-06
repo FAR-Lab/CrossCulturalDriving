@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UltimateReplay;
 using UnityEngine;
 
 
@@ -15,14 +16,19 @@ public class TrafficLightSupervisor : MonoBehaviour
         GREEN
     };
 
+    [ReplayVar(false)] private int test = 0;    
     // Start is called before the first frame update
     void Start()
     {
-    }
+        test++;
 
+    }
+   
 
     private void SetTrafficLights(trafficLightStatus status)
     {
+      
+
         foreach (ParticipantOrder po in FElem.AllPossPart)
         {
             ConnectionAndSpawing.Singleton.GetMainClientObject(po)?.GetComponent<ParticipantInputCapture>()

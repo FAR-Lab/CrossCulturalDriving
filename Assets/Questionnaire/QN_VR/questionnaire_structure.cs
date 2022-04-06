@@ -7,6 +7,8 @@ using Newtonsoft.Json.Serialization;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Linq;
+using System.Collections.Generic;
 
 // TODO this would be great for the language selection;
 //https://stackoverflow.com/a/22912864
@@ -42,10 +44,43 @@ class StringExtension
 {
     public static string Reverse(string s)
     {
-        char[] charArray = s.ToCharArray();
-        Array.Reverse(charArray);
-        return new string(charArray);
+        if (s.All(char.IsDigit))
+        {
+            return s;
+        }
+        else
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
     }
+
+    public static string RTLText(string sin, int numberOfAlphabetsInSingleLine = 50)
+    {
+        string outstring = "";
+        string linestring = "";
+        foreach (string s in sin.Split(' '))
+        {
+            if (s.Length + linestring.Length > numberOfAlphabetsInSingleLine)
+            {
+                outstring = outstring + '\n'+'\r' + linestring;
+                linestring = "";
+            }
+
+            linestring = Reverse(s) + ' ' + linestring; //determin if a number is involved??
+        }
+
+        if (linestring.Length > 0)
+        {
+            outstring = outstring + '\n'+'\r' + linestring;
+        }
+
+        
+        return outstring.Trim();
+    }
+
+    //https://answers.unity.com/questions/1034235/how-to-write-text-from-left-to-right.html
 }
 
 
@@ -257,7 +292,7 @@ public struct NetworkedQuestionnaireQuestion : INetworkSerializable
             Answers = new Dictionary<int, string>();
             for (int n = 0; n < length; ++n)
             {
-                Answers.Add(qIDs[n],answers[n]);
+                Answers.Add(qIDs[n], answers[n]);
             }
         }
     }
