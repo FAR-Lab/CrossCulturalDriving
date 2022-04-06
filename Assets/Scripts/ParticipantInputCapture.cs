@@ -98,7 +98,7 @@ public class ParticipantInputCapture : NetworkBehaviour
     }
 
 
-[ClientRpc]
+    [ClientRpc]
     public void UpdateTrafficLightsClientRPC(TrafficLightSupervisor.trafficLightStatus msg)
     {
         if (!IsLocalPlayer || IsServer) return;

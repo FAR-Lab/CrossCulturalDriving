@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Rerun;
+using UltimateReplay;
 using UnityEngine;
 using Unity.Collections;
 using Unity.Netcode;
@@ -498,10 +499,14 @@ public class ConnectionAndSpawing : MonoBehaviour
         m_QNDataStorageServer = GetComponent<QNDataStorageServer>();
         m_QNDataStorageServer.enabled = true;
 
+        
         GetComponent<TrafficLightSupervisor>().enabled = true;
         SetupServerFunctionality();
         m_ReRunManager.SetRecordingFolder(pairName);
         Debug.Log("Starting Server for session: " + pairName);
+        
+        
+       
     }
 
     private QNDataStorageServer m_QNDataStorageServer;
@@ -617,8 +622,12 @@ public class ConnectionAndSpawing : MonoBehaviour
         GetComponent<OVRManager>().enabled = false;
         FindObjectOfType<RerunGUI>().enabled = true;
         FindObjectOfType<RerunInputManager>().enabled = true;
-
+        
         SceneManager.sceneLoaded += VisualsceneLoadReRun;
+        
+        
+        GetComponent<TrafficLightSupervisor>().enabled = true;
+        
     }
 
     private void VisualsceneLoadReRun(Scene arg0, LoadSceneMode arg1)
@@ -688,12 +697,17 @@ public class ConnectionAndSpawing : MonoBehaviour
         ServerState = ActionState.READY;
     }
 
+    
+   
 
     private void SwitchToDriving()
     {
         ServerState = ActionState.DRIVE;
+        
         m_ReRunManager.BeginRecording(LastLoadedScene);
         m_QNDataStorageServer.StartScenario(LastLoadedScene, m_ReRunManager.GetRecordingFolder());
+        
+       
     }
 
 
@@ -901,6 +915,14 @@ public class ConnectionAndSpawing : MonoBehaviour
                                                         ParticipantOrder + " " +
                                                         NetworkManager.Singleton.IsConnectedClient);
                 }
+            }
+            if (ServerState == ActionState.DRIVE || ServerState == ActionState.READY||ServerState == ActionState.QUESTIONS||ServerState == ActionState.POSTQUESTIONS)
+            {
+                GUIStyle style = new GUIStyle();
+                style.fontSize = 25;
+                
+                    GUI.Label(new Rect(10, Screen.height-100, 150, 100), "Current scene: " +LastLoadedScene,style);
+               
             }
         }
     }

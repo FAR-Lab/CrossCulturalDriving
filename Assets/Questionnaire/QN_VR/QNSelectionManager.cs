@@ -284,7 +284,7 @@ public class QNSelectionManager : MonoBehaviour
 
     private string SetText(string text)
     {
-        return m_LanguageSelect.Contains("Hebrew") ? StringExtension.Reverse(text) : text;
+        return m_LanguageSelect.Contains("Hebrew") ? StringExtension.RTLText(text) : text;
     }
 }
 

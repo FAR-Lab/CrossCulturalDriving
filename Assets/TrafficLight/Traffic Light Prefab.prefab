@@ -92,6 +92,8 @@ GameObject:
   - component: {fileID: 1130163460550090250}
   - component: {fileID: 5674130361117542876}
   - component: {fileID: 473467233798975877}
+  - component: {fileID: -2950875461965767323}
+  - component: {fileID: -1893557420965346708}
   m_Layer: 0
   m_Name: Traffic Light Prefab
   m_TagString: TrafficLight
@@ -162,6 +164,46 @@ MonoBehaviour:
   LightSurfaces: {fileID: 6587346377239034837}
   StartinTrafficlightStatus: 1
   participantAssociation: 97
+--- !u!114 &-2950875461965767323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6568031579991734297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 33456
+  prefabIdentity:
+    id: 49194
+  observedComponents:
+  - {fileID: -1893557420965346708}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
+--- !u!114 &-1893557420965346708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6568031579991734297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  replayIdentity:
+    id: 55116
+  replayObject:
+    reference: {fileID: -2950875461965767323}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &8819548197487461144
 GameObject:
   m_ObjectHideFlags: 0
