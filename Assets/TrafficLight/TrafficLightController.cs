@@ -37,42 +37,50 @@ public class TrafficLightController : ReplayBehaviour
     public ParticipantOrder participantAssociation;
 
 
-    [ReplayVar(false)] public int LightRecordedState;
-
-
-    private int _replayLastVal = -1;
-
-
     void Start()
     {
         LightRenderer = LightSurfaces.GetComponent<Renderer>();
         InteralGraphicsUpdate(StartinTrafficlightStatus);
-        _replayLastVal = (int) StartinTrafficlightStatus;
-    }
+       
 
+
+    }
+   
+  
     private void Update()
     {
-        if (NetworkManager.Singleton.IsClient) return;
-
-
-        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
+    }
+    
+    public override void OnReplayEvent(ushort eventID, ReplayState
+        eventData)
+    {
+        Debug.Log("PlayingBack Event!!");
+        switch (eventID)
         {
-           
-            if (_replayLastVal != LightRecordedState)
+            case 1:
             {
-                Debug.Log("PlayingBack Variable");
-                _replayLastVal = LightRecordedState;
-
-                InteralGraphicsUpdate((TrafficLightSupervisor.trafficLightStatus) LightRecordedState);
+                
+                InteralGraphicsUpdate((TrafficLightSupervisor.trafficLightStatus) eventData.ReadByte());
+                break;
             }
         }
     }
 
+
     private void InteralGraphicsUpdate(TrafficLightSupervisor.trafficLightStatus inval)
     {
-        if (ConnectionAndSpawing.Singleton.ServerState != ActionState.RERUN)
+        if (IsRecording)
         {
-            LightRecordedState = (int) inval;
+            Debug.Log("Recorded event!");
+            ReplayState state = ReplayState.pool.GetReusable();
+            state.Write((byte) inval);
+            RecordEvent(1, state);
+        }
+
+       
+        if (IsReplaying)
+        {
+            Debug.Log(inval);
         }
 
         switch (inval)

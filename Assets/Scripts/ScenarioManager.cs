@@ -89,7 +89,7 @@ public class ScenarioManager : MonoBehaviour {
         Transform MyCar = MyLocalClient.GetComponent<ParticipantInputCapture>().GetMyCar();
        
         qnmanager.gameObject.SetActive(true);
-        qnmanager.setRelativePosition(MyCar, 1.5f, 4.5f);
+        qnmanager.setRelativePosition(MyCar, 2f, 4.25f);
         if (QuestionairToAsk !=null) {
             Debug.Log("about to setup QN");
             qnmanager.startAskingTheQuestionairs(MyLocalClient, conditionName, ConnectionAndSpawing.Singleton.lang);
