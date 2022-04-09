@@ -198,7 +198,7 @@
         ],
         "QuestionText": {
             "English": "Where was the stopped car located when you approached it?",
-            "Hebrew": "בזמן שהתקרבת לצומת, איפה היה הרכב השני?"
+            "Hebrew": "היכן היה ממוקם הרכב שעצר כאשר התקרבת אליו?"
         },
         "Answers": [
             {
@@ -281,7 +281,7 @@
         ],
         "QuestionText": {
             "English": "While approaching the stopped car, what was the other driver's speed?",
-            "Hebrew": "מה הייתה המהירות של הנהג השני בזמן שהתקרבת לרכב העוצר?"
+            "Hebrew": "מה הייתה המהירות של הנהג השני בזמן שהתקרבת לרכב שעצר?"
         },
         "Answers": [
             {
@@ -548,7 +548,7 @@
         ],
         "QuestionText": {
             "English": "Based on the other drivers's speed while overtaking the stopped car, what could have happened next?",
-            "Hebrew": "בהתחשב במהירות של הנהג השני בזמן שעקף את הרכב שעצר, מה היה עשוי לקרות?"
+            "Hebrew": "בהתחשב במהירות של הנהג השני בזמן שעקפת את הרכב שעצר, מה היה עשוי לקרות?"
         },
         "Answers": [
             {
@@ -661,7 +661,7 @@
         ],
         "QuestionText": {
             "English": "While overtaking the stopped car, did you use your signaling lights?",
-            "Hebrew": "בזמן שהעקפת את הרכב שעצר, האם השתמשת באורות האיתות?"
+            "Hebrew": "בזמן שעקפת את הרכב שעצר, האם השתמשת באורות האיתות?"
         },
         "Answers": [
             {
@@ -690,11 +690,12 @@
     {
         "ID": 21,
         "Scenario_ID": "NI2-16",
-        "SA_atoms": "Speed",
+        "SA_atoms": "Signaling",
         "SA_Level": "Comprehension",
         "Awareness_to": "Other driver",
         "Participant": [
-            "A"
+            "A",
+            "B"
         ],
         "QuestionText": {
             "English": "What did the other driver mean when they signaled?",
