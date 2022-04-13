@@ -7,6 +7,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1269808430263219646, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a48f0577efcfb5240846662715c8cb8f, type: 2}
+    - target: {fileID: 1478983563353132455, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ac54d3edd33ca0644a3d6870d026728a, type: 2}
+    - target: {fileID: 2635296531358158659, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0be1f02d5f2bff943bcb9c4563e35c11, type: 2}
+    - target: {fileID: 3776002538558385202, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fa6f208ecdbfda940a35f85a5600e606, type: 2}
     - target: {fileID: 4468049383334380044, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.018
@@ -337,7 +353,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4471618475864336874, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
       propertyPath: m_Name
-      value: RerunOVRCameraRig (1) Variant
+      value: RerunOVRCameraRig Simpsons
       objectReference: {fileID: 0}
     - target: {fileID: 4471618475864336876, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
       propertyPath: m_RootOrder
@@ -487,6 +503,10 @@ PrefabInstance:
       propertyPath: _pointerPoseRoot
       value: 
       objectReference: {fileID: 4178240877513323453}
+    - target: {fileID: 4605390760325553897, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fa6f208ecdbfda940a35f85a5600e606, type: 2}
     - target: {fileID: 4842724449025540056, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -503,6 +523,10 @@ PrefabInstance:
       propertyPath: _pointerPoseRoot
       value: 
       objectReference: {fileID: 4178240877513323453}
+    - target: {fileID: 7651566455482715862, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fa6f208ecdbfda940a35f85a5600e606, type: 2}
     - target: {fileID: 7664942497120668404, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -864,33 +888,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4471618474683254233, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
   m_PrefabInstance: {fileID: 572650666192083537}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3759113537250930120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4178240876274048904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54c9647dc784a46bca664910f182491e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 0
-  SyncScaleY: 0
-  SyncScaleZ: 0
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.001
-  ScaleThreshold: 0.01
-  InLocalSpace: 1
-  Interpolate: 1
-  CanCommitToTransform: 0
 --- !u!114 &1460402939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -997,3 +994,30 @@ MonoBehaviour:
   HandModelL: {fileID: 0}
   HandModelR: {fileID: 0}
   steeringWheelCenter: {fileID: 0}
+--- !u!114 &3759113537250930120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4178240876274048904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54c9647dc784a46bca664910f182491e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.001
+  ScaleThreshold: 0.01
+  InLocalSpace: 1
+  Interpolate: 1
+  CanCommitToTransform: 0
