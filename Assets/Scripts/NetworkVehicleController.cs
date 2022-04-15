@@ -439,6 +439,12 @@ public class NetworkVehicleController : NetworkBehaviour
     {
         return "Left" + LeftIsActuallyOn.ToString() + farlab_logger.supSep + "Right" + RightIsActuallyOn.ToString();
     }
+    public void GetIndicatorState(out bool Left, out bool right)
+    {
+        Left = LeftIsActuallyOn;
+        right = RightIsActuallyOn;
+        
+    }
     void UpdateIndicator()
     {
         if (indicaterStage == 1)
