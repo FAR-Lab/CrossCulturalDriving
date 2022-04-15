@@ -154,6 +154,7 @@ namespace UltimateReplay.Storage
             }
             else if(fileFormat == ReplayFileFormat.Json)
             {
+                 
 #if ULTIMATEREPLAY_JSON
                 target = new ReplayFileJsonTarget(filePath, ReplayStreamTarget.AccessMode.ReadWrite, chunkSize);
 #endif

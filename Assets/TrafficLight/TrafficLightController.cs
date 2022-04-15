@@ -11,7 +11,7 @@ using Unity.Netcode;
 using UnityEngine.SocialPlatforms;
 
 
-public class TrafficLightController : ReplayBehaviour
+public class TrafficLightController : MonoBehaviour
 {
     enum materialID : int
     {
@@ -51,7 +51,7 @@ public class TrafficLightController : ReplayBehaviour
     {
     }
     
-    public override void OnReplayEvent(ushort eventID, ReplayState
+ /*   public override void OnReplayEvent(ushort eventID, ReplayState
         eventData)
     {
         Debug.Log("PlayingBack Event!!");
@@ -66,9 +66,10 @@ public class TrafficLightController : ReplayBehaviour
         }
     }
 
-
+*/
     private void InteralGraphicsUpdate(TrafficLightSupervisor.trafficLightStatus inval)
     {
+        /*
         if (IsRecording)
         {
             Debug.Log("Recorded event!");
@@ -82,7 +83,7 @@ public class TrafficLightController : ReplayBehaviour
         {
             Debug.Log(inval);
         }
-
+*/
         switch (inval)
         {
             case TrafficLightSupervisor.trafficLightStatus.IDLE:

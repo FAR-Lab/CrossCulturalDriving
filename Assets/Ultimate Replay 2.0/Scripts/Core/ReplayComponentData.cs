@@ -1,5 +1,6 @@
 ﻿using System;
 using UltimateReplay.Serializers;
+using UnityEngine;
 
 namespace UltimateReplay.Core
 {
@@ -11,10 +12,13 @@ namespace UltimateReplay.Core
         // Private
         [ReplayTextSerialize("Behaviour Identity")]
         private ReplayIdentity behaviourIdentity;
+
         [ReplayTextSerialize("Component Serialize Type String")]
         private string componentSerializerTypeString;
+
         [ReplayTextSerialize("Component Serializer ID")]
         private int componentSerializerID;
+
         private ReplayState componentStateData;
 
         // Properties
@@ -49,7 +53,8 @@ namespace UltimateReplay.Core
         /// <param name="behaviourIdentity">The identity of the behaviour component</param>
         /// <param name="componentSerializerType">The type of the serializer</param>
         /// <param name="componentStateData">The data assocaited with the component</param>
-        public ReplayComponentData(ReplayIdentity behaviourIdentity, Type componentSerializerType, ReplayState componentStateData)
+        public ReplayComponentData(ReplayIdentity behaviourIdentity, Type componentSerializerType,
+            ReplayState componentStateData)
         {
             this.behaviourIdentity = behaviourIdentity;
             this.componentSerializerTypeString = componentSerializerType.AssemblyQualifiedName;
@@ -63,14 +68,15 @@ namespace UltimateReplay.Core
         /// <param name="behaviourIdentity">The identity of the behaviour component</param>
         /// <param name="componentSerializerID">The id of the component serializer</param>
         /// <param name="componentStateData">The data associated with the component</param>
-        public ReplayComponentData(ReplayIdentity behaviourIdentity, int componentSerializerID, ReplayState componentStateData)
+        public ReplayComponentData(ReplayIdentity behaviourIdentity, int componentSerializerID,
+            ReplayState componentStateData)
         {
             this.behaviourIdentity = behaviourIdentity;
             this.componentSerializerTypeString = null;
             this.componentSerializerID = componentSerializerID;
             this.componentStateData = componentStateData;
         }
-        
+
         // Methods
         /// <summary>
         /// Release the component data.
@@ -95,7 +101,7 @@ namespace UltimateReplay.Core
 
             if (componentSerializerTypeString == null)
             {
-                state.Write((byte)componentSerializerID);
+                state.Write((byte) componentSerializerID);
             }
             else
             {
@@ -142,7 +148,7 @@ namespace UltimateReplay.Core
         public Type ResolveSerializerType()
         {
             // Check for valid serializer id
-            if(componentSerializerID != -1)
+            if (componentSerializerID != -1)
             {
                 // Get the type from the serializer id
                 return ReplaySerializers.GetSerializerTypeFromID(componentSerializerID);
@@ -172,11 +178,18 @@ namespace UltimateReplay.Core
 
             // Check for found
             if (deserializerType == null)
+            {
+                Debug.Log("Type was null");
+
                 return false;
+            }
 
             // Check for matching types
             if (deserializerType != componentSerializer.GetType())
+            {
+                Debug.Log(deserializerType.ToString() + "Type missmatch"+ componentSerializer.GetType().ToString());
                 return false;
+            }
 
             // Prepare state and deserialize
             componentStateData.PrepareForRead();

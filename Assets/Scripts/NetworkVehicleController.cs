@@ -435,7 +435,10 @@ public class NetworkVehicleController : NetworkBehaviour
         }
     }
 
-
+    public string GetIndicatorString()
+    {
+        return "Left" + LeftIsActuallyOn.ToString() + farlab_logger.supSep + "Right" + RightIsActuallyOn.ToString();
+    }
     void UpdateIndicator()
     {
         if (indicaterStage == 1)
