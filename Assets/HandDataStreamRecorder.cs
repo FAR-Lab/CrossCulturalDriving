@@ -11,11 +11,11 @@ using Unity.Collections;
 using Unity.Mathematics;
 
 
-
 //using  Unity.Netcode.Serialization.Pooled;
 //https://www.youtube.com/watch?v=lBzwUKQ3tbw
 
-public class HandDataStreamRecorder : MonoBehaviour {
+public class HandDataStreamRecorder : MonoBehaviour
+{
     public GameObject RightHandReader_ReRun;
     public GameObject LeftHandReader_ReRun;
 
@@ -23,61 +23,91 @@ public class HandDataStreamRecorder : MonoBehaviour {
     private Dictionary<ulong, Dictionary<OVRPlugin.Hand, HandDataStreamerReader>> HandClinets =
         new Dictionary<ulong, Dictionary<OVRPlugin.Hand, HandDataStreamerReader>>();
 
-    
+
     public static HandDataStreamRecorder Singleton { get; private set; }
-    private void Awake() {
-        
-        if (Singleton != null && Singleton != this) {
+
+    private void Awake()
+    {
+        if (Singleton != null && Singleton != this)
+        {
             Destroy(this);
             return;
         }
 
         Singleton = this;
         DontDestroyOnLoad(gameObject);
-
     }
 
-    void Start() {
-       // Instantiate(RightHandReader_ReRun, transform)
-       //     .GetComponent<HandDataStreamerReader>();
-        
+    void Start()
+    {
+        // Instantiate(RightHandReader_ReRun, transform)
+        //     .GetComponent<HandDataStreamerReader>();
     }
 
-    
-
-    public void StoreHandData(ulong senderClientId, NetworkSkeletonPoseData newRemoteHandData) {
-        
-        
-        if (HandClinets.ContainsKey(senderClientId)) {
-            HandClinets[senderClientId][newRemoteHandData.HandType].GetNewData(newRemoteHandData);
-         //   Debug.Log("Updated hand data for "+senderClientId);
+    public string GetLatestState(ParticipantOrder po,OVRPlugin.Hand h )
+    {
+        if (ConnectionAndSpawing.Singleton.GetClientIdParticipantOrder(po, out ulong clientID))
+        {
+            if (HandClinets.ContainsKey(clientID))
+            {
+                if (HandClinets[clientID].ContainsKey(h))
+                {
+                    return HandClinets[clientID][h].GetLatestHandDataString();
+                }
+            }
         }
-        else {
+
+        return " ";
+    }
+
+    public void StoreHandData(ulong senderClientId, NetworkSkeletonPoseData newRemoteHandData)
+    {
+        if (HandClinets.ContainsKey(senderClientId))
+        {
+            HandClinets[senderClientId][newRemoteHandData.HandType].GetNewData(newRemoteHandData);
+            //   Debug.Log("Updated hand data for "+senderClientId);
+        }
+        else
+        {
             HandDataStreamerReader leftHand = null;
             HandDataStreamerReader rightHand = null;
-          //  Debug.Log("Creating new hands for  "+senderClientId);
-            if (NetworkManager.Singleton.IsServer) {
+            //  Debug.Log("Creating new hands for  "+senderClientId);
+            if (NetworkManager.Singleton.IsServer)
+            {
                 var _tr = ConnectionAndSpawing.Singleton.GetMainClientObject(senderClientId);
-                if (_tr == null) {
-                    Debug.LogWarning("Wups, we where alittle early with try to display hand data. Lets try that again at the next data pakage.");
+                if (_tr == null)
+                {
+                    Debug.LogWarning(
+                        "Wups, we where alittle early with try to display hand data. Lets try that again at the next data pakage.");
                     return;
                 }
+
                 leftHand = Instantiate(LeftHandReader_ReRun, _tr)
                     .GetComponent<HandDataStreamerReader>();
+
                 rightHand = Instantiate(RightHandReader_ReRun, _tr)
                     .GetComponent<HandDataStreamerReader>();
-            }
-            
 
-            if (leftHand != null && rightHand != null) {
-                HandClinets.Add(senderClientId, new Dictionary<OVRPlugin.Hand, HandDataStreamerReader> {
+                leftHand.gameObject.AddComponent<ParticipantOrderReplayComponent>()
+                    .SetParticipantOrder(ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(senderClientId));
+
+                rightHand.gameObject.AddComponent<ParticipantOrderReplayComponent>()
+                    .SetParticipantOrder(ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(senderClientId));
+            }
+
+
+            if (leftHand != null && rightHand != null)
+            {
+                HandClinets.Add(senderClientId, new Dictionary<OVRPlugin.Hand, HandDataStreamerReader>
+                    {
                         {OVRPlugin.Hand.HandLeft, leftHand},
                         {OVRPlugin.Hand.HandRight, rightHand}
                     }
                 );
-                Debug.Log("Just added hand for the client:"+senderClientId.ToString());
+                Debug.Log("Just added hand for the client:" + senderClientId.ToString());
             }
-            else {
+            else
+            {
                 Debug.LogWarning(
                     "Something with instantiateing the hands failed. This is not a safe condition. You should stop.");
             }
@@ -85,21 +115,21 @@ public class HandDataStreamRecorder : MonoBehaviour {
     }
 
 
-
-    void Update() {
-        
-        
+    void Update()
+    {
     }
 }
 
-public struct NetworkSkeletonPoseData : INetworkSerializable {
+public struct NetworkSkeletonPoseData : INetworkSerializable
+{
     public OVRPlugin.Hand HandType;
     public Vector3 RootPos;
     public Quaternion RootRot;
     public float RootScale;
     public Quaternion[] BoneRotations;
 
-    public static int GetSize() {
+    public static int GetSize()
+    {
         //ToDO  Only way for now to write it as safe code. Could be improved to actually reference Vector3 and quaternions etc.
         int size = //sizeof(ParticipantOrder) + //1
             2 * sizeof(float) + // OVRPlugin.Hand  / should 
@@ -110,9 +140,19 @@ public struct NetworkSkeletonPoseData : INetworkSerializable {
         return size; /// This is strange
     }
 
+    public override string ToString()
+    {
+        return HandType.ToString() + farlab_logger.supSep
+                                   + RootPos.ToString() + farlab_logger.supSep
+                                   + RootRot.ToString() + farlab_logger.supSep
+                                   + RootScale.ToString() + farlab_logger.supSep
+                                   + Array.ConvertAll(BoneRotations, s => s.ToString());
+    }
+
     public NetworkSkeletonPoseData(Vector3 RootPos_, Quaternion RootRot_,
         float RootScale_, //ParticipantOrder ThisOrder_,
-        Quaternion[] BoneRotations_, OVRPlugin.Hand HandType_) {
+        Quaternion[] BoneRotations_, OVRPlugin.Hand HandType_)
+    {
         // ThisOrder = ThisOrder_;
         RootPos = RootPos_;
         RootRot = RootRot_;
@@ -123,18 +163,28 @@ public struct NetworkSkeletonPoseData : INetworkSerializable {
     }
 
 
-    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter {
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
         serializer.SerializeValue(ref RootPos);
         serializer.SerializeValue(ref RootRot);
         serializer.SerializeValue(ref RootScale);
         int length = 0;
 
-        if (!serializer.IsReader) { length = BoneRotations.Length; }
+        if (!serializer.IsReader)
+        {
+            length = BoneRotations.Length;
+        }
 
         serializer.SerializeValue(ref length);
-        if (serializer.IsReader) { BoneRotations = new Quaternion[length]; }
+        if (serializer.IsReader)
+        {
+            BoneRotations = new Quaternion[length];
+        }
 
-        for (int n = 0; n < length; ++n) { serializer.SerializeValue(ref BoneRotations[n]); }
+        for (int n = 0; n < length; ++n)
+        {
+            serializer.SerializeValue(ref BoneRotations[n]);
+        }
 
         serializer.SerializeValue(ref HandType);
     }

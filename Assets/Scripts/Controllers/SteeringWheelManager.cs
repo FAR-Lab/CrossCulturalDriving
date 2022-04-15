@@ -362,12 +362,12 @@ public class SteeringWheelManager : MonoBehaviour {
     }
     public float GetAccelInput(ParticipantOrder po) {
         if (ActiveWheels.ContainsKey(po)) { return ActiveWheels[po].accelInput; }
-        else { return -1; }
+        else { return -2; }
     }
 
     public float GetSteerInput(ParticipantOrder po) {
         if (ActiveWheels.ContainsKey(po)) { return ActiveWheels[po].steerInput; }
-        else { return -1; }
+        else { return -2; }
     }
 
     public float GetHandBrakeInput() { return 0f; }

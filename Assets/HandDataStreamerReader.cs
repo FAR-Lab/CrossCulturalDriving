@@ -11,14 +11,15 @@ using Unity.Netcode;
 public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeletonDataProvider,
     OVRSkeletonRenderer.IOVRSkeletonRendererDataProvider,
     OVRMesh.IOVRMeshDataProvider,
-    OVRMeshRenderer.IOVRMeshRendererDataProvider {
+    OVRMeshRenderer.IOVRMeshRendererDataProvider
+{
     public OVRSkeleton HandSkeleton;
     private OVRBone[] HandBones;
 
     [SerializeField] private OVRPlugin.SkeletonType HandType = OVRPlugin.SkeletonType.None;
 
     private OVRSkeleton.IOVRSkeletonDataProvider _iovrSkeletonDataProviderImplementation;
-
+    private NetworkSkeletonPoseData LastRecievedData;
     private SkinnedMeshRenderer m_SkinnedMeshRenderer;
     public Vector3 RootPos;
     public Quaternion RootRot;
@@ -32,17 +33,21 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
     private bool ready = false;
 
     // Start is called before the first frame update
-    void Start() {
+    void Start()
+    {
         BoneRotations = new Quaternion[24];
-        for (int i = 0; i < 24; i++) { BoneRotations[i] = new Quaternion(); }
+        for (int i = 0; i < 24; i++)
+        {
+            BoneRotations[i] = new Quaternion();
+        }
 
         ready = true;
         m_SkinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
     }
 
     // Update is called once per frame
-    void Update() {
-
+    void Update()
+    {
         if (IsDataValid && Time.time > lastUpdate + HandTimeout)
         {
             IsDataValid = false;
@@ -54,32 +59,48 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         m_SkinnedMeshRenderer.enabled = IsDataValid;
     }
 
-    public void GetNewData(NetworkSkeletonPoseData newRemoteHandData) {
-       if(! ready) {
-           return;
-       }
+    public string GetLatestHandDataString()
+    {
+        if (!ready)
+        {
+            return "";
+            
+        }
+        return LastRecievedData.ToString();
+    }
 
-       if (newRemoteHandData.HandType != (OVRPlugin.Hand) HandType) {
+    public void GetNewData(NetworkSkeletonPoseData newRemoteHandData)
+    {
+        if (!ready)
+        {
+            return;
+        }
 
-           Debug.Log("Data miss match left right hand aborting!!");
-           return;
-       }
-      // Debug.Log("Should be a right hand");
-         lastUpdate= Time.time;
+        LastRecievedData = newRemoteHandData;
+        
+        if (newRemoteHandData.HandType != (OVRPlugin.Hand) HandType)
+        {
+            Debug.Log("Data miss match left right hand aborting!!");
+            return;
+        }
+
+        // Debug.Log("Should be a right hand");
+        lastUpdate = Time.time;
         IsDataValid = true;
-       // Debug.Log("Should be a right hand1");
+        // Debug.Log("Should be a right hand1");
         RootPos = newRemoteHandData.RootPos;
         RootRot = newRemoteHandData.RootRot;
         RootScale = newRemoteHandData.RootScale;
-      //  Debug.Log("Should be a right hand2");
+        //  Debug.Log("Should be a right hand2");
         newRemoteHandData.BoneRotations.CopyTo(BoneRotations, 0);
-
     }
 
 
-    OVRSkeleton.SkeletonType OVRSkeleton.IOVRSkeletonDataProvider.GetSkeletonType() {
-       // Debug.Log("GetSkeletonType");
-        switch (HandType) {
+    OVRSkeleton.SkeletonType OVRSkeleton.IOVRSkeletonDataProvider.GetSkeletonType()
+    {
+        // Debug.Log("GetSkeletonType");
+        switch (HandType)
+        {
             case OVRPlugin.SkeletonType.HandLeft:
                 return OVRSkeleton.SkeletonType.HandLeft;
 
@@ -91,12 +112,14 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         }
     }
 
-    OVRSkeleton.SkeletonPoseData OVRSkeleton.IOVRSkeletonDataProvider.GetSkeletonPoseData() {
-       // Debug.Log("GetSkeletonPoseData Only right hand ??");
+    OVRSkeleton.SkeletonPoseData OVRSkeleton.IOVRSkeletonDataProvider.GetSkeletonPoseData()
+    {
+        // Debug.Log("GetSkeletonPoseData Only right hand ??");
         var data = new OVRSkeleton.SkeletonPoseData();
 
         data.IsDataValid = IsDataValid;
-        if (IsDataValid) {
+        if (IsDataValid)
+        {
             data.RootPose = new OVRPlugin.Posef() {Orientation = RootRot.ToQuatf(), Position = RootPos.ToVector3f()};
             data.RootScale = RootScale;
             data.BoneRotations = Array.ConvertAll(BoneRotations, s => s.ToQuatf());
@@ -107,18 +130,21 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         // Debug.Log("Sending Skelton Data" + IsDataValid);
         return data;
     }
-    public OVRSkeleton.SkeletonPoseData GetSkeletonPoseData() {
+
+    public OVRSkeleton.SkeletonPoseData GetSkeletonPoseData()
+    {
         // 
         var data = new OVRSkeleton.SkeletonPoseData();
 
         data.IsDataValid = IsDataValid;
-        if (IsDataValid) {
+        if (IsDataValid)
+        {
             data.RootPose = new OVRPlugin.Posef() {Orientation = RootRot.ToQuatf(), Position = RootPos.ToVector3f()};
             data.RootScale = RootScale;
             data.BoneRotations = Array.ConvertAll(BoneRotations, s => s.ToQuatf());
             data.IsDataHighConfidence =
                 true; // this is obviusly not communicate but we do not send data if thats false.
-           // Debug.Log("GetSkeletonPoseData");
+            // Debug.Log("GetSkeletonPoseData");
         }
 
         // Debug.Log("Sending Skelton Data" + IsDataValid);
@@ -126,12 +152,14 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
     }
 
     OVRSkeletonRenderer.SkeletonRendererData OVRSkeletonRenderer.IOVRSkeletonRendererDataProvider.
-        GetSkeletonRendererData() {
-     //   Debug.Log("GetSkeletonRendererData");
+        GetSkeletonRendererData()
+    {
+        //   Debug.Log("GetSkeletonRendererData");
         var data = new OVRSkeletonRenderer.SkeletonRendererData();
 
         data.IsDataValid = IsDataValid;
-        if (IsDataValid) {
+        if (IsDataValid)
+        {
             data.RootScale = RootScale;
             data.IsDataHighConfidence = true;
             data.ShouldUseSystemGestureMaterial = false; // no idea tbh
@@ -140,9 +168,11 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         return data;
     }
 
-    OVRMesh.MeshType OVRMesh.IOVRMeshDataProvider.GetMeshType() {
-       // Debug.Log("GetMeshType");
-        switch (HandType) {
+    OVRMesh.MeshType OVRMesh.IOVRMeshDataProvider.GetMeshType()
+    {
+        // Debug.Log("GetMeshType");
+        switch (HandType)
+        {
             case OVRPlugin.SkeletonType.None:
                 return OVRMesh.MeshType.None;
             case OVRPlugin.SkeletonType.HandLeft:
@@ -154,12 +184,14 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         }
     }
 
-    OVRMeshRenderer.MeshRendererData OVRMeshRenderer.IOVRMeshRendererDataProvider.GetMeshRendererData() {
-       // Debug.Log("GetMeshRendererData");
+    OVRMeshRenderer.MeshRendererData OVRMeshRenderer.IOVRMeshRendererDataProvider.GetMeshRendererData()
+    {
+        // Debug.Log("GetMeshRendererData");
         var data = new OVRMeshRenderer.MeshRendererData();
 
         data.IsDataValid = IsDataValid;
-        if (IsDataValid) {
+        if (IsDataValid)
+        {
             data.IsDataHighConfidence = true;
             data.ShouldUseSystemGestureMaterial = false; // again no idea lol
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Rerun;
 using UltimateReplay;
 using UnityEngine;
@@ -45,7 +46,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     #region ParticipantMapping
 
-    enum ParticipantObjectSpawnType
+    public enum ParticipantObjectSpawnType
     {
         MAIN,
         CAR,
@@ -495,18 +496,17 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     public void StartAsServer(string pairName)
     {
+        Application.targetFrameRate = 72;
+        gameObject.AddComponent<farlab_logger>();
         SteeringWheelManager.Singleton.enabled = true;
         m_QNDataStorageServer = GetComponent<QNDataStorageServer>();
         m_QNDataStorageServer.enabled = true;
 
-        
+
         GetComponent<TrafficLightSupervisor>().enabled = true;
         SetupServerFunctionality();
         m_ReRunManager.SetRecordingFolder(pairName);
         Debug.Log("Starting Server for session: " + pairName);
-        
-        
-       
     }
 
     private QNDataStorageServer m_QNDataStorageServer;
@@ -622,12 +622,11 @@ public class ConnectionAndSpawing : MonoBehaviour
         GetComponent<OVRManager>().enabled = false;
         FindObjectOfType<RerunGUI>().enabled = true;
         FindObjectOfType<RerunInputManager>().enabled = true;
-        
+
         SceneManager.sceneLoaded += VisualsceneLoadReRun;
-        
-        
+
+
         GetComponent<TrafficLightSupervisor>().enabled = true;
-        
     }
 
     private void VisualsceneLoadReRun(Scene arg0, LoadSceneMode arg1)
@@ -697,17 +696,21 @@ public class ConnectionAndSpawing : MonoBehaviour
         ServerState = ActionState.READY;
     }
 
-    
-   
 
     private void SwitchToDriving()
     {
+        if (!farlab_logger.Instance.ReadyToRecord())
+        {
+            Debug.LogWarning(
+                "I was trying to start recording while something else was still storring Data. Try again in a moment!");
+            return;
+        }
+
         ServerState = ActionState.DRIVE;
-        
+
         m_ReRunManager.BeginRecording(LastLoadedScene);
         m_QNDataStorageServer.StartScenario(LastLoadedScene, m_ReRunManager.GetRecordingFolder());
-        
-       
+        farlab_logger.Instance.StartRecording(m_ReRunManager,LastLoadedScene,m_ReRunManager.GetRecordingFolder());
     }
 
 
@@ -736,12 +739,19 @@ public class ConnectionAndSpawing : MonoBehaviour
                 .StartQuestionairClientRPC();
         }
 
-        m_QNDataStorageServer.StartQn(GetScenarioManager());
+        m_QNDataStorageServer.StartQn(GetScenarioManager(), m_ReRunManager);
+        StartCoroutine(farlab_logger.Instance.StopRecording());
     }
 
     private void SwitchToPostQN()
     {
-        m_QNDataStorageServer.StopScenario(m_ReRunManager.GetCurrentFilePath());
+        m_QNDataStorageServer.StopScenario(m_ReRunManager);
+        if (farlab_logger.Instance.isRecording())
+        {
+            StartCoroutine(farlab_logger.Instance.StopRecording());
+        }
+
+        ;
         ServerState = ActionState.POSTQUESTIONS;
         SwitchToWaitingRoom();
     }
@@ -785,9 +795,9 @@ public class ConnectionAndSpawing : MonoBehaviour
         if (NetworkManager.Singleton.IsServer)
         {
             //if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
-          //  {
-          //      DestroyAllClientObjects(new List<ParticipantObjectSpawnType> {ParticipantObjectSpawnType.CAR});
-          //  }
+            //  {
+            //      DestroyAllClientObjects(new List<ParticipantObjectSpawnType> {ParticipantObjectSpawnType.CAR});
+            //  }
 
             switch (ServerState)
             {
@@ -801,6 +811,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                         SwitchToDriving();
                         SetStartingGPSDirections();
                     }
+
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W))
                     {
                         Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
@@ -916,13 +927,14 @@ public class ConnectionAndSpawing : MonoBehaviour
                                                         NetworkManager.Singleton.IsConnectedClient);
                 }
             }
-            if (ServerState == ActionState.DRIVE || ServerState == ActionState.READY||ServerState == ActionState.QUESTIONS||ServerState == ActionState.POSTQUESTIONS)
+
+            if (ServerState == ActionState.DRIVE || ServerState == ActionState.READY ||
+                ServerState == ActionState.QUESTIONS || ServerState == ActionState.POSTQUESTIONS)
             {
                 GUIStyle style = new GUIStyle();
                 style.fontSize = 25;
-                
-                    GUI.Label(new Rect(10, Screen.height-100, 150, 100), "Current scene: " +LastLoadedScene,style);
-               
+
+                GUI.Label(new Rect(10, Screen.height - 100, 150, 100), "Current scene: " + LastLoadedScene, style);
             }
         }
     }
@@ -987,6 +999,16 @@ public class ConnectionAndSpawing : MonoBehaviour
             : null;
     }
 
+    public Transform GetClientObject(ParticipantOrder po, ParticipantObjectSpawnType type)
+    {
+        if (!_OrderToClient.Keys.Contains(po)) return null;
+        ulong senderClientId = _OrderToClient[po];
+        if (!ClientObjects.ContainsKey(senderClientId)) return null;
+        return ClientObjects[senderClientId].ContainsKey(type)
+            ? ClientObjects[senderClientId][type].transform
+            : null;
+    }
+
     public Transform GetMainClientCameraObject(ParticipantOrder po)
     {
         if (ServerState == ActionState.RERUN)
@@ -1001,12 +1023,12 @@ public class ConnectionAndSpawing : MonoBehaviour
                 }
                 else
                 {
-                 //   Debug.Log(po.ToString() +
-                     //         pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder());
+                    //   Debug.Log(po.ToString() +
+                    //         pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder());
                 }
             }
 
-            Debug.LogWarning("Never found eye anchor for participant: "+po);
+            Debug.LogWarning("Never found eye anchor for participant: " + po);
             return null;
         }
         else
@@ -1025,6 +1047,20 @@ public class ConnectionAndSpawing : MonoBehaviour
     {
         if (_ClientToOrder.ContainsKey(clientid)) return _ClientToOrder[clientid];
         else return ParticipantOrder.None;
+    }
+
+
+    public bool GetClientIdParticipantOrder(ParticipantOrder po, out ulong val)
+    {
+        var tmp = GetClientID(po);
+        if (tmp.HasValue)
+        {
+            val = tmp.Value;
+            return true;
+        }
+
+        val = 0;
+        return false;
     }
 
     public List<ParticipantOrder> GetCurrentlyConnectedClients()
