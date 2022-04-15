@@ -117,7 +117,7 @@ public class SteeringWheelManager : MonoBehaviour {
         ParticipantOrder po = ParticipantOrder.A;
         for (int i = 0; i < DirectInputWrapper.DevicesCount(); i++) {
             Debug.Log("We got the input controller called" + DirectInputWrapper.GetProductNameManaged(i) +
-                      "Asigning it to participant: " + po.ToString());
+                      "Assigning it to participant: " + po.ToString());
             ActiveWheels.Add(po, new SteeringWheelData(i));
             po++;
         }

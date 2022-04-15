@@ -34,28 +34,38 @@ public class QNDataStorageServer : MonoBehaviour
 
     private IEnumerator writtingCorutine;
 
+    private GroundTruthLogger gtLogger;
     // Start is called before the first frame update
     void Start()
     {
         activeQuestionList = new Dictionary<int, QuestionnaireQuestion>();
+        gtLogger = new GroundTruthLogger();
     }
 
+    private void Update()
+    {
+        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.DRIVE)
+        {
+            gtLogger.Update();
+        }
+    }
 
     public void StartScenario(string name, string sessionName)
     {
         CurrentScenarioLog = new ScenarioLog(name, sessionName);
+
+
+        gtLogger.StartScenario(ConnectionAndSpawing.Singleton.GetClientList()
+            .ConvertAll(x => ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(x)).ToArray());
     }
 
 
-    private void GatherGroundTruth(ref ScenarioLog log)
-    {
-        log.facts.Add("scenario length", (log.endTime - log.startTime).ToString());
-    }
+    
 
     public void StartQn(ScenarioManager sManager, RerunManager activeManager)
     {
         if (sManager == null) return;
-        GatherGroundTruth(ref CurrentScenarioLog);
+        gtLogger.GatherGroundTruth(ref CurrentScenarioLog);
         participantAnswerStatus = new Dictionary<ParticipantOrder, int>();
         LastParticipantStartTimes = new Dictionary<ParticipantOrder, DateTime>();
 
