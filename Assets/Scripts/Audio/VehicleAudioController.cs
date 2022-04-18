@@ -50,7 +50,7 @@ public class VehicleAudioController : MonoBehaviour {
         selectSnapshot.TransitionTo(0f);
     }
 
-    private void PlaySurfaceBump()
+    public void PlaySurfaceBump()
     {
         roadAudio.PlaySurfaceBump();
     }

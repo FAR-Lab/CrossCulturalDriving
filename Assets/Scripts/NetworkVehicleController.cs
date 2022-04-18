@@ -31,7 +31,7 @@ public class NetworkVehicleController : NetworkBehaviour
     public Material BrakelightsOn;
 
 
-    private AudioSource HonkSound;
+    public AudioSource HonkSound;
     public float SteeringInput;
     public float ThrottleInput;
 
@@ -193,12 +193,23 @@ public class NetworkVehicleController : NetworkBehaviour
         }
     }
 
+    public delegate void HonkDelegate();
+
+    public HonkDelegate HonkHook;
+
+    public void registerHonk(HonkDelegate val){
+        HonkHook += val;}
+    public void DeRegisterHonk(HonkDelegate val){
+        HonkHook -= val;}
 
     [ClientRpc]
     public void HonkMyCarClientRpc()
     {
         Debug.Log("HonkMyCarClientRpc");
         HonkSound.Play();
+        if (HonkHook != null){
+            HonkHook.Invoke();
+        }
     }
 
     private void LateUpdate()

@@ -1,22 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using Newtonsoft.Json;
-using Oculus.Platform;
 using Rerun;
 using UltimateReplay;
-using UltimateReplay.Core;
-using UltimateReplay.Serializers;
-using UltimateReplay.Storage;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using Application = UnityEngine.Application;
 
 
 public class QNDataStorageServer : MonoBehaviour
@@ -28,13 +17,14 @@ public class QNDataStorageServer : MonoBehaviour
 
     private Dictionary<ParticipantOrder, int> participantAnswerStatus;
     private Dictionary<ParticipantOrder, DateTime> LastParticipantStartTimes;
-
+    private int StartID = -1;
     private ScenarioLog CurrentScenarioLog;
 
 
     private IEnumerator writtingCorutine;
 
     private GroundTruthLogger gtLogger;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,8 +50,6 @@ public class QNDataStorageServer : MonoBehaviour
     }
 
 
-    
-
     public void StartQn(ScenarioManager sManager, RerunManager activeManager)
     {
         if (sManager == null) return;
@@ -70,7 +58,7 @@ public class QNDataStorageServer : MonoBehaviour
         LastParticipantStartTimes = new Dictionary<ParticipantOrder, DateTime>();
 
         bool first = true;
-        int StartID = -1;
+
         if (activeQuestionList != null) activeQuestionList.Clear();
         foreach (QuestionnaireQuestion q in sManager.GetQuestionObject())
         {
@@ -89,6 +77,9 @@ public class QNDataStorageServer : MonoBehaviour
         {
             participantAnswerStatus.Add(po, StartID);
             LastParticipantStartTimes.Add(po, new DateTime());
+
+            ConnectionAndSpawing.Singleton.SendTotalQNCount(po,
+                activeQuestionList.Count(x => x.Value.ContainsOrder(po)));
         }
 
 
@@ -232,6 +223,13 @@ public class QNDataStorageServer : MonoBehaviour
 
     public void NewDatapointfromClient(ParticipantOrder po, int id, int answerIndex, string lang)
     {
+        if (answerIndex == -1 && id == -1)
+        {
+            SendPreviousQuestion(po, lang);
+            Debug.Log("We are tasked to Go Back ");
+            return;
+        }
+
         if (id > -1) //special question ID used to initialze the process
         {
             if (!CurrentScenarioLog.QuestionResults.ContainsKey(id))
@@ -244,15 +242,25 @@ public class QNDataStorageServer : MonoBehaviour
                 CurrentScenarioLog.QuestionResults.Add(id, new QuestionLog(activeQuestionList[id]));
             }
 
-            CurrentScenarioLog.QuestionResults[id].ParticipantsReponse.Add((char) po,
-                new QuestionLog.ParticipantsAnswerReponse
-                {
-                    AnswerId = answerIndex,
-                    AnswerText = activeQuestionList[id].Answers.First(s => s.index == answerIndex)
-                        .AnswerText[LogLanguage],
-                    StartTimeQuestion = LastParticipantStartTimes[po],
-                    StopTimeQuestion = DateTime.Now
-                });
+            QuestionLog.ParticipantsAnswerReponse response = new QuestionLog.ParticipantsAnswerReponse
+            {
+                AnswerId = answerIndex,
+                AnswerText = activeQuestionList[id].Answers.First(s => s.index == answerIndex)
+                    .AnswerText[LogLanguage],
+                StartTimeQuestion = LastParticipantStartTimes[po],
+                StopTimeQuestion = DateTime.Now,
+                Attempts = 1
+            };
+            if (!CurrentScenarioLog.QuestionResults[id].ParticipantsReponse.ContainsKey((char) po))
+            {
+                CurrentScenarioLog.QuestionResults[id].ParticipantsReponse.Add((char) po, response);
+            }
+            else
+            {
+                response.Attempts += CurrentScenarioLog.QuestionResults[id].ParticipantsReponse[(char) po].Attempts;
+                CurrentScenarioLog.QuestionResults[id].ParticipantsReponse[(char) po] = response;
+                Debug.Log("Over writting Previously recorded answer");
+            }
 
             Debug.Log("There should be some storage code here: " + po + id.ToString() + "  " + answerIndex.ToString());
         }
@@ -305,6 +313,52 @@ public class QNDataStorageServer : MonoBehaviour
 
         ConnectionAndSpawing.Singleton.SendNewQuestionToParticipant(p, outval);
     }
+
+    private void SendPreviousQuestion(ParticipantOrder p, string lang)
+    {
+        int val = participantAnswerStatus[p];
+        val--;
+
+
+        while (activeQuestionList.ContainsKey(val) && !activeQuestionList[val].ContainsOrder(p))
+        {
+            val--;
+            Debug.Log("looking for a next relevant question!" + val.ToString());
+        }
+
+        NetworkedQuestionnaireQuestion outval;
+        if (!activeQuestionList.ContainsKey(val))
+        {
+            participantAnswerStatus[p] = StartID;
+            SendNewQuestion(p, lang);
+            Debug.LogWarning(
+                "Hit the beginning of the Questionnaire Attempting to send the first message again. This is an error should not happen!" +
+                val.ToString());
+            return;
+        }
+        else
+        {
+            participantAnswerStatus[p] = val;
+            outval = activeQuestionList[val].GenerateNetworkVersion(lang);
+            Debug.Log("Found Another question to send " + val.ToString());
+            LastParticipantStartTimes[p] = DateTime.Now;
+        }
+
+        ConnectionAndSpawing.Singleton.SendNewQuestionToParticipant(p, outval);
+    }
+
+    public string GetCurrentQuestionForParticipant(ParticipantOrder po)
+    {
+        if (participantAnswerStatus == null || activeQuestionList == null) return " - ";
+
+        if (participantAnswerStatus.ContainsKey(po) &&activeQuestionList.ContainsKey(participantAnswerStatus[po])&& activeQuestionList[participantAnswerStatus[po]].QuestionText!=null){
+            return activeQuestionList[participantAnswerStatus[po]].QuestionText[LogLanguage] + " at Scenario_ID: " +
+                   activeQuestionList[participantAnswerStatus[po]].Scenario_ID;
+        }
+
+
+        return "Not Found";
+    }
 }
 
 
@@ -346,7 +400,7 @@ public struct QuestionLog
         public string AnswerText;
         public DateTime StartTimeQuestion;
         public DateTime StopTimeQuestion;
-
+        public ushort Attempts;
 
         public void FinalUpdate(int answerId, string answerText)
         {

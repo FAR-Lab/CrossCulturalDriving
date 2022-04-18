@@ -7,7 +7,6 @@ using UltimateReplay;
 using UltimateReplay.Core;
 using UltimateReplay.Serializers;
 using Unity.Netcode;
-using UnityEditor.Build;
 
 //[DisallowMultipleComponent]
 //[ReplaySerializer(typeof(ParticipantOrderReplayComponentSerializer))]
@@ -85,14 +84,14 @@ public class ParticipantOrderReplayComponent : ReplayRecordableBehaviour
 
     public override void OnReplaySerialize(ReplayState state)
     {
-        Debug.Log("Serialize po");
+      
         state.Write((char) m_participantOrder);
     }
 
 
     public override void OnReplayDeserialize(ReplayState state)
     {
-        Debug.Log("DeSerialize po");
+       
         m_participantOrder = (ParticipantOrder) (char) state.ReadByte();
     }
 
