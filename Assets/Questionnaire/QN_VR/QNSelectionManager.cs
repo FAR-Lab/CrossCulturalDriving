@@ -14,6 +14,7 @@ using UnityEngine.InputSystem;
 using Newtonsoft.Json;
 using Unity.Collections;
 using Unity.Netcode;
+using UnityEngine.UIElements;
 
 public class QNSelectionManager : MonoBehaviour
 {
@@ -29,8 +30,9 @@ public class QNSelectionManager : MonoBehaviour
     };
 
     public QNStates m_interalState = QNStates.IDLE;
+
     private string m_condition;
-    private InputAction selectAction;
+    // private InputAction selectAction;
 
 
     Text QustionField;
@@ -42,10 +44,12 @@ public class QNSelectionManager : MonoBehaviour
 
     private string m_LanguageSelect;
 
-
+    private RectTransform BackButton;
+    private Text CountDisplay;
     NetworkedQuestionnaireQuestion currentActiveQustion;
 
-   
+    private int _answerCount = 0;
+    private int _totalCount = 0;
 
 #if debug
     public List<TextAsset> QNFiles;
@@ -54,20 +58,18 @@ public class QNSelectionManager : MonoBehaviour
     Transform ParentPosition;
     float up, forward;
 
-    public void ChangeLanguage(string lang)
-    {
+    public void ChangeLanguage(string lang){
         m_LanguageSelect = lang;
     }
 
-    public void setRelativePosition(Transform t, float up_, float forward_)
-    {
+    public void setRelativePosition(Transform t, float up_, float forward_){
         ParentPosition = t;
         up = up_;
         forward = forward_;
     }
 
-    void Start()
-    {
+    void Start(){
+        /*
         selectAction = new InputAction("Select");
         selectAction.AddBinding("<Keyboard>/space");
         selectAction.AddBinding("<Joystick>/trigger");
@@ -92,9 +94,11 @@ public class QNSelectionManager : MonoBehaviour
         selectAction.AddBinding("<Joystick>/hat/left");
         selectAction.AddBinding("<Joystick>/hat/right");
         selectAction.Enable();
+        */
         QustionField = transform.Find("QuestionField").GetComponent<Text>();
         sba = GetComponentInChildren<selectionBarAnimation>();
-
+        BackButton = transform.Find("BackButton").GetComponent<RectTransform>();
+        CountDisplay = transform.Find("CountDisplay").GetComponent<Text>();
 
 #if DEBUGQN
         startAskingTheQuestionairs(FindObjectOfType<LocalVRPlayer>().transform, QNFiles.ToArray(), "Test");
@@ -103,71 +107,59 @@ public class QNSelectionManager : MonoBehaviour
 #endif
     }
 
- 
 
     private Transform positioingRef;
 
     // Update is called once per frame
-    public void startAskingTheQuestionairs(Transform mylocalclient,  string Condition,
-        string lang)
-    {
-        if (m_interalState == QNStates.IDLE)
-        {
-          
+    public void startAskingTheQuestionairs(Transform mylocalclient, string Condition,
+        string lang){
+        if (m_interalState == QNStates.IDLE){
             ChangeLanguage(lang);
             m_MyLocalClient = mylocalclient.GetComponent<ParticipantInputCapture>();
 
             m_condition = Condition;
-         
+
             m_interalState = QNStates.WAITINGFORQUESTION;
-            m_MyLocalClient.SendQNAnswerServerRPC(-1, 0,m_LanguageSelect);
+            m_MyLocalClient.SendQNAnswerServerRPC(-1, 0, m_LanguageSelect);
         }
-        else
-        {
+        else{
             Debug.LogError("I should really only once start the Questionnaire.");
         }
     }
 
-    void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.Q))
-        {
+    void Update(){
+        if (Input.GetKeyUp(KeyCode.Q)){
             m_interalState = QNStates.FINISH;
         }
 
-        if (ParentPosition != null) {
+        if (ParentPosition != null){
             transform.rotation = ParentPosition.rotation;
-            transform.position = ParentPosition.position + ParentPosition.rotation* new  Vector3(0, up, forward);
+            transform.position = ParentPosition.position + ParentPosition.rotation * new Vector3(0, up, forward);
         }
 
-        switch (m_interalState)
-        {
+        switch (m_interalState){
             case QNStates.IDLE:
                 //Nothing is happening just waiting for something to happen.
                 break;
 
             case QNStates.WAITINGFORQUESTION:
 
-                if(m_MyLocalClient.HasNewQuestion())
-            {
-                currentActiveQustion = m_MyLocalClient.GetNewQuestion();
+                if (m_MyLocalClient.HasNewQuestion()){
+                    currentActiveQustion = m_MyLocalClient.GetNewQuestion();
 
-                if (currentActiveQustion.reply == replyType.NEWQUESTION)
-                {
-                    m_interalState = QNStates.LOADINGQUESTION;
+                    if (currentActiveQustion.reply == replyType.NEWQUESTION){
+                        m_interalState = QNStates.LOADINGQUESTION;
+                    }
+                    else if (currentActiveQustion.reply == replyType.FINISHED){
+                        m_interalState = QNStates.FINISH;
+                    }
                 }
-                else if (currentActiveQustion.reply == replyType.FINISHED)
-                {
-                    m_interalState = QNStates.FINISH;
-                }
-            }
-               
+
                 break;
             case QNStates.LOADINGQUESTION:
-               
 
-                foreach (RectTransform r in AnswerFields)
-                {
+                updateCountDisaply();
+                foreach (RectTransform r in AnswerFields){
                     Destroy(r.gameObject);
                 }
 
@@ -175,9 +167,8 @@ public class QNSelectionManager : MonoBehaviour
 
                 QustionField.text = SetText(currentActiveQustion.QuestionText);
                 int i = 0;
-                
-                foreach (int a in currentActiveQustion.Answers.Keys)
-                {
+
+                foreach (int a in currentActiveQustion.Answers.Keys){
                     rayCastButton rcb = Instantiate(ButtonPrefab, this.transform).transform
                         .GetComponentInChildren<rayCastButton>();
                     rcb.initButton(SetText(currentActiveQustion.Answers[a]), a);
@@ -191,13 +182,12 @@ public class QNSelectionManager : MonoBehaviour
 
                 m_interalState = QNStates.RESPONSEWAIT;
                 break;
-            
+
 
             case QNStates.RESPONSEWAIT:
                 List<RaycastResult> results = new List<RaycastResult>();
                 RaycastHit hit;
-                if (Camera.main == null)
-                {
+                if (Camera.main == null){
                     Debug.Log("This is interesting unloading");
                     return;
                 }
@@ -205,86 +195,85 @@ public class QNSelectionManager : MonoBehaviour
                 Ray ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2f,
                     Camera.main.pixelHeight / 2f));
                 LayerMask layerMask = 1 << 5;
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.UseGlobal))
-                {
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.UseGlobal)){
                     rayCastButton rcb = null;
                     Transform objectHit = hit.transform;
                     bool onTarget = false;
 
-                    if (hit.transform == transform)
-                    {
+                    if (hit.transform == transform){
                         sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
                     }
-                    else
-                    {
+                    else{
                         rcb = hit.transform.GetComponent<rayCastButton>();
-                        if (rcb != null)
-                        {
+                        if (rcb != null){
                             onTarget = true;
                             sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
+                            if (m_MyLocalClient.ButtonPush()){
+                                int AnswerIndex = rcb.activateNextQuestions();
+                                m_MyLocalClient.SendQNAnswer(currentActiveQustion.ID, AnswerIndex, m_LanguageSelect);
+                                _answerCount++;
+                                m_interalState = QNStates.WAITINGFORQUESTION;
+                            }
+                        }
+                        else{
+                            if (hit.transform.GetComponent<RectTransform>() == BackButton){
+                                sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
+                                if (m_MyLocalClient.ButtonPush()){
+                                    _answerCount--;
+                                    if (_answerCount < 0) _answerCount = 0;
+                                    m_MyLocalClient.SendQNAnswer(-1, -1, m_LanguageSelect);
+                                    m_interalState = QNStates.WAITINGFORQUESTION;
+                                }
+                            }
                         }
                     }
-
-
-                    if (m_MyLocalClient.ButtonPush() && onTarget) {
-
-                        int AnswerIndex = rcb.activateNextQuestions();
-
-
-                        m_MyLocalClient.SendQNAnswer(currentActiveQustion.ID, AnswerIndex,m_LanguageSelect);
-                        
-                        //m_QNLogger.AddNewDataPoint(currentActiveQustion, AnswerIndex, m_LanguageSelect);
-                        //  Debug.Log("To Question: " + currentActiveQustion.QuestionText["English"] +
-                       // "We answered: " + currentActiveQustion.Answers[AnswerIndex].AnswerText["English"]);
-
-                       // foreach (int nextQ in currentActiveQustion.Answers[AnswerIndex].nextQuestionIndexQueue)
-                      //  {
-                     //       nextQuestionsToAskQueue.Enqueue(nextQ);
-                     //   }
-
-                        m_interalState = QNStates.WAITINGFORQUESTION;
-                    }
-
                 }
 
                 break;
             case QNStates.FINISH:
 
-                if (m_MyLocalClient != null && m_MyLocalClient.IsLocalPlayer)
-                {
-                   /* m_QNLogger.DumpData(out string data);
-
-
-                   
-                    LongStringMessage message = new LongStringMessage();
-                    message.message = data;
-                    FastBufferWriter writer = new FastBufferWriter(message.GetSize(), Allocator.Temp);
-                    Debug.Log("The message is" + message.GetSize() + " While the buffer has" + writer.Capacity);
-                    writer.WriteNetworkSerializable(message);
-                    NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(QNLogger.qnMessageName,
-                       NetworkManager.Singleton.ServerClientId, writer, NetworkDelivery.Reliable);
-                       
-                        writer.Dispose();
-*/
+                if (m_MyLocalClient != null && m_MyLocalClient.IsLocalPlayer){
                     m_MyLocalClient.PostQuestionServerRPC(m_MyLocalClient.OwnerClientId);
-                    m_interalState = QNStates.IDLE;
+
+                    
+                    foreach (RectTransform r in AnswerFields){
+                        Destroy(r.gameObject);
+                    }
+                    
+                    switch (m_LanguageSelect){
+                        case "Hebrew":
+                            QustionField.text = "המתן בבקשה";
+                            break;
+
+                        case "English":
+                        default:
+                            QustionField.text = "Please Wait!";
+                            break;
+                    }
                    
+                    m_interalState = QNStates.IDLE;
                 }
-                else
-                {
+                else{
                     Debug.LogError("Did not get my local player dont know who to report back to.");
                 }
 
                 break;
-           
+
             default:
                 throw new ArgumentOutOfRangeException();
         }
     }
 
-    private string SetText(string text)
-    {
+    private string SetText(string text){
         return m_LanguageSelect.Contains("Hebrew") ? StringExtension.RTLText(text) : text;
+    }
+
+    public void SetTotalQNCount(int outval){
+        _totalCount = outval;
+    }
+
+    private void updateCountDisaply(){
+        CountDisplay.text = (1+_answerCount).ToString() + " / " + _totalCount.ToString();
     }
 }
 

@@ -16,7 +16,7 @@ public class GroundTruthLogger
     
     private Dictionary<ParticipantOrder, bool> _breaks;
 
-
+    private List<ParticipantOrder> CurrentScenarioPOList;
 
     // Start is called before the first frame update
     public void Init()
@@ -25,6 +25,8 @@ public class GroundTruthLogger
 
     public void StartScenario(ParticipantOrder[] participantstoCollectFor)
     {
+        CurrentScenarioPOList = new List<ParticipantOrder>(participantstoCollectFor);
+        
         if (_vehicles == null) _vehicles = new Dictionary<ParticipantOrder, NetworkVehicleController>();
         _vehicles.Clear();
 
@@ -44,9 +46,10 @@ public class GroundTruthLogger
         if (_breaks == null) _breaks = new Dictionary<ParticipantOrder, bool>();
         _breaks.Clear();
 
-        foreach (ParticipantOrder po in participantstoCollectFor)
+        foreach (ParticipantOrder po in CurrentScenarioPOList)
         {
             if (po == ParticipantOrder.None) continue;
+            Debug.Log(po);
             _vehicles.Add(po, null);
             _speeds.Add(po, new List<float>());
             _horn.Add(po, false);
@@ -55,13 +58,14 @@ public class GroundTruthLogger
             _hazardLights.Add(po, false);
             _breaks.Add(po, false);
         }
+       
     }
 
 
     public void GatherGroundTruth(ref ScenarioLog log)
     {
         log.facts.Add("scenario length", (log.endTime - log.startTime).ToString());
-        foreach (var po in _vehicles.Keys)
+        foreach (var po in CurrentScenarioPOList)
         {
             if (_speeds[po].Count() > 1)
             {
@@ -82,14 +86,26 @@ public class GroundTruthLogger
             log.facts.Add(po + " break used: ", _breaks[po] ? "Yes" : "No");
             
         }
+        CurrentScenarioPOList.Clear();
     }
 
 
     // Update is called once per frame
     public void Update()
     {
-        foreach (var po in _vehicles.Keys)
+        if(
+        _vehicles==null ||
+        _speeds==null ||
+        _horn==null ||
+        _leftSignal==null ||
+        _rightSignal==null||
+        _hazardLights==null ||
+        _breaks==null ){Debug.LogWarning("Started logging but my Dictionaries where not yet set up. :-( very sad!! "); return;}
+           
+        foreach (var po in CurrentScenarioPOList)
         {
+            
+            
             if (_vehicles[po] == null)
             {
                 _vehicles[po] = ConnectionAndSpawing.Singleton

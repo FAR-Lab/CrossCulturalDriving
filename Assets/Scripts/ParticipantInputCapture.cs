@@ -406,4 +406,12 @@ public class ParticipantInputCapture : NetworkBehaviour
         }
     }
     
+    [ClientRpc]
+    public void SetTotalQNCountClientRpc(int outval)
+    {
+        if (!IsLocalPlayer) return;
+
+        FindObjectOfType<QNSelectionManager>()?.SetTotalQNCount(outval);
+
+    }
 }

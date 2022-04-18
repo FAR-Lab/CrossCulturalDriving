@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Threading;
-using System.Text;
 using System;
 using System.Collections.Concurrent;
 using Rerun;
-using UnityEditor.Build;
 
-#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+
 public class farlab_logger : MonoBehaviour
 {
     //Global variables
-
+//#if UNITY_EDITOR || UNITY_STANDALONE_WIN
 
     private Transform PLayerHeadA;
     private Transform PLayerHeadB;
@@ -553,5 +551,5 @@ public class farlab_logger : MonoBehaviour
     {
         return RECORDING;
     }
+
 }
-#endif

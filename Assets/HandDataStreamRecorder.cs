@@ -142,6 +142,7 @@ public struct NetworkSkeletonPoseData : INetworkSerializable
 
     public override string ToString()
     {
+        if (BoneRotations == null) return "";
         return HandType.ToString() + farlab_logger.supSep
                                    + RootPos.ToString() + farlab_logger.supSep
                                    + RootRot.ToString() + farlab_logger.supSep
