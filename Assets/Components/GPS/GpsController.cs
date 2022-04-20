@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class GpsController : ReplayBehaviour
 {
-  public enum Direction:int  { Straight, Left, Right, Stop, Hurry ,Loading,None, StartRight, StartStraight };
+  public enum Direction:int  { Straight, Left, Right, Stop, Hurry ,Loading,None, StartRight, StartStraight, ComeToStop};
   [ReplayVar(false)] public int recordingDirection = (int)Direction.None;
 
 
 
 
-    public Sprite straightImage, leftImage, rightImage, StopImage, HurryImage, LoadingImage, StartRightImage, StartSraightImage;
+    public Sprite straightImage, leftImage, rightImage, StopImage, HurryImage, LoadingImage, StartRightImage, StartSraightImage, ComeToStopImage;
     AudioSource GpsAudioPlayer;
 
     public Sprite HurryImageEnglish, StopImageEnglish, LoadingImageEnglish;
@@ -84,6 +84,8 @@ public class GpsController : ReplayBehaviour
                 return StartSraightImage;
             case Direction.StartRight:
                 return StartRightImage;
+            case Direction.ComeToStop:
+                return ComeToStopImage;
             default:
                 return null;
         }
