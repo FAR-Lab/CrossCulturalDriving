@@ -13,7 +13,7 @@ and comment out the G29 code and uncomment the relevant labeled sections in the 
 Logitech Gaming Software and Logitech G Hub and also CLOSE them both before entering play mode(otherwise it will not run and will crash on exiting play mode). Make sure the wheel shows up in Logitech G Hub before closing G Hub. To use the Oculus Quest 2 headset, open Oculus Link through the desktop and also open it on the Quest 2 and leave both open.
 
 ## Notes
-These notes concern the simulator in development and are subject to change.
+These notes concern the simulator in development and are subject to change. The standard operating procedure is documented on overleaf. Ask @DavidGoedicke for access.
 ### Setup
 Git: 
 Once you pulled the repository you need to initialize the submodule ReRun:
@@ -28,9 +28,10 @@ import the necessary third party packages:
 
 | Key combination | Effect                            |
 |-----------------|-----------------------------------|
-|↵ Enter | Switch into driving mode |
-|⇧ Shift +  Q  | Switch back into the waiting room |
-|Ctrl + Q | Display SA Questions |
+|⇧ Shift +  D | Switch into driving mode |
+|⇧ Shift +  W  | Switch back into the waiting room |
+|⇧ Shift +  Q | Display SA Questionnaire |
+|⇧ Shift +  A/B | Toggle the participants steerring wheel button remotely (for testing questionnaire) |
 |0,1,2,3,4 | Switch between the views in the server |
 
 
