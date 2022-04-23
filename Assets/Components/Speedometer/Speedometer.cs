@@ -59,13 +59,17 @@ public class Speedometer : ReplayBehaviour
         if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
         {
             UpdateSpeed(mySpeed, true);
-           
         }
     }
 
 
     public void UpdateSpeed(float speed, bool IsReplaying = false)
     {
+        if(speedPointerTransform==null)
+        {
+            Debug.Log("Could not find speedometer. Trying again");
+            Start();
+        }
         if (!IsReplaying)
         {
             mySpeed = speed;

@@ -174,9 +174,15 @@ public class NetworkVehicleController : NetworkBehaviour
     {
         TurnOnBrakeLight(Active);
     }
+    
+    private void TurnOnBrakeLightLocalServer(bool Active){
+        TurnOnBrakeLightClientRpc(Active);
+        TurnOnBrakeLight(Active);
+    }
 
     private void TurnOnBrakeLight(bool Active)
     {
+       
         if (Active)
         {
             foreach (Transform t in BrakeLightObjects)
@@ -205,7 +211,7 @@ public class NetworkVehicleController : NetworkBehaviour
     [ClientRpc]
     public void HonkMyCarClientRpc()
     {
-        Debug.Log("HonkMyCarClientRpc");
+       // Debug.Log("HonkMyCarClientRpc");
         HonkSound.Play();
         if (HonkHook != null){
             HonkHook.Invoke();
@@ -293,12 +299,14 @@ public class NetworkVehicleController : NetworkBehaviour
 
             if (ThrottleInput < 0 && !breakIsOn)
             {
-                BrakeLightChangedServerRpc(true);
+                TurnOnBrakeLightLocalServer(true);
                 breakIsOn = true;
+               
             }
             else if (ThrottleInput >= 0 && breakIsOn)
             {
-                BrakeLightChangedServerRpc(false);
+                
+                TurnOnBrakeLightLocalServer(false);
                 breakIsOn = false;
             }
         }
@@ -353,12 +361,6 @@ public class NetworkVehicleController : NetworkBehaviour
 
     private bool breakIsOn;
 
-    [ServerRpc]
-    private void BrakeLightChangedServerRpc(bool newvalue)
-    {
-        TurnOnBrakeLightClientRpc(newvalue);
-        TurnOnBrakeLight(newvalue);
-    }
 
 
     public void HonkMyCar()

@@ -5,7 +5,7 @@ using UltimateReplay;
 using UnityEngine;
 
 
-public class TrafficLightSupervisor : MonoBehaviour
+public class TrafficLightSupervisor : ReplayBehaviour
 {
     private TrafficLightController[] m_TrafficLightControllers;
 
@@ -16,18 +16,36 @@ public class TrafficLightSupervisor : MonoBehaviour
         GREEN
     };
 
-    [ReplayVar(false)] private int test = 0;    
-    // Start is called before the first frame update
+  
     void Start()
     {
-        test++;
+     
 
     }
-   
+    public override void OnReplayEvent(ushort eventID, ReplayState
+        eventData)
+    {
+        Debug.Log("PlayingBack Event!!");
+        switch (eventID)
+        {
+            case 1:
+            {
+                
+                SetTrafficLights((trafficLightStatus) eventData.ReadByte());
+                break;
+            }
+        }
+    }
 
     private void SetTrafficLights(trafficLightStatus status)
     {
-      
+        if (IsRecording)
+        {
+            Debug.Log("Recorded event!");
+            ReplayState state = ReplayState.pool.GetReusable();
+            state.Write((byte) status);
+            RecordEvent(1, state);
+        }
 
         foreach (ParticipantOrder po in FElem.AllPossPart)
         {

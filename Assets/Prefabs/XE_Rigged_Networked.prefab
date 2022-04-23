@@ -545,9 +545,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 250
+  MaxDistance: 200
   Pan2D: 0
-  rolloffMode: 1
+  rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -595,7 +595,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.085
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -688,7 +688,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 20138
+    id: 60708
   replayObject:
     reference: {fileID: -2906884681439060436}
   positionFlags: 263
@@ -707,7 +707,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 24471
+    id: 45822
   prefabIdentity:
     id: 18765
   observedComponents:
@@ -750,7 +750,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 38807
+    id: 64585
   replayObject:
     reference: {fileID: -2906884681439060436}
   m_participantOrder: 0
@@ -767,11 +767,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 60232
+    id: 43595
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedAudio: {fileID: 82318783350293580}
-  recordFlags: 4
+  recordFlags: 6
 --- !u!1 &103102
 GameObject:
   m_ObjectHideFlags: 0
@@ -969,7 +969,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 37885
+    id: 2775
   replayObject:
     reference: {fileID: -2906884681439060436}
   positionFlags: 263
@@ -1752,7 +1752,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 28950
+    id: 25046
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedAudio: {fileID: 82179829388801616}
@@ -2413,7 +2413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 21037
+    id: 6137
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedAudio: {fileID: 8297354}
@@ -2491,7 +2491,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 15792
+    id: 20893
   replayObject:
     reference: {fileID: -2906884681439060436}
   positionFlags: 263
@@ -5005,7 +5005,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 19088
+    id: 2627
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedAudio: {fileID: 8253590}
@@ -6170,7 +6170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 31194
+    id: 14174
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedAudio: {fileID: 8282142}
@@ -6248,7 +6248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 7365
+    id: 11544
   replayObject:
     reference: {fileID: -2906884681439060436}
   positionFlags: 263
@@ -6397,7 +6397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 1172
+    id: 55848
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedAudio: {fileID: 82914859112444036}
@@ -6934,7 +6934,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 2506
+    id: 27221
   replayObject:
     reference: {fileID: -2906884681439060436}
   positionFlags: 263
@@ -7737,7 +7737,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 6396
+    id: 30535
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedRenderer: {fileID: 23261190955339692}
@@ -7873,7 +7873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 22841
+    id: 52428
   replayObject:
     reference: {fileID: -2906884681439060436}
   positionFlags: 0
@@ -7972,7 +7972,7 @@ MonoBehaviour:
   width: 512
   height: 768
   depth: 16
-  rtf: 0
+  rtf: 6
   flipHorizontal: 1
 --- !u!1 &1184536589677604
 GameObject:
@@ -8202,8 +8202,8 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 0
-  m_HDR: 0
-  m_AllowMSAA: 0
+  m_HDR: 1
+  m_AllowMSAA: 1
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 1
   m_OcclusionCulling: 1
@@ -8224,10 +8224,10 @@ MonoBehaviour:
   ReferenceMaterial: {fileID: 2100000, guid: 3a7465f1a75f24546b2231bbc1c8e8d0, type: 2}
   TargetRenderer: {fileID: 23387448993188222}
   rt: {fileID: 0}
-  width: 384
+  width: 500
   height: 1308
   depth: 16
-  rtf: 0
+  rtf: 6
   flipHorizontal: 1
 --- !u!1 &1232226947679096
 GameObject:
@@ -8288,7 +8288,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b740340c1954871479378842c7cf0571, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8486,7 +8486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 41123
+    id: 29975
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedRenderer: {fileID: 23366822252624480}
@@ -8625,7 +8625,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 39127
+    id: 43475
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedRenderer: {fileID: 23353113586693306}
@@ -8830,7 +8830,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 35659
+    id: 9300
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedRenderer: {fileID: 23357028160542600}
@@ -9030,7 +9030,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 12640
+    id: 40132
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedRenderer: {fileID: 23107828148067610}
@@ -9165,7 +9165,7 @@ MonoBehaviour:
   width: 512
   height: 768
   depth: 16
-  rtf: 0
+  rtf: 6
   flipHorizontal: 1
 --- !u!1 &1584263918984448
 GameObject:
@@ -9262,7 +9262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 15930
+    id: 50917
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedRenderer: {fileID: 23378663467087764}
@@ -9825,7 +9825,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 64c81bdb65d3ffe44bcc4cd22be452ce, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9942,7 +9942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 40419
+    id: 42589
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedRenderer: {fileID: 23325350253942988}
@@ -10047,7 +10047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 46686
+    id: 54121
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedRenderer: {fileID: 23276408013039158}
@@ -10116,7 +10116,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3a7465f1a75f24546b2231bbc1c8e8d0, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10445,7 +10445,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   replayIdentity:
-    id: 64253
+    id: 6333
   replayObject:
     reference: {fileID: -2906884681439060436}
   observedRenderer: {fileID: 365435026594160890}

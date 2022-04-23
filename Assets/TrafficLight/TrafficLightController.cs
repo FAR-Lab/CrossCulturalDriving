@@ -51,39 +51,16 @@ public class TrafficLightController : MonoBehaviour
     {
     }
     
- /*   public override void OnReplayEvent(ushort eventID, ReplayState
-        eventData)
-    {
-        Debug.Log("PlayingBack Event!!");
-        switch (eventID)
-        {
-            case 1:
-            {
-                
-                InteralGraphicsUpdate((TrafficLightSupervisor.trafficLightStatus) eventData.ReadByte());
-                break;
-            }
-        }
-    }
+    
 
-*/
+
     private void InteralGraphicsUpdate(TrafficLightSupervisor.trafficLightStatus inval)
     {
-        /*
-        if (IsRecording)
-        {
-            Debug.Log("Recorded event!");
-            ReplayState state = ReplayState.pool.GetReusable();
-            state.Write((byte) inval);
-            RecordEvent(1, state);
-        }
+        
+       
 
        
-        if (IsReplaying)
-        {
-            Debug.Log(inval);
-        }
-*/
+
         switch (inval)
         {
             case TrafficLightSupervisor.trafficLightStatus.IDLE:
@@ -151,19 +128,20 @@ public class TrafficLightController : MonoBehaviour
 
     private IEnumerator GoGreen()
     {
-        Material[] mat = LightRenderer.materials;
-        mat[(int) materialID.MID] = yellow;
-        mat[(int) materialID.TOP] = off;
-        mat[(int) materialID.BOTTOM] = off;
+       Material[] mat = LightRenderer.materials;
+      ///  mat[(int) materialID.MID] = yellow;
+        //mat[(int) materialID.TOP] = off;
+     //   mat[(int) materialID.BOTTOM] = off;
 
-        LightRenderer.materials = mat;
+     //   LightRenderer.materials = mat;
 
-        yield return new WaitForSeconds(1);
+      //  yield return new WaitForSeconds(1);
 
         mat[(int) materialID.MID] = off;
         mat[(int) materialID.TOP] = off;
         mat[(int) materialID.BOTTOM] = green;
 
         LightRenderer.materials = mat;
+        yield return null;
     }
 }
