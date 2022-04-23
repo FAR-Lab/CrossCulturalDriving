@@ -21,7 +21,7 @@ public class MirrorCamera : MonoBehaviour {
 
     void Start() {
         cam = GetComponent<Camera>();
-        rt = new RenderTexture(width, height, depth, rtf);
+        rt = new RenderTexture(width, height, 0, rtf);
         rt.Create();
         rt.name = "MirrorCameraTexture"+ transform.name;
      

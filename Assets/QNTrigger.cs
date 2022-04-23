@@ -10,54 +10,54 @@ public class QNTrigger : MonoBehaviour
     private ScenarioManager scenMen;
 
     public ParticipantOrder StartingId;
+
+    public bool UseParticipantStopSign = true;
+
     // Start is called before the first frame update
-    void Start()
-    {
-        if (NetworkManager.Singleton.IsServer)
-        {
-
-
+    void Start(){
+        if (NetworkManager.Singleton.IsServer){
             scenMen = transform.parent.GetComponentInParent<ScenarioManager>();
-            if (scenMen == null)
-            {
+            if (scenMen == null){
                 Debug.LogError("Could not find a scenario manager to call when I get triggered");
             }
         }
-        else
-        {
+        else{
             Destroy(gameObject);
         }
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    void Update(){ }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (NetworkManager.Singleton.IsServer)
-        {
-            if (StartingId == ParticipantOrder.None)
-            {        
-                if (other.transform.GetComponentInParent<NetworkVehicleController>() != null)
+ 
 
-                {
+    private void OnTriggerEnter(Collider other){
+        if (NetworkManager.Singleton.IsServer){
+            if (StartingId == ParticipantOrder.None){
+                if (other.transform.GetComponentInParent<NetworkVehicleController>() != null){
                     Debug.Log("Found a car so I am telling the server to switch to QNs");
 
-
-                    ConnectionAndSpawing.Singleton.SwitchToQN();
+                    if (UseParticipantStopSign){
+                       
+                        ConnectionAndSpawing.Singleton.AwaitQN();
+                    }
+                    else{
+                        ConnectionAndSpawing.Singleton.SwitchToQN();
+                    }
                 }
             }
-            else if (other.transform.GetComponentInParent<NetworkVehicleController>().getParticipantOrder() == StartingId)
-            {
-              
+            else if (other.transform.GetComponentInParent<NetworkVehicleController>().getParticipantOrder() ==
+                     StartingId){
                 Debug.Log("Found the matching car so I am telling the server to switch to QNs");
 
-                
-                
-                ConnectionAndSpawing.Singleton.SwitchToQN();
+
+                if (UseParticipantStopSign){
+                    ConnectionAndSpawing.Singleton.AwaitQN();
+                   
+                }
+                else{
+                    ConnectionAndSpawing.Singleton.SwitchToQN();
+                }
             }
         }
     }

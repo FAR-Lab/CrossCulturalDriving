@@ -9,7 +9,6 @@ using UnityEngine;
 using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UNET;
-using UnityEditor;
 using UnityEngine.SceneManagement;
 
 
@@ -669,6 +668,9 @@ public class ConnectionAndSpawing : MonoBehaviour
             Instantiate(VRUIStartPrefab);
             Debug.Log("Started Client");
         }
+        else{
+            GetComponent<StartServerClientGUI>().enabled = true;
+        }
 
         if (FindObjectsOfType<RerunManager>().Length > 1){
             Debug.LogError("We found more than 1 RerunManager. This is not support. Check your Hiracy");
@@ -685,10 +687,14 @@ public class ConnectionAndSpawing : MonoBehaviour
     // Update is called once per frame
     void Update(){
         if (NetworkManager.Singleton.IsServer){
-            //if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
-            //  {
-            //      DestroyAllClientObjects(new List<ParticipantObjectSpawnType> {ParticipantObjectSpawnType.CAR});
-            //  }
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.Space)){
+                if (Input.GetKeyUp(KeyCode.A)){
+                    ResetParticipantObject(ParticipantOrder.A, ParticipantObjectSpawnType.CAR);
+                }
+                else if (Input.GetKeyUp(KeyCode.B)){
+                    ResetParticipantObject(ParticipantOrder.B, ParticipantObjectSpawnType.CAR);
+                }
+            }
 
             switch (ServerState){
                 case ActionState.DEFAULT: break;
@@ -945,4 +951,92 @@ public class ConnectionAndSpawing : MonoBehaviour
     public RerunManager GetReRunManager(){
         return m_ReRunManager;
     }
+
+    private bool ResetParticipantObject(ParticipantOrder po, ParticipantObjectSpawnType objectType){
+        switch (objectType){
+            case ParticipantObjectSpawnType.MAIN:
+                break;
+            case ParticipantObjectSpawnType.CAR:
+                ulong? ClinetID = GetClientID(po);
+                if (ClinetID.HasValue && ClientObjects.ContainsKey(ClinetID.Value) &&
+                    ClientObjects[ClinetID.Value].ContainsKey(ParticipantObjectSpawnType.CAR)){
+                    var car = ClientObjects[ClinetID.Value][ParticipantObjectSpawnType.CAR];
+                    car.transform.GetComponent<Rigidbody>().velocity =
+                        Vector3.zero; // Unsafe we are not sure that it has a rigid body
+                    car.transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                    _prepareSpawing(ClinetID.Value, out Pose? tempPose);
+                    if (!tempPose.HasValue){
+                        Debug.LogWarning("Did not find a position to reset the participant to." + po);
+                        return false;
+                    }
+
+                    car.transform.position = tempPose.Value.position;
+                    car.transform.rotation = tempPose.Value.rotation;
+                    return true;
+                }
+                else{
+                    return false;
+                }
+
+
+                break;
+            case ParticipantObjectSpawnType.PEDESTRIAN:
+                break;
+            default:
+                break;
+        }
+
+        return false;
+    }
+
+
+    private static readonly Dictionary<ParticipantOrder, GpsController.Direction> StopDict =
+        new Dictionary<ParticipantOrder, GpsController.Direction>(){
+            {ParticipantOrder.A, GpsController.Direction.Stop},
+            {ParticipantOrder.B, GpsController.Direction.Stop},
+            {ParticipantOrder.C, GpsController.Direction.Stop},
+            {ParticipantOrder.D, GpsController.Direction.Stop},
+            {ParticipantOrder.E, GpsController.Direction.Stop},
+            {ParticipantOrder.F, GpsController.Direction.Stop}
+        };
+
+
+    private Coroutine i_AwaitCarStopped;
+    private bool FinishedRunningAwaitCorutine=true;
+
+    public void AwaitQN(){
+        Debug.Log("Starting Await Progress");
+        if (!FinishedRunningAwaitCorutine) return;
+
+        FinishedRunningAwaitCorutine = false;
+        UpdateAllGPS(StopDict);
+        i_AwaitCarStopped = StartCoroutine(AwaitCarStopped());
+    }
+
+    private float totalSpeedReturn(){
+        float testValue = 0f;
+        foreach (ulong val in GetClientList()){
+            ParticipantOrder po = GetParticipantOrderClientId(val);
+            Transform tf = GetClientObject(po, ParticipantObjectSpawnType.CAR);
+            if (tf != null){
+                Rigidbody rb = tf.GetComponent<Rigidbody>();
+                if (rb != null){
+                    testValue += rb.velocity.magnitude;
+                }
+            }
+        }
+
+        return testValue;
+    }
+
+    IEnumerator AwaitCarStopped(){
+        yield return new  WaitUntil(() =>
+            totalSpeedReturn() <= 0.1f
+        );
+        SwitchToQN();
+        FinishedRunningAwaitCorutine = true;
+    }
+    
+    
+   
 }
