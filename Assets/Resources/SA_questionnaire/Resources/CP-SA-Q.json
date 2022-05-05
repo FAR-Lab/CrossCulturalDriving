@@ -10,7 +10,7 @@
             "B"
         ],
         "QuestionText": {
-            "English": "While approaching the junction, what was your speed?",
+            "English": "How fast were you driving before the intersection?",
             "Hebrew": "מה הייתה המהירות שלך בזמן שהתקרבת לצומת?"
         },
         "Answers": [
@@ -45,18 +45,63 @@
         ]
     },
     {
-        "ID": 2,
-        "Scenario_ID": "CP1-2",
-        "SA_atoms": "Signaling",
-        "SA_Level": "Perception",
-        "Awareness_to": "Other driver",
+        "ID": 11,
+        "Scenario_ID": "CP1-11",
+        "SA_atoms": "Speed",
+        "SA_Level": "Comprehension",
+        "Awareness_to": "Myself",
         "Participant": [
             "A",
             "B"
         ],
         "QuestionText": {
-            "English": "While approaching the junction, did the other driver signal?",
-            "Hebrew": "האם הנהג השני אותת בזמן שהוא התקרב לצומת?"
+            "English": "As you approached the intersection, how was your speed changing?",
+            "Hebrew": "מה שינית במהירות שלך בזמן שהתקרבת לצומת?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "I was slowing down",
+                    "Hebrew": "האטתי"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "I was accelerating",
+                    "Hebrew": "האצתי"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I didn't changed my speed",
+                    "Hebrew": "לא שיניתי את המהירות שלי"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
+    },
+    {
+        "ID": 18,
+        "Scenario_ID": "CP1-18",
+        "SA_atoms": "Signaling",
+        "SA_Level": "Perception",
+        "Awareness_to": "Myself",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "As you approached the intersection, did you signal?",
+            "Hebrew": "בזמן שהתקרבת לצומת, האם אותתתה?"
         },
         "Answers": [
             {
@@ -79,12 +124,261 @@
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
                 }
+            }
+        ]
+    },
+    {
+        "ID": 19,
+        "Scenario_ID": "CP1-19",
+        "SA_atoms": "Heading",
+        "SA_Level": "Perception",
+        "Awareness_to": "Myself",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "As you approached the intersection, what direction were you heading?",
+            "Hebrew": "בזמן שהתקרבת לצומת, לאיזה כיוון הרכב שלך פנה?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "To the right",
+                    "Hebrew": "ימינה"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "To the left",
+                    "Hebrew": "שמאלה"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "Straight",
+                    "Hebrew": "ישר"
+                }
             },
             {
                 "index": 4,
                 "AnswerText": {
-                    "English": "I didn't see any other car",
-                    "Hebrew": "לא ראיתי רכב נוסף"
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
+    },    
+    {
+        "ID": 16,
+        "Scenario_ID": "CP1-16",
+        "SA_atoms": "Heading",
+        "SA_Level": "Projection",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "Did you feel there was a risk of a collision at that intersection?",
+            "Hebrew":"האם חשת שעשויה להיות התנגשות בצומת?"
+                  },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "Yes",
+                    "Hebrew": "כן"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "No",
+                    "Hebrew": "לא"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
+    },
+    {
+        "ID": 25,
+        "Scenario_ID": "CP1-25",
+        "SA_atoms": "Environment",
+        "SA_Level": "Perception",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "As you approached the intersection, did you notice another vehicle?",
+            "Hebrew": "בזמן שהתקרבת לצומת, האם שמת לב לרכב נוסף?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "Yes",
+                    "Hebrew": "כן"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "No",
+                    "Hebrew": "לא"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
+    },
+    {
+        "ID": 9,
+        "Scenario_ID": "CP1-9",
+        "SA_atoms": "Speed",
+        "SA_Level": "Perception",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "How fast was the other driver driving before the intersection?",
+            "Hebrew": "מה הייתה המהירות של הנהג השני לפני הצומת?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "High speed",
+                    "Hebrew": "מהירה"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "Normal speed",
+                    "Hebrew": "נורמאלית"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "Slow speed",
+                    "Hebrew": "איטית"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }            
+        ]
+    },
+    {
+        "ID": 10,
+        "Scenario_ID": "CP1-10",
+        "SA_atoms": "Speed",
+        "SA_Level": "Comprehension",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "As you approached the intersection, how the other driver's speed changing?",
+            "Hebrew": "כיצד המהירות של הנהג השני השתנתה בזמן שהתקרבת לצומת?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "They were slowing down",
+                    "Hebrew": "הוא האט"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "They were accelerating",
+                    "Hebrew": "הוא האיץ"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "They didn't change their speed",
+                    "Hebrew": "הוא לא שינה את המהירות שלו"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
+    },
+    {
+        "ID": 15,
+        "Scenario_ID": "CP1-15",
+        "SA_atoms": "Speed",
+        "SA_Level": "Projection",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "What did you expect the other vehicle to do when you noticed it?",
+            "Hebrew": "מה ציפית שהרכב השני יעשה כאשר שמת לב אליו?"
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "Come to a complete stop",
+                    "Hebrew": "יעצור לחלוטין"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "Continue at the same pace and enter the intersection",
+                    "Hebrew": "ימשיך באותה מהירות ויכנס לצומת"
+                }
+            }, 
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "Slown down and move slowly into the intersection",
+                    "Hebrew": "יאט ויכנס באיטיות לצומת"
+                }
+            },                       
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
                 }
             }
         ]
@@ -100,36 +394,36 @@
             "B"
         ],
         "QuestionText": {
-            "English": "Where was the other driver when you approached the intersection?",
-            "Hebrew": "היכן היה הנהג השני כאשר התקרבת לצומת?"
+            "English": "What direction was the other vehicle coming from?",
+            "Hebrew": "מאיזה כיוון הרכב השני הגיע?"
         },
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
                     "English": "On the opposite lane to my left",
-                    "Hebrew": "בנתיב ממולי מצד שמאל"
+                    "Hebrew": "מהנתיב מולי מצד שמאל"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
                     "English": "On the opposite lane to my right",
-                    "Hebrew": "בנתיב ממולי מצד ימין"
+                    "Hebrew": "מהנתיב מולי מצד ימין"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
                     "English": "On the orthogonal lane to my right",
-                    "Hebrew": "בנתיב מצד ימין"
+                    "Hebrew": "מהנתיב מצד ימין"
                 }
             },
             {
                 "index": 4,
                 "AnswerText": {
                     "English": "On the orthogonal lane to my left",
-                    "Hebrew": "בנתיב מצד שמאל"
+                    "Hebrew": "מהנתיב מצד שמאל"
                 }
             },
             {
@@ -138,106 +432,9 @@
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
                 }
-            },
-            {
-                "index": 6,
-                "AnswerText": {
-                    "English": "I didn't see any other car",
-                    "Hebrew": "לא ראיתי רכב נוסף"
-                }
             }
         ]
-    },
-    {
-        "ID": 5,
-        "Scenario_ID": "CP1-5",
-        "SA_atoms": "Location",
-        "SA_Level": "Comprehension",
-        "Awareness_to": "Other driver",
-        "Participant": [
-            "A",
-            "B"
-        ],
-        "QuestionText": {
-            "English": "What did the location of the other vehicle mean?",
-            "Hebrew": "כיצד פירשת את המיקום של הרכב השני?"
-        },
-        "Answers": [
-            {
-                "index": 1,
-                "AnswerText": {
-                    "English": "Another vehicle approaching the intersection",
-                    "Hebrew": "רכב נוסף מתקרב לצומת"
-                }
-            },
-            {
-                "index": 2,
-                "AnswerText": {
-                    "English": "Another vehicle was not approaching the intersection",
-                    "Hebrew": "אף רכב לא מתקרב לצומת"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "I am not sure",
-                    "Hebrew": "אני לא בטוח"
-                }
-            },
-            {
-                "index": 4,
-                "AnswerText": {
-                    "English": "I didn't see any other car",
-                    "Hebrew": "לא ראיתי רכב נוסף"
-                }
-            }
-        ]
-    },
-    {
-        "ID": 6,
-        "Scenario_ID": "CP1-6",
-        "SA_atoms": "Location",
-        "SA_Level": "Projection",
-        "Awareness_to": "Other driver",
-        "Participant": [
-            "A",
-            "B"
-        ],
-        "QuestionText": {
-            "English": "Given the location of the other driver, what could have happened next?",
-            "Hebrew": "בהינתן מיקומו של הרכב השני, מה היה עשוי לקרות?"
-        },
-        "Answers": [
-            {
-                "index": 1,
-                "AnswerText": {
-                    "English": "The other driver would have crossed the intersection",
-                    "Hebrew": "הנהג השני עשוי היה לחצות את הצומת"
-                }
-            },
-            {
-                "index": 2,
-                "AnswerText": {
-                    "English": "The other driver would not have cross the intersection",
-                    "Hebrew": "הנהג השני לא היה חוצה את הצומת"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "There was no other driver",
-                    "Hebrew": "לא היה נהג נוסף"
-                }
-            },
-            {
-                "index": 4,
-                "AnswerText": {
-                    "English": "I am not sure",
-                    "Hebrew": "אני לא בטוח"
-                }
-            }
-        ]
-    },
+    },    
     {
         "ID": 7,
         "Scenario_ID": "CP1-7",
@@ -263,7 +460,7 @@
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "The other car",
+                    "English": "The other vehicle",
                     "Hebrew": "לנהג השני"
                 }
             },
@@ -301,8 +498,8 @@
             "B"
         ],
         "QuestionText": {
-            "English": "Given the location of the other driver and the right-of-way, what could have happened next?",
-            "Hebrew": "בהינתן מיקומו של הרכב השני וזכות הקדימה, מה היה עשוי לקרות?"
+            "English": "Given the right-of-way, what could have happened next?",
+            "Hebrew": "בהינתן זכות הקדימה, מה היה עשוי לקרות?"
         },
         "Answers": [
             {
@@ -318,16 +515,9 @@
                     "English": "The other driver would not have crossed the intersection first",
                     "Hebrew": "הנהג השני לא היה חוצה את הצומת"
                 }
-            },
+            },            
             {
                 "index": 3,
-                "AnswerText": {
-                    "English": "There was no other driver",
-                    "Hebrew": "לא היה נהג נוסף"
-                }
-            },
-            {
-                "index": 4,
                 "AnswerText": {
                     "English": "I am not sure",
                     "Hebrew": "אני לא בטוח"
@@ -336,9 +526,9 @@
         ]
     },
     {
-        "ID": 9,
-        "Scenario_ID": "CP1-9",
-        "SA_atoms": "Speed",
+        "ID": 2,
+        "Scenario_ID": "CP1-2",
+        "SA_atoms": "Signaling",
         "SA_Level": "Perception",
         "Awareness_to": "Other driver",
         "Participant": [
@@ -346,194 +536,31 @@
             "B"
         ],
         "QuestionText": {
-            "English": "While approaching the junction, what was the other driver's speed?",
-            "Hebrew": "מה הייתה המהירות של הנהג השני בזמן שהתקרבת לצומת?"
+            "English": "Did the other vehicle signal as it approached the intersection?",
+            "Hebrew": "האם הרכב השני אותת בזמן שהוא התקרב לצומת?"
         },
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "High speed",
-                    "Hebrew": "מהירה"
+                    "English": "Yes",
+                    "Hebrew": "כן"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "Normal speed",
-                    "Hebrew": "נורמאלית"
+                    "English": "No",
+                    "Hebrew": "לא"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "Slow speed",
-                    "Hebrew": "איטית"
-                }
-            },
-            {
-                "index": 4,
-                "AnswerText": {
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
                 }
-            },
-            {
-                "index": 5,
-                "AnswerText": {
-                    "English": "I didn't see any other car",
-                    "Hebrew": "לא ראיתי רכב נוסף"
-                }
-            }
-        ]
-    },
-    {
-        "ID": 10,
-        "Scenario_ID": "CP1-10",
-        "SA_atoms": "Speed",
-        "SA_Level": "Comprehension",
-        "Awareness_to": "Other driver",
-        "Participant": [
-            "A",
-            "B"
-        ],
-        "QuestionText": {
-            "English": "While approaching the junction, what did the other driver's speed mean?",
-            "Hebrew": "מה הייתה משמעות המהירות של הנהג השני בזמן שהתקרבת לצומת?"
-        },
-        "Answers": [
-            {
-                "index": 1,
-                "AnswerText": {
-                    "English": "They were slowing down",
-                    "Hebrew": "הוא האט"
-                }
-            },
-            {
-                "index": 2,
-                "AnswerText": {
-                    "English": "They were accelerating",
-                    "Hebrew": "הוא האיץ"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "They didn't change their speed",
-                    "Hebrew": "הוא לא שינה את המהירות שלו"
-                }
-            },
-            {
-                "index": 4,
-                "AnswerText": {
-                    "English": "I'm not sure",
-                    "Hebrew": "אני לא בטוח"
-                }
-            },
-            {
-                "index": 5,
-                "AnswerText": {
-                    "English": "I didn't see any other car",
-                    "Hebrew": "לא ראיתי רכב נוסף"
-                }
-            }
-        ]
-    },
-    {
-        "ID": 11,
-        "Scenario_ID": "CP1-11",
-        "SA_atoms": "Speed",
-        "SA_Level": "Comprehension",
-        "Awareness_to": "Myself",
-        "Participant": [
-            "A",
-            "B"
-        ],
-        "QuestionText": {
-            "English": "While approaching the junction, what were you trying to do with your speed?",
-            "Hebrew": "מה שינית במהירות שלך בזמן שהתקרבת לצומת?"
-        },
-        "Answers": [
-            {
-                "index": 1,
-                "AnswerText": {
-                    "English": "I was slowing down",
-                    "Hebrew": "האטתי"
-                }
-            },
-            {
-                "index": 2,
-                "AnswerText": {
-                    "English": "I was accelerating",
-                    "Hebrew": "האצתי"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "I didn't changed my speed",
-                    "Hebrew": "לא שיניתי את המהירות שלי"
-                }
-            },
-            {
-                "index": 4,
-                "AnswerText": {
-                    "English": "I'm not sure",
-                    "Hebrew": "אני לא בטוח"
-                }
-            }
-        ]
-    },
-    {
-        "ID": 13,
-        "Scenario_ID": "CP1-13",
-        "SA_atoms": "Heading",
-        "SA_Level": "Projection",
-        "Awareness_to": "Other driver",
-        "Participant": [
-            "A",
-            "B"
-        ],
-        "QuestionText": {
-            "English": "While approaching the junction, giving the other driver's direction, what could have happened next?",
-            "Hebrew": "בזמן שהתקרבת לצומת ובהינתן כיוון הנסיעה של הנהג השני, מה היה עשוי לקרות?"
-        },
-        "Answers": [
-            {
-                "index": 1,
-                "AnswerText": {
-                    "English": "The other driver would have turned right",
-                    "Hebrew": "הנהג השני היה פונה ימינה"
-                }
-            },
-            {
-                "index": 2,
-                "AnswerText": {
-                    "English": "The other driver would have turned left",
-                    "Hebrew": "הנהג השני היה פונה שמאלה"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "The other driver would have went straight",
-                    "Hebrew": "הנהג השני היה ממשיך ישר"
-                }
-            },
-            {
-                "index": 4,
-                "AnswerText": {
-                    "English": "I'm not sure",
-                    "Hebrew": "אני לא בטוח"
-                }
-            },
-            {
-                "index": 5,
-                "AnswerText": {
-                    "English": "I didn't see any other car",
-                    "Hebrew": "לא ראיתי רכב נוסף"
-                }
-            }
+            }            
         ]
     },
     {
@@ -547,7 +574,7 @@
             "B"
         ],
         "QuestionText": {
-            "English": "While approaching the junction, which direction was the other vehicle facing?",
+            "English": "Going into the intersection, which direction was the other vehicle heading?",
             "Hebrew": "בזמן שהתקרבת לצומת, לאיזה כיוון פנה הנהג השני?"
         },
         "Answers": [
@@ -578,96 +605,6 @@
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
                 }
-            },
-            {
-                "index": 5,
-                "AnswerText": {
-                    "English": "I didn't see any other car",
-                    "Hebrew": "לא ראיתי רכב נוסף"
-                }
-            }
-        ]
-    },
-    {
-        "ID": 15,
-        "Scenario_ID": "CP1-15",
-        "SA_atoms": "Speed",
-        "SA_Level": "Projection",
-        "Awareness_to": "Other driver",
-        "Participant": [
-            "A",
-            "B"
-        ],
-        "QuestionText": {
-            "English": "Based on the other drivers's speed while approaching the junction, what could have happened next?",
-            "Hebrew": "בהתחשב במהירות הנסיעה של הנהג השני בזמן שהתקרב לצומת, מה היה עשוי לקרות?"
-        },
-        "Answers": [
-            {
-                "index": 1,
-                "AnswerText": {
-                    "English": "The other driver would have come to a complete stop",
-                    "Hebrew": "הנהג השני היה עוצר"
-                }
-            },
-            {
-                "index": 2,
-                "AnswerText": {
-                    "English": "The other driver would have continued at the same pace and enter the junction",
-                    "Hebrew": "הנהג השני היה ממשיך באותה מהירות ונכנס לצומת"
-                }
-            },            
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "There was no other driver",
-                    "Hebrew": "לא היה נהג נוסף"
-                }
-            },
-            {
-                "index": 4,
-                "AnswerText": {
-                    "English": "I'm not sure",
-                    "Hebrew": "אני לא בטוח"
-                }
-            }
-        ]
-    },
-    {
-        "ID": 16,
-        "Scenario_ID": "CP1-16",
-        "SA_atoms": "Heading",
-        "SA_Level": "Projection",
-        "Awareness_to": "Other driver",
-        "Participant": [
-            "A",
-            "B"
-        ],
-        "QuestionText": {
-            "English": "Based on the sequence of events, did you feel a collision could have happened?",
-            "Hebrew": "בהתחשב ברצף האירועים, האם חשת שעשויה להיות התנגשות?"
-        },
-        "Answers": [
-            {
-                "index": 1,
-                "AnswerText": {
-                    "English": "Yes",
-                    "Hebrew": "כן"
-                }
-            },
-            {
-                "index": 2,
-                "AnswerText": {
-                    "English": "No",
-                    "Hebrew": "לא"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "I'm not sure",
-                    "Hebrew": "אני לא בטוח"
-                }
             }
         ]
     },
@@ -682,7 +619,7 @@
             "B"
         ],
         "QuestionText": {
-            "English": "Before crossing the junction, which direction did you think the other driver was going in?",
+            "English": "Before crossing the intersection, which direction did you think the other driver was going in?",
             "Hebrew": "לפני שחצית את הצומת, לאיזה כיוון חשבת שהנהג השני עשוי לפנות?"
         },
         "Answers": [
@@ -713,88 +650,43 @@
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
                 }
-            },
-            {
-                "index": 5,
-                "AnswerText": {
-                    "English": "I didn't see any other car",
-                    "Hebrew": "לא ראיתי רכב נוסף"
-                }
             }
         ]
     },
     {
-        "ID": 18,
-        "Scenario_ID": "CP1-18",
-        "SA_atoms": "Signaling",
-        "SA_Level": "Perception",
-        "Awareness_to": "Myself",
-        "Participant": [
-            "A",
-            "B"
-        ],
-        "QuestionText": {
-            "English": "While approaching the junction, did you use your signaling lights?",
-            "Hebrew": "בזמן שהתקרבת לצומת, האם השתמשת באורות האיתות?"
-        },
-        "Answers": [
-            {
-                "index": 1,
-                "AnswerText": {
-                    "English": "Yes",
-                    "Hebrew": "כן"
-                }
-            },
-            {
-                "index": 2,
-                "AnswerText": {
-                    "English": "No",
-                    "Hebrew": "לא"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "I'm not sure",
-                    "Hebrew": "אני לא בטוח"
-                }
-            }
-        ]
-    },
-    {
-        "ID": 19,
-        "Scenario_ID": "CP1-19",
+        "ID": 13,
+        "Scenario_ID": "CP1-13",
         "SA_atoms": "Heading",
-        "SA_Level": "Perception",
-        "Awareness_to": "Myself",
+        "SA_Level": "Projection",
+        "Awareness_to": "Other driver",
         "Participant": [
             "A",
             "B"
         ],
         "QuestionText": {
-            "English": "While approaching the junction, which direction were you facing?",
-            "Hebrew": "בזמן שהתקרבת לצומת, לאיזה כיוון פנית?"
+            "English": "While the other driver was approaching the intersection, I could tell that:",
+            "Hebrew":"בזמן שהנהג השני התקרב לצומת, מה היה עשוי לקרות להערכתך?"
         },
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "To the right",
-                    "Hebrew": "ימינה"
+                    "English": "The other driver was going to turn right",
+                    "Hebrew": "הנהג השני היה פונה ימינה"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "To the left",
-                    "Hebrew": "שמאלה"
+                    "English": "The other driver was going to turn left",
+                    "Hebrew": "הנהג השני היה פונה שמאלה"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "Straight",
-                    "Hebrew": "ישר"
+                    "English": "The other driver was going to go straight",
+                    "Hebrew": "הנהג השני היה ממשיך ישר"
                 }
             },
             {
@@ -831,7 +723,7 @@
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "The other car",
+                    "English": "The other vehicle",
                     "Hebrew": "הרכב השני"
                 }
             },
@@ -862,7 +754,7 @@
             "B"
         ],
         "QuestionText": {
-            "English": "After entering the junction, what was the location of the other vehicle?",
+            "English": "As you entered the intersection, what was the location of the other vehicle?",
             "Hebrew": "בזמן שנכנסת לצומת, מה היה המיקום של הרכב השני?"
         },
         "Answers": [
@@ -876,28 +768,28 @@
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "In the middle of the junction",
+                    "English": "In the middle of the intersection",
                     "Hebrew": "בתוך הצומת"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "Before the Junction",
+                    "English": "Before the intersection",
                     "Hebrew": "לפני הצומת"
                 }
             },
             {
                 "index": 4,
                 "AnswerText": {
-                    "English": "After the junction",
+                    "English": "After the intersection",
                     "Hebrew": "אחרי הצומת"
                 }
             },
             {
                 "index": 5,
                 "AnswerText": {
-                    "English": "I didn't have a chance to get into the junction",
+                    "English": "I didn't have a chance to get into the intersection",
                     "Hebrew": "לא הספקתי להכנס לצומת"
                 }
             },
@@ -907,14 +799,7 @@
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
                 }
-            },
-            {
-                "index": 7,
-                "AnswerText": {
-                    "English": "I didn't see any other car",
-                    "Hebrew": "לא ראיתי רכב נוסף"
-                }
             }
         ]
-    }
+    }  
 ]
