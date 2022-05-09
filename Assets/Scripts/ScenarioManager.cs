@@ -1,12 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Newtonsoft.Json;
-using OVR.OpenVR;
-using Unity.Netcode;
-using UnityEditor;
-using UnityEngine.Networking;
 using UnityEngine;
 using Application = UnityEngine.Application;
 
@@ -89,12 +83,23 @@ public class ScenarioManager : MonoBehaviour {
         Transform MyCar = MyLocalClient.GetComponent<ParticipantInputCapture>().GetMyCar();
        
         qnmanager.gameObject.SetActive(true);
-        qnmanager.setRelativePosition(MyCar, 2f, 4.25f);
+        qnmanager.transform.localScale *= 0.1f;
+        qnmanager.setRelativePosition(MyCar.GetComponent<NetworkVehicleController>().SteeringWheel, -0.25f, -0.16f, Quaternion.Euler(new Vector3(67,270,0)));
         if (QuestionairToAsk !=null) {
             Debug.Log("about to setup QN");
             qnmanager.startAskingTheQuestionairs(MyLocalClient, conditionName, ConnectionAndSpawing.Singleton.lang);
             Debug.Log("Started asking questions!");
         }
+
+        foreach (QnCaptureScreenShot screenShot in FindObjectsOfType<QnCaptureScreenShot>()){
+            if (screenShot.ContainsPO(ConnectionAndSpawing.Singleton.ParticipantOrder)){
+                qnmanager.AddImage(screenShot.GetTexture());
+                break;
+            }
+        }
+        
+        
+        
     }
 
     public Dictionary<ParticipantOrder, GpsController.Direction> GetStartingPositions() {

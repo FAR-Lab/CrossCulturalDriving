@@ -39,7 +39,9 @@ public class ParticipantInputCapture : NetworkBehaviour
         ReadyForAssignment = false;
     }
 
-
+    public ParticipantOrder getMyOrder(){
+        return m_participantOrder;
+    }
     public static ParticipantInputCapture GetMyPIC()
     {
         foreach (ParticipantInputCapture pic in FindObjectsOfType<ParticipantInputCapture>())

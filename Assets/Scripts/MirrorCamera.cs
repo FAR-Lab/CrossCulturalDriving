@@ -15,13 +15,12 @@ public class MirrorCamera : MonoBehaviour {
     public RenderTexture rt;
     public int width = 256;
     public int height = 256;
-    public int depth = 0;
     public RenderTextureFormat rtf;
     public bool flipHorizontal;
 
     void Start() {
         cam = GetComponent<Camera>();
-        rt = new RenderTexture(width, height, 0, rtf);
+        rt = new RenderTexture(width, height, 16, rtf);
         rt.Create();
         rt.name = "MirrorCameraTexture"+ transform.name;
      

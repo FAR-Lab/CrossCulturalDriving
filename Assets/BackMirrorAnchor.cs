@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 public class BackMirrorAnchor : MonoBehaviour {
@@ -22,7 +21,6 @@ public class BackMirrorAnchor : MonoBehaviour {
         {
             float lerpValue = Mathf.Lerp(0, 1, ((CameraPos.localPosition.y - minIn) / (maxIn - minIn)));
 ;            transform.localPosition = Vector3.Lerp(LowerTarget.localPosition, InitalUpperPosition, lerpValue);
-            //Debug.Log(lerpValue);
         }
     }
 }
