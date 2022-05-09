@@ -90,6 +90,7 @@ public class ObjAnswer
 {
     public int index { get; set; } //This property define the order of the answers
     public Dictionary<string, string> AnswerText { get; set; }
+    public bool FinishQN { get; set; }
 }
 
 public class QuestionnaireQuestion

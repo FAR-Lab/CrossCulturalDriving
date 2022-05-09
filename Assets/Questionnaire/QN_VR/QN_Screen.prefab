@@ -302,7 +302,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 5
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &114567478546710778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -334,6 +334,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ButtonPrefab: {fileID: 1760336582165158, guid: 36e99e288be1353488b2cf7c2926563e, type: 3}
   m_interalState: 0
+  up: 0
+  forward: 0
+  deltaRotation: {x: 0, y: 0, z: 0, w: 0}
+  ScenarioImageHolder: {fileID: 1853806982428388, guid: 4f9e5e49da447e842b54e2e663678fa2, type: 3}
 --- !u!222 &222212222742178676
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -355,7 +359,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.44705883}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

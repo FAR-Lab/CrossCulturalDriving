@@ -4,6 +4,7 @@ using System.IO;
 using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -56,16 +57,18 @@ public class QNSelectionManager : MonoBehaviour
 #endif
 
     Transform ParentPosition;
-    float up, forward;
+    public float up, forward;
+    public Quaternion deltaRotation;
 
     public void ChangeLanguage(string lang){
         m_LanguageSelect = lang;
     }
 
-    public void setRelativePosition(Transform t, float up_, float forward_){
+    public void setRelativePosition(Transform t, float up_, float forward_, Quaternion deltaRotation_){
         ParentPosition = t;
         up = up_;
         forward = forward_;
+        deltaRotation = deltaRotation_;
     }
 
     void Start(){
@@ -107,6 +110,36 @@ public class QNSelectionManager : MonoBehaviour
 #endif
     }
 
+    public GameObject ScenarioImageHolder;
+
+    public void AddImage(Texture2D CaptureScenarioImage){
+        if (ScenarioImageHolder == null){
+            Debug.LogError("This is not good. Could not show a picture even-though I was supposed to.!");
+            return;
+        }
+
+        var newImageHolder = Instantiate(ScenarioImageHolder, transform).transform;
+
+        newImageHolder.transform.localPosition = new Vector3(0, 400, 0f);
+        
+      //  newImageHolder.GetComponent<RectTransform>().localRotation = new Quaternion(0.1f, 0, 0, 0);// ok so this is trang 
+      
+        if (newImageHolder.GetComponent<RawImage>() != null){
+           // byte[] byteArray = File.ReadAllBytes(CaptureScenarioImage);
+           // Texture2D sampleTexture = new Texture2D(2, 2);
+          //  bool isLoaded = sampleTexture.LoadImage(byteArray);
+            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,CaptureScenarioImage.height/4);
+            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,CaptureScenarioImage.width/4);
+            
+          //  if (isLoaded){
+                newImageHolder.GetComponent<RawImage>().texture = CaptureScenarioImage;
+          //  }
+        }
+        else{
+            Debug.Log("Was trying to show a screenshot but well didnt know where really sorry try againI guess ;-) ");
+        }
+    }
+
 
     private Transform positioingRef;
 
@@ -133,8 +166,8 @@ public class QNSelectionManager : MonoBehaviour
         }
 
         if (ParentPosition != null){
-            transform.rotation = ParentPosition.rotation;
-            transform.position = ParentPosition.position + ParentPosition.rotation * new Vector3(0, up, forward);
+            transform.rotation = ParentPosition.rotation * deltaRotation;
+            transform.position = ParentPosition.position + ParentPosition.rotation * new Vector3(up, forward, 0);
         }
 
         switch (m_interalState){
@@ -235,14 +268,14 @@ public class QNSelectionManager : MonoBehaviour
                 if (m_MyLocalClient != null && m_MyLocalClient.IsLocalPlayer){
                     m_MyLocalClient.PostQuestionServerRPC(m_MyLocalClient.OwnerClientId);
 
-                    
+
                     foreach (RectTransform r in AnswerFields){
                         Destroy(r.gameObject);
                     }
-                    
+
                     switch (m_LanguageSelect){
                         case "Hebrew":
-                            QustionField.text = "המתן בבקשה";
+                            QustionField.text = StringExtension.RTLText("המתן בבקשה");
                             break;
 
                         case "English":
@@ -250,7 +283,7 @@ public class QNSelectionManager : MonoBehaviour
                             QustionField.text = "Please Wait!";
                             break;
                     }
-                   
+
                     m_interalState = QNStates.IDLE;
                 }
                 else{
@@ -273,7 +306,7 @@ public class QNSelectionManager : MonoBehaviour
     }
 
     private void updateCountDisaply(){
-        CountDisplay.text = (1+_answerCount).ToString() + " / " + _totalCount.ToString();
+        CountDisplay.text = (1 + _answerCount).ToString() + " / " + _totalCount.ToString();
     }
 }
 
