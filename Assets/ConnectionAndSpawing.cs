@@ -10,6 +10,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UNET;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 
 public class ConnectionAndSpawing : MonoBehaviour
@@ -17,7 +18,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     public GameObject PlayerPrefab;
     public GameObject CarPrefab;
     public GameObject VRUIStartPrefab;
-
+    public GameObject ref_ServerTimingDisplay;
 
     public List<SceneField> IncludedScenes = new List<SceneField>();
     public string LastLoadedVisualScene;
@@ -441,6 +442,14 @@ public class ConnectionAndSpawing : MonoBehaviour
         SetupServerFunctionality();
         m_ReRunManager.SetRecordingFolder(pairName);
         Debug.Log("Starting Server for session: " + pairName);
+
+        FindObjectOfType<RerunLayoutManager>().enabled = false;
+
+        if (ref_ServerTimingDisplay != null){
+            ServerTimeDisplay val = Instantiate(ref_ServerTimingDisplay, Vector3.zero, Quaternion.identity, transform)
+                .GetComponent<ServerTimeDisplay>();
+            val.StartDisplay(0.5f);
+        }
     }
 
     private QNDataStorageServer m_QNDataStorageServer;
@@ -534,7 +543,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     public void StartReRun(){
         ServerState = ActionState.RERUN;
-
+        FindObjectOfType<RerunLayoutManager>().enabled = true;
         m_ReRunManager.RegisterPreLoadHandler(LoadSceneReRun);
         NetworkManager.Singleton.enabled = false;
         GetComponent<OVRManager>().enabled = false;
@@ -670,6 +679,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         }
         else{
             GetComponent<StartServerClientGUI>().enabled = true;
+            FindObjectOfType<RerunLayoutManager>().enabled = false;
         }
 
         if (FindObjectsOfType<RerunManager>().Length > 1){
@@ -1002,7 +1012,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
 
     private Coroutine i_AwaitCarStopped;
-    private bool FinishedRunningAwaitCorutine=true;
+    private bool FinishedRunningAwaitCorutine = true;
 
     public void AwaitQN(){
         Debug.Log("Starting Await Progress");
@@ -1030,13 +1040,10 @@ public class ConnectionAndSpawing : MonoBehaviour
     }
 
     IEnumerator AwaitCarStopped(){
-        yield return new  WaitUntil(() =>
+        yield return new WaitUntil(() =>
             totalSpeedReturn() <= 0.1f
         );
         SwitchToQN();
         FinishedRunningAwaitCorutine = true;
     }
-    
-    
-   
 }

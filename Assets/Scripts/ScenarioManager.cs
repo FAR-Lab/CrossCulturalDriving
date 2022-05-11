@@ -84,7 +84,7 @@ public class ScenarioManager : MonoBehaviour {
        
         qnmanager.gameObject.SetActive(true);
         qnmanager.transform.localScale *= 0.1f;
-        qnmanager.setRelativePosition(MyCar.GetComponent<NetworkVehicleController>().SteeringWheel, -0.25f, -0.16f, Quaternion.Euler(new Vector3(67,270,0)));
+        qnmanager.setRelativePosition(MyCar, -0.38f, 1.14f,0.6f);
         if (QuestionairToAsk !=null) {
             Debug.Log("about to setup QN");
             qnmanager.startAskingTheQuestionairs(MyLocalClient, conditionName, ConnectionAndSpawing.Singleton.lang);
