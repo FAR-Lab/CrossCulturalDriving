@@ -15,6 +15,7 @@ using UnityEngine.InputSystem;
 using Newtonsoft.Json;
 using Unity.Collections;
 using Unity.Netcode;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
 public class QNSelectionManager : MonoBehaviour
@@ -57,18 +58,20 @@ public class QNSelectionManager : MonoBehaviour
 #endif
 
     Transform ParentPosition;
-    public float up, forward;
-    public Quaternion deltaRotation;
+    [FormerlySerializedAs("up")] public float xOffset;
+    [FormerlySerializedAs("forward")] public float yOffset;
+    [FormerlySerializedAs("left")] public float zOffset;
+
 
     public void ChangeLanguage(string lang){
         m_LanguageSelect = lang;
     }
 
-    public void setRelativePosition(Transform t, float up_, float forward_, Quaternion deltaRotation_){
+    public void setRelativePosition(Transform t, float up_, float forward_,float left_){
         ParentPosition = t;
-        up = up_;
-        forward = forward_;
-        deltaRotation = deltaRotation_;
+        xOffset = up_;
+        yOffset = forward_;
+        zOffset = left_;
     }
 
     void Start(){
@@ -120,20 +123,14 @@ public class QNSelectionManager : MonoBehaviour
 
         var newImageHolder = Instantiate(ScenarioImageHolder, transform).transform;
 
-        newImageHolder.transform.localPosition = new Vector3(0, 400, 0f);
+        newImageHolder.transform.localPosition = new Vector3(0, 300, 0f);
         
-      //  newImageHolder.GetComponent<RectTransform>().localRotation = new Quaternion(0.1f, 0, 0, 0);// ok so this is trang 
-      
         if (newImageHolder.GetComponent<RawImage>() != null){
-           // byte[] byteArray = File.ReadAllBytes(CaptureScenarioImage);
-           // Texture2D sampleTexture = new Texture2D(2, 2);
-          //  bool isLoaded = sampleTexture.LoadImage(byteArray);
-            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,CaptureScenarioImage.height/4);
-            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,CaptureScenarioImage.width/4);
-            
-          //  if (isLoaded){
-                newImageHolder.GetComponent<RawImage>().texture = CaptureScenarioImage;
-          //  }
+            CaptureScenarioImage.Apply();
+            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,CaptureScenarioImage.height/6);
+            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,CaptureScenarioImage.width/6);
+            newImageHolder.GetComponent<RawImage>().texture = CaptureScenarioImage;
+          
         }
         else{
             Debug.Log("Was trying to show a screenshot but well didnt know where really sorry try againI guess ;-) ");
@@ -166,8 +163,8 @@ public class QNSelectionManager : MonoBehaviour
         }
 
         if (ParentPosition != null){
-            transform.rotation = ParentPosition.rotation * deltaRotation;
-            transform.position = ParentPosition.position + ParentPosition.rotation * new Vector3(up, forward, 0);
+            transform.rotation = ParentPosition.rotation;
+            transform.position = ParentPosition.position + ParentPosition.rotation * new Vector3(xOffset, yOffset, zOffset);
         }
 
         switch (m_interalState){

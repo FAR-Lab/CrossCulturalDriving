@@ -50,6 +50,7 @@ public class QNDataStorageServer : MonoBehaviour
             .ConvertAll(x => ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(x)).ToArray());
     }
 
+   
 
     public void StartQn(ScenarioManager sManager, RerunManager activeManager){
         if (sManager == null) return;
@@ -73,7 +74,7 @@ public class QNDataStorageServer : MonoBehaviour
         foreach (ParticipantOrder po in ConnectionAndSpawing.Singleton.GetCurrentlyConnectedClients()){
             participantAnswerStatus.Add(po, StartID);
             LastParticipantStartTimes.Add(po, new DateTime());
-
+            ParticipantCountCurrent.Add(po,0);
             ConnectionAndSpawing.Singleton.SendTotalQNCount(po,
                 activeQuestionList.Count(x => x.Value.ContainsOrder(po)));
         }
@@ -168,7 +169,11 @@ public class QNDataStorageServer : MonoBehaviour
     public void NewDatapointfromClient(ParticipantOrder po, int id, int answerIndex, string lang){
         if (answerIndex == -1 && id == -1){
             SendPreviousQuestion(po, lang);
-
+            ParticipantCountCurrent[po]--;
+            if (ParticipantCountCurrent[po] < 0){
+                ParticipantCountCurrent[po] = 0;
+            };
+            UpdateTotalParticipantCounts();
             return;
         }
 
@@ -210,6 +215,8 @@ public class QNDataStorageServer : MonoBehaviour
         }
 
         SendNewQuestion(po, lang);
+        ParticipantCountCurrent[po]++;
+        UpdateTotalParticipantCounts();
     }
 
 
@@ -227,9 +234,11 @@ public class QNDataStorageServer : MonoBehaviour
         System.IO.File.WriteAllText(fullPath, s);
     }
 
-    private void SendEndQuestionnaire(ParticipantOrder p, string lang){
+    private void SendEndQuestionnaire(ParticipantOrder po, string lang){
         NetworkedQuestionnaireQuestion outval = NetworkedQuestionnaireQuestion.GetDefaultNQQ();
-        ConnectionAndSpawing.Singleton.SendNewQuestionToParticipant(p, outval);
+        ConnectionAndSpawing.Singleton.SendNewQuestionToParticipant(po, outval);
+        ParticipantCountCurrent[po]= activeQuestionList.Count(x => x.Value.ContainsOrder(po));
+        UpdateTotalParticipantCounts();
     }
 
     private void SendNewQuestion(ParticipantOrder p, string lang){
@@ -293,12 +302,36 @@ public class QNDataStorageServer : MonoBehaviour
             && activeQuestionList.ContainsKey(participantAnswerStatus[po])
             && activeQuestionList[participantAnswerStatus[po]].QuestionText != null){
             return activeQuestionList[participantAnswerStatus[po]].QuestionText[LogLanguage] + " at Scenario_ID: " +
-                   activeQuestionList[participantAnswerStatus[po]].Scenario_ID;
+                   activeQuestionList[participantAnswerStatus[po]].Scenario_ID+"  =>  "+
+                   GetTotalParticiapnAnswerCountString(po);
         }
 
 
         return "Not Found";
     }
+    private Dictionary<ParticipantOrder, string> ParticipantCountStrings = new Dictionary<ParticipantOrder, string>();
+    private Dictionary<ParticipantOrder, int> ParticipantCountCurrent = new Dictionary<ParticipantOrder, int>();
+
+    private string GetTotalParticiapnAnswerCountString(ParticipantOrder po){
+        if (ParticipantCountStrings.ContainsKey(po)){
+            return ParticipantCountStrings[po];
+        }
+
+        return "";
+    }
+    private void UpdateTotalParticipantCounts(){
+        foreach (ParticipantOrder po in participantAnswerStatus.Keys){
+            if (!ParticipantCountStrings.ContainsKey(po)){
+                ParticipantCountStrings.Add(po,"");
+            }
+            ParticipantCountStrings[po]=
+                ParticipantCountCurrent[po].ToString() +
+                " / " +activeQuestionList.Count(x => x.Value.ContainsOrder(po));
+
+        }
+    }
+    
+    
 }
 
 
