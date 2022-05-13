@@ -27,6 +27,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     private GameObject myStateManager;
 
 
+    private Dictionary<SceneField, bool> VisitedScenes = new Dictionary<SceneField, bool>();
     private ParticipantOrder _participantOrder = ParticipantOrder.None;
 
     public ParticipantOrder ParticipantOrder => _participantOrder;
@@ -652,13 +653,17 @@ public class ConnectionAndSpawing : MonoBehaviour
         StartCoroutine(farlab_logger.Instance.StopRecording());
     }
 
+    private void ForceBackToWaitingRoom(){
+        Debug.Log("Forced back to the waiting Room. When running studies please try to avoid this!");
+        SwitchToPostQN();
+    }
+
     private void SwitchToPostQN(){
         m_QNDataStorageServer.StopScenario(m_ReRunManager);
         if (farlab_logger.Instance.isRecording()){
             StartCoroutine(farlab_logger.Instance.StopRecording());
         }
 
-        ;
         ServerState = ActionState.POSTQUESTIONS;
         SwitchToWaitingRoom();
     }
@@ -719,14 +724,14 @@ public class ConnectionAndSpawing : MonoBehaviour
 
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W)){
                         Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
-                        SwitchToPostQN();
+                        ForceBackToWaitingRoom();
                     }
 
                     break;
                 case ActionState.DRIVE:
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W)){
                         Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
-                        SwitchToPostQN();
+                        ForceBackToWaitingRoom();
                     }
                     else if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q)){
                         SwitchToQN();
@@ -734,13 +739,13 @@ public class ConnectionAndSpawing : MonoBehaviour
 
                     break;
                 case ActionState.QUESTIONS:
-                    if (!QNFinished.ContainsValue(false)){
+                    if (!QNFinished.ContainsValue(false)){ // This could be come a corutine too
                         SwitchToPostQN();
                     }
 
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W)){
                         Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
-                        SwitchToPostQN();
+                        ForceBackToWaitingRoom();
                     }
 
                     break;
@@ -762,6 +767,9 @@ public class ConnectionAndSpawing : MonoBehaviour
     }
 
 
+    public GUIStyle NotVisitedButton;
+    public GUIStyle VisitendButton;
+
     void OnGUI(){
         if (NetworkManager.Singleton == null && !ClientListInitDone) return;
         if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer){
@@ -772,8 +780,14 @@ public class ConnectionAndSpawing : MonoBehaviour
             if (ServerState == ActionState.WAITINGROOM){
                 int y = 50;
                 foreach (SceneField f in IncludedScenes){
-                    if (GUI.Button(new Rect(5, 5 + y, 150, 25), f.SceneName)){
+                    if (!VisitedScenes.ContainsKey(f)){
+                        VisitedScenes.Add(f, false);
+                    }
+
+                    if (GUI.Button(new Rect(5, 5 + y, 150, 25), f.SceneName,
+                            VisitedScenes[f] ? VisitendButton : NotVisitedButton)){
                         SwitchToLoading(f.SceneName);
+                        VisitedScenes[f] = true;
                     }
 
                     y += 27;
@@ -955,6 +969,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         if (_OrderToClient.ContainsKey(participantOrder)){
             ClientObjects[_OrderToClient[participantOrder]][ParticipantObjectSpawnType.MAIN]
                 .GetComponent<ParticipantInputCapture>().SetTotalQNCountClientRpc(count);
+            Debug.Log("just send total QN count to client: " + participantOrder);
         }
     }
 
