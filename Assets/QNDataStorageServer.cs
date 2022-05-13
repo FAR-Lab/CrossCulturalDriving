@@ -44,7 +44,7 @@ public class QNDataStorageServer : MonoBehaviour
 
     public void StartScenario(string name, string sessionName){
         CurrentScenarioLog = new ScenarioLog(name, sessionName);
-
+        Debug.Log("startedAnewQuestionnaire");
 
         gtLogger.StartScenario(ConnectionAndSpawing.Singleton.GetClientList()
             .ConvertAll(x => ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(x)).ToArray());
@@ -57,7 +57,7 @@ public class QNDataStorageServer : MonoBehaviour
         gtLogger.GatherGroundTruth(ref CurrentScenarioLog);
         participantAnswerStatus = new Dictionary<ParticipantOrder, int>();
         LastParticipantStartTimes = new Dictionary<ParticipantOrder, DateTime>();
-
+        ParticipantCountCurrent = new Dictionary<ParticipantOrder, int>();
         bool first = true;
 
         if (activeQuestionList != null) activeQuestionList.Clear();
@@ -77,6 +77,7 @@ public class QNDataStorageServer : MonoBehaviour
             ParticipantCountCurrent.Add(po,0);
             ConnectionAndSpawing.Singleton.SendTotalQNCount(po,
                 activeQuestionList.Count(x => x.Value.ContainsOrder(po)));
+            Debug.Log("Just iniiated QN for participant:"+po);
         }
 
 
@@ -221,6 +222,7 @@ public class QNDataStorageServer : MonoBehaviour
 
 
     public void StopScenario(RerunManager activeManager){
+        Debug.Log("Stopping Scenario and QN logger.");
         CurrentScenarioLog.Stop();
         string folderpath = activeManager.GetCurrentFolderPath() + "/QN/";
         System.IO.Directory.CreateDirectory(folderpath);

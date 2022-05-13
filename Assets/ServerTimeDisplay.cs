@@ -35,6 +35,10 @@ public class ServerTimeDisplay : MonoBehaviour
                  ConnectionAndSpawing.Singleton.ServerState == ActionState.LOADINGSCENARIO)){
                 scenarioStartTime = Time.time;
             }
+            else if (lasState !=  ActionState.WAITINGROOM &&
+                (ConnectionAndSpawing.Singleton.ServerState == ActionState.WAITINGROOM)){
+                scenarioStartTime = Time.time;
+            }
 
             lasState = ConnectionAndSpawing.Singleton.ServerState;
         }
