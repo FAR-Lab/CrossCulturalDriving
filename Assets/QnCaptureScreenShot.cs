@@ -31,11 +31,18 @@ public class QnCaptureScreenShot : MonoBehaviour
         if (!triggered) {
             if (ParticipantsWeShouldTakeAPictureFor.Contains(ConnectionAndSpawing.Singleton.ParticipantOrder)){
                 triggered = true;
-               // CapturedScenarioImage= Application.persistentDataPath + "temp.png";
-                CapturedScenarioImage = ScreenCapture.CaptureScreenshotAsTexture(ScreenCapture.StereoScreenCaptureMode.RightEye);
+                StartCoroutine(CaptureScreenShot());
             }
-
         }
+    }
+    IEnumerator CaptureScreenShot()
+    {
+        // We should only read the screen buffer after rendering is complete
+        yield return new WaitForEndOfFrame();
+
+        // Create a texture the size of the screen, RGB24 format
+
+        CapturedScenarioImage = ScreenCapture.CaptureScreenshotAsTexture();
     }
 
 
