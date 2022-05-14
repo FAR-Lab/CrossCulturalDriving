@@ -81,6 +81,7 @@ public class ScenarioManager : MonoBehaviour {
     public void RunQuestionairNow(Transform MyLocalClient_) {
         MyLocalClient = MyLocalClient_;
         Transform MyCar = MyLocalClient.GetComponent<ParticipantInputCapture>().GetMyCar();
+        MyLocalClient.GetComponent<ParticipantInputCapture>().NewScenario();
        
         qnmanager.gameObject.SetActive(true);
         qnmanager.transform.localScale *= 0.1f;
@@ -94,12 +95,11 @@ public class ScenarioManager : MonoBehaviour {
         foreach (QnCaptureScreenShot screenShot in FindObjectsOfType<QnCaptureScreenShot>()){
             if (screenShot.ContainsPO(ConnectionAndSpawing.Singleton.ParticipantOrder)){
                 qnmanager.AddImage(screenShot.GetTexture());
+                MyLocalClient.GetComponent<ParticipantInputCapture>()
+                    .InitiateImageTransfere(screenShot.GetTexture().EncodeToJPG(50));
                 break;
             }
         }
-        
-        
-        
     }
 
     public Dictionary<ParticipantOrder, GpsController.Direction> GetStartingPositions() {

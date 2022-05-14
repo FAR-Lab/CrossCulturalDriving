@@ -317,6 +317,7 @@ public class ConnectionAndSpawing : MonoBehaviour
             obj.Despawn(true);
         }
 
+        m_QNDataStorageServer.DeRegisterHandler(GetOrder(ClientID));
         RemoveParticipant(ClientID);
     }
 
@@ -392,6 +393,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
             newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, !persistent);
             ClientObjects[clientID].Add(ParticipantObjectSpawnType.MAIN, newPlayer.GetComponent<NetworkObject>());
+            m_QNDataStorageServer.SetupForNewRemoteImage(temp);
             return true;
         }
 
@@ -1061,4 +1063,11 @@ public class ConnectionAndSpawing : MonoBehaviour
         SwitchToQN();
         FinishedRunningAwaitCorutine = true;
     }
+
+    public QNDataStorageServer GetQnStorageServer(){
+        return m_QNDataStorageServer;
+    }
+
+
+   
 }

@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Rerun;
 using UltimateReplay;
+using Unity.Netcode;
 using UnityEngine;
 
 
@@ -50,7 +52,6 @@ public class QNDataStorageServer : MonoBehaviour
             .ConvertAll(x => ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(x)).ToArray());
     }
 
-   
 
     public void StartQn(ScenarioManager sManager, RerunManager activeManager){
         if (sManager == null) return;
@@ -74,10 +75,10 @@ public class QNDataStorageServer : MonoBehaviour
         foreach (ParticipantOrder po in ConnectionAndSpawing.Singleton.GetCurrentlyConnectedClients()){
             participantAnswerStatus.Add(po, StartID);
             LastParticipantStartTimes.Add(po, new DateTime());
-            ParticipantCountCurrent.Add(po,0);
+            ParticipantCountCurrent.Add(po, 0);
             ConnectionAndSpawing.Singleton.SendTotalQNCount(po,
                 activeQuestionList.Count(x => x.Value.ContainsOrder(po)));
-            Debug.Log("Just iniiated QN for participant:"+po);
+            Debug.Log("Just iniiated QN for participant:" + po);
         }
 
 
@@ -173,7 +174,9 @@ public class QNDataStorageServer : MonoBehaviour
             ParticipantCountCurrent[po]--;
             if (ParticipantCountCurrent[po] < 0){
                 ParticipantCountCurrent[po] = 0;
-            };
+            }
+
+            ;
             UpdateTotalParticipantCounts();
             return;
         }
@@ -239,7 +242,7 @@ public class QNDataStorageServer : MonoBehaviour
     private void SendEndQuestionnaire(ParticipantOrder po, string lang){
         NetworkedQuestionnaireQuestion outval = NetworkedQuestionnaireQuestion.GetDefaultNQQ();
         ConnectionAndSpawing.Singleton.SendNewQuestionToParticipant(po, outval);
-        ParticipantCountCurrent[po]= activeQuestionList.Count(x => x.Value.ContainsOrder(po));
+        ParticipantCountCurrent[po] = activeQuestionList.Count(x => x.Value.ContainsOrder(po));
         UpdateTotalParticipantCounts();
     }
 
@@ -304,13 +307,14 @@ public class QNDataStorageServer : MonoBehaviour
             && activeQuestionList.ContainsKey(participantAnswerStatus[po])
             && activeQuestionList[participantAnswerStatus[po]].QuestionText != null){
             return activeQuestionList[participantAnswerStatus[po]].QuestionText[LogLanguage] + " at Scenario_ID: " +
-                   activeQuestionList[participantAnswerStatus[po]].Scenario_ID+"  =>  "+
+                   activeQuestionList[participantAnswerStatus[po]].Scenario_ID + "  =>  " +
                    GetTotalParticiapnAnswerCountString(po);
         }
 
 
         return "Not Found";
     }
+
     private Dictionary<ParticipantOrder, string> ParticipantCountStrings = new Dictionary<ParticipantOrder, string>();
     private Dictionary<ParticipantOrder, int> ParticipantCountCurrent = new Dictionary<ParticipantOrder, int>();
 
@@ -321,19 +325,74 @@ public class QNDataStorageServer : MonoBehaviour
 
         return "";
     }
+
     private void UpdateTotalParticipantCounts(){
         foreach (ParticipantOrder po in participantAnswerStatus.Keys){
             if (!ParticipantCountStrings.ContainsKey(po)){
-                ParticipantCountStrings.Add(po,"");
+                ParticipantCountStrings.Add(po, "");
             }
-            ParticipantCountStrings[po]=
-                ParticipantCountCurrent[po].ToString() +
-                " / " +activeQuestionList.Count(x => x.Value.ContainsOrder(po));
 
+            ParticipantCountStrings[po] =
+                ParticipantCountCurrent[po].ToString() +
+                " / " + activeQuestionList.Count(x => x.Value.ContainsOrder(po));
         }
     }
-    
-    
+
+
+    //ImageStorage
+    public const string imageDataPrefix = "QNIMAGE";
+    public const int ByteArraySize = 1000;
+
+    private Dictionary<ParticipantOrder, List<byte>> ImageRecievers =
+        new Dictionary<ParticipantOrder, List<byte>>();
+
+    public void SetupForNewRemoteImage(ParticipantOrder po){
+        if (!ImageRecievers.ContainsKey(po)){
+            ImageRecievers.Add(po, null);
+        }
+
+        ImageRecievers[po] = new List<byte>();
+        NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(imageDataPrefix + po.ToString(),
+            (senderClientId, reader) => {
+                reader.ReadNetworkSerializable<BasicByteArraySender>(out BasicByteArraySender data);
+
+                var participantOrder = ConnectionAndSpawing.Singleton.GetParticipantOrderClientId(senderClientId);
+                if (ImageRecievers.ContainsKey(participantOrder)){
+                    foreach (byte b in data.DataSendArray){
+                        ImageRecievers[po].Add(b);
+                    }
+                }
+            });
+    }
+
+    public void DeRegisterHandler(ParticipantOrder po){
+        NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(imageDataPrefix + po.ToString());
+    }
+
+    public void NewRemoteImage(ParticipantOrder po, int totalSize){
+        if (ImageRecievers.ContainsKey(po)){
+            Debug.Log("WillTry To store picture!");
+
+
+            string folderpath = ConnectionAndSpawing.Singleton.GetReRunManager().GetCurrentFolderPath() +
+                                "/QN_Pictures/";
+
+            if (!System.IO.Directory.Exists(folderpath)){
+                System.IO.Directory.CreateDirectory(folderpath);
+            }
+
+            string fullPath = folderpath
+                              + "QNImage"
+                              + "Scenario-" + CurrentScenarioLog.ScenarioName + '_'
+                              + "sessionName-" + CurrentScenarioLog.participantComboName + '_'
+                              + "ParticipantOrder-" + po + '_'
+                              + System.DateTime.Now.ToString(DateTimeFormatFolder) + '_'
+                              + ".jpg";
+            Debug.Log(fullPath);
+            System.IO.File.WriteAllBytes(fullPath, ImageRecievers[po].ToArray());
+            ImageRecievers[po].Clear();
+        }
+    }
 }
 
 

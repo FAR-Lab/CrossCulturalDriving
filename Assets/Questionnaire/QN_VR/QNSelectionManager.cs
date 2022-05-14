@@ -123,17 +123,20 @@ public class QNSelectionManager : MonoBehaviour
 
         var newImageHolder = Instantiate(ScenarioImageHolder, transform).transform;
 
-        newImageHolder.transform.localPosition = new Vector3(0, 300, 0f);
         
-        if (newImageHolder.GetComponent<RawImage>() != null){
-            CaptureScenarioImage.Apply();
-            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,CaptureScenarioImage.height/6);
-            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,CaptureScenarioImage.width/6);
-            newImageHolder.GetComponent<RawImage>().texture = CaptureScenarioImage;
-          
+        CaptureScenarioImage.Apply();
+        const float width = 300;
+        float factor = width/(CaptureScenarioImage.width - 10);
+        if (newImageHolder.GetChild(0).GetComponent<RawImage>() != null){
+           
+            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,factor*CaptureScenarioImage.height);
+            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,factor*CaptureScenarioImage.width);
+            newImageHolder.GetChild(0).GetComponent<RawImage>().texture = CaptureScenarioImage;
+            newImageHolder.transform.localPosition = new Vector3(0, factor*CaptureScenarioImage.height+80, 0f);
+       
         }
         else{
-            Debug.Log("Was trying to show a screenshot but well didnt know where really sorry try againI guess ;-) ");
+            Debug.Log("Was trying to show a screenshot but well didnt know were really?");
         }
     }
 
@@ -263,7 +266,8 @@ public class QNSelectionManager : MonoBehaviour
             case QNStates.FINISH:
 
                 if (m_MyLocalClient != null && m_MyLocalClient.IsLocalPlayer){
-                    m_MyLocalClient.PostQuestionServerRPC(m_MyLocalClient.OwnerClientId);
+                  
+                    m_MyLocalClient.GoForPostQuestion();
 
 
                     foreach (RectTransform r in AnswerFields){
