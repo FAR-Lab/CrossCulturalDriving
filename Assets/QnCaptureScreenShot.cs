@@ -9,7 +9,7 @@ public class QnCaptureScreenShot : MonoBehaviour
 
     public List<ParticipantOrder> ParticipantsWeShouldTakeAPictureFor = new List<ParticipantOrder>();
     
-    bool triggered = false;
+    public bool triggered = false;
 
     public Texture2D CapturedScenarioImage;
     // Start is called before the first frame update
