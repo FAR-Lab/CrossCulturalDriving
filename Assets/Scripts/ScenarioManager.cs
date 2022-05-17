@@ -94,10 +94,13 @@ public class ScenarioManager : MonoBehaviour {
 
         foreach (QnCaptureScreenShot screenShot in FindObjectsOfType<QnCaptureScreenShot>()){
             if (screenShot.ContainsPO(ConnectionAndSpawing.Singleton.ParticipantOrder)){
-                qnmanager.AddImage(screenShot.GetTexture());
-                MyLocalClient.GetComponent<ParticipantInputCapture>()
-                    .InitiateImageTransfere(screenShot.GetTexture().EncodeToJPG(50));
-                break;
+                if (screenShot.triggered){
+
+                    qnmanager.AddImage(screenShot.GetTexture());
+                    MyLocalClient.GetComponent<ParticipantInputCapture>()
+                        .InitiateImageTransfere(screenShot.GetTexture().EncodeToJPG(50));
+                    break;
+                }
             }
         }
     }

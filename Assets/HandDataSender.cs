@@ -1,15 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using Oculus.Platform;
+
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Collections;
-//using Unity.Collections.LowLevel.Unsafe;
-using Unity.Mathematics;
+
 
 public class HandDataSender : NetworkBehaviour {
     private FastBufferWriter _fastBufferWriter;
@@ -127,9 +121,9 @@ public class HandDataSender : NetworkBehaviour {
       //  Debug.Log("Sending HandData" + OwnerClientId);
         NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
             GETMessageNameServer(),
-            NetworkManager.Singleton.ServerClientId,
-            _fastBufferWriter,
-            NetworkDelivery.UnreliableSequenced);
+            NetworkManager.ServerClientId,
+            _fastBufferWriter
+            );
 
         _fastBufferWriter.Dispose();
     }

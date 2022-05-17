@@ -121,6 +121,10 @@ public class QNSelectionManager : MonoBehaviour
             return;
         }
 
+        if (CaptureScenarioImage==null || CaptureScenarioImage.height <= 1 || CaptureScenarioImage.width <= 0){
+           Debug.LogWarning("Was supposed to show a picture but did not get anything usable");
+            return;
+        }
         var newImageHolder = Instantiate(ScenarioImageHolder, transform).transform;
 
         
