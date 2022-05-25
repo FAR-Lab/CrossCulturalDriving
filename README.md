@@ -33,6 +33,7 @@ import the necessary third party packages:
 |⇧ Shift +  Q | Display SA Questionnaire |
 |⇧ Shift +  A/B | Toggle the participants steerring wheel button remotely (for testing questionnaire) |
 |0,1,2,3,4 | Switch between the views in the server |
+|^ Ctrl + ⎵ Space + A/B|Resets the participant to the starting position|
 
 
 #### Calibration
