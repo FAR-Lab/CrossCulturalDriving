@@ -26,7 +26,7 @@ public class ParticipantInputCapture : NetworkBehaviour
     private NetworkVehicleController NetworkedVehicle;
 
     public NetworkVariable<GpsController.Direction> CurrentDirection =
-        new NetworkVariable<GpsController.Direction>(NetworkVariableReadPermission.Everyone);
+        new NetworkVariable<GpsController.Direction>();
 
     private GpsController m_GpsController;
 
@@ -391,7 +391,7 @@ public class ParticipantInputCapture : NetworkBehaviour
             writer.WriteNetworkSerializable(tmp);
             NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
                 QNDataStorageServer.imageDataPrefix + po.ToString(),
-                NetworkManager.Singleton.ServerClientId,
+                NetworkManager.ServerClientId,
                 writer,
                 NetworkDelivery.ReliableSequenced);
 
