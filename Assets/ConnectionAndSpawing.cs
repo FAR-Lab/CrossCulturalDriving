@@ -465,7 +465,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     private bool SuccessFullyConnected = false;
 
     private void ClientDisconnected_client(ulong ClientID){
-        Debug.Log(SuccessFullyConnected);
+//        Debug.Log(SuccessFullyConnected);
         if (SuccessFullyConnected){
             Debug.Log("Quitting due to disconnection.");
             Application.Quit();

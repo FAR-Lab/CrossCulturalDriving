@@ -4,19 +4,11 @@ using System.IO;
 using System;
 using System.Text;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
-using Newtonsoft.Json;
-using Unity.Collections;
-using Unity.Netcode;
 using UnityEngine.Serialization;
-using UnityEngine.UIElements;
+
 
 public class QNSelectionManager : MonoBehaviour
 {
@@ -67,7 +59,7 @@ public class QNSelectionManager : MonoBehaviour
         m_LanguageSelect = lang;
     }
 
-    public void setRelativePosition(Transform t, float up_, float forward_,float left_){
+    public void setRelativePosition(Transform t, float up_, float forward_, float left_){
         ParentPosition = t;
         xOffset = up_;
         yOffset = forward_;
@@ -115,29 +107,36 @@ public class QNSelectionManager : MonoBehaviour
 
     public GameObject ScenarioImageHolder;
 
+
+    private Transform newImageHolder = null;
+
     public void AddImage(Texture2D CaptureScenarioImage){
         if (ScenarioImageHolder == null){
             Debug.LogError("This is not good. Could not show a picture even-though I was supposed to.!");
             return;
         }
 
-        if (CaptureScenarioImage==null || CaptureScenarioImage.height <= 1 || CaptureScenarioImage.width <= 0){
-           Debug.LogWarning("Was supposed to show a picture but did not get anything usable");
+        if (CaptureScenarioImage == null || CaptureScenarioImage.height <= 1 || CaptureScenarioImage.width <= 0){
+            Debug.LogWarning("Was supposed to show a picture but did not get anything usable");
             return;
         }
-        var newImageHolder = Instantiate(ScenarioImageHolder, transform).transform;
 
-        
+        if (newImageHolder == null){
+            newImageHolder = Instantiate(ScenarioImageHolder, transform).transform;
+        }
+
+        newImageHolder.gameObject.SetActive(true);
+
         CaptureScenarioImage.Apply();
         const float width = 300;
-        float factor = width/(CaptureScenarioImage.width - 10);
+        float factor = width / (CaptureScenarioImage.width - 10);
         if (newImageHolder.GetChild(0).GetComponent<RawImage>() != null){
-           
-            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,factor*CaptureScenarioImage.height);
-            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,factor*CaptureScenarioImage.width);
+            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,
+                factor * CaptureScenarioImage.height);
+            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,
+                factor * CaptureScenarioImage.width);
             newImageHolder.GetChild(0).GetComponent<RawImage>().texture = CaptureScenarioImage;
-            newImageHolder.transform.localPosition = new Vector3(0, factor*CaptureScenarioImage.height+80, 0f);
-       
+            newImageHolder.transform.localPosition = new Vector3(0, factor * CaptureScenarioImage.height + 80, 0f);
         }
         else{
             Debug.Log("Was trying to show a screenshot but well didnt know were really?");
@@ -171,7 +170,8 @@ public class QNSelectionManager : MonoBehaviour
 
         if (ParentPosition != null){
             transform.rotation = ParentPosition.rotation;
-            transform.position = ParentPosition.position + ParentPosition.rotation * new Vector3(xOffset, yOffset, zOffset);
+            transform.position = ParentPosition.position +
+                                 ParentPosition.rotation * new Vector3(xOffset, yOffset, zOffset);
         }
 
         switch (m_interalState){
@@ -203,6 +203,26 @@ public class QNSelectionManager : MonoBehaviour
                 AnswerFields.Clear();
 
                 QustionField.text = SetText(currentActiveQustion.QuestionText);
+
+                if (currentActiveQustion.QnImagePath.Length > 0){
+                    try{
+                        AddImage(Resources.Load<Texture2D>(currentActiveQustion.QnImagePath));
+                    }
+                    catch(Exception e){
+                        Debug.LogWarning(
+                            "I tried to add an image but did not find the image in the referenced path (or something similar). The path was: " +
+                            currentActiveQustion.QnImagePath+e.ToString());
+                        if (newImageHolder != null){
+                            newImageHolder.gameObject.SetActive(false);
+                        }
+                    }
+                }
+                else{
+                    if (newImageHolder != null){
+                        newImageHolder.gameObject.SetActive(false);
+                    }
+                }
+
                 int i = 0;
 
                 foreach (int a in currentActiveQustion.Answers.Keys){
@@ -270,7 +290,6 @@ public class QNSelectionManager : MonoBehaviour
             case QNStates.FINISH:
 
                 if (m_MyLocalClient != null && m_MyLocalClient.IsLocalPlayer){
-                  
                     m_MyLocalClient.GoForPostQuestion();
 
 
