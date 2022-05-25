@@ -210,6 +210,8 @@ public class ConnectionAndSpawing : MonoBehaviour
         NetworkManager.Singleton.SceneManager.LoadScene(name, LoadSceneMode.Single);
     }
 
+    
+    
     private void LoadSceneVisuals(){
         var tmp = GetScenarioManager();
         if (tmp != null && tmp.VisualSceneToUse != null && tmp.VisualSceneToUse.SceneName.Length > 0){
@@ -716,8 +718,13 @@ public class ConnectionAndSpawing : MonoBehaviour
             switch (ServerState){
                 case ActionState.DEFAULT: break;
                 case ActionState.WAITINGROOM: break;
-                case ActionState.LOADINGSCENARIO: break;
-                case ActionState.LOADINGVISUALS: break;
+                case ActionState.LOADINGSCENARIO: 
+                case ActionState.LOADINGVISUALS:
+                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W)){
+                        Debug.LogWarning("Forcing back to Waitingroom from" + ServerState.ToString());
+                        ForceBackToWaitingRoom();
+                    }
+                    break;
                 case ActionState.READY:
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D)){
                         SwitchToDriving();
