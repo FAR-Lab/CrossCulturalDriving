@@ -1,4 +1,4 @@
-using System;
+ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,31 +13,39 @@ public class ServerTimeDisplay : MonoBehaviour
     private bool running = false;
     private Coroutine m_Corutine;
 
-    private float scenarioStartTime = 0.0f;
-    private float serverStartTime = 0.0f;
+    private int scenarioStartTime = 0;
+    private int serverStartTime = 0;
     public void StartDisplay(float delay = 0.5f
     ){
         running = true;
         TotalTime = transform.GetChild(0).Find("TotalTime").GetComponent<Text>();
         ScenarioTime = transform.GetChild(0).Find("ScenarioTime").GetComponent<Text>();
-        serverStartTime = Time.time;
-        scenarioStartTime = Time.time;
+        serverStartTime = Mathf.RoundToInt( Time.time);
+        scenarioStartTime =Mathf.RoundToInt( Time.time);
         StartCoroutine(updateDisplay(delay));
-        
+     
+    }
+
+    private void TimerReset(){
+        serverStartTime =Mathf.RoundToInt( Time.time);
+       
     }
 
     private ActionState lasState = default;
 
     private void Update(){
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyUp(KeyCode.T)){
+            TimerReset();
+        }
         if (lasState != ConnectionAndSpawing.Singleton.ServerState){
             if (lasState == ActionState.WAITINGROOM &&
                 (ConnectionAndSpawing.Singleton.ServerState == ActionState.LOADINGVISUALS ||
                  ConnectionAndSpawing.Singleton.ServerState == ActionState.LOADINGSCENARIO)){
-                scenarioStartTime = Time.time;
+                scenarioStartTime = Mathf.RoundToInt( Time.time);
             }
             else if (lasState !=  ActionState.WAITINGROOM &&
                 (ConnectionAndSpawing.Singleton.ServerState == ActionState.WAITINGROOM)){
-                scenarioStartTime = Time.time;
+                scenarioStartTime =Mathf.RoundToInt( Time.time);
             }
 
             lasState = ConnectionAndSpawing.Singleton.ServerState;

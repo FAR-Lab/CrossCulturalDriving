@@ -417,7 +417,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         NetworkManager.ConnectionApprovedDelegate callback){
         bool approve = false;
         ParticipantOrder temp = (ParticipantOrder) connectionData[0];
-
+      
         approve = AddParticipant(temp, clientId);
 
         if (!approve){
