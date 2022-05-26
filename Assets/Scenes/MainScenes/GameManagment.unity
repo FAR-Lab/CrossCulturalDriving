@@ -192,7 +192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 593a2fe42fa9d37498c96f9a383b6521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DontDestroy: 1
   RunInBackground: 1
   LogLevel: 1
   NetworkConfig:
@@ -223,7 +222,7 @@ MonoBehaviour:
     NetworkIdRecycleDelay: 120
     RpcHashSize: 0
     LoadSceneTimeOut: 120
-    MessageBufferTimeout: 20
+    SpawnTimeout: 1
     EnableNetworkLogs: 1
 --- !u!114 &476093110
 MonoBehaviour:
@@ -692,18 +691,6 @@ PrefabInstance:
     - target: {fileID: 1286891131255837244, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1370842235534986742, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
-      propertyPath: field of view
-      value: 80
-      objectReference: {fileID: 0}
-    - target: {fileID: 1370842235548541828, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
-      propertyPath: field of view
-      value: 80
-      objectReference: {fileID: 0}
-    - target: {fileID: 1671002158394851887, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2751920820005047154, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
       propertyPath: isPrefab

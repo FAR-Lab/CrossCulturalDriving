@@ -170,6 +170,7 @@ GameObject:
   - component: {fileID: 4979024292393695785}
   - component: {fileID: 9215300665400652558}
   - component: {fileID: 4032273853972096690}
+  - component: {fileID: 4811909469833576583}
   m_Layer: 5
   m_Name: ServerTimeDisplay
   m_TagString: Untagged
@@ -230,6 +231,23 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &4811909469833576583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4979024292393695789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &4979024292539892117
 GameObject:
   m_ObjectHideFlags: 0
