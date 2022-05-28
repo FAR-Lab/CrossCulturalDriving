@@ -1,5 +1,29 @@
 [
     {
+        "ID": 0,
+        "Scenario_ID": "CP-1",
+        "SA_atoms": "NA",
+        "SA_Level": "NA",
+        "Awareness_to": "NA",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "These questions are about the last intersection you went through. Above the questions, you will see a screenshot of the scenery related to the moment we are being asked (from your perspective)",
+            "Hebrew": "השאלות הבאות מתייחסות לתרחיש הצומת בו השתתפת הרגע. מעל השאלות יוצג בפניך תמונת נוף (מנקודת המבט שלך) הקשור לרגע עליו אתה נשאל."
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "OK",
+                    "Hebrew": "OK"
+                }
+            }
+        ]
+    },
+    {
         "ID": 1,
         "Scenario_ID": "CP-1",
         "SA_atoms": "Speed",
@@ -10,10 +34,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "How fast were you driving before the intersection?",
+            "English": "While approaching the intersection, how fast were you driving?",
             "Hebrew": "מה הייתה המהירות שלך בזמן שהתקרבת לצומת?"
         },
-        "QnImagePath":"QNPictures\\CPapproach",
+        "QnImagePath": "QNPictures\\CPapproach",
         "Answers": [
             {
                 "index": 1,
@@ -57,9 +81,9 @@
         ],
         "QuestionText": {
             "English": "As you approached the intersection, how was your speed changing?",
-            "Hebrew": "מה שינית במהירות שלך בזמן שהתקרבת לצומת?"
+            "Hebrew": "כיצד המהירות שלך השתנתה בזמן שהתקרבת לצומת?"
         },
-          "QnImagePath":"QNPictures\\CPatIntersection",
+        "QnImagePath": "QNPictures\\CPapproach",
         "Answers": [
             {
                 "index": 1,
@@ -103,9 +127,9 @@
         ],
         "QuestionText": {
             "English": "As you approached the intersection, did you signal?",
-            "Hebrew": "בזמן שהתקרבת לצומת, האם אותתתה?"
+            "Hebrew": "האם אותתת בזמן שהתקרבת לצומת?"
         },
-        "QnImagePath":"QNPictures\\NIapproachA",
+        "QnImagePath":"QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
@@ -141,22 +165,23 @@
             "B"
         ],
         "QuestionText": {
-            "English": "As you approached the intersection, what direction were you heading?",
-            "Hebrew": "בזמן שהתקרבת לצומת, לאיזה כיוון הרכב שלך פנה?"
+            "English": "As you approached the intersection, what direction was your car pointing?",
+            "Hebrew": "בזמן שהתקרבת לצומת, לאיזה כיוון כיוונת את הרכב?"
         },
+        "QnImagePath": "QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "To the right",
-                    "Hebrew": "ימינה"
+                    "English": "To my right",
+                    "Hebrew": "לימין שלי"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "To the left",
-                    "Hebrew": "שמאלה"
+                    "English": "To my left",
+                    "Hebrew": "לשמאל שלי"
                 }
             },
             {
@@ -186,9 +211,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "Did you feel there was a risk of a collision at that intersection?",
-            "Hebrew":"האם חשת שעשויה להיות התנגשות בצומת?"
-                  },
+            "English": "As you approached the intersection, did you feel there was a risk of a collision?",
+            "Hebrew": "בזמן שהתקרבת לצומת, האם חשת שעשויה להיות התנגשות?"
+        },
+        "QnImagePath":"QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
@@ -227,6 +253,7 @@
             "English": "As you approached the intersection, did you notice another vehicle?",
             "Hebrew": "בזמן שהתקרבת לצומת, האם שמת לב לרכב נוסף?"
         },
+        "QnImagePath":"QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
@@ -263,9 +290,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "How fast was the other driver driving before the intersection?",
-            "Hebrew": "מה הייתה המהירות של הנהג השני לפני הצומת?"
+            "English": "While the other vehicle was approaching the intersection what was their speed?",
+            "Hebrew": "מה הייתה המהירות של הרכב האחר בזמן שהוא התקרב לצומת?"
         },
+        "QnImagePath": "QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
@@ -308,28 +336,29 @@
             "B"
         ],
         "QuestionText": {
-            "English": "As you approached the intersection, how the other driver's speed changing?",
-            "Hebrew": "כיצד המהירות של הנהג השני השתנתה בזמן שהתקרבת לצומת?"
+            "English": "As you approached the intersection, how did you interpret the other vehicle's speed change?",
+            "Hebrew": "כיצד פירשת את המהירות של הרכב האחר בזמן שהתקרבת לצומת?"
         },
+        "QnImagePath": "QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "They were slowing down",
+                    "English": "It was slowing down",
                     "Hebrew": "הוא האט"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "They were accelerating",
+                    "English": "It was accelerating",
                     "Hebrew": "הוא האיץ"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "They didn't change their speed",
+                    "English": "It didn't change its speed",
                     "Hebrew": "הוא לא שינה את המהירות שלו"
                 }
             },
@@ -353,9 +382,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "What did you expect the other vehicle to do when you noticed it?",
-            "Hebrew": "מה ציפית שהרכב השני יעשה כאשר שמת לב אליו?"
+            "English": "Based on the other vehicle's speed while approaching the intersection, what did you expect the other driver to do?",
+            "Hebrew": "בזמן שהתקרבת לצומת, מה ציפית שהנהג האחר יעשה בהינתן המהירות שלו?"
         },
+        "QnImagePath": "QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
@@ -374,7 +404,7 @@
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "Slow down and move slowly into the intersection",
+                    "English": "Slow down and move into the intersection",
                     "Hebrew": "יאט ויכנס באיטיות לצומת"
                 }
             },
@@ -399,42 +429,75 @@
         ],
         "QuestionText": {
             "English": "What direction was the other vehicle coming from?",
-            "Hebrew": "מאיזה כיוון הרכב השני הגיע?"
+            "Hebrew": "מאיזה כיוון הרכב האחר הגיע?"
         },
+        "QnImagePath": "QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "To my left, on the opposite lane",
-                    "Hebrew": "מהנתיב מולי מצד שמאל"
+                    "English": "From the intersecting road on my left",
+                    "Hebrew": "מהכביש המצטלב משמאלי"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "On the opposite side of the road to my right",
-                    "Hebrew": "מהנתיב מולי מצד ימין"
+                    "English": "From the intersecting road on my right",
+                    "Hebrew": "מהכביש המצטלב מימיני"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "To my right, on the orthogonal lane",
-                    "Hebrew": "מהנתיב מצד ימין"
+                    "English": "From the opposing lane to my left",
+                    "Hebrew": "מהנתיב הנגדי משמאלי"
                 }
             },
             {
                 "index": 4,
                 "AnswerText": {
-                    "English": "To my left, on the orthogonal lane",
-                    "Hebrew": "מהנתיב מצד שמאל"
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
+    },
+    {
+        "ID": 5,
+        "Scenario_ID": "CP-5",
+        "SA_atoms": "Location",
+        "SA_Level": "Comprehension",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "At the intersection, how did you interpret the other vehicle's location?",
+            "Hebrew": "כיצד פירשת את המיקום של הרכב האחר בצומת?"
+        },
+        "QnImagePath": "QNPictures\\CPatIntersection",
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "It was approaching the intersection",
+                    "Hebrew": "רכב נוסף מתקרב לצומת"
                 }
             },
             {
-                "index": 5,
+                "index": 2,
                 "AnswerText": {
-                    "English": "I'm not sure",
-                    "Hebrew": "אני לא בטוח"
+                    "English": "I am not sure it was approaching the intersection",
+                    "Hebrew": "אני לא בטוח שהרכב האחר התקרב לצומת"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I didn't see it",
+                    "Hebrew": "אני לא ראיתי אותו"
                 }
             }
         ]
@@ -450,9 +513,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "Who had the right of way?",
+            "English": "At the intersection who had the right of way?",
             "Hebrew": "למי הייתה זכות קדימה?"
         },
+        "QnImagePath": "QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
@@ -465,7 +529,7 @@
                 "index": 2,
                 "AnswerText": {
                     "English": "The other vehicle",
-                    "Hebrew": "לנהג השני"
+                    "Hebrew": "לרכב האחר"
                 }
             },
             {
@@ -479,7 +543,7 @@
                 "index": 4,
                 "AnswerText": {
                     "English": "Neither of us",
-                    "Hebrew":  "לאף אחד מאיתנו"
+                    "Hebrew": "לאף אחד מאיתנו"
                 }
             },
             {
@@ -502,26 +566,34 @@
             "B"
         ],
         "QuestionText": {
-            "English": "Given the right-of-way, what could have happened next?",
-            "Hebrew": "בהינתן זכות הקדימה, מה היה עשוי לקרות?"
+            "English": "Given the location of the other vehicle and the right-of-way, what did you think could have happened next?",
+            "Hebrew": "בהינתן מיקומו של הרכב האחר וזכות הקדימה, מה היה עשוי לקרות?"
         },
+        "QnImagePath": "QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "The other driver would have crossed the intersection first",
-                    "Hebrew": "הנהג השני עשוי היה לחצות את הצומת"
+                    "English": "The other vehicle would have crossed the intersection first",
+                    "Hebrew": "הרכב האחר עשוי לחצות את הצומת"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "The other driver would not have crossed the intersection first",
-                    "Hebrew": "הנהג השני לא היה חוצה את הצומת"
+                    "English": "The other vehicle would not have crossed the intersection first",
+                    "Hebrew": "הרכב האחר לא היה חוצה את הצומת"
                 }
             },
             {
                 "index": 3,
+                "AnswerText": {
+                    "English": "Both of us would enter the intersection at the same time",
+                    "Hebrew": "שנינו היינו נכנסים לצומת באותו זמן"
+                }
+            },
+            {
+                "index": 4,
                 "AnswerText": {
                     "English": "I am not sure",
                     "Hebrew": "אני לא בטוח"
@@ -541,8 +613,9 @@
         ],
         "QuestionText": {
             "English": "Did the other vehicle signal as it approached the intersection?",
-            "Hebrew": "האם הרכב השני אותת בזמן שהוא התקרב לצומת?"
+            "Hebrew": "האם הרכב האחר אותת בזמן שהוא התקרב לצומת?"
         },
+        "QnImagePath": "QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
@@ -578,22 +651,23 @@
             "B"
         ],
         "QuestionText": {
-            "English": "Going into the intersection, which direction was the other vehicle heading?",
-            "Hebrew": "בזמן שהתקרבת לצומת, לאיזה כיוון פנה הנהג השני?"
+            "English": "While going into the intersection, which direction was the other vehicle pointing?",
+            "Hebrew": "בזמן שהתקרבת לצומת, לאיזה כיוון הרכב האחר כיוון?"
         },
+        "QnImagePath": "QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "To the right",
-                    "Hebrew": "לימין"
+                    "English": "To their right",
+                    "Hebrew": "לימין שלו"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "To the left",
-                    "Hebrew": "לשמאל"
+                    "English": "To their left",
+                    "Hebrew": "לשמאל שלו"
                 }
             },
             {
@@ -623,9 +697,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "Before crossing the intersection, which direction did you think the other driver was going in?",
-            "Hebrew": "לפני שחצית את הצומת, לאיזה כיוון חשבת שהנהג השני עשוי לפנות?"
+            "English": "Before crossing the intersection, which direction did you think the other vehicle was pointing (In its perspective)?",
+            "Hebrew": "לפני שחצית את הצומת, לאיזה כיוון חשבת שהרכב האחר מכוון (מנקודת המבט שלו)?"
         },
+        "QnImagePath": "QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
@@ -637,14 +712,14 @@
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "Turning right",
+                    "English": "Turning to its right",
                     "Hebrew": "ימינה"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "Turning left",
+                    "English": "Turning to its left",
                     "Hebrew": "שמאלה"
                 }
             },
@@ -668,29 +743,30 @@
             "B"
         ],
         "QuestionText": {
-            "English": "While the other driver was approaching the intersection, I could tell that:",
-            "Hebrew":"בזמן שהנהג השני התקרב לצומת, מה היה עשוי לקרות להערכתך?"
+            "English": "While the other vehicle was approaching the intersection, I could tell that:",
+            "Hebrew": "בזמן שהרכב האחר התקרב לצומת, יכולתי לאמר ש:"
         },
+        "QnImagePath": "QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "The other driver was going to turn right",
-                    "Hebrew": "הנהג השני היה פונה ימינה"
+                    "English": "It was going to turn right",
+                    "Hebrew": "הוא הולך לפנות ימינה"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "The other driver was going to turn left",
-                    "Hebrew": "הנהג השני היה פונה שמאלה"
+                    "English": "It was going to turn left",
+                    "Hebrew": "הוא הולך לפנות שמאלה"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "The other driver was going to go straight",
-                    "Hebrew": "הנהג השני היה ממשיך ישר"
+                    "English": "It was going to go straight",
+                    "Hebrew": "הוא נוסע ישר"
                 }
             },
             {
@@ -716,6 +792,7 @@
             "English": "Who was the first one to enter the intersection?",
             "Hebrew": "מי הראשון שנכנס לצומת?"
         },
+        "QnImagePath": "QNPictures\\CPatIntersection",
         "Answers": [
             {
                 "index": 1,
@@ -728,7 +805,7 @@
                 "index": 2,
                 "AnswerText": {
                     "English": "The other vehicle",
-                    "Hebrew": "הרכב השני"
+                    "Hebrew": "הרכב האחר"
                 }
             },
             {
@@ -759,13 +836,13 @@
         ],
         "QuestionText": {
             "English": "As you entered the intersection, what was the location of the other vehicle?",
-            "Hebrew": "בזמן שנכנסת לצומת, מה היה המיקום של הרכב השני?"
+            "Hebrew": "בזמן שנכנסת לצומת, מה היה המיקום של הרכב האחר?"
         },
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "I didn't notice / Can't remember",
+                    "English": "I didn't notice / can't remember",
                     "Hebrew": "לא שמתי לב / לא זוכר"
                 }
             },
