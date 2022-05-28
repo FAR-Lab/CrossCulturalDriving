@@ -1,5 +1,29 @@
 [
     {
+        "ID": 0,
+        "Scenario_ID": "NSI3-0",
+        "SA_atoms": "NA",
+        "SA_Level": "NA",
+        "Awareness_to": "NA",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "These questions are about the last scenario you went through. Above the questions, you will see a screenshot of the scenery related to the moment we are being asked (from your perspective)",
+            "Hebrew": "השאלות הבאות מתייחסות לתרחיש בו השתתפת הרגע. מעל השאלות יוצג בפניך תמונת נוף (מנקודת המבט שלך) הקשור לרגע עליו אתה נשאל."
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "OK",
+                    "Hebrew": "OK"
+                }
+            }
+        ]
+    },
+    {
         "ID": 1,
         "Scenario_ID": "NSI3-5",
         "SA_atoms": "Speed",
@@ -9,9 +33,10 @@
             "A"
         ],
         "QuestionText": {
-            "English": "How fast were you driving while approaching the main road?",
-            "Hebrew": "מה הייתה המהירות שלך בזמן שהתקרבת לכביש הראשי?"
+            "English": "While approaching the main road, how fast were you driving?",
+            "Hebrew": "מה הייתה מהירות הנסיעה שלך בזמן שהתקרבת לכביש הראשי?"
         },
+        "QnImagePath": "QNPictures\\NSI2ApproachA",
         "Answers": [
             {
                 "index": 1,
@@ -53,9 +78,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "How fast were you driving while approaching the merging lane?",
-            "Hebrew": "מה הייתה המהירות שלך בזמן שהתקרבת לנתיב המתמזג?"
+            "English": "While you were approaching the merging lane, how fast were you driving?",
+            "Hebrew": "מה הייתה מהירות הנסיעה שלך בזמן שהתקרבת לנתיב המשתלב?"
         },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
         "Answers": [
             {
                 "index": 1,
@@ -98,8 +124,9 @@
         ],
         "QuestionText": {
             "English": "As you approached the main road, how was your speed changing?",
-            "Hebrew": "מה שינית במהירות שלך בזמן שהתקרבת לכביש הראשי?"
+            "Hebrew": "כיצד המהירות שלך השתנתה בזמן שהתקרבת לכביש הראשי?"
         },
+        "QnImagePath": "QNPictures\\NSI2ApproachA",
         "Answers": [
             {
                 "index": 1,
@@ -141,9 +168,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "While approaching the merging lane, what were you trying to do with your speed?",
-            "Hebrew": "מה שינית במהירות שלך בזמן שהתקרבת לנתיב המשתלב?"
+            "English": "As you approached the merging lane, how was your speed changing?",
+            "Hebrew": "כיצד המהירות שלך השתנתה בזמן שהתקרבת לנתיב המשתלב?"
         },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
         "Answers": [
             {
                 "index": 1,
@@ -185,22 +213,23 @@
             "A"
         ],
         "QuestionText": {
-            "English": "While approaching the main road, what direction were you heading?",
-            "Hebrew": "בזמן שהתקרבת לכביש הראשי, לאיזה כיוון פנית?"
+            "English": "As you approached the main road, what direction was your vehicle pointing?",
+            "Hebrew": "בזמן שהתקרבת לכביש הראשי, לאיזה כיוון כיוונת את הרכב?"
         },
+        "QnImagePath": "QNPictures\\NSI2ApproachA",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "To the right",
-                    "Hebrew": "ימינה"
+                    "English": "To my right",
+                    "Hebrew": "לימין שלי"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "To the left",
-                    "Hebrew": "שמאלה"
+                    "English": "To my left",
+                    "Hebrew": "לשמאל שלי"
                 }
             },
             {
@@ -230,8 +259,9 @@
         ],
         "QuestionText": {
             "English": "As you approached the merging lane, did you notice another vehicle?",
-            "Hebrew": "בזמן שהתקרבת לנתיב המתמזג, האם שמת לב לרכב נוסף?"
+            "Hebrew": "בזמן שהתקרבת לנתיב המשתלב, האם שמת לב לרכב נוסף?"
         },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
         "Answers": [
             {
                 "index": 1,
@@ -267,9 +297,10 @@
             "A"
         ],
         "QuestionText": {
-            "English": "While approaching the main road, did you signal? ",
-            "Hebrew": "בזמן שהתקרבת לכביש הראשי, האם אותתתה?"
+            "English": "As you approached the main road, did you signal?",
+            "Hebrew": "האם אותתת בזמן שהתקרבת לכביש הראשי?"
         },
+        "QnImagePath": "QNPictures\\NSI2ApproachA",
         "Answers": [
             {
                 "index": 1,
@@ -304,77 +335,34 @@
             "B"
         ],
         "QuestionText": {
-            "English": "when you approached the merging lane, where was the other vehicle?",
-            "Hebrew": "היכן היה הנהג השני כשהתקרבת לנתיב המתמזג?"
+            "English": "While you were approaching the merging lane, what direction was the other vehicle coming from?",
+            "Hebrew": "בזמן שהתקרבת לנתיב המשתלב, מאיזה כיוון הרכב האחר הגיע ?"
         },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "On the merging lane",
-                    "Hebrew": "בנתיב המשתלב"
+                    "English": "From the merging lane",
+                    "Hebrew": "מהנתיב המשתלב"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "To my right, on the vertical path",
-                    "Hebrew": "בנתיב האנכי מימני"
+                    "English": "From behind me",
+                    "Hebrew": "מאחוריי"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "To my left, on the vertical path",
-                    "Hebrew": "בנתיב האנכי משמאלי"
+                    "English": "In front of me",
+                    "Hebrew": "מלפניי"
                 }
             },
             {
                 "index": 4,
-                "AnswerText": {
-                    "English": "I'm not sure",
-                    "Hebrew": "אני לא בטוח"
-                }
-            },
-            {
-                "index": 5,
-                "AnswerText": {
-                    "English": "I didn't see any other vehicle",
-                    "Hebrew": "לא ראיתי רכב נוסף"
-                }
-            }
-        ]
-    },
-    {
-        "ID": 22,
-        "Scenario_ID": "NSI3-10",
-        "SA_atoms": "Signaling",
-        "SA_Level": "Comprehension",
-        "Awareness_to": "Myself",
-        "Participant": [
-            "A"
-        ],
-        "QuestionText": {
-            "English": "What did you mean when you signaled?",
-            "Hebrew": "למה התכוונתה כשהשתמשת האורות האיתות?"
-        },
-        "Answers": [
-            {
-                "index": 1,
-                "AnswerText": {
-                    "English": "I didn't use any signaling",
-                    "Hebrew": "לא השתמשתי באורות האיתות"
-                }
-            },
-            {
-                "index": 2,
-                "AnswerText": {
-                    "English": "I wanted to change lanes",
-                    "Hebrew": "רציתי לשנות נתיבים"
-                }
-            },
-            {
-                "index": 3,
                 "AnswerText": {
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
@@ -389,12 +377,13 @@
         "SA_Level": "Perception",
         "Awareness_to": "Other driver",
         "Participant": [
-            "B"
+            "A"
         ],
         "QuestionText": {
             "English": "As you approached the main road, did you notice another vehicle?",
             "Hebrew": "בזמן שהתקרבת לכביש הראשי, האם שמת לב לרכב נוסף?"
         },
+        "QnImagePath": "QNPictures\\NSI2ApproachA",
         "Answers": [
             {
                 "index": 1,
@@ -430,29 +419,23 @@
             "B"
         ],
         "QuestionText": {
-            "English": "Given the location of the other driver, what could have happened next?",
-            "Hebrew": "בהינתן מיקומו של הרכב הנוסף, מה היה עשוי לקרות?"
+            "English": "Based on the other vehicle's location, what did you expect the other driver to do?",
+            "Hebrew": "מה ציפית שהנהג האחר יעשה בהינתן המיקום שלו?"
         },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "The other driver would have merged in the main road",
-                    "Hebrew": "הנהג השני היה מתמזג לתוך הכביש הראשי"
+                    "English": "Merge into the main road",
+                    "Hebrew": "ישתלב לתוך הכביש הראשי"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "The other driver would have not merged the main road",
-                    "Hebrew": "הנהג השני לא היה מתמזג לכביש הראשי"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "There was no other driver",
-                    "Hebrew": "לא היה רכב נוסף"
+                    "English": "Not to merge into the main road",
+                    "Hebrew": "לא ישתלב לכביש הראשי"
                 }
             },
             {
@@ -471,33 +454,64 @@
         "SA_Level": "Comprehension",
         "Awareness_to": "Other driver",
         "Participant": [
-            "A",
-            "B"
+            "A"
         ],
         "QuestionText": {
-            "English": "What did the location of the other vehicle mean?",
-            "Hebrew": "מה הייתה המשמעות של הרכב הנוסף?"
+            "English": "How did you interpret the other vehicle's location?",
+            "Hebrew": "כיצד פירשת את המיקום של הרכב האחר?"
         },
+        "QnImagePath": "QNPictures\\NSI2ApproachA",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "Another vehicle was in the merging lane",
-                    "Hebrew": "רכב נוסף היה בנתיב המשתלב"
+                    "English": "The other vehicle was in the merging lane",
+                    "Hebrew": "הרכב נוסף בנתיב המשתלב"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "Another vehicle was on the main road",
-                    "Hebrew": "רכב נוסף היה בכביש הראשי"
+                    "English": "The other vehicle was on the main road",
+                    "Hebrew": "הרכב נוסף על הכביש הראשי"
                 }
             },
             {
-                "index": 3,
+                "index": 4,
                 "AnswerText": {
-                    "English": "There was no other vehicle",
-                    "Hebrew": "לא היה רכב נוסף"
+                    "English": "I am not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
+    },
+    {
+        "ID": 5,
+        "Scenario_ID": "NSI3-2",
+        "SA_atoms": "Location",
+        "SA_Level": "Comprehension",
+        "Awareness_to": "Other driver",
+        "Participant": [
+            "B"
+        ],
+        "QuestionText": {
+            "English": "How did you interpret the other vehicle's location?",
+            "Hebrew": "כיצד פירשת את המיקום של הרכב האחר?"
+        },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "The other vehicle was in the merging lane",
+                    "Hebrew": "הרכב נוסף בנתיב המשתלב"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "The other vehicle was on the main road",
+                    "Hebrew": "הרכב נוסף על הכביש הראשי"
                 }
             },
             {
@@ -519,22 +533,23 @@
             "B"
         ],
         "QuestionText": {
-            "English": "While approaching the merging lane, which direction was the other vehicle facing?",
-            "Hebrew": "בזמן שהתקרבת לנתיב המשתלב, לאיזה כיוון פנה הנהג השני?"
+            "English": "As you approached the merging lane, which direction was the other vehicle pointing?",
+            "Hebrew": "לאיזה כיוון הרכב האחר כיוון בזמן שהתקרבת לנתיב המשתלב?"
         },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "To the right",
-                    "Hebrew": "לימין"
+                    "English": "To its right",
+                    "Hebrew": "לימין לו"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "To the left",
-                    "Hebrew": "לשמאל"
+                    "English": "To its left",
+                    "Hebrew": "לשמאל שלו"
                 }
             },
             {
@@ -563,22 +578,16 @@
             "A"
         ],
         "QuestionText": {
-            "English": "Given the location of the other driver, what could have happened next?",
-            "Hebrew": "בהינתן מיקומו של הרכב הנוסף, מה היה עשוי לקרות?"
+            "English": "Based on the other vehicle's location, what did you expect the other driver to do?",
+            "Hebrew": "מה ציפית שהנהג האחר יעשה בהינתן המיקום שלו?"
         },
+        "QnImagePath": "QNPictures\\NSI2ApproachA",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "The other driver would have continue straight on the main road ",
-                    "Hebrew": "הנהג השני היה ממשיך ישר בכביש הראשי"
-                }
-            },
-            {
-                "index": 2,
-                "AnswerText": {
-                    "English": "There was no other driver",
-                    "Hebrew": "לא היה רכב נוסף"
+                    "English": "Continue straight on the main road",
+                    "Hebrew": "ימשיך ישר בכביש הראשי"
                 }
             },
             {
@@ -600,29 +609,30 @@
             "B"
         ],
         "QuestionText": {
-            "English": "While approaching the merging lane,giving the other driver's direction, what could have happened next?",
-            "Hebrew": "בזמן שהתקרבת לנתיב המשתלב ובהתחשב בכיוון של הנהג השני, מה היה עשוי לקרות?"
+            "English": "While approaching the merging lane, given the other vehicle's direction, I could tell that:",
+            "Hebrew": "בהינתן הכיוון של הרכב האחר ובזמן שהתקרבת לנתיב המתמזג , יכולתי לאמר ש:"
         },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "The other driver would have turned right",
-                    "Hebrew": "הנהג השני היה פונה ימינה"
+                    "English": "It was going to turn right",
+                    "Hebrew": "הוא הולך לפנות ימינה"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "The other driver would have turned left",
-                    "Hebrew": "הנהג השני היה פונה שמאלה"
+                    "English": "It was going to turn left",
+                    "Hebrew": "הוא הולך לפנות שמאלה"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "The other driver would have went straight",
-                    "Hebrew": "הנהג השני היה ממשיך ישר"
+                    "English": "It was going to continue straight",
+                    "Hebrew": "הוא הולך להמשיך ישר"
                 }
             },
             {
@@ -644,9 +654,10 @@
             "A"
         ],
         "QuestionText": {
-            "English": "How fast was the other driver driving while approaching the main road?",
-            "Hebrew": "מה הייתה המהירות של הנהג השני בזמן שהתקרבת לכביש הראשי?"
+            "English": "While you were approaching the main road, how fast was the other vehicle driving?",
+            "Hebrew": "מה הייתה המהירות של הרכב האחר בזמן שהתקרבת לכביש הראשי?"
         },
+        "QnImagePath": "QNPictures\\NSI2ApproachA",
         "Answers": [
             {
                 "index": 1,
@@ -688,9 +699,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "How fast was the other driver driving while approaching the merging lane?",
-            "Hebrew": "מה הייתה המהירות של הנהג השני בזמן שהתקרבת לנתיב המשתלב?"
+            "English": "While you were approaching the merging lane, how fast was the other vehicle driving?",
+            "Hebrew": "מה הייתה המהירות של הרכב האחר בזמן שהתקרבת לנתיב המשתלב?"
         },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
         "Answers": [
             {
                 "index": 1,
@@ -732,28 +744,29 @@
             "A"
         ],
         "QuestionText": {
-            "English": "How did the other driver's speed change as you approached the main road?",
-            "Hebrew": "מה הייתה משמעות המהירות של הנהג השני בזמן שהתקרבת לכביש הראשי?"
+            "English": "As you approached the main road, how did you interpret the other vehicle's speed change?",
+            "Hebrew": "כיצד פירשת את המהירות של הרכב האחר בזמן שהתקרבת לכביש הראשי?"
         },
+        "QnImagePath": "QNPictures\\NSI2ApproachA",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "They were slowing down",
+                    "English": "It was slowing down",
                     "Hebrew": "הוא האט"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "They were accelerating",
+                    "English": "It was accelerating",
                     "Hebrew": "הוא האיץ"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "They didn't change their speed",
+                    "English": "It didn't change its speed",
                     "Hebrew": "הוא לא שינה את המהירות שלו"
                 }
             },
@@ -776,28 +789,29 @@
             "B"
         ],
         "QuestionText": {
-            "English": "How did the other driver's speed change as you approached the main road?",
-            "Hebrew": "מה הייתה משמעות המהירות של הנהג השני בזמן שהתקרבת לנתיב המשתלב?"
+            "English": "As you approached the merging lane, how did you interpret the other vehicle's speed change?",
+            "Hebrew": "כיצד פירשת את המהירות של הרכב האחר בזמן שהתקרבת לנתיב המשתלב?"
         },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "They were slowing down",
+                    "English": "It was slowing down",
                     "Hebrew": "הוא האט"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "They were accelerating",
+                    "English": "It was accelerating",
                     "Hebrew": "הוא האיץ"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "They didn't change their speed",
+                    "English": "It didn't change its speed",
                     "Hebrew": "הוא לא שינה את המהירות שלו"
                 }
             },
@@ -820,9 +834,10 @@
             "A"
         ],
         "QuestionText": {
-            "English": "What did you expect the other driver to do when he approached the merging lane?",
-            "Hebrew": "כיצד ציפית שהנהג השני יתנהג כשהתקרב לנתיב המשתלב?"
+            "English": "Based on the other vehicle's speed while it was approaching the merging lane, what did you expect the other driver to do?",
+            "Hebrew": "מה ציפית שהנהג האחר יעשה בהינתן המהירות שלו בזמן שהוא התקרב לנתיב המתמזג?"
         },
+        "QnImagePath": "QNPictures\\NSI2ApproachA",
         "Answers": [
             {
                 "index": 1,
@@ -836,13 +851,6 @@
                 "AnswerText": {
                     "English": "Won't give me the right of way",
                     "Hebrew": "לא יתן לי זכות קדימה"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "There was no other driver",
-                    "Hebrew": "לא היה נהג נוסף"
                 }
             },
             {
@@ -864,29 +872,23 @@
             "B"
         ],
         "QuestionText": {
-            "English": "What did you expect the other driver to do when he approached the main road?",
-            "Hebrew": "כיצד ציפית שהנהג השני יתנהג כשהתקרב לכביש הראשי?"
+            "English": "Based on the other vehicle's speed while it was approaching the main road, what did you expect the other driver to do?",
+            "Hebrew": "מה ציפית שהנהג האחר יעשה בהינתן המהירות שלו בזמן שהתקרב לכביש הראשי?"
         },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
                     "English": "Merge into the main road",
-                    "Hebrew": "יתמזג לכביש הראשי"
+                    "Hebrew": "ישתלב לכביש הראשי"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "Stop & waited till I pass",
+                    "English": "Stop and waited until I passed",
                     "Hebrew": "יעצור ויחכה עד שאני אחלוף"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "There was no other driver",
-                    "Hebrew": "לא היה נהג נוסף"
                 }
             },
             {
@@ -909,8 +911,9 @@
         ],
         "QuestionText": {
             "English": "Did the other vehicle signal as it approached the merging lane?",
-            "Hebrew": "האם הנהג השני אותת בזמן שהתקרבת לנתיב המתמזג?"
+            "Hebrew": "האם הרכב האחר אותת כשהוא התקרב לנתיב המשתלב?"
         },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
         "Answers": [
             {
                 "index": 1,
@@ -945,9 +948,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "What did the other driver mean when they signaled?",
-            "Hebrew": "למה התכוון הנהג השני כאשר הוא אותת?"
+            "English": "How did you interpret the other vehicle's signaling?",
+            "Hebrew": "כיצד פירשת את האיתות של הרכב האחר?"
         },
+        "QnImagePath": "QNPictures\\NSI3ApproachB",
         "Answers": [
             {
                 "index": 1,
@@ -959,15 +963,8 @@
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "They wanted to signal their intention to change heading",
+                    "English": "It wanted to signal its intention to change its direction",
                     "Hebrew": "הוא רצה לסמן את הכוונה שלו לשנות כיוון"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "There was no other driver",
-                    "Hebrew": "לא היה נהג נוסף"
                 }
             },
             {

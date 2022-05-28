@@ -1,18 +1,80 @@
 [
     {
+        "ID": 0,
+        "Scenario_ID": "NI1-0",
+        "SA_atoms": "NA",
+        "SA_Level": "NA",
+        "Awareness_to": "NA",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "These questions are about the last scenario you went through. Above the questions, you will see a screenshot of the scenery related to the moment we are being asked (from your perspective)",
+            "Hebrew": "השאלות הבאות מתייחסות לתרחיש בו השתתפת הרגע. מעל השאלות יוצג בפניך תמונת נוף (מנקודת המבט שלך) הקשור לרגע עליו אתה נשאל."
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "OK",
+                    "Hebrew": "OK"
+                }
+            }
+        ]
+    },
+    {
         "ID": 4,
         "Scenario_ID": "NI1-4",
         "SA_atoms": "Location",
         "SA_Level": "Perception",
         "Awareness_to": "Other driver",
         "Participant": [
-            "A",
+            "A"
+        ],
+        "QuestionText": {
+            "English": "Where was the stopped car located when you approached it?",
+            "Hebrew": "היכן היה ממוקם הרכב שעצר כאשר התקרבת אליו?"
+        },
+        "QnImagePath": "QNPictures\\NIapproachA",
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "On the opposite lane",
+                    "Hebrew": "בנתיב הנגדי"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "In my lane",
+                    "Hebrew": "בנתיב שלי"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
+    },
+    {
+        "ID": 4,
+        "Scenario_ID": "NI1-4",
+        "SA_atoms": "Location",
+        "SA_Level": "Perception",
+        "Awareness_to": "Other driver",
+        "Participant": [
             "B"
         ],
         "QuestionText": {
             "English": "Where was the stopped car located when you approached it?",
             "Hebrew": "היכן היה ממוקם הרכב שעצר כאשר התקרבת אליו?"
         },
+        "QnImagePath": "QNPictures\\NIapproachB",
         "Answers": [
             {
                 "index": 1,
@@ -47,9 +109,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "What did the location of the stopped car mean?",
-            "Hebrew": "מה הייתה משמעות המיקום של הרכב שעצר?"
+            "English": "How did you interpret the other vehicle's location & the stopped car?",
+            "Hebrew": "כיצד פירשת את מיקום הרכב האחר והרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NIapproachB",
         "Answers": [
             {
                 "index": 1,
@@ -74,13 +137,58 @@
         "SA_Level": "Perception",
         "Awareness_to": "Myself",
         "Participant": [
-            "A",
+            "A"
+        ],
+        "QuestionText": {
+            "English": "While approaching the stopped car, how fast were you driving?",
+            "Hebrew": "מה הייתה מהירות הנסיעה שלך בזמן שהתקרבת לרכב שעצר?"
+        },
+        "QnImagePath": "QNPictures\\NIapproachA",
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "High speed",
+                    "Hebrew": "מהירה"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "Normal speed",
+                    "Hebrew": "נורמאלית"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "Slow speed",
+                    "Hebrew": "איטית"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
+    },
+    {
+        "ID": 1,
+        "Scenario_ID": "NI1-1",
+        "SA_atoms": "Speed",
+        "SA_Level": "Perception",
+        "Awareness_to": "Myself",
+        "Participant": [
             "B"
         ],
         "QuestionText": {
-            "English": "How fast were you driving while approaching the stopped car?",
-            "Hebrew": "מה הייתה המהירות שלך בזמן שהתקרבת אל הרכב שעצר?"
+            "English": "While approaching the stopped car, how fast were you driving?",
+            "Hebrew": "מה הייתה מהירות הנסיעה שלך בזמן שהתקרבת לרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NIapproachB",
         "Answers": [
             {
                 "index": 1,
@@ -119,13 +227,58 @@
         "SA_Level": "Comprehension",
         "Awareness_to": "Myself",
         "Participant": [
-            "A",
+            "A"
+        ],
+        "QuestionText": {
+            "English": "As you approached the stopped car, how was your speed changing?",
+            "Hebrew": "כיצד המהירות שלך השתנתה בזמן שהתקרבת לרכב שעצר?"
+        },
+        "QnImagePath": "QNPictures\\NIjustAtA",
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "I was slowing down",
+                    "Hebrew": "האטתי"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "I was accelerating",
+                    "Hebrew": "האצתי"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "I didn't changed my speed",
+                    "Hebrew": "לא שיניתי את המהירות שלי"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
+    },
+    {
+        "ID": 11,
+        "Scenario_ID": "NI1-11",
+        "SA_atoms": "Speed",
+        "SA_Level": "Comprehension",
+        "Awareness_to": "Myself",
+        "Participant": [
             "B"
         ],
         "QuestionText": {
             "English": "As you approached the stopped car, how was your speed changing?",
-            "Hebrew": "מה שינית במהירות שלך בזמן שהתקרבת לרכב שעצר?"
+            "Hebrew": "כיצד המהירות שלך השתנתה בזמן שהתקרבת לרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtB",
         "Answers": [
             {
                 "index": 1,
@@ -167,9 +320,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "While approaching the stopped car, did you signal?",
-            "Hebrew": "בזמן שהתקרבת לרכב שעצר, האם אותתתה?"
+            "English": "As you approached the stopped car, did you signal?",
+            "Hebrew": "האם אותתת בזמן שהתקרבת לרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtB",
         "Answers": [
             {
                 "index": 1,
@@ -195,35 +349,50 @@
         ]
     },
     {
-        "ID": 22,
-        "Scenario_ID": "NI1-18",
-        "SA_atoms": "Signaling",
-        "SA_Level": "Comprehension",
-        "Awareness_to": "Myself",
+        "ID": 4,
+        "Scenario_ID": "NI1-3",
+        "SA_atoms": "Location",
+        "SA_Level": "Perception",
+        "Awareness_to": "Other driver",
         "Participant": [
-            "B"
+            "A"
         ],
         "QuestionText": {
-            "English": "What did you mean when you signaled?",
-            "Hebrew": "למה התכוונת כשהשתמשת באורות האיתות?"
+            "English": "What direction was the other vehicle coming from when you reached the stopped car?",
+            "Hebrew": "מאיזה כיוון הגיע הרכב הנוסף כאשר הגעת לרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtA",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "I didn't use any signaling",
-                    "Hebrew": "לא השתמשתי באורות האיתות"
+                    "English": "From the opposite lane in front of me",
+                    "Hebrew": "מהנתיב הנגדי מולי"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "I wanted to change lanes",
-                    "Hebrew": "רציתי לשנות נתיבים"
+                    "English": "From the opposite lane, behind me",
+                    "Hebrew": "מהנתיב הנגדי מאחורי"
                 }
             },
             {
                 "index": 3,
+                "AnswerText": {
+                    "English": "From my lane, In front of me",
+                    "Hebrew": "מהנתיב שלי מלפני"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "From my lane, behind me",
+                    "Hebrew": "מהנתיב שלי מאחורי"
+                }
+            },
+            {
+                "index": 5,
                 "AnswerText": {
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
@@ -238,39 +407,39 @@
         "SA_Level": "Perception",
         "Awareness_to": "Other driver",
         "Participant": [
-            "A",
             "B"
         ],
         "QuestionText": {
-            "English": "What direction was the second vehicle coming from when you reached the stopped car?",
-            "Hebrew": "מהיכן הגיע הרכב השני כאשר התקרבת לרכב העוצר?"
+            "English": "What direction was the other vehicle coming from when you reached the stopped car?",
+            "Hebrew": "מאיזה כיוון הגיע הרכב הנוסף כאשר הגעת לרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtB",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "In front of me, on the opposite lane",
+                    "English": "From the opposite lane in front of me",
                     "Hebrew": "מהנתיב הנגדי מולי"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "Behind me, on the opposite lane",
+                    "English": "From the opposite lane, behind me",
                     "Hebrew": "מהנתיב הנגדי מאחורי"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "In front of me on my lane",
+                    "English": "From my lane, In front of me",
                     "Hebrew": "מהנתיב שלי מלפני"
                 }
             },
             {
                 "index": 4,
                 "AnswerText": {
-                    "English": "Behind me in my lane",
+                    "English": "From my lane, behind me",
                     "Hebrew": "מהנתיב שלי מאחורי"
                 }
             },
@@ -279,13 +448,6 @@
                 "AnswerText": {
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
-                }
-            },
-            {
-                "index": 6,
-                "AnswerText": {
-                    "English": "I didn't see any other car",
-                    "Hebrew": "לא ראיתי רכב נוסף"
                 }
             }
         ]
@@ -297,13 +459,58 @@
         "SA_Level": "Perception",
         "Awareness_to": "Other driver",
         "Participant": [
-            "A",
+            "A"
+        ],
+        "QuestionText": {
+            "English": "While the other vehicle was approaching the stopped car what was their speed?",
+            "Hebrew": "מה הייתה המהירות של הרכב האחר בזמן שהוא התקרב לרכב שעצר?"
+        },
+        "QnImagePath": "QNPictures\\NIjustAtA",
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "High speed",
+                    "Hebrew": "מהירה"
+                }
+            },
+            {
+                "index": 2,
+                "AnswerText": {
+                    "English": "Normal speed",
+                    "Hebrew": "נורמאלית"
+                }
+            },
+            {
+                "index": 3,
+                "AnswerText": {
+                    "English": "Slow speed",
+                    "Hebrew": "איטית"
+                }
+            },
+            {
+                "index": 4,
+                "AnswerText": {
+                    "English": "I'm not sure",
+                    "Hebrew": "אני לא בטוח"
+                }
+            }
+        ]
+    },
+    {
+        "ID": 9,
+        "Scenario_ID": "NI1-5",
+        "SA_atoms": "Speed",
+        "SA_Level": "Perception",
+        "Awareness_to": "Other driver",
+        "Participant": [
             "B"
         ],
         "QuestionText": {
-            "English": "How fast was the other driver driving while he approached the stopped car?",
-            "Hebrew": "מה הייתה המהירות של הנהג השני בזמן שהוא התקרב לרכב שעצר?"
+            "English": "While the other vehicle was approaching the stopped car what was their speed?",
+            "Hebrew": "מה הייתה המהירות של הרכב האחר בזמן שהוא התקרב לרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtB",
         "Answers": [
             {
                 "index": 1,
@@ -345,9 +552,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "While overtaking the stopped car, did you signal?",
-            "Hebrew": "בזמן שעקפת את הרכב שעצר, האם השתמשת באורות האיתות?"
+            "English": "As you overtook the stopped car, did you signal?",
+            "Hebrew": "האם אותתת בזמן שעקפת את הרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NInextToCarB",
         "Answers": [
             {
                 "index": 1,
@@ -382,28 +590,29 @@
             "A"
         ],
         "QuestionText": {
-            "English": "How did the other driver's speed change as you approached the stopped car?",
-            "Hebrew": "מה הייתה משמעות המהירות של הנהג השני בזמן שהתקרבת לרכב שעצר?"
+            "English": "As you approached the stopped car, how did you interpret the other vehicle's speed change?",
+            "Hebrew": "בזמן שהתקרבת לרכב שעצר, כיצד פירשת את המהירות של הרכב האחר?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtA",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "They were slowing down",
+                    "English": "It was slowing down",
                     "Hebrew": "הוא האט"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "They were accelerating",
+                    "English": "It was accelerating",
                     "Hebrew": "הוא האיץ"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "They didn't change their speed",
+                    "English": "It didn't change Its speed",
                     "Hebrew": "הוא לא שינה את המהירות שלו"
                 }
             },
@@ -426,9 +635,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "How fast were you driving while overtaking the stopped car?",
-            "Hebrew": "מה הייתה המהירות שלך בזמן שעקפת את הרכב שעצר?"
+            "English": "While you overtook the stopped car, how fast were you driving?",
+            "Hebrew": "מה הייתה מהירות הנסיעה שלך בזמן שעקפת את הרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NInextToCarB",
         "Answers": [
             {
                 "index": 1,
@@ -470,9 +680,10 @@
             "A"
         ],
         "QuestionText": {
-            "English": "What did the location of the other vehicle & the stopped car mean?",
-            "Hebrew": "מה הייתה משמעות המיקום של הרכב שעצר והרכב הנוסף?"
+            "English": "As you approached the stopped car, how did you interpret the location of other vehicle and the stopped car?",
+            "Hebrew": "בזמן שהתקרבת לרכב שעצר, כיצד פירשת את המיקום של הרכב האחר והרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtA",
         "Answers": [
             {
                 "index": 1,
@@ -507,9 +718,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "As you overtook the stopped car, how was your speed changing?",
-            "Hebrew": "מה שינית במהירות שלך בזמן שעקפת את הרכב שעצר?"
+            "English": "while you were overtaking the stopped car how was your speed changing?",
+            "Hebrew": "כיצד המהירות שלך השתנתה בזמן שעקפת את הרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NInextToCarB",
         "Answers": [
             {
                 "index": 1,
@@ -551,33 +763,27 @@
             "A"
         ],
         "QuestionText": {
-            "English": "Given the location of the other driver & the stopped car, what could have happened next?",
-            "Hebrew": "בהינתן מיקומו של הרכב השני והרכב שעצר, מה היה עשוי לקרות?"
+            "English": "Based on the other vehicle's location & the stopped car, what did you expect the other driver to do?",
+            "Hebrew": "בהינתן המיקום של הרכב האחר והרכב שעצר, מה ציפית שהנהג האחר יעשה?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtA",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "The other driver would have overtaken the stopped car before I passed it",
-                    "Hebrew": "הנהג השני היה עוקף את הרכב שעצר לפני שהייתי חולף אותו"
+                    "English": "Overtake the stopped car before I pass it",
+                    "Hebrew": "יעקוף את הרכב שעצר לפני שאחלוף לידו"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "The other driver would have stopped and wait until I passed the stopped car",
-                    "Hebrew": "הנהג השני היה עוצר ומחכה עד שאני אחלוף את הרכב שעצר"
+                    "English": "Stop and wait until I pass the stopped car",
+                    "Hebrew": "יעצור וימתין עד שאני אחלוף לצד הרכב שעצר"
                 }
             },
             {
                 "index": 3,
-                "AnswerText": {
-                    "English": "There was no other driver",
-                    "Hebrew": "לא היה נהג נוסף"
-                }
-            },
-            {
-                "index": 4,
                 "AnswerText": {
                     "English": "I am not sure",
                     "Hebrew": "אני לא בטוח"
@@ -595,9 +801,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "How fast was the other driver driving while you overtook the stopped car?",
-            "Hebrew": "מה הייתה המהירות של הנהג השני בזמן שעקפת את הרכב שעצר?"
+            "English": "While you overtook the stopped car, what was the other vehicle's speed?",
+            "Hebrew": "מה הייתה המהירות של הרכב האחר בזמן שאתה עקפת את הרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NInextToCarB",
         "Answers": [
             {
                 "index": 1,
@@ -640,8 +847,9 @@
         ],
         "QuestionText": {
             "English": "Did the other vehicle signal as it approached the stopped car?",
-            "Hebrew": "האם הנהג השני אותת בזמן שהוא התקרב לרכב שעצר?"
+            "Hebrew": "האם הרכב האחר אותת בזמן שהוא התקרב לרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtA",
         "Answers": [
             {
                 "index": 1,
@@ -676,28 +884,29 @@
             "B"
         ],
         "QuestionText": {
-            "English": "How did the other driver's speed change when you overtook the stopped car?",
-            "Hebrew": "מה הייתה משמעות המהירות של הנהג השני בזמן שעקפת את הרכב שעצר?"
+            "English": "As you overtook the stopped car, how did you interpret the other driver's speed change?",
+            "Hebrew": "כיצד פירשת את המהירות של הרכב האחר בזמן שאתה עקפת את הרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NInextToCarB",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "They were slowing down",
+                    "English": "It was slowing down",
                     "Hebrew": "הוא האט"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "They were accelerating",
+                    "English": "It was accelerating",
                     "Hebrew": "הוא האיץ"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "They didn't change their speed",
+                    "English": "It didn't change its speed",
                     "Hebrew": "הוא לא שינה את המהירות שלו"
                 }
             },
@@ -720,33 +929,27 @@
             "A"
         ],
         "QuestionText": {
-            "English": "What did the other driver mean when they signaled?",
-            "Hebrew": "למה התכוון הנהג השני כאשר הוא אותת?"
+            "English": "How did you interpret the other vehicle's signaling?",
+            "Hebrew": "כיצד פירשת את האיתות של הרכב האחר?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtA",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "They didn't use any signaling",
-                    "Hebrew": "הוא לא אותת"
+                    "English": "It didn't use any signaling",
+                    "Hebrew": "לא ראיתי שהוא אותת"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "They wanted to signal their intention to change heading",
+                    "English": "It wanted to signal Its intention to change direction",
                     "Hebrew": "הוא רצה לסמן את הכוונה שלו לשנות כיוון"
                 }
             },
             {
                 "index": 3,
-                "AnswerText": {
-                    "English": "There was no other driver",
-                    "Hebrew": "לא היה נהג נוסף"
-                }
-            },
-            {
-                "index": 4,
                 "AnswerText": {
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
@@ -765,8 +968,9 @@
         ],
         "QuestionText": {
             "English": "Which lane were you in when you overtook the stopped car?",
-            "Hebrew": "באיזה נתיב היית כאשר עקפת את הרכב שעצר?"
+            "Hebrew": "באיזה נתיב היית בזמן שעקפת את הרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NInextToCarB",
         "Answers": [
             {
                 "index": 1,
@@ -801,9 +1005,10 @@
             "A"
         ],
         "QuestionText": {
-            "English": "How fast were you driving while the other driver overtook the stopped car?",
-            "Hebrew": "מה הייתה המהירות שלך בזמן שהנהג השני עקף את הרכב שעצר?"
+            "English": "While the other vehicle overtook the stopped car, how fast were you driving?",
+            "Hebrew": "מה הייתה המהירות שלך בזמן שהרכב האחר עקף את הרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtA",
         "Answers": [
             {
                 "index": 1,
@@ -852,9 +1057,10 @@
             "A"
         ],
         "QuestionText": {
-            "English": "While the other driver overtook the stopped car, how was your speed changing?",
-            "Hebrew": "מה שינית במהירות שלך בזמן שהנהג השני עקף את הרכב שעצר?"
+            "English": "While the other vehicle overtook the stopped car, how was your speed changing?",
+            "Hebrew": "כיצד המהירות שלך השתנתה בזמן שהרכב האחר עקף את הרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtA",
         "Answers": [
             {
                 "index": 1,
@@ -896,36 +1102,37 @@
             "B"
         ],
         "QuestionText": {
-            "English": "Where was the other vehicle when you overtook the stopped car?",
-            "Hebrew": "היכן היה הרכב השני כאשר עקפת את הרכב שעצר?"
+            "English": "While you were overtaking the stopped car, what direction was the other vehicle coming from?",
+            "Hebrew": "מאיזה כיוון הרכב האחר הגיע בזמן שעקפת את הרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NInextToCarB",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "On the opposite lane in front of me",
-                    "Hebrew": "בנתיב הנגדי מולי"
+                    "English": "From the opposite lane in front of me",
+                    "Hebrew": "מהנתיב הנגדי מולי"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "On the opposite lane behind me",
-                    "Hebrew": "בנתיב הנגדי מאחורי"
+                    "English": "From the opposite lane behind me",
+                    "Hebrew": "מהנתיב הנגדי מאחורי"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "On the opposite lane behind me",
-                    "Hebrew": "בנתיב שלי מלפני"
+                    "English": "From my lane in front of me",
+                    "Hebrew": "מהנתיב שלי מלפני"
                 }
             },
             {
                 "index": 4,
                 "AnswerText": {
-                    "English": "In my lane behind me",
-                    "Hebrew": "בנתיב שלי מאחורי"
+                    "English": "From my lane behind me",
+                    "Hebrew": "מהנתיב שלי מאחורי"
                 }
             },
             {
@@ -933,13 +1140,6 @@
                 "AnswerText": {
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
-                }
-            },
-            {
-                "index": 6,
-                "AnswerText": {
-                    "English": "I didn't see any other car",
-                    "Hebrew": "לא ראיתי רכב נוסף"
                 }
             }
         ]
@@ -954,22 +1154,23 @@
             "A"
         ],
         "QuestionText": {
-            "English": "What could have happened next, given the other driver's speed?",
-            "Hebrew": "בהתחשב במהירות הנסיעה של הנהג השני, מה היה עשוי לקרות?"
+            "English": "Given the other vehicle's speed, what did you think could have happened next?",
+            "Hebrew": "בהינתן מהירות הרכב האחר, מה חשבת שעשוי לקרות?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtA",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "The other driver would have overtaken the stopped car before I passed it",
-                    "Hebrew": "הנהג השני היה עוקף את הרכב שעצר לפני שהייתי חולף אותו"
+                    "English": "It will overtake the stopped car before I passed it",
+                    "Hebrew": "הוא יעקוף את הרכב שעצר לפני שאני אחלוף אותו"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "The other driver would have stopped and waited till I pass the stopped car",
-                    "Hebrew": "הנהג השני היה עוצר ומחכה עד שהייתי עובר את הרכב שעצר"
+                    "English": "It will stop and wait till I pass the stopped car",
+                    "Hebrew": "הוא יעצור ויחכה עד שאחלוף את הרכב שעצר"
                 }
             },
             {
@@ -991,36 +1192,37 @@
             "B"
         ],
         "QuestionText": {
-            "English": "What direction was the second vehicle coming from when you finished overtaking the stopped car? ",
-            "Hebrew": "היכן היה הנהג השני כאשר סיימת לעקוף את הרכב שעצר?"
+            "English": "When you finished overtaking the stopped car, what direction was the other vehicle coming from?",
+            "Hebrew": "מאיזה כיוון הרכב האחר הגיע בזמן שסיימת לעקוף את הרכב שעצר?"
         },
+        "QnImagePath": "QNPictures\\NInextToCarB",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
                     "English": "In front of me, on the opposite lane",
-                    "Hebrew": "בנתיב הנגדי מולי"
+                    "Hebrew": "מהנתיב הנגדי מולי"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
                     "English": "Behind me, on the opposite lane",
-                    "Hebrew": "בנתיב הנגדי מאחורי"
+                    "Hebrew": "מהנתיב הנגדי מאחורי"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
                     "English": "In front of me on my lane",
-                    "Hebrew": "בנתיב שלי מלפני"
+                    "Hebrew": "מהנתיב שלי מלפני"
                 }
             },
             {
                 "index": 4,
                 "AnswerText": {
                     "English": "Behind me in my lane",
-                    "Hebrew": "בנתיב שלי מאחורי"
+                    "Hebrew": "מהנתיב שלי מאחורי"
                 }
             },
             {
@@ -1028,13 +1230,6 @@
                 "AnswerText": {
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
-                }
-            },
-            {
-                "index": 6,
-                "AnswerText": {
-                    "English": "I didn't see any other car",
-                    "Hebrew": "לא ראיתי רכב נוסף"
                 }
             }
         ]
@@ -1049,9 +1244,10 @@
             "A"
         ],
         "QuestionText": {
-            "English": "Based on the sequence of events, did you feel there was a risk of a collision?",
-            "Hebrew": "בהתחשב ברצף האירועים, האם חשת שעשויה להיות התנגשות?"
+            "English": "As you approached the stopped car, did you feel there was a risk of a collision?",
+            "Hebrew": "בזמן שהתקרבת לרכב שעצר, האם חשת שעשויה להיות התנגשות?"
         },
+        "QnImagePath": "QNPictures\\NIjustAtA",
         "Answers": [
             {
                 "index": 1,
