@@ -1,6 +1,6 @@
 # CrossCulturalDriving2021
 
-Updated version of CrossCulturalDriving including ECS, new networking stack(MLAPI), Unity.InputSystem, and Unity XR Interaction Toolkit with Oculus Plugin alongside Oculus Integration, works with Logitech G29 steering wheel.
+Updated version of CrossCulturalDriving ~~including ECS~~, new networking stack(MLAPI), ~~Unity.InputSystem~~, and ~~Unity XR Interaction Toolkit~~ with Oculus Plugin alongside Oculus Integration, works with Logitech G29 steering wheel.
 
 Unity Issues: The Mono Cecil package will not be imported with git, it needs to be manually installed from safe mode.
 
@@ -33,6 +33,7 @@ import the necessary third party packages:
 |⇧ Shift +  Q | Display SA Questionnaire |
 |⇧ Shift +  A/B | Toggle the participants steerring wheel button remotely (for testing questionnaire) |
 |0,1,2,3,4 | Switch between the views in the server |
+|^ Ctrl + ⎵ Space + A/B|Resets the participant to the starting position|
 
 
 #### Calibration

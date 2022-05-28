@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class StateManager : NetworkBehaviour {
     public NetworkVariable<ActionState> GlobalState =
-        new NetworkVariable<ActionState>(NetworkVariableReadPermission.Everyone);
+        new NetworkVariable<ActionState>();
     
     
 

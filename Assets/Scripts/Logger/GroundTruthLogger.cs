@@ -18,6 +18,7 @@ public class GroundTruthLogger
 
     private List<ParticipantOrder> CurrentScenarioPOList;
 
+    
     // Start is called before the first frame update
     public void Init()
     {
@@ -27,23 +28,23 @@ public class GroundTruthLogger
     {
         CurrentScenarioPOList = new List<ParticipantOrder>(participantstoCollectFor);
         
-        if (_vehicles == null) _vehicles = new Dictionary<ParticipantOrder, NetworkVehicleController>();
+        _vehicles ??= new Dictionary<ParticipantOrder, NetworkVehicleController>();
         _vehicles.Clear();
 
-        if (_speeds == null) _speeds = new Dictionary<ParticipantOrder, List<float>>();
+        _speeds ??= new Dictionary<ParticipantOrder, List<float>>();
         _speeds.Clear();
 
-        if (_horn == null) _horn = new Dictionary<ParticipantOrder, bool>();
+        _horn ??= new Dictionary<ParticipantOrder, bool>();
         _horn.Clear();
 
-        if (_leftSignal == null) _leftSignal = new Dictionary<ParticipantOrder, bool>();
+        _leftSignal ??= new Dictionary<ParticipantOrder, bool>();
         _leftSignal.Clear();
-        if (_rightSignal == null) _rightSignal = new Dictionary<ParticipantOrder, bool>();
+        _rightSignal ??= new Dictionary<ParticipantOrder, bool>();
         _rightSignal.Clear();
-        if (_hazardLights == null) _hazardLights = new Dictionary<ParticipantOrder, bool>();
+        _hazardLights ??= new Dictionary<ParticipantOrder, bool>();
         _hazardLights.Clear();
         
-        if (_breaks == null) _breaks = new Dictionary<ParticipantOrder, bool>();
+        _breaks ??= new Dictionary<ParticipantOrder, bool>();
         _breaks.Clear();
 
         foreach (ParticipantOrder po in CurrentScenarioPOList)
@@ -64,7 +65,8 @@ public class GroundTruthLogger
 
     public void GatherGroundTruth(ref ScenarioLog log)
     {
-        log.facts.Add("scenario length", (log.endTime - log.startTime).ToString());
+        //https://stackoverflow.com/questions/8945272/check-difference-in-seconds-between-two-times
+        log.facts.Add("scenario length", (log.endTime - log.startTime).TotalSeconds.ToString()); 
         foreach (var po in CurrentScenarioPOList)
         {
             if (_speeds[po].Count() > 1)
@@ -135,6 +137,8 @@ public class GroundTruthLogger
         }
     }
 }
+
+
 
 //From https://stackoverflow.com/a/6252351
 public static class Extend
