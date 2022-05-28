@@ -1,5 +1,29 @@
 [
     {
+        "ID": 0,
+        "Scenario_ID": "NSI1-0",
+        "SA_atoms": "NA",
+        "SA_Level": "NA",
+        "Awareness_to": "NA",
+        "Participant": [
+            "A",
+            "B"
+        ],
+        "QuestionText": {
+            "English": "These questions are about the last scenario you went through. Above the questions, you will see a screenshot of the scenery related to the moment we are being asked (from your perspective)",
+            "Hebrew": "השאלות הבאות מתייחסות לתרחיש בו השתתפת הרגע. מעל השאלות יוצג בפניך תמונת נוף (מנקודת המבט שלך) הקשור לרגע עליו אתה נשאל."
+        },
+        "Answers": [
+            {
+                "index": 1,
+                "AnswerText": {
+                    "English": "OK",
+                    "Hebrew": "OK"
+                }
+            }
+        ]
+    },
+    {
         "ID": 1,
         "Scenario_ID": "NSI1-4",
         "SA_atoms": "Speed",
@@ -10,9 +34,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "How fast were you driving while approaching the diverging lane?",
-            "Hebrew": "מה הייתה המהירות שלך בזמן שהתקרבת לנתיב היציאה מהדרך הראשית?"
+            "English": "While approaching the diverging lane, how fast were you driving?",
+            "Hebrew": "מה הייתה מהירות הנסיעה שלך בזמן שהתקרבת לנתיב היוצא?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
@@ -56,8 +81,9 @@
         ],
         "QuestionText": {
             "English": "As you approached the diverging lane, how was your speed changing?",
-            "Hebrew": "מה שינית במהירות שלך בזמן שהתקרבת לנתיב היוצא?"
+            "Hebrew": "כיצד המהירות שלך השתנתה בזמן שהתקרבת לנתיב היוצא?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
@@ -100,9 +126,10 @@
             "B"
         ],
         "QuestionText": {
-            "English": "How fast was the other driver driving while approaching the diverging lane?",
-            "Hebrew": "מה הייתה המהירות של הנהג השני בזמן שהתקרבת לנתיב היוצא?"
+            "English": "While approaching the diverging lane, how fast was the other vehicle driving?",
+            "Hebrew": "מה הייתה המהירות של הרכב האחר בזמן שהוא התקרב לנתיב היוצא?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
@@ -145,28 +172,29 @@
             "B"
         ],
         "QuestionText": {
-            "English": "How did the other driver's speed change as you approached the diverging lane?",
-            "Hebrew": "מה הייתה משמעות המהירות של הנהג השני בזמן שהתקרבת לנתיב היוצא?"
+            "English": "As you approached the diverging lane, how did you interpret the other vehicle's speed change?",
+            "Hebrew": "כיצד פירשת את המהירות של הרכב האחר בזמן שהתקרבת לנתיב היוצא?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "They were slowing down",
+                    "English": "It was slowing down",
                     "Hebrew": "הוא האט"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "They were accelerating",
+                    "English": "It was accelerating",
                     "Hebrew": "הוא האיץ"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
-                    "English": "They didn't change their speed",
+                    "English": "It didn't change its speed",
                     "Hebrew": "הוא לא שינה את המהירות שלו"
                 }
             },
@@ -190,15 +218,16 @@
             "B"
         ],
         "QuestionText": {
-            "English": "What could have happened next, given the other driver's speed?",
-            "Hebrew": "בהתחשב במהירות של הנהג השני, מה היה עשוי לקרות?"
+            "English": "Given the other vehicle's speed, what could have happened next?",
+            "Hebrew": "בהינתן מהירות הרכב האחר, מה חשבת שעשוי לקרות?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
                     "English": "Nothing, we kept enough distance",
-                    "Hebrew": "כלום, שמרנו מספיק מרחק"
+                    "Hebrew": "שום דבר, שמרנו מספיק מרחק"
                 }
             },
             {
@@ -228,14 +257,15 @@
             "B"
         ],
         "QuestionText": {
-            "English": "when you approached the diverging lane, where was the other vehicle?",
-            "Hebrew": "היכן היה הרכב השני כאשר התקרבת לנתיב היציאה מהדרך הראשית?"
+            "English": "While approaching the diverging lane, what direction was the other vehicle coming from?",
+            "Hebrew": "מאיזה כיוון הגיע הרכב הנוסף כאשר התקרבת לנתיב היוצא?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "Behind me",
+                    "English": "From behind me",
                     "Hebrew": "מאחורי"
                 }
             },
@@ -252,13 +282,6 @@
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
                 }
-            },
-            {
-                "index": 4,
-                "AnswerText": {
-                    "English": "I didn't see any other vehicle",
-                    "Hebrew": "לא ראיתי רכב נוסף"
-                }
             }
         ]
     },
@@ -273,29 +296,23 @@
             "B"
         ],
         "QuestionText": {
-            "English": "What did the location of the other vehicle mean?",
-            "Hebrew": "מה הייתה המשמעות של הרכב הנוסף?"
+            "English": "How did you interpret the other vehicle's location?",
+            "Hebrew": "כיצד פירשת את מיקום הרכב האחר?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
                     "English": "There is another vehicle on the main road",
-                    "Hebrew": "רכב נוסף היה בכביש הראשי"
+                    "Hebrew": "יש רכב נוסף על הכביש הראשי"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "There was no other vehicle",
-                    "Hebrew": "לא היה רכב נוסף"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "I am not sure",
-                    "Hebrew": "אני לא בטוח"
+                    "English": "I am not sure there was another vehicle",
+                    "Hebrew": "אני לא בטוח שהיה רכב נוסף"
                 }
             }
         ]
@@ -310,33 +327,27 @@
             "B"
         ],
         "QuestionText": {
-            "English": "While approaching the diverging lane, giving the other driver's direction, what could have happened next?",
-            "Hebrew": "בזמן שהתקרבת לנתיב היוצא ובהתחשב בכיוון של הנהג השני, מה היה עשוי לקרות?"
+            "English": "While approaching the diverging lane, given the other vehicle's direction, I could tell that:",
+            "Hebrew": "בזמן שהתקרבת לנתיב היוצא ובהינתן הכיוון של הרכב האחר, יכולתי לאמר ש:"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "The other driver would have turned right",
-                    "Hebrew": "הנהג השני היה פונה ימינה"
+                    "English": "It was going to turn left",
+                    "Hebrew": "הוא הולך לפנות שמאלה"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "The other driver would have turned left",
-                    "Hebrew": "הנהג השני היה פונה שמאלה"
+                    "English": "It was going straight",
+                    "Hebrew": "הוא ימשיך ישר"
                 }
             },
             {
                 "index": 3,
-                "AnswerText": {
-                    "English": "The other driver would have went straight",
-                    "Hebrew": "הנהג השני היה ממשיך ישר"
-                }
-            },
-            {
-                "index": 4,
                 "AnswerText": {
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
@@ -355,22 +366,23 @@
             "B"
         ],
         "QuestionText": {
-            "English": "While approaching the diverging lane, what direction were you heading?",
-            "Hebrew": "בזמן שהתקרבת לנתיב היוצא, לאיזה כיוון פנית?"
+            "English": "As you approached the diverging lane, what direction was your vehicle pointing?",
+            "Hebrew": "בזמן שהתקרבת לנתיב היוצא, לאיזה כיוון כיוונת את הרכב?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "To the right",
-                    "Hebrew": "לימין"
+                    "English": "To my right",
+                    "Hebrew": "לימין שלי"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "To the left",
-                    "Hebrew": "לשמאל"
+                    "English": "To my left",
+                    "Hebrew": "לשמאל שלי"
                 }
             },
             {
@@ -400,22 +412,23 @@
             "B"
         ],
         "QuestionText": {
-            "English": "While approaching the diverging lane, which direction was the other vehicle facing?",
-            "Hebrew": "בזמן שהתקרבת לנתיב היוצא, לאיזה כיוון פנה הנהג השני?"
+            "English": "As you approached the diverging lane, which direction was the other vehicle pointing?",
+            "Hebrew": "בזמן שהתקרבת לנתיב היוצא, לאיזה כיוון הרכב האחר כיוון?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "To the right",
-                    "Hebrew": "לימין"
+                    "English": "To their right",
+                    "Hebrew": "לימין שלו"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "To the left",
-                    "Hebrew": "לשמאל"
+                    "English": "To their left",
+                    "Hebrew": "לשמאל שלו"
                 }
             },
             {
@@ -444,9 +457,10 @@
             "A"
         ],
         "QuestionText": {
-            "English": "While approaching the diverging lane, did you signal? ",
-            "Hebrew": "בזמן שהתקרבת לנתיב היוצא, האם אותתתה?"
+            "English": "As you approached the diverging lane, did you signal?",
+            "Hebrew": "האם אותתת בזמן שהתקרבת לנתיב היוצא?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
@@ -472,43 +486,6 @@
         ]
     },
     {
-        "ID": 22,
-        "Scenario_ID": "NSI1-15",
-        "SA_atoms": "Signaling",
-        "SA_Level": "Comprehension",
-        "Awareness_to": "Myself",
-        "Participant": [
-            "A"
-        ],
-        "QuestionText": {
-            "English": "What did you mean when you signaled?",
-            "Hebrew": "למה התכוונתה כשאותתתה?"
-        },
-        "Answers": [
-            {
-                "index": 1,
-                "AnswerText": {
-                    "English": "I didn't use any signaling",
-                    "Hebrew": "לא השתמשתי באורות האיתות"
-                }
-            },
-            {
-                "index": 2,
-                "AnswerText": {
-                    "English": "I wanted to change lanes",
-                    "Hebrew": "רציתי לשנות נתיבים"
-                }
-            },
-            {
-                "index": 3,
-                "AnswerText": {
-                    "English": "I'm not sure",
-                    "Hebrew": "אני לא בטוח"
-                }
-            }
-        ]
-    },
-    {
         "ID": 2,
         "Scenario_ID": "NSI1-7",
         "SA_atoms": "Signaling",
@@ -519,8 +496,9 @@
         ],
         "QuestionText": {
             "English": "Did the other vehicle signal as it approached the diverging lane?",
-            "Hebrew": "האם הנהג השני אותת בזמן שהוא התקרב לנתיב היציאה מהדרך הראשית?"
+            "Hebrew": "האם הרכב האחר אותת בזמן שהוא התקרב לנתיב היוצא?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
@@ -555,33 +533,27 @@
             "B"
         ],
         "QuestionText": {
-            "English": "What did the other driver mean when they signaled?",
-            "Hebrew": "למה התכוון הנהג השני כאשר הוא אותת?"
+            "English": "How did you interpret the other vehicle's signaling?",
+            "Hebrew": "כיצד פירשת את האיתות של הרכב האחר?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
-                    "English": "They didn't use any signaling",
+                    "English": "It didn't use any signaling",
                     "Hebrew": "הוא לא אותת"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
-                    "English": "They wanted to signal their intention to change heading",
-                    "Hebrew": "הוא רצה לסמן את הכוונה שלו לשנות כיוון"
+                    "English": "It wanted to signal its intention to change the direction",
+                    "Hebrew": "הוא רצה לסמן את הכוונות שלו לשנות כיוון"
                 }
             },
             {
                 "index": 3,
-                "AnswerText": {
-                    "English": "There was no other driver",
-                    "Hebrew": "לא היה נהג נוסף"
-                }
-            },
-            {
-                "index": 4,
                 "AnswerText": {
                     "English": "I'm not sure",
                     "Hebrew": "אני לא בטוח"
@@ -599,29 +571,30 @@
             "B"
         ],
         "QuestionText": {
-            "English": "What did you expect the other driver to do when he approached the diverging lane?",
-            "Hebrew": "כיצד ציפית שהנהג השני יתנהג כשהתקרב לנתיב היוצא?"
+            "English": "Based on the other vehicle's speed while it was approaching the diverging lane, what did you expect the other driver to do?",
+            "Hebrew": "מה ציפית שהנהג האחר יעשה בהינתן המהירות שלו בזמן שהתקרבת לנתיב היוצא?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
                 "AnswerText": {
                     "English": "Keep going straight",
-                    "Hebrew": "שימשיך ישר"
+                    "Hebrew": "ימשיך ישר"
                 }
             },
             {
                 "index": 2,
                 "AnswerText": {
                     "English": "Maintain his current speed and merge into the diverging lane",
-                    "Hebrew": "שימשיך באותו קצב ויכנס לנתיב היוצא"
+                    "Hebrew": "ישמור על מהירות וישתלב בנתיב היוצא"
                 }
             },
             {
                 "index": 3,
                 "AnswerText": {
                     "English": "Slow down and enter the diverging lane cautiously",
-                    "Hebrew":"שיאט וינוע לאט לתוך הנתיב היוצא"
+                    "Hebrew":"יאט ויכנס לנתיב היוצא בזהירות"
                 }
             },            
             {
@@ -643,9 +616,10 @@
             "A"
         ],
         "QuestionText": {
-            "English": "What did you expect the other driver to do when he approached the diverging lane?",
-            "Hebrew": "כיצד ציפית שהנהג השני יתנהג כשהתקרב לנתיב היוצא?"
+            "English": "Based on the other vehicle's speed while you were approaching the diverging lane, what did you expect the other driver to do?",
+            "Hebrew": "מה ציפית שהנהג האחר יעשה בהינתן המהירות שלו בזמן שהתקרבת לנתיב היוצא?"
         },
+        "QnImagePath": "QNPictures\\NSI1JustBefore",
         "Answers": [
             {
                 "index": 1,
