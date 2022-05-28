@@ -4,17 +4,11 @@ using System.IO;
 using System;
 using System.Text;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
-using Newtonsoft.Json;
-using Unity.Collections;
-using Unity.Netcode;
-using UnityEngine.UIElements;
+using UnityEngine.Serialization;
+
 
 public class QNSelectionManager : MonoBehaviour
 {
@@ -56,16 +50,20 @@ public class QNSelectionManager : MonoBehaviour
 #endif
 
     Transform ParentPosition;
-    float up, forward;
+    [FormerlySerializedAs("up")] public float xOffset;
+    [FormerlySerializedAs("forward")] public float yOffset;
+    [FormerlySerializedAs("left")] public float zOffset;
+
 
     public void ChangeLanguage(string lang){
         m_LanguageSelect = lang;
     }
 
-    public void setRelativePosition(Transform t, float up_, float forward_){
+    public void setRelativePosition(Transform t, float up_, float forward_, float left_){
         ParentPosition = t;
-        up = up_;
-        forward = forward_;
+        xOffset = up_;
+        yOffset = forward_;
+        zOffset = left_;
     }
 
     void Start(){
@@ -107,6 +105,44 @@ public class QNSelectionManager : MonoBehaviour
 #endif
     }
 
+    public GameObject ScenarioImageHolder;
+
+
+    private Transform newImageHolder = null;
+
+    public void AddImage(Texture2D CaptureScenarioImage){
+        if (ScenarioImageHolder == null){
+            Debug.LogError("This is not good. Could not show a picture even-though I was supposed to.!");
+            return;
+        }
+
+        if (CaptureScenarioImage == null || CaptureScenarioImage.height <= 1 || CaptureScenarioImage.width <= 0){
+            Debug.LogWarning("Was supposed to show a picture but did not get anything usable");
+            return;
+        }
+
+        if (newImageHolder == null){
+            newImageHolder = Instantiate(ScenarioImageHolder, transform).transform;
+        }
+
+        newImageHolder.gameObject.SetActive(true);
+
+        CaptureScenarioImage.Apply();
+        const float width = 300;
+        float factor = width / (CaptureScenarioImage.width - 10);
+        if (newImageHolder.GetChild(0).GetComponent<RawImage>() != null){
+            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,
+                factor * CaptureScenarioImage.height);
+            newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,
+                factor * CaptureScenarioImage.width);
+            newImageHolder.GetChild(0).GetComponent<RawImage>().texture = CaptureScenarioImage;
+            newImageHolder.transform.localPosition = new Vector3(0, factor * CaptureScenarioImage.height + 80, 0f);
+        }
+        else{
+            Debug.Log("Was trying to show a screenshot but well didnt know were really?");
+        }
+    }
+
 
     private Transform positioingRef;
 
@@ -134,7 +170,8 @@ public class QNSelectionManager : MonoBehaviour
 
         if (ParentPosition != null){
             transform.rotation = ParentPosition.rotation;
-            transform.position = ParentPosition.position + ParentPosition.rotation * new Vector3(0, up, forward);
+            transform.position = ParentPosition.position +
+                                 ParentPosition.rotation * new Vector3(xOffset, yOffset, zOffset);
         }
 
         switch (m_interalState){
@@ -166,6 +203,26 @@ public class QNSelectionManager : MonoBehaviour
                 AnswerFields.Clear();
 
                 QustionField.text = SetText(currentActiveQustion.QuestionText);
+
+                if (currentActiveQustion.QnImagePath.Length > 0){
+                    try{
+                        AddImage(Resources.Load<Texture2D>(currentActiveQustion.QnImagePath));
+                    }
+                    catch(Exception e){
+                        Debug.LogWarning(
+                            "I tried to add an image but did not find the image in the referenced path (or something similar). The path was: " +
+                            currentActiveQustion.QnImagePath+e.ToString());
+                        if (newImageHolder != null){
+                            newImageHolder.gameObject.SetActive(false);
+                        }
+                    }
+                }
+                else{
+                    if (newImageHolder != null){
+                        newImageHolder.gameObject.SetActive(false);
+                    }
+                }
+
                 int i = 0;
 
                 foreach (int a in currentActiveQustion.Answers.Keys){
@@ -233,16 +290,16 @@ public class QNSelectionManager : MonoBehaviour
             case QNStates.FINISH:
 
                 if (m_MyLocalClient != null && m_MyLocalClient.IsLocalPlayer){
-                    m_MyLocalClient.PostQuestionServerRPC(m_MyLocalClient.OwnerClientId);
+                    m_MyLocalClient.GoForPostQuestion();
 
-                    
+
                     foreach (RectTransform r in AnswerFields){
                         Destroy(r.gameObject);
                     }
-                    
+
                     switch (m_LanguageSelect){
                         case "Hebrew":
-                            QustionField.text = "המתן בבקשה";
+                            QustionField.text = StringExtension.RTLText("המתן בבקשה");
                             break;
 
                         case "English":
@@ -250,7 +307,7 @@ public class QNSelectionManager : MonoBehaviour
                             QustionField.text = "Please Wait!";
                             break;
                     }
-                   
+
                     m_interalState = QNStates.IDLE;
                 }
                 else{
@@ -273,7 +330,7 @@ public class QNSelectionManager : MonoBehaviour
     }
 
     private void updateCountDisaply(){
-        CountDisplay.text = (1+_answerCount).ToString() + " / " + _totalCount.ToString();
+        CountDisplay.text = (1 + _answerCount).ToString() + " / " + _totalCount.ToString();
     }
 }
 

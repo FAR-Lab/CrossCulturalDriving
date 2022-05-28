@@ -10,6 +10,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UNET;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 
 public class ConnectionAndSpawing : MonoBehaviour
@@ -17,7 +18,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     public GameObject PlayerPrefab;
     public GameObject CarPrefab;
     public GameObject VRUIStartPrefab;
-
+    public GameObject ref_ServerTimingDisplay;
 
     public List<SceneField> IncludedScenes = new List<SceneField>();
     public string LastLoadedVisualScene;
@@ -26,6 +27,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     private GameObject myStateManager;
 
 
+    private Dictionary<SceneField, bool> VisitedScenes = new Dictionary<SceneField, bool>();
     private ParticipantOrder _participantOrder = ParticipantOrder.None;
 
     public ParticipantOrder ParticipantOrder => _participantOrder;
@@ -208,6 +210,8 @@ public class ConnectionAndSpawing : MonoBehaviour
         NetworkManager.Singleton.SceneManager.LoadScene(name, LoadSceneMode.Single);
     }
 
+    
+    
     private void LoadSceneVisuals(){
         var tmp = GetScenarioManager();
         if (tmp != null && tmp.VisualSceneToUse != null && tmp.VisualSceneToUse.SceneName.Length > 0){
@@ -315,6 +319,7 @@ public class ConnectionAndSpawing : MonoBehaviour
             obj.Despawn(true);
         }
 
+        m_QNDataStorageServer.DeRegisterHandler(GetOrder(ClientID));
         RemoveParticipant(ClientID);
     }
 
@@ -390,6 +395,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
             newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, !persistent);
             ClientObjects[clientID].Add(ParticipantObjectSpawnType.MAIN, newPlayer.GetComponent<NetworkObject>());
+            m_QNDataStorageServer.SetupForNewRemoteImage(temp);
             return true;
         }
 
@@ -411,7 +417,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         NetworkManager.ConnectionApprovedDelegate callback){
         bool approve = false;
         ParticipantOrder temp = (ParticipantOrder) connectionData[0];
-
+      
         approve = AddParticipant(temp, clientId);
 
         if (!approve){
@@ -441,6 +447,14 @@ public class ConnectionAndSpawing : MonoBehaviour
         SetupServerFunctionality();
         m_ReRunManager.SetRecordingFolder(pairName);
         Debug.Log("Starting Server for session: " + pairName);
+
+        FindObjectOfType<RerunLayoutManager>().enabled = false;
+
+        if (ref_ServerTimingDisplay != null){
+            ServerTimeDisplay val = Instantiate(ref_ServerTimingDisplay, Vector3.zero, Quaternion.identity, transform)
+                .GetComponent<ServerTimeDisplay>();
+            val.StartDisplay(0.5f);
+        }
     }
 
     private QNDataStorageServer m_QNDataStorageServer;
@@ -451,7 +465,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     private bool SuccessFullyConnected = false;
 
     private void ClientDisconnected_client(ulong ClientID){
-        Debug.Log(SuccessFullyConnected);
+//        Debug.Log(SuccessFullyConnected);
         if (SuccessFullyConnected){
             Debug.Log("Quitting due to disconnection.");
             Application.Quit();
@@ -534,7 +548,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     public void StartReRun(){
         ServerState = ActionState.RERUN;
-
+        FindObjectOfType<RerunLayoutManager>().enabled = true;
         m_ReRunManager.RegisterPreLoadHandler(LoadSceneReRun);
         NetworkManager.Singleton.enabled = false;
         GetComponent<OVRManager>().enabled = false;
@@ -643,13 +657,17 @@ public class ConnectionAndSpawing : MonoBehaviour
         StartCoroutine(farlab_logger.Instance.StopRecording());
     }
 
+    private void ForceBackToWaitingRoom(){
+        Debug.Log("Forced back to the waiting Room. When running studies please try to avoid this!");
+        SwitchToPostQN();
+    }
+
     private void SwitchToPostQN(){
         m_QNDataStorageServer.StopScenario(m_ReRunManager);
         if (farlab_logger.Instance.isRecording()){
             StartCoroutine(farlab_logger.Instance.StopRecording());
         }
 
-        ;
         ServerState = ActionState.POSTQUESTIONS;
         SwitchToWaitingRoom();
     }
@@ -670,6 +688,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         }
         else{
             GetComponent<StartServerClientGUI>().enabled = true;
+            FindObjectOfType<RerunLayoutManager>().enabled = false;
         }
 
         if (FindObjectsOfType<RerunManager>().Length > 1){
@@ -699,8 +718,13 @@ public class ConnectionAndSpawing : MonoBehaviour
             switch (ServerState){
                 case ActionState.DEFAULT: break;
                 case ActionState.WAITINGROOM: break;
-                case ActionState.LOADINGSCENARIO: break;
-                case ActionState.LOADINGVISUALS: break;
+                case ActionState.LOADINGSCENARIO: 
+                case ActionState.LOADINGVISUALS:
+                    if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W)){
+                        Debug.LogWarning("Forcing back to Waitingroom from" + ServerState.ToString());
+                        ForceBackToWaitingRoom();
+                    }
+                    break;
                 case ActionState.READY:
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D)){
                         SwitchToDriving();
@@ -709,14 +733,14 @@ public class ConnectionAndSpawing : MonoBehaviour
 
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W)){
                         Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
-                        SwitchToPostQN();
+                        ForceBackToWaitingRoom();
                     }
 
                     break;
                 case ActionState.DRIVE:
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W)){
                         Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
-                        SwitchToPostQN();
+                        ForceBackToWaitingRoom();
                     }
                     else if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q)){
                         SwitchToQN();
@@ -724,13 +748,13 @@ public class ConnectionAndSpawing : MonoBehaviour
 
                     break;
                 case ActionState.QUESTIONS:
-                    if (!QNFinished.ContainsValue(false)){
+                    if (!QNFinished.ContainsValue(false)){ // This could be come a corutine too
                         SwitchToPostQN();
                     }
 
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W)){
                         Debug.Log("Forcing back to Waitingroom from" + ServerState.ToString());
-                        SwitchToPostQN();
+                        ForceBackToWaitingRoom();
                     }
 
                     break;
@@ -752,6 +776,9 @@ public class ConnectionAndSpawing : MonoBehaviour
     }
 
 
+    public GUIStyle NotVisitedButton;
+    public GUIStyle VisitendButton;
+
     void OnGUI(){
         if (NetworkManager.Singleton == null && !ClientListInitDone) return;
         if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer){
@@ -762,8 +789,14 @@ public class ConnectionAndSpawing : MonoBehaviour
             if (ServerState == ActionState.WAITINGROOM){
                 int y = 50;
                 foreach (SceneField f in IncludedScenes){
-                    if (GUI.Button(new Rect(5, 5 + y, 150, 25), f.SceneName)){
+                    if (!VisitedScenes.ContainsKey(f)){
+                        VisitedScenes.Add(f, false);
+                    }
+
+                    if (GUI.Button(new Rect(5, 5 + y, 150, 25), f.SceneName,
+                            VisitedScenes[f] ? VisitendButton : NotVisitedButton)){
                         SwitchToLoading(f.SceneName);
+                        VisitedScenes[f] = true;
                     }
 
                     y += 27;
@@ -945,6 +978,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         if (_OrderToClient.ContainsKey(participantOrder)){
             ClientObjects[_OrderToClient[participantOrder]][ParticipantObjectSpawnType.MAIN]
                 .GetComponent<ParticipantInputCapture>().SetTotalQNCountClientRpc(count);
+            Debug.Log("just send total QN count to client: " + participantOrder);
         }
     }
 
@@ -1002,7 +1036,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
 
     private Coroutine i_AwaitCarStopped;
-    private bool FinishedRunningAwaitCorutine=true;
+    private bool FinishedRunningAwaitCorutine = true;
 
     public void AwaitQN(){
         Debug.Log("Starting Await Progress");
@@ -1030,13 +1064,17 @@ public class ConnectionAndSpawing : MonoBehaviour
     }
 
     IEnumerator AwaitCarStopped(){
-        yield return new  WaitUntil(() =>
+        yield return new WaitUntil(() =>
             totalSpeedReturn() <= 0.1f
         );
         SwitchToQN();
         FinishedRunningAwaitCorutine = true;
     }
-    
-    
+
+    public QNDataStorageServer GetQnStorageServer(){
+        return m_QNDataStorageServer;
+    }
+
+
    
 }

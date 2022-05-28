@@ -7,7 +7,6 @@ using Newtonsoft.Json.Serialization;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
 using System.Collections.Generic;
 
 // TODO this would be great for the language selection;
@@ -42,41 +41,34 @@ public struct LanguageSelect
 //From https://answers.unity.com/questions/1034235/how-to-write-text-from-left-to-right.html
 class StringExtension
 {
-    public static string Reverse(string s)
-    {
-        if (s.All(char.IsDigit))
-        {
+    public static string Reverse(string s){
+        if (s.All(char.IsDigit)){
             return s;
         }
-        else
-        {
+        else{
             char[] charArray = s.ToCharArray();
             Array.Reverse(charArray);
             return new string(charArray);
         }
     }
 
-    public static string RTLText(string sin, int numberOfAlphabetsInSingleLine = 50)
-    {
+    public static string RTLText(string sin, int numberOfAlphabetsInSingleLine = 50){
         string outstring = "";
         string linestring = "";
-        foreach (string s in sin.Split(' '))
-        {
-            if (s.Length + linestring.Length > numberOfAlphabetsInSingleLine)
-            {
-                outstring = outstring + '\n'+'\r' + linestring;
+        foreach (string s in sin.Split(' ')){
+            if (s.Length + linestring.Length > numberOfAlphabetsInSingleLine){
+                outstring = outstring + '\n' + '\r' + linestring;
                 linestring = "";
             }
 
             linestring = Reverse(s) + ' ' + linestring; //determin if a number is involved??
         }
 
-        if (linestring.Length > 0)
-        {
-            outstring = outstring + '\n'+'\r' + linestring;
+        if (linestring.Length > 0){
+            outstring = outstring + '\n' + '\r' + linestring;
         }
 
-        
+
         return outstring.Trim();
     }
 
@@ -88,42 +80,39 @@ class StringExtension
 
 public class ObjAnswer
 {
-    public int index { get; set; } //This property define the order of the answers
-    public Dictionary<string, string> AnswerText { get; set; }
+    public int index{ get; set; } //This property define the order of the answers
+    public Dictionary<string, string> AnswerText{ get; set; }
+    public bool FinishQN{ get; set; }
 }
 
 public class QuestionnaireQuestion
 {
-    public int ID { get; set; } //This will be a unique id for each question in the collection  
-    public string Scenario_ID { get; set; }
-    public string SA_atoms { get; set; } //This property can be used to filter a group of questions
-    public string SA_Level { get; set; } //The level of the question based on SAGAT model
-    public string Awareness_to { get; set; }
+    public int ID{ get; set; } //This will be a unique id for each question in the collection  
+    public string Scenario_ID{ get; set; }
+    public string SA_atoms{ get; set; } //This property can be used to filter a group of questions
+    public string SA_Level{ get; set; } //The level of the question based on SAGAT model
+    public string Awareness_to{ get; set; }
 
-    public List<Char> Participant { get; set; }
-    public Dictionary<string, string> QuestionText { get; set; }
-
-    public List<ObjAnswer> Answers { get; set; }
+    public List<Char> Participant{ get; set; }
+    public Dictionary<string, string> QuestionText{ get; set; }
+    public string QnImagePath{ get; set; }
+    public List<ObjAnswer> Answers{ get; set; }
 
 
     private List<ParticipantOrder> AllParticipents;
 
     private int InteralTrackingID;
 
-    public int getInteralID()
-    {
+    public int getInteralID(){
         return InteralTrackingID;
     }
 
-    public void setInternalID(int inval)
-    {
+    public void setInternalID(int inval){
         InteralTrackingID = inval;
     }
 
-    public string GetQuestionText(string lang)
-    {
-        if (QuestionText.ContainsKey(lang))
-        {
+    public string GetQuestionText(string lang){
+        if (QuestionText.ContainsKey(lang)){
             return QuestionText[lang];
         }
 
@@ -131,15 +120,12 @@ public class QuestionnaireQuestion
         return "";
     }
 
-    public override string ToString()
-    {
+    public override string ToString(){
         return "ID:" + ID + " ENGQ:" + GetQuestionText("English") + "With answer count:" + Answers.Count.ToString();
     }
 
-    public bool ContainsOrder(ParticipantOrder po)
-    {
-        if (!initComplete)
-        {
+    public bool ContainsOrder(ParticipantOrder po){
+        if (!initComplete){
             init();
         }
 
@@ -149,13 +135,10 @@ public class QuestionnaireQuestion
 
     private bool initComplete = false;
 
-    public void init()
-    {
+    public void init(){
         AllParticipents = new List<ParticipantOrder>();
-        foreach (char c in Participant)
-        {
-            switch (c)
-            {
+        foreach (char c in Participant){
+            switch (c){
                 case 'A':
                 case 'a':
                     AllParticipents.Add(ParticipantOrder.A);
@@ -186,29 +169,23 @@ public class QuestionnaireQuestion
         initComplete = true;
     }
 
-    public NetworkedQuestionnaireQuestion GenerateNetworkVersion(string lang)
-    {
+    public NetworkedQuestionnaireQuestion GenerateNetworkVersion(string lang){
         NetworkedQuestionnaireQuestion outVal = NetworkedQuestionnaireQuestion.GetDefaultNQQ();
-        foreach (ObjAnswer a in Answers)
-        {
-            if (a.AnswerText.Keys.Contains(lang))
-            {
+        foreach (ObjAnswer a in Answers){
+            if (a.AnswerText.Keys.Contains(lang)){
                 outVal.Answers.Add(a.index, a.AnswerText[lang]);
             }
-            else
-            {
+            else{
                 Debug.Log(
                     "Did not find Answer for requested language. please fix Data and results will be incomplete!: " +
                     lang + " id:" + a.index.ToString());
             }
         }
 
-        if (QuestionText.Keys.Contains(lang))
-        {
+        if (QuestionText.Keys.Contains(lang)){
             outVal.QuestionText = QuestionText[lang];
         }
-        else
-        {
+        else{
             Debug.Log(
                 "Did not find QuestionText for requested language. please fix Data and results will be incomplete!: " +
                 lang + " id:" + ID);
@@ -216,6 +193,8 @@ public class QuestionnaireQuestion
 
         outVal.ID = getInteralID();
         outVal.reply = replyType.NEWQUESTION;
+        QnImagePath ??= "";
+        outVal.QnImagePath = QnImagePath;
         Debug.Log(outVal);
         return outVal;
     }
@@ -234,33 +213,31 @@ public struct NetworkedQuestionnaireQuestion : INetworkSerializable
     public string QuestionText;
     public replyType reply;
     public Dictionary<int, string> Answers;
+    public string QnImagePath;
 
-    public NetworkedQuestionnaireQuestion(int ID_, replyType reply_, string QuestionText_)
-    {
+    public NetworkedQuestionnaireQuestion(int ID_, replyType reply_, string QuestionText_, string QnImagePath_){
         ID = ID_;
         reply = reply_;
         QuestionText = QuestionText_;
         Answers = new Dictionary<int, string>();
+        QnImagePath = QnImagePath_;
     }
 
     //Factory //
-    public static NetworkedQuestionnaireQuestion GetDefaultNQQ()
-    {
-        return new NetworkedQuestionnaireQuestion(-1, replyType.FINISHED, "");
+    public static NetworkedQuestionnaireQuestion GetDefaultNQQ(){
+        return new NetworkedQuestionnaireQuestion(-1, replyType.FINISHED, "","");
     }
 
 
-    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-    {
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter{
         serializer.SerializeValue(ref ID);
         serializer.SerializeValue(ref QuestionText);
         serializer.SerializeValue(ref reply);
-
+        serializer.SerializeValue(ref QnImagePath);
 
         int length = 0;
 
-        if (!serializer.IsReader)
-        {
+        if (!serializer.IsReader){
             length = Answers.Count;
         }
 
@@ -270,28 +247,23 @@ public struct NetworkedQuestionnaireQuestion : INetworkSerializable
         var answers = new string[length];
 
 
-        if (!serializer.IsReader)
-        {
+        if (!serializer.IsReader){
             int count = 0;
-            foreach (KeyValuePair<int, string> pair in Answers)
-            {
+            foreach (KeyValuePair<int, string> pair in Answers){
                 qIDs[count] = pair.Key;
                 answers[count] = pair.Value;
                 count++;
             }
         }
 
-        for (int n = 0; n < length; ++n)
-        {
+        for (int n = 0; n < length; ++n){
             serializer.SerializeValue(ref qIDs[n]);
             serializer.SerializeValue(ref answers[n]);
         }
 
-        if (serializer.IsReader)
-        {
+        if (serializer.IsReader){
             Answers = new Dictionary<int, string>();
-            for (int n = 0; n < length; ++n)
-            {
+            for (int n = 0; n < length; ++n){
                 Answers.Add(qIDs[n], answers[n]);
             }
         }

@@ -9,55 +9,67 @@ using Button = UnityEngine.UI.Button;
 
 public class StartServerClientGUI : MonoBehaviour
 {
-  
- 
-
     public GameObject ServerStartGUI;
     private Transform ServerGuiSintance;
-    
-  
+
+
     private Text SessionName;
+
     private void Start(){
-        
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-        
-        Debug.Log("Running start on the ServerGUIScript should not happen in android ");
+
+      
         if (ServerStartGUI == null) return;
         ServerGuiSintance = GameObject.Instantiate(ServerStartGUI).transform;
 
         SessionName = ServerGuiSintance.Find("PairName")?.GetComponent<InputField>()?.textComponent;
-       ServerGuiSintance.Find("IpAddress").GetComponent<Text>().text=LocalIPAddress();
-        
-        ServerGuiSintance.Find("StartAsServer")?.GetComponent<Button>().onClick.AddListener(StartAsServerInterfaceCallback);
-        ServerGuiSintance.Find("StartClientA")?.GetComponent<Button>().onClick.AddListener(StartAsClientAInterfaceCallback);
-        ServerGuiSintance.Find("StartClientB")?.GetComponent<Button>().onClick.AddListener(StartAsClientBInterfaceCallback);
+        ServerGuiSintance.Find("IpAddress").GetComponent<Text>().text = LocalIPAddress();
+
+        ServerGuiSintance.Find("StartAsServer")?.GetComponent<Button>().onClick
+            .AddListener(StartAsServerInterfaceCallback);
+        ServerGuiSintance.Find("StartClientA")?.GetComponent<Button>().onClick
+            .AddListener(StartAsClientAInterfaceCallback);
+        ServerGuiSintance.Find("StartClientB")?.GetComponent<Button>().onClick
+            .AddListener(StartAsClientBInterfaceCallback);
+
+        ServerGuiSintance.Find("StartAsReRun")?.GetComponent<Button>().onClick
+            .AddListener(StartAsReRuInterfaceCallback);
 #endif
     }
 
-   
+
+    public void StartAsReRuInterfaceCallback(){
+        Debug.Log("Starting as Rerun Button Call!");
+        ConnectionAndSpawing.Singleton.StartReRun();
+        Destroy(ServerGuiSintance.gameObject);
+        this.enabled = false;
+    }
 
     public void StartAsServerInterfaceCallback(){
-
         string tmp = SessionName.text;
         if (tmp.Length <= 1){
             tmp = "Unnamed_" + DateTime.Now.ToString("yyyyMMddTHHmmss");
         }
+
         ConnectionAndSpawing.Singleton.StartAsServer(tmp);
         Destroy(ServerGuiSintance.gameObject);
         this.enabled = false;
     }
+
     public void StartAsClientAInterfaceCallback(){
         ConnectionAndSpawing.Singleton.StartAsClient("English", ParticipantOrder.A, "127.0.0.1", 7777,
             ResponseDelegate);
         Destroy(ServerGuiSintance.gameObject);
         this.enabled = false;
     }
+
     public void StartAsClientBInterfaceCallback(){
         ConnectionAndSpawing.Singleton.StartAsClient("English", ParticipantOrder.B, "127.0.0.1", 7777,
             ResponseDelegate);
         Destroy(ServerGuiSintance.gameObject);
         this.enabled = false;
     }
+
     void OnGUI(){
         /*
         if (ServerStarted || ClientStarted)
