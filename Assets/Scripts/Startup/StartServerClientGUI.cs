@@ -16,7 +16,7 @@ public class StartServerClientGUI : MonoBehaviour
     private Text SessionName;
 
     private void Start(){
-#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+#if UNITY_EDITOR || UNITY_STANDALONE
 
       
         if (ServerStartGUI == null) return;

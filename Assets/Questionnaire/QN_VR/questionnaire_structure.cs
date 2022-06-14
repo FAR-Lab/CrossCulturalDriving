@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
 // TODO this would be great for the language selection;

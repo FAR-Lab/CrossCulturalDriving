@@ -315,17 +315,14 @@ public class ConnectionAndSpawing : MonoBehaviour
 
 
     private void ClientDisconnected(ulong ClientID){
-        foreach (var obj in ClientObjects[ClientID].Values){
-            obj.Despawn(true);
+        if (ClientObjects.ContainsKey(ClientID) && ClientObjects[ClientID] != null){
+            m_QNDataStorageServer.DeRegisterHandler(GetOrder(ClientID));
+            RemoveParticipant(ClientID);
         }
-
-        m_QNDataStorageServer.DeRegisterHandler(GetOrder(ClientID));
-        RemoveParticipant(ClientID);
     }
 
     private void ClientConnected(ulong ClientID){
-        //      if (! NetworkManager.Singleton.IsServer) return;
-//      if(SceneSwitchingFinished) SpawnAPlayer(ClientID);
+      
     }
 
     private bool _prepareSpawing(ulong clientID, out Pose? tempPose){
@@ -426,7 +423,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                       "Try to change the -po commandline argument of the participant that is" +
                       " trying to connect.");
         }
-
+        Debug.Log("Client will connect now!");
         callback(false, 0, approve, null, null);
 
         SpawnAPlayer(clientId, true);
