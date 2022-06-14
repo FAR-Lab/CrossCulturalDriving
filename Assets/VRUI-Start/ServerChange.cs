@@ -9,12 +9,11 @@ using UnityEngine.SceneManagement;
 
 public class ServerChange : MonoBehaviour
 {
-    
     public TMP_Dropdown ParticipantDropdown;
     public TMP_Text ParticipantTextBox;
     public TMP_Dropdown LanguageDropdown;
     public TMP_Text LanguageTextBox;
-    public TMP_Text ServerIPTextBox; 
+    public TMP_Text ServerIPTextBox;
     public TMP_Text ServerConnectionStatusTextBox;
     public TMP_InputField serverIPField;
 
@@ -33,16 +32,14 @@ public class ServerChange : MonoBehaviour
     private bool ready;
 
 
-    public bool ReadyToLoad {
+    public bool ReadyToLoad{
         get { return ready; }
     }
 
     // This script renders UI compnjents with textmesh pro for changing participant setup configuration on the oculus headset
     // Setup the scene as described in https://www.youtube.com/watch?v=1zJw0F_3UZ0
 
-    private void Start()
-    {
-
+    private void Start(){
         m_path = Application.persistentDataPath + "/" + FileName;
         ready = true;
 
@@ -56,9 +53,8 @@ public class ServerChange : MonoBehaviour
         ParticipantItems.Add("E");
         ParticipantItems.Add("F");
 
-        foreach (var item in ParticipantItems)
-        {
-            ParticipantDropdown.options.Add(new TMP_Dropdown.OptionData() { text = item });
+        foreach (var item in ParticipantItems){
+            ParticipantDropdown.options.Add(new TMP_Dropdown.OptionData(){text = item});
         }
 
         LanguageDropdown.options.Clear();
@@ -69,59 +65,51 @@ public class ServerChange : MonoBehaviour
         LanguageItems.Add("Chinese");
         LanguageItems.Add("German");
 
-        foreach (var item in LanguageItems)
-        {
-            LanguageDropdown.options.Add(new TMP_Dropdown.OptionData() { text = item });
+        foreach (var item in LanguageItems){
+            LanguageDropdown.options.Add(new TMP_Dropdown.OptionData(){text = item});
         }
-        
-        LoadConf();
 
-     
-        ParticipantDropdown.onValueChanged.AddListener(delegate { ParticipantDropdownItemSelected(ParticipantDropdown); });
+        if (LoadConf()){
+            AutoStartStudy();
+        }
+
+        ParticipantDropdown.onValueChanged.AddListener(
+            delegate{ ParticipantDropdownItemSelected(ParticipantDropdown); });
 
 
-        LanguageDropdown.onValueChanged.AddListener(delegate { LanguageDropdownItemSelected(ParticipantDropdown); });
+        LanguageDropdown.onValueChanged.AddListener(delegate{ LanguageDropdownItemSelected(ParticipantDropdown); });
 
-        serverIPField.onValueChanged.AddListener(delegate { IPCHanged(); });
-        
-        
-       
+        serverIPField.onValueChanged.AddListener(delegate{ IPCHanged(); });
     }
 
 
-
-    public void IPCHanged()
-    {
+    public void IPCHanged(){
         ServerIPString = serverIPField.text;
         ServerIPTextBox.text = "IP: " + ServerIPString;
     }
 
-    public void StoreConfiguration() {
-
+    public void StoreConfiguration(){
         StoreConf(ParticipantIDString, ServerIPString, LanguageString);
         Debug.Log("Store configuration file and shut down.");
-        Application.Quit();        
+        Application.Quit();
     }
 
-    private void AutoStartStudy()
-    {
+    private void AutoStartStudy(){
         ServerConnectionStatusTextBox.text = "Trying to establish a connection";
-        if (Enum.TryParse<ParticipantOrder>(ParticipantIDString, out ParticipantOrder myParticipant))
-        { ConnectionAndSpawing.Singleton.StartAsClient(LanguageString, myParticipant, ServerIPString, 7777, ResponseDelegate);
+        if (Enum.TryParse<ParticipantOrder>(ParticipantIDString, out ParticipantOrder myParticipant)){
+            ConnectionAndSpawing.Singleton.StartAsClient(LanguageString, myParticipant, ServerIPString, 7777,
+                ResponseDelegate);
             ServerConnectionStatusTextBox.text = "Waiting for Connection Response";
         }
 
-        else
-        {
+        else{
             Debug.LogError("ServerChange could not find a matching particpant ID");
             ServerConnectionStatusTextBox.text = "No Matching Participant ID Enum";
         }
     }
 
-    private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response)
-    {
-        switch (response)
-        {
+    private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response){
+        switch (response){
             case ConnectionAndSpawing.ClienConnectionResponse.FAILED:
                 Debug.Log("Connection Failed maybe change IP address, participant order (A,b,C, etc.) or the port");
                 ServerConnectionStatusTextBox.text = "Connection failed";
@@ -135,14 +123,13 @@ public class ServerChange : MonoBehaviour
         }
     }
 
-    void ParticipantDropdownItemSelected(TMP_Dropdown dropdown)
-    {
+    void ParticipantDropdownItemSelected(TMP_Dropdown dropdown){
         int index = dropdown.value;
         ParticipantIDString = dropdown.options[index].text;
         ParticipantTextBox.text = "ID: " + ParticipantIDString;
-}
-    void LanguageDropdownItemSelected(TMP_Dropdown dropdown)
-    {
+    }
+
+    void LanguageDropdownItemSelected(TMP_Dropdown dropdown){
         int index = LanguageDropdown.value;
         LanguageString = LanguageDropdown.options[index].text;
         LanguageTextBox.text = "Lang: " + LanguageString;
@@ -150,86 +137,87 @@ public class ServerChange : MonoBehaviour
     // All for writing and storing data from down here
 
 
-    void LoadConf()
-    {   
+    private bool LoadConf(){
         if (File.Exists(m_path)){
-         Dictionary<string, string> dict = LoadDict();
+            Dictionary<string, string> dict = LoadDict();
 
-         if (dict.ContainsKey("participant") && dict.ContainsKey("server") && dict.ContainsKey("language"))
-         {
-             ParticipantIDString = dict["participant"];
-             ServerIPString = dict["server"];
-             LanguageString = dict["language"];
+            if (dict.ContainsKey("participant") && dict.ContainsKey("server") && dict.ContainsKey("language")){
+                ParticipantIDString = dict["participant"];
+                ServerIPString = dict["server"];
+                LanguageString = dict["language"];
 
-             switch (ParticipantIDString)
-             {
-                 case "A":
-                     ParticipantDropdown.value = 0;
-                     break;
+                switch (ParticipantIDString){
+                    case "A":
+                        ParticipantDropdown.value = 0;
+                        break;
 
-                 case "B":
-                     ParticipantDropdown.value = 1;
-                     break;
+                    case "B":
+                        ParticipantDropdown.value = 1;
+                        break;
 
-                 case "C":
-                     ParticipantDropdown.value = 2;
-                     break;
+                    case "C":
+                        ParticipantDropdown.value = 2;
+                        break;
 
-                 case "D":
-                     ParticipantDropdown.value = 3;
-                     break;
+                    case "D":
+                        ParticipantDropdown.value = 3;
+                        break;
 
-                 case "E":
-                     ParticipantDropdown.value = 4;
-                     break;
+                    case "E":
+                        ParticipantDropdown.value = 4;
+                        break;
 
-                 case "F":
-                     ParticipantDropdown.value = 5;
-                     break;
+                    case "F":
+                        ParticipantDropdown.value = 5;
+                        break;
 
-                 default:
-                     Debug.LogError("ServerChange could not find a matching particpant ID");
-                     break;
-             }
+                    default:
+                        Debug.LogError("ServerChange could not find a matching particpant ID");
+                        ParticipantDropdown.value = 0;
+                        break;
+                }
 
-             switch (LanguageString)
-             {
-                 case "English":
-                     LanguageDropdown.value = 0; //TODO This is bad form. We should not directly reference the index but rather dynamically find the index. 
-                     break;
+                switch (LanguageString){
+                    case "English":
+                        LanguageDropdown.value =
+                            0; //TODO This is bad form. We should not directly reference the index but rather dynamically find the index. 
+                        break;
 
-                 case "Hebrew":
-                     LanguageDropdown.value = 1;
-                     break;
+                    case "Hebrew":
+                        LanguageDropdown.value = 1;
+                        break;
 
-                 case "Chinese":
-                     LanguageDropdown.value = 2;
-                     break;
+                    case "Chinese":
+                        LanguageDropdown.value = 2;
+                        break;
 
-                 case "German":
-                     LanguageDropdown.value = 3;
-                     break;
+                    case "German":
+                        LanguageDropdown.value = 3;
+                        break;
 
-                 default:
-                     Debug.LogError("ServerChange could not find a matching language ");
-                     break;
-             }
+                    default:
+                        Debug.LogError("ServerChange could not find a matching language ");
+                        LanguageDropdown.value = 0;
+                        break;
+                }
 
-             AutoStartStudy();
-             
-         }
-         else
-         {
-             Debug.LogError("Participant configuration file corrupted");         }
+
+                return true;
+            }
+            else{
+                Debug.LogError("Participant configuration file corrupted");
+                return false;
+            }
         }
 
-        else {
+        else{
             ParticipantIDString = "A";
             ServerIPString = "192.168.1.1";
             LanguageString = "English";
 
             ParticipantDropdown.value = 0;
-            LanguageDropdown.value = 0; 
+            LanguageDropdown.value = 0;
+            return false;
         }
 
         ServerIPTextBox.text = "IP: " + ServerIPString;
@@ -238,10 +226,9 @@ public class ServerChange : MonoBehaviour
 
         LanguageDropdownItemSelected(ParticipantDropdown);
         ParticipantDropdownItemSelected(ParticipantDropdown);
-
     }
-    public void StoreConf(string participantID, string serverIP, string language)
-    {
+
+    public void StoreConf(string participantID, string serverIP, string language){
         Dictionary<string, string> dict = new Dictionary<string, string>();
         dict["participant"] = participantID;
         dict["server"] = serverIP;
@@ -253,8 +240,7 @@ public class ServerChange : MonoBehaviour
 
     // https://stackoverflow.com/questions/59288414/how-do-i-use-streamreader-to-add-split-lines-to-a-dictionary?rq=1
 
-    private Dictionary<string, string> LoadDict()
-    {
+    private Dictionary<string, string> LoadDict(){
         Debug.Log("Trying to load from: " + m_path);
         Dictionary<string, string> dict = File
             .ReadLines(@m_path)
@@ -263,21 +249,15 @@ public class ServerChange : MonoBehaviour
             .ToDictionary(items => items[0], items => items[1]);
 
         return dict;
-
     }
 
-    private void WriteDict(Dictionary<string, string> dict)
-    {
+    private void WriteDict(Dictionary<string, string> dict){
         Debug.Log("Trying to write to: " + m_path);
         StreamWriter writer = new StreamWriter(m_path, false);
-        foreach (KeyValuePair<string, string> entry in dict)
-        {
-
+        foreach (KeyValuePair<string, string> entry in dict){
             writer.WriteLine(entry.Key + m_seperator + entry.Value.ToString());
-
         }
+
         writer.Close();
     }
-
-
 }
