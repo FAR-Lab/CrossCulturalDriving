@@ -6,6 +6,7 @@ using System.Threading;
 using System;
 using System.Collections.Concurrent;
 using Rerun;
+using UnityEngine.XR;
 
 
 public class farlab_logger : MonoBehaviour
@@ -203,11 +204,11 @@ public class farlab_logger : MonoBehaviour
                 delegate() { return carARigidbody != null ? carARigidbody.velocity.z.ToString("F4") : " "; });
 
             LogVariable velxB = new LogVariable("Car VelocityXB",
-                delegate() { return carARigidbody != null ? carARigidbody.velocity.x.ToString("F4") : " "; });
+                delegate() { return carBRigidbody != null ? carBRigidbody.velocity.x.ToString("F4") : " "; });
             LogVariable velyB = new LogVariable("Car VelocityYB",
-                delegate() { return carARigidbody != null ? carARigidbody.velocity.y.ToString("F4") : " "; });
+                delegate() { return carBRigidbody != null ? carBRigidbody.velocity.y.ToString("F4") : " "; });
             LogVariable velzB = new LogVariable("Car VelocityZB",
-                delegate() { return carARigidbody != null ? carARigidbody.velocity.z.ToString("F4") : " "; });
+                delegate() { return carBRigidbody != null ? carBRigidbody.velocity.z.ToString("F4") : " "; });
 
 
             LogVariable spxA = new LogVariable("Car PositionXA",
@@ -224,17 +225,17 @@ public class farlab_logger : MonoBehaviour
                 delegate() { return CarA != null ? CarA.rotation.eulerAngles.z.ToString("F4") : " "; });
 
             LogVariable spxB = new LogVariable("Car PositionXB",
-                delegate() { return CarA != null ? CarA.position.x.ToString("F4") : " "; });
+                delegate() { return CarB != null ? CarB.position.x.ToString("F4") : " "; });
             LogVariable spyB = new LogVariable("Car PositionYB",
-                delegate() { return CarA != null ? CarA.position.y.ToString("F4") : " "; });
+                delegate() { return CarB != null ? CarB.position.y.ToString("F4") : " "; });
             LogVariable spzB = new LogVariable("Car PositionZB",
-                delegate() { return CarA != null ? CarA.position.z.ToString("F4") : " "; });
+                delegate() { return CarB != null ? CarB.position.z.ToString("F4") : " "; });
             LogVariable RotxB = new LogVariable("Car RotationXB",
-                delegate() { return CarA != null ? CarA.rotation.eulerAngles.x.ToString("F4") : " "; });
+                delegate() { return CarB != null ? CarB.rotation.eulerAngles.x.ToString("F4") : " "; });
             LogVariable RotyB = new LogVariable("Car RotationYB",
-                delegate() { return CarA != null ? CarA.rotation.eulerAngles.y.ToString("F4") : " "; });
+                delegate() { return CarB != null ? CarB.rotation.eulerAngles.y.ToString("F4") : " "; });
             LogVariable RotzB = new LogVariable("Car RotationZB",
-                delegate() { return CarA != null ? CarA.rotation.eulerAngles.z.ToString("F4") : " "; });
+                delegate() { return CarB != null ? CarB.rotation.eulerAngles.z.ToString("F4") : " "; });
 
 
             LogVariable AccelA = new LogVariable("AccelA",
@@ -336,7 +337,7 @@ public class farlab_logger : MonoBehaviour
             LogVariable realTime = new LogVariable("ScenarioTime",
                 delegate() { return (Time.time - ScenarioStartTime).ToString("F4"); });
             LogVariable Framerate = new LogVariable("FrameRate",
-                delegate() { return  (1.0f/Time.smoothDeltaTime).ToString(); });
+                delegate() { return  (1.0f/XRDevice.refreshRate).ToString(); });
 
             LogVariable frame = new LogVariable("Frame Number", delegate() { return Time.frameCount.ToString(); });
 

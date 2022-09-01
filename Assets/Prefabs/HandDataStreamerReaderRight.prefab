@@ -1230,6 +1230,7 @@ GameObject:
   - component: {fileID: 3858003787392411250}
   - component: {fileID: 4457052377409270791}
   - component: {fileID: 1340214039411840896}
+  - component: {fileID: -24948398455843946}
   m_Layer: 0
   m_Name: HandDataStreamerReaderRight
   m_TagString: Untagged
@@ -1278,7 +1279,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HandSkeleton: {fileID: 0}
   HandType: 1
-  FakeRemoteHand: {fileID: 0}
+  RootPos: {x: 0, y: 0, z: 0}
+  RootRot: {x: 0, y: 0, z: 0, w: 0}
+  RootScale: 0
+  BoneRotations: []
 --- !u!114 &1340214039411840896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1347,6 +1351,22 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+--- !u!114 &-24948398455843946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3858003787392411260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &4013991977667587580
 GameObject:
   m_ObjectHideFlags: 0

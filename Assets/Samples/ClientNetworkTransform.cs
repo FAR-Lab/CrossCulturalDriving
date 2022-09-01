@@ -1,8 +1,11 @@
 using Unity.Netcode.Components;
+using Unity.Netcode;
 using UnityEngine;
 
-namespace Unity.Netcode.Samples
+namespace Unity.Multiplayer.Samples.Utilities.ClientAuthority
 {
+    // TODO inherit from `NetworkBehaviour` instead of `NetworkTransform` to cut direct relationship between two
+    // TODO change to owner netvar instead of RPC based
     /// <summary>
     /// Used for syncing a transform with client side changes. This includes host. Pure server as owner isn't supported by this. Please use NetworkTransform
     /// for transforms that'll always be owned by the server.
@@ -26,6 +29,7 @@ namespace Unity.Netcode.Samples
 
         protected override void Update()
         {
+            CanCommitToTransform = IsOwner;
             base.Update();
             if (NetworkManager.Singleton != null && (NetworkManager.Singleton.IsConnectedClient || NetworkManager.Singleton.IsListening))
             {
@@ -34,6 +38,11 @@ namespace Unity.Netcode.Samples
                     TryCommitTransformToServer(transform, NetworkManager.LocalTime.Time);
                 }
             }
+        }
+
+        protected override bool OnIsServerAuthoritative()
+        {
+            return false;
         }
     }
 }

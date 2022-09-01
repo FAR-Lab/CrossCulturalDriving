@@ -44,7 +44,6 @@ public class ParticipantOrderReplayComponent : ReplayRecordableBehaviour
             this.enabled = false;
         }
 
-        Debug.Log(ReplaySerializers.GetSerializerIDFromType(typeof(ParticipantOrderReplayComponent)));
     }
 
     public override void OnReplayCapture()

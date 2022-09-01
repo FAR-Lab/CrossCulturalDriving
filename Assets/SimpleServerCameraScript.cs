@@ -56,13 +56,16 @@ public class SimpleServerCameraScript : MonoBehaviour
 
     private void LoadUnityAction(Scene arg0, LoadSceneMode arg1)
     {
-        if (!initFinished)
-        {
-            setupCameras();
-            initFinished = true;
-        }
+        
         if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN && arg0.name!=ConnectionAndSpawing.WaitingRoomSceneName)
-        {
+        { 
+            if (!initFinished)
+            {
+                setupCameras();
+                initFinished = true;
+            }
+           
+            
             LinkCameras();
         }
     }
@@ -72,7 +75,18 @@ public class SimpleServerCameraScript : MonoBehaviour
 
     private void setupCameras()
     {
-        FindObjectOfType<RerunPlaybackCameraManager>()?.EnableCameras();
+        var r = FindObjectOfType<RerunPlaybackCameraManager>();
+        if (r != null)
+        {
+
+            r.EnableCameras();
+        }
+        else
+        {
+            Debug.LogWarning("Could Not enable camera controlls.");
+        }
+        
+        
         m_Cameras = new Dictionary<RerunCameraIdentifier.CameraNumber, RerunCameraIdentifier>();
         foreach (RerunCameraIdentifier v in FindObjectsOfType<RerunCameraIdentifier>())
         {
