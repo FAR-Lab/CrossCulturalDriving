@@ -1065,6 +1065,15 @@ public class ConnectionAndSpawing : MonoBehaviour
             ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
             : null;
     }
+    
+    public Transform GetClientHead(ParticipantOrder po){
+        if (!_OrderToClient.Keys.Contains(po)) return null;
+        ulong senderClientId = _OrderToClient[po];
+        if (!ClientObjects.ContainsKey(senderClientId)) return null;
+        return ClientObjects[senderClientId].ContainsKey(ParticipantObjectSpawnType.MAIN)
+            ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform.FindChildRecursive("CenterEyeAnchor").transform
+            : null;
+    }
 
     public Transform GetClientObject(ParticipantOrder po, ParticipantObjectSpawnType type)
     {

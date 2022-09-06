@@ -43,7 +43,35 @@ public class HandDataStreamRecorder : MonoBehaviour
         // Instantiate(RightHandReader_ReRun, transform)
         //     .GetComponent<HandDataStreamerReader>();
     }
+    public Vector3 GetRootPosition(ParticipantOrder po,OVRPlugin.Hand h ){
+        if (ConnectionAndSpawing.Singleton.GetClientIdParticipantOrder(po, out ulong clientID))
+        {
+            if (HandClinets.ContainsKey(clientID))
+            {
+                if (HandClinets[clientID].ContainsKey(h))
+                {
+                    return HandClinets[clientID][h].RootPos;
+                }
+            }
+        }
+        return Vector3.zero;
+    }
 
+    public Vector3 GetRootPosition_World(ParticipantOrder po,OVRPlugin.Hand h ){
+
+        if (ConnectionAndSpawing.Singleton.GetClientIdParticipantOrder(po, out ulong clientID))
+        {
+            if (HandClinets.ContainsKey(clientID))
+            {
+                if (HandClinets[clientID].ContainsKey(h))
+                {
+                    return HandClinets[clientID][h].transform.position;
+                }
+            }
+        }
+        return Vector3.zero;
+    }
+    
     public string GetLatestState(ParticipantOrder po,OVRPlugin.Hand h )
     {
         if (ConnectionAndSpawing.Singleton.GetClientIdParticipantOrder(po, out ulong clientID))
