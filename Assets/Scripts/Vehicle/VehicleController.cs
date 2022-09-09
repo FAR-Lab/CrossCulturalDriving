@@ -25,6 +25,7 @@ public class AxleInfo
     [System.NonSerialized] public WheelHit hitRight;
     [System.NonSerialized] public bool isGroundedLeft = false;
     [System.NonSerialized] public bool isGroundedRight = false;
+
 }
 
 public enum RoadSurface
@@ -209,6 +210,11 @@ public class VehicleController : MonoBehaviour
         {
             axle.left.wheelDampingRate = wheelDamping;
             axle.right.wheelDampingRate = wheelDamping;
+            
+            axle.left.GetWorldPose(out Vector3 pos,out Quaternion rot);
+            axle.leftVisual.transform.position = pos;
+           
+
         }
     }
 
@@ -486,9 +492,10 @@ public class VehicleController : MonoBehaviour
         Vector3 position;
         Quaternion rotation;
         collider.GetWorldPose(out position, out rotation);
-
-        visualWheel.transform.position = position;
+        visualWheel.transform.position =position;
         visualWheel.transform.rotation = rotation;
+
+        
     }
 
     private void OnGUI()

@@ -43,7 +43,7 @@ public class SimpleServerCameraScript : MonoBehaviour
     private void UnloadUnityAction(Scene arg0)
     {
         if (!initFinished)
-        {
+        { 
             setupCameras();
             initFinished = true;
         }
