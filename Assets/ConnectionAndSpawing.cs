@@ -233,12 +233,11 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     private void LocalLoadScene(string name)
     {
-        DestroyAllClientObjects(new List<ParticipantObjectSpawnType> { ParticipantObjectSpawnType.CAR });
+        DestroyAllClientObjects(new List<ParticipantObjectSpawnType> {ParticipantObjectSpawnType.CAR});
 
 
         NetworkManager.Singleton.SceneManager.LoadScene(name, LoadSceneMode.Single);
     }
-
 
 
     private void LoadSceneVisuals()
@@ -324,6 +323,32 @@ public class ConnectionAndSpawing : MonoBehaviour
         }
     }
 
+    private void DespawnAllObjectsforParticipant(ParticipantOrder po)
+    {
+        if (po == ParticipantOrder.None) return;
+        ulong clientID = _OrderToClient[po];
+        DespawnAllObjectsforParticipant(clientID);
+    }
+
+
+    private void DespawnAllObjectsforParticipant(ulong clientID)
+    {
+        if (ClientObjects.ContainsKey(clientID) && ClientObjects[clientID] != null)
+        {
+            List<ParticipantObjectSpawnType> despawnList =
+                new List<ParticipantObjectSpawnType>(ClientObjects[clientID].Keys);
+            if (despawnList.Contains(ParticipantObjectSpawnType.MAIN))
+            {
+                despawnList.Remove(ParticipantObjectSpawnType.MAIN);
+            }
+
+            foreach (var spawntype in despawnList)
+            {
+                DespawnObjectOfType(clientID, spawntype);
+            }
+        }
+    }
+
     private void DespawnObjectOfType(ulong clientID, ParticipantObjectSpawnType oType)
     {
         if (ClientObjects[clientID].ContainsKey(oType))
@@ -365,6 +390,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     {
         if (ClientObjects.ContainsKey(ClientID) && ClientObjects[ClientID] != null)
         {
+            DespawnAllObjectsforParticipant(ClientID);
             m_QNDataStorageServer.DeRegisterHandler(GetOrder(ClientID));
             RemoveParticipant(ClientID);
         }
@@ -396,13 +422,13 @@ public class ConnectionAndSpawing : MonoBehaviour
         if (temp != ParticipantOrder.None)
         {
             yield return new WaitUntil(() =>
-               ClientObjects[clientID].ContainsKey(ParticipantObjectSpawnType.MAIN) &&
-               ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null
+                ClientObjects[clientID].ContainsKey(ParticipantObjectSpawnType.MAIN) &&
+                ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null
             );
             SpawnACar_Immediate(clientID);
         }
-
     }
+
     private bool SpawnACar_Immediate(ulong clientID)
     {
         ParticipantOrder temp = GetOrder(clientID);
@@ -413,7 +439,6 @@ public class ConnectionAndSpawing : MonoBehaviour
             var newCar =
                 Instantiate(CarPrefab,
                     tempPose.Value.position, tempPose.Value.rotation);
-
 
 
             newCar.GetComponent<NetworkObject>().Spawn(true);
@@ -486,13 +511,13 @@ public class ConnectionAndSpawing : MonoBehaviour
 
 
     // https://docs-multiplayer.unity3d.com/netcode/current/basics/connection-approval
-    private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+    private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request,
+        NetworkManager.ConnectionApprovalResponse response)
     {
-
         //byte[] connectionData, ulong clientId,
         // NetworkManager.ConnectionApprovedDelegate callback){
         bool approve = false;
-        ParticipantOrder temp = (ParticipantOrder)request.Payload[0];
+        ParticipantOrder temp = (ParticipantOrder) request.Payload[0];
 
         approve = AddParticipant(temp, request.ClientNetworkId);
 
@@ -503,7 +528,6 @@ public class ConnectionAndSpawing : MonoBehaviour
         }
         else
         {
-
             Debug.Log("Client will connect now!");
         }
 
@@ -531,7 +555,6 @@ public class ConnectionAndSpawing : MonoBehaviour
         m_ReRunManager.SetRecordingFolder(pairName);
         Debug.Log("Starting Server for session: " + pairName);
 
-        
 
         if (ref_ServerTimingDisplay != null)
         {
@@ -581,7 +604,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     private void SetParticipantOrder(ParticipantOrder val)
     {
-        NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] { (byte)val }; // assigning ID
+        NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] {(byte) val}; // assigning ID
         _participantOrder = val;
         ParticipantOrder_Set = true;
     }
@@ -648,7 +671,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     public void StartReRun()
     {
         ServerState = ActionState.RERUN;
-        FindObjectOfType<RerunLayoutManager>().enabled = true;
+       // FindObjectOfType<RerunLayoutManager>().?enabled = true;
         m_ReRunManager.RegisterPreLoadHandler(LoadSceneReRun);
         NetworkManager.Singleton.enabled = false;
         GetComponent<OVRManager>().enabled = false;
@@ -797,7 +820,9 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     private bool retry = true;
 
-    private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response) { }
+    private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response)
+    {
+    }
 
 
     void Start()
@@ -811,7 +836,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         }
         else
         {
-            GetComponent<StartServerClientGUI>().enabled = true;    
+            GetComponent<StartServerClientGUI>().enabled = true;
         }
 
         if (FindObjectsOfType<RerunManager>().Length > 1)
@@ -856,6 +881,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                         Debug.LogWarning("Forcing back to Waitingroom from" + ServerState.ToString());
                         ForceBackToWaitingRoom();
                     }
+
                     break;
                 case ActionState.READY:
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D))
@@ -885,7 +911,8 @@ public class ConnectionAndSpawing : MonoBehaviour
                     break;
                 case ActionState.QUESTIONS:
                     if (!QNFinished.ContainsValue(false))
-                    { // This could be come a corutine too
+                    {
+                        // This could be come a corutine too
                         SwitchToPostQN();
                     }
 
@@ -959,7 +986,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                         {
                             Send = new ClientRpcSendParams
                             {
-                                TargetClientIds = new ulong[] { clientID }
+                                TargetClientIds = new ulong[] {clientID}
                             }
                         };
 
@@ -1029,11 +1056,11 @@ public class ConnectionAndSpawing : MonoBehaviour
         foreach (ParticipantOrder or in dict.Keys)
         {
             ulong? cid = GetClientID(or);
-            if (cid != null && ClientObjects.ContainsKey((ulong)cid))
+            if (cid != null && ClientObjects.ContainsKey((ulong) cid))
             {
-                ClientObjects[(ulong)cid][ParticipantObjectSpawnType.MAIN]
+                ClientObjects[(ulong) cid][ParticipantObjectSpawnType.MAIN]
                     .GetComponent<ParticipantInputCapture>().CurrentDirection.Value = dict[or];
-                ClientObjects[(ulong)cid][ParticipantObjectSpawnType.CAR]
+                ClientObjects[(ulong) cid][ParticipantObjectSpawnType.CAR]
                     .GetComponentInChildren<GpsController>().SetDirection(dict[or]);
             }
         }
@@ -1065,13 +1092,15 @@ public class ConnectionAndSpawing : MonoBehaviour
             ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
             : null;
     }
-    
-    public Transform GetClientHead(ParticipantOrder po){
+
+    public Transform GetClientHead(ParticipantOrder po)
+    {
         if (!_OrderToClient.Keys.Contains(po)) return null;
         ulong senderClientId = _OrderToClient[po];
         if (!ClientObjects.ContainsKey(senderClientId)) return null;
         return ClientObjects[senderClientId].ContainsKey(ParticipantObjectSpawnType.MAIN)
-            ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform.FindChildRecursive("CenterEyeAnchor").transform
+            ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
+                .FindChildRecursive("CenterEyeAnchor").transform
             : null;
     }
 
@@ -1221,7 +1250,8 @@ public class ConnectionAndSpawing : MonoBehaviour
 
 
     private static readonly Dictionary<ParticipantOrder, GpsController.Direction> StopDict =
-        new Dictionary<ParticipantOrder, GpsController.Direction>(){
+        new Dictionary<ParticipantOrder, GpsController.Direction>()
+        {
             {ParticipantOrder.A, GpsController.Direction.Stop},
             {ParticipantOrder.B, GpsController.Direction.Stop},
             {ParticipantOrder.C, GpsController.Direction.Stop},
@@ -1277,7 +1307,4 @@ public class ConnectionAndSpawing : MonoBehaviour
     {
         return m_QNDataStorageServer;
     }
-
-
-
 }

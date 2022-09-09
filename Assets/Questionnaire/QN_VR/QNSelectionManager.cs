@@ -126,7 +126,7 @@ public class QNSelectionManager : MonoBehaviour
         }
 
         newImageHolder.gameObject.SetActive(true);
-
+        Debug.Log("Set an image for the image screen!");
         CaptureScenarioImage.Apply();
         const float width = 300;
         float factor = width / (CaptureScenarioImage.width - 10);
