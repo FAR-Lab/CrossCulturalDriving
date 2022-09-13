@@ -1,4 +1,6 @@
-# CrossCulturalDriving2021
+# CrossCulturalDriving
+
+The version of the simulator used for the article: [Strangers in a Strange Land: New Experimental System for Understanding Driving Culture Using VR](https://ieeexplore.ieee.org/document/9720119) can be found under the [`main-OculusCV1`](https://github.com/FAR-Lab/CrossCulturalDriving/tree/main-OculusCV1) branch.
 
 Updated version of CrossCulturalDriving ~~including ECS~~, new networking stack(MLAPI), ~~Unity.InputSystem~~, and ~~Unity XR Interaction Toolkit~~ with Oculus Plugin alongside Oculus Integration, works with Logitech G29 steering wheel.
 
