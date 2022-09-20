@@ -24,6 +24,7 @@ public class SimpleServerCameraScript : MonoBehaviour
         NetworkManager.Singleton.OnClientConnectedCallback += DisableMe;
         NetworkManager.Singleton.OnServerStarted += StartingAsServer;
         
+      
         SceneManager.sceneLoaded += LoadUnityAction;
         SceneManager.sceneUnloaded += UnloadUnityAction;
         
@@ -43,7 +44,7 @@ public class SimpleServerCameraScript : MonoBehaviour
     private void UnloadUnityAction(Scene arg0)
     {
         if (!initFinished)
-        {
+        { 
             setupCameras();
             initFinished = true;
         }
@@ -56,13 +57,16 @@ public class SimpleServerCameraScript : MonoBehaviour
 
     private void LoadUnityAction(Scene arg0, LoadSceneMode arg1)
     {
-        if (!initFinished)
-        {
-            setupCameras();
-            initFinished = true;
-        }
+        
         if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN && arg0.name!=ConnectionAndSpawing.WaitingRoomSceneName)
-        {
+        { 
+            if (!initFinished)
+            {
+                setupCameras();
+                initFinished = true;
+            }
+           
+            
             LinkCameras();
         }
     }
@@ -72,8 +76,21 @@ public class SimpleServerCameraScript : MonoBehaviour
 
     private void setupCameras()
     {
-        FindObjectOfType<RerunPlaybackCameraManager>()?.EnableCameras();
+        var r = FindObjectOfType<RerunPlaybackCameraManager>();
+        Debug.Log(r.enabled);
+        if (r != null)
+        {
+
+            r.EnableCameras();
+        }
+        else
+        {
+            Debug.LogWarning("Could Not enable camera controlls.");
+        }
+        
+        
         m_Cameras = new Dictionary<RerunCameraIdentifier.CameraNumber, RerunCameraIdentifier>();
+        
         foreach (RerunCameraIdentifier v in FindObjectsOfType<RerunCameraIdentifier>())
         {
             if (m_Cameras.ContainsKey(v.myNumber))
@@ -82,6 +99,7 @@ public class SimpleServerCameraScript : MonoBehaviour
             }
             else
             {
+                Debug.Log("Found Camera Number: "+v.myNumber);
                 m_Cameras.Add(v.myNumber, v);
             }
         }
@@ -93,6 +111,8 @@ public class SimpleServerCameraScript : MonoBehaviour
             NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;
             setupCameras();
         }
+        SceneManager.sceneLoaded -= LoadUnityAction;
+        SceneManager.sceneUnloaded -= UnloadUnityAction;
     }
 
     private void DelinkCameras()
@@ -105,6 +125,7 @@ public class SimpleServerCameraScript : MonoBehaviour
 
     private void LinkCameras()
     {
+        
         string scene =ConnectionAndSpawing.Singleton.GetLoadedScene();
         if (scene != ConnectionAndSpawing.WaitingRoomSceneName)
         {
@@ -112,6 +133,7 @@ public class SimpleServerCameraScript : MonoBehaviour
             if (tmp == null) return;
             foreach (CameraSetupXC cameraSetupXc in tmp.CameraSetups)
             {
+                Debug.Log("Going through cameras "+cameraSetupXc.CameraMode.ToString());
                 if (m_Cameras.ContainsKey(cameraSetupXc.targetNumber))
                 {
                     Transform val =
@@ -182,6 +204,8 @@ public class SimpleServerCameraScript : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        SceneManager.sceneLoaded -= LoadUnityAction;
+        SceneManager.sceneUnloaded -= UnloadUnityAction;
     }
 
 

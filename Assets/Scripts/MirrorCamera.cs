@@ -3,8 +3,6 @@
 
 using System;
 using UnityEngine;
-using System.Collections;
-using System.Security.Cryptography.X509Certificates;
 using UnityEngine.Rendering;
 
 //[ExecuteInEditMode]
@@ -18,8 +16,12 @@ public class MirrorCamera : MonoBehaviour {
     public RenderTextureFormat rtf;
     public bool flipHorizontal;
 
+    private const int FrameSkip = 3;
+private static int SharedFrameOffset=0;
+private int frameOffset = 0;
     void Start() {
         cam = GetComponent<Camera>();
+    
         rt = new RenderTexture(width, height, 16, rtf);
         rt.Create();
         rt.name = "MirrorCameraTexture"+ transform.name;
@@ -32,7 +34,20 @@ public class MirrorCamera : MonoBehaviour {
         cam.forceIntoRenderTexture = true;
         cam.targetTexture = rt;
         cam.stereoTargetEye = StereoTargetEyeMask.None;
-        //  Debug.Log("Camera Mirror script start up assigned RT");
+        // Here follows an attempt to reduce rendering load onthe oculus Quest:
+        // Based on a solution on the unity forums: http://answers.unity.com/answers/1429100/view.html
+cam.enabled = false;
+frameOffset = SharedFrameOffset;
+SharedFrameOffset++;
+//  Debug.Log("Camera Mirror script start up assigned RT");
+    }
+
+    private void Update()
+    {
+        if ((Time.frameCount+frameOffset) % FrameSkip==0)
+        {
+            cam.Render();
+        }
     }
 
     void OnPreCull() {
