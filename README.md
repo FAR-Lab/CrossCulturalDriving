@@ -33,6 +33,7 @@ import the necessary third party packages:
 |⇧ Shift +  D | Switch into driving mode |
 |⇧ Shift +  W  | Switch back into the waiting room |
 |⇧ Shift +  Q | Display SA Questionnaire |
+|⇧ Shift +  T | Resets the Timer |
 |⇧ Shift +  A/B | Toggle the participants steerring wheel button remotely (for testing questionnaire) |
 |0,1,2,3,4 | Switch between the views in the server |
 |^ Ctrl + ⎵ Space + A/B|Resets the participant to the starting position|
@@ -45,6 +46,7 @@ During the calibration, which lasts a few seconds, both hands should be placed o
 #### Participant controls during driving
 The blinkers are located behind the steering wheel left and right. 
 The questionnaire can be clicked with the round steering wheel button and head pose. 
+The traffic lights are controlled through the interface on the server. 
 
 #### IP 
 The servers local IP is set in the participants VR-UI. Ensure that no firewall is blocking local network access. 
@@ -58,3 +60,5 @@ Scenes need to be included in the build and included in the Connection and Spawn
 Rerun .replay files are automatically stored on the server path: `C:\Users\<USERNAME>\AppData\LocalLow\<USERNAME>\XCDriving\test`
 
 
+# License
+Currently the project is not licensed for use. The scenes use assets from the Unity Asset Store under the [standard license](https://unity.com/legal/as-terms). 
