@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c21c693a7772e248bced9b1e01cc7f3, type: 3}
+  m_Name: UltimateReplaySettings
+  m_EditorClassIdentifier: 
+  defaultReplayPreparer:
+    skipTypes:
+    - assemblyQualifiedTypeName: UltimateReplay.ReplayObject, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    - assemblyQualifiedTypeName: UltimateReplay.ReplayBehaviour, Assembly-CSharp,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    - assemblyQualifiedTypeName: UnityEngine.Camera, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    - assemblyQualifiedTypeName: UnityEngine.AudioSource, UnityEngine.AudioModule,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    - assemblyQualifiedTypeName: UnityEngine.ParticleSystem, UnityEngine.ParticleSystemModule,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    preparerSettings:
+    - componentPreparerType:
+        assemblyQualifiedTypeName: UnityEngine.Animator, UnityEngine.AnimationModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      enabled: 1
+    - componentPreparerType:
+        assemblyQualifiedTypeName: UnityEngine.Behaviour, UnityEngine.CoreModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      enabled: 1
+    - componentPreparerType:
+        assemblyQualifiedTypeName: UnityEngine.Collider, UnityEngine.PhysicsModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      enabled: 1
+    - componentPreparerType:
+        assemblyQualifiedTypeName: UnityEngine.Collider2D, UnityEngine.Physics2DModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      enabled: 1
+    - componentPreparerType:
+        assemblyQualifiedTypeName: UnityEngine.Rigidbody, UnityEngine.PhysicsModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      enabled: 1
+    - componentPreparerType:
+        assemblyQualifiedTypeName: UnityEngine.Rigidbody2D, UnityEngine.Physics2DModule,
+          Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      enabled: 1
+  recordOptions:
+    recordFPS: 12
+    recordUpdateMethod: 0
+  playbackOptions:
+    playbackEndBehaviour: 0
+    playbackFPS: -1
+    playbackUpdateMethod: 0
+  prefabs:
+    prefabs:
+    - {fileID: 4253647433789861586, guid: d0579203b68a7904a8215afc8f429274, type: 3}
+    - {fileID: 2793757322121236835, guid: a975a6371b84d014b87d9be9c16b271c, type: 3}
+    - {fileID: 5230255863197606600, guid: 228af54c65110cc48816a8995e7c3dff, type: 3}
