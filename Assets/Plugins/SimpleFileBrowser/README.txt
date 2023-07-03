@@ -1,4 +1,4 @@
-= Simple File Browser =
+= Simple File Browser (v1.6.0) =
 
 Online documentation & example code available at: https://github.com/yasirkula/UnitySimpleFileBrowser
 E-mail: yasirkula@gmail.com
@@ -34,6 +34,9 @@ If you are sure that your plugin is up-to-date, then enable "Custom Proguard Fil
 
 - File browser doesn't show any files on Android 10+
 File browser uses Storage Access Framework on these Android versions and users must first click the "Pick Folder" button in the quick links section
+
+- File browser doesn't show any files on Unity 2021.3.x
+Please see: https://github.com/yasirkula/UnitySimpleFileBrowser/issues/70
 
 - RequestPermission returns Permission.Denied on Android
 Declare the WRITE_EXTERNAL_STORAGE permission manually in your Plugins/Android/AndroidManifest.xml file as follows: <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="replace"/>
@@ -94,6 +97,7 @@ FileBrowser.Permission RequestPermission();
 bool FileBrowserHelpers.FileExists( string path );
 bool FileBrowserHelpers.DirectoryExists( string path );
 bool FileBrowserHelpers.IsDirectory( string path );
+bool FileBrowserHelpers.IsPathDescendantOfAnother( string path, string parentFolderPath );
 string FileBrowserHelpers.GetDirectoryName( string path );
 FileSystemEntry[] FileBrowserHelpers.GetEntriesInDirectory( string path, bool extractOnlyLastSuffixFromExtensions ); // Returns all files and folders in a directory. If you want "File.tar.gz"s extension to be extracted as ".tar.gz" instead of ".gz", set 'extractOnlyLastSuffixFromExtensions' to false
 string FileBrowserHelpers.CreateFileInDirectory( string directoryPath, string filename ); // Returns the created file's path

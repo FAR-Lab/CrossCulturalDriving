@@ -140,6 +140,24 @@ namespace SimpleFileBrowser
 			return extension == null || extension.Length <= 1; // extension includes '.'
 		}
 
+		public static bool IsPathDescendantOfAnother( string path, string parentFolderPath )
+		{
+#if !UNITY_EDITOR && UNITY_ANDROID
+			if( ShouldUseSAFForPath( path ) )
+				return AJC.CallStatic<bool>( "IsSAFEntryChildOfAnother", Context, path, parentFolderPath );
+#endif
+			path = Path.GetFullPath( path ).Replace( '\\', '/' );
+			parentFolderPath = Path.GetFullPath( parentFolderPath ).Replace( '\\', '/' );
+
+			if( path == parentFolderPath )
+				return false;
+
+			if( parentFolderPath[parentFolderPath.Length - 1] != '/' )
+				parentFolderPath += "/";
+
+			return path != parentFolderPath && path.StartsWith( parentFolderPath, System.StringComparison.OrdinalIgnoreCase );
+		}
+
 		public static string GetDirectoryName( string path )
 		{
 #if !UNITY_EDITOR && UNITY_ANDROID
@@ -242,11 +260,13 @@ namespace SimpleFileBrowser
 
 				return result;
 			}
+			catch( System.UnauthorizedAccessException ) { }
 			catch( System.Exception e )
 			{
 				Debug.LogException( e );
-				return null;
 			}
+
+			return null;
 		}
 
 		public static string CreateFileInDirectory( string directoryPath, string filename )
