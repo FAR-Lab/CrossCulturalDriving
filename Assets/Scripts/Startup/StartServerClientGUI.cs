@@ -70,55 +70,7 @@ public class StartServerClientGUI : MonoBehaviour
         this.enabled = false;
     }
 
-    void OnGUI(){
-        /*
-        if (ServerStarted || ClientStarted)
-            return;
-        if (CONNECTING){
-            GUI.Label(new Rect(10, 10, 200, 80), "CONNECTING", Style);
-            return;
-        }
-
-        GUI.Box(new Rect(10, 10, 400, 240), "");
-
-        GUI.Label(new Rect(20, 20, 80, 20), "pairname:", Style);
-        pairName = GUI.TextField(new Rect(240, 20, 80, 20), pairName, Style);
-
-        if (GUI.Button(new Rect(20, 50, 80, 20), "start server", Style)){
-            ServerStarted = true;
-            ConnectionAndSpawing.Singleton.StartAsServer(pairName);
-            this.enabled = false;
-        }
-
-        if (GUI.Button(new Rect(240, 50, 80, 20), "RERUN", Style)){
-            Debug.Log("Server Started.");
-
-            ConnectionAndSpawing.Singleton.StartReRun();
-            this.enabled = false;
-        }
-
-        if (GUI.Button(new Rect(20, 100, 80, 20), "Client A", Style)){
-            Debug.Log("Client Started.");
-            CONNECTING = true;
-            ConnectionAndSpawing.Singleton.StartAsClient("English", ParticipantOrder.A, "127.0.0.1", 7777,
-                ResponseDelegate);
-        }
-
-        if (GUI.Button(new Rect(240, 100, 80, 20), "client B", Style)){
-            Debug.Log("Client Started.");
-            CONNECTING = true;
-            ConnectionAndSpawing.Singleton.StartAsClient("English", ParticipantOrder.B, "127.0.0.1", 7777,
-                ResponseDelegate);
-        }
-
-        if (IpString.Length <= 1){
-            IpString += LocalIPAddress();
-        }
-
-        GUI.Label(new Rect(20, 150, 200, 80), "IP:" + IpString, Style);
-        */
-    }
-
+    
     private void ResponseDelegate(ConnectionAndSpawing.ClienConnectionResponse response){
         switch (response){
             case ConnectionAndSpawing.ClienConnectionResponse.FAILED:

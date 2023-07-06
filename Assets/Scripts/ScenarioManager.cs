@@ -48,6 +48,8 @@ public class ScenarioManager : MonoBehaviour
             ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN){ }
     }
 
+    
+
 
     void Update(){ }
 

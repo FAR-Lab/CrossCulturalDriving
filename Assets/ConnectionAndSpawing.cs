@@ -215,21 +215,6 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     #region SpawningAndConnecting
 
-    void SetupServerFunctionality()
-    {
-        NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
-        NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected;
-        NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
-        NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
-
-
-        NetworkManager.Singleton.StartServer();
-        NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;
-
-
-        SteeringWheelManager.Singleton.Init();
-    }
-
 
     private void LocalLoadScene(string name)
     {
@@ -287,8 +272,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("A client Finished loading But we are not gonna Spawn cause the visuals are missing!" +
-                              "");
+                    Debug.Log("A client Finished loading But we are not gonna Spawn cause the visuals are missing!");
                 }
 
                 break;
@@ -398,7 +382,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     private void ClientConnected(ulong ClientID)
     {
-        Debug.Log("on Client Connect CallBack Was called!");
+        Debug.Log("OnClientConnect CallBack was called!");
         // Whats important here is that this doesnt get called 
         SpawnAPlayer(ClientID, true);
     }
@@ -541,17 +525,40 @@ public class ConnectionAndSpawing : MonoBehaviour
     #endregion
 
 
+public delegate void SetupServerFunctionality_Delegate(string pairName);
+ public SetupServerFunctionality_Delegate SetupServerFunctionality;
+
+
     public void StartAsServer(string pairName)
     {
         Application.targetFrameRate = 72;
+      
         gameObject.AddComponent<farlab_logger>();
+
         SteeringWheelManager.Singleton.enabled = true;
         m_QNDataStorageServer = GetComponent<QNDataStorageServer>();
         m_QNDataStorageServer.enabled = true;
 
 
         GetComponent<TrafficLightSupervisor>().enabled = true;
-        SetupServerFunctionality();
+       
+
+        NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
+        NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected;
+        NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
+        NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
+
+
+        
+        
+
+
+        SteeringWheelManager.Singleton.Init();
+
+
+        SetupServerFunctionality?.Invoke(pairName);
+
+
         m_ReRunManager.SetRecordingFolder(pairName);
         Debug.Log("Starting Server for session: " + pairName);
 
@@ -562,6 +569,9 @@ public class ConnectionAndSpawing : MonoBehaviour
                 .GetComponent<ServerTimeDisplay>();
             val.StartDisplay(0.5f);
         }
+
+        NetworkManager.Singleton.StartServer();
+        NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;
     }
 
     private QNDataStorageServer m_QNDataStorageServer;
@@ -595,12 +605,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         Debug.Log(SuccessFullyConnected + " CHECK HERE");
     }
 
-    void SetupClientFunctionality()
-    {
-        NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected_client;
-        NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected_client;
-    }
-
+   
 
     private void SetParticipantOrder(ParticipantOrder val)
     {
@@ -616,7 +621,9 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     public void StartAsClient(string lang_, ParticipantOrder val, string ip, int port, ReponseDelegate result)
     {
-        SetupClientFunctionality();
+        NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected_client;
+        NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected_client;
+
         ReponseHandler += result;
         SetupTransport(ip, port);
         Setlanguage(lang_);
