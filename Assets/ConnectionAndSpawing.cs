@@ -525,9 +525,8 @@ public class ConnectionAndSpawing : MonoBehaviour
     #endregion
 
 
-public delegate void SetupServerFunctionality_Delegate(string pairName);
- public SetupServerFunctionality_Delegate SetupServerFunctionality;
-
+    public delegate void SetupServerFunctionality_Delegate(string pairName);
+    public SetupServerFunctionality_Delegate SetupServerFunctionality;
 
     public void StartAsServer(string pairName)
     {
@@ -548,13 +547,7 @@ public delegate void SetupServerFunctionality_Delegate(string pairName);
         NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
         NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
 
-
-        
-        
-
-
         SteeringWheelManager.Singleton.Init();
-
 
         SetupServerFunctionality?.Invoke(pairName);
 
