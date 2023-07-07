@@ -31,7 +31,7 @@ public class SC_TrackingManager : MonoBehaviour
     }
 
     void Calibrate(){
-        player = GameObject.FindWithTag("Player");
+        player = GameObject.FindWithTag("Avatar");
         container = player.GetComponentInChildren<SC_Container>();
         hip = player.transform.Find("mixamorig:Hips");
         FindZedManager();

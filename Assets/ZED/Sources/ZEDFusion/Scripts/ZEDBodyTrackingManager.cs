@@ -102,9 +102,10 @@ public class ZEDBodyTrackingManager : MonoBehaviour
     /// <summary>
     /// Start this instance.
     /// </summary>
+
+    
     private void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
         QualitySettings.vSyncCount = 1; // Activate vsync
 
         avatarControlList = new Dictionary<int,SkeletonHandler> ();

@@ -721,6 +721,10 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     private void SwitchToWaitingRoom()
     {
+        // find avatar and make it dont destroy on load (temporary fix)
+        GameObject tempAvatar = GameObject.FindWithTag("Avatar");
+        DontDestroyOnLoad(tempAvatar);
+
         if (m_ReRunManager.IsRecording())
         {
             m_ReRunManager.StopRecording();

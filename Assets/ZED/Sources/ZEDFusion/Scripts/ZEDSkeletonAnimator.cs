@@ -74,8 +74,6 @@ public class ZEDSkeletonAnimator : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
-
         if(!NetworkManager.Singleton.IsServer)
         {
             // destroy height offsetter if not server

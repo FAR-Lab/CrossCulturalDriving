@@ -1206,6 +1206,12 @@ public class SkeletonHandler : ScriptableObject
     /// <param name="_mirrorOnYAxis">Mirror the 3D avatars or not.</param>
     public void SetControlWithJointPosition(Vector3[] jointsPosition, Quaternion[] jointsRotation, Quaternion rootRotation, bool useAvatar, bool _mirrorOnYAxis)
     {
+        // temporary fix for "gameobject destroy but still trying to access it"
+        if(skeleton == null || humanoid == null)
+        {
+            return;
+        }
+
         currentJoints = jointsPosition;
 
         humanoid.SetActive(useAvatar);
