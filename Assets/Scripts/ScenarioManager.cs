@@ -31,12 +31,17 @@ public class ScenarioManager : MonoBehaviour
     public GpsController.Direction StartingDirectionParticipantE;
     public GpsController.Direction StartingDirectionParticipantF;
 
+    // Dictionary -- key: ParticpantOrder, value: Direction
+    public Dictionary<ParticipantOrder, GpsController.Direction> StartingDirections;
+
+    // How to populate the dictionary? Serializalize and configure in inspector. 
+
+    
 
     public List<CameraSetupXC> CameraSetups;
 
 
   
-
     void Start(){
         qnmanager = Instantiate(
             QuestionairPrefab).GetComponent<QNSelectionManager>();

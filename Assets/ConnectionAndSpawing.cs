@@ -43,7 +43,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
 
     //   public bool RunAsServer;
-    public static bool fakeCare = false;
+    public static bool fakeCar = false;
 
     #region ParticipantMapping
 
@@ -52,6 +52,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         MAIN,
         CAR,
         PEDESTRIAN,
+        AUTONOMOUSPASSENGER,
     }
 
 
@@ -218,7 +219,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     private void LocalLoadScene(string name)
     {
-        DestroyAllClientObjects(new List<ParticipantObjectSpawnType> {ParticipantObjectSpawnType.CAR});
+        DestroyAllClientObjects(new List<ParticipantObjectSpawnType> { ParticipantObjectSpawnType.CAR });
 
 
         NetworkManager.Singleton.SceneManager.LoadScene(name, LoadSceneMode.Single);
@@ -387,8 +388,9 @@ public class ConnectionAndSpawing : MonoBehaviour
         SpawnAPlayer(ClientID, true);
     }
 
-    private bool _prepareSpawing(ulong clientID, out Pose? tempPose)
+    private bool _prepareSpawing(ulong clientID, out Pose? tempPose, out ParticipantObjectSpawnType SpawnType)
     {
+        SpawnType = ParticipantObjectSpawnType.PEDESTRIAN;
         bool success = true;
         tempPose = GetScenarioManager().GetStartPose(GetOrder(clientID));
         if (tempPose == null)
@@ -418,40 +420,47 @@ public class ConnectionAndSpawing : MonoBehaviour
         ParticipantOrder temp = GetOrder(clientID);
         if (temp == ParticipantOrder.None) return false;
 
-        if (_prepareSpawing(clientID, out Pose? tempPose))
+        if (_prepareSpawing(clientID, out Pose? tempPose, out ParticipantObjectSpawnType type))
         {
-            var newCar =
-                Instantiate(CarPrefab,
-                    tempPose.Value.position, tempPose.Value.rotation);
-
-
-            newCar.GetComponent<NetworkObject>().Spawn(true);
-
-            if (!fakeCare)
+            switch (type)
             {
-                newCar.GetComponent<NetworkVehicleController>().AssignClient(clientID, GetOrder(clientID));
 
-#if SPAWNDEBUG
-                Debug.Log("Assigning car to a new partcipant with clinetID:" + clientID.ToString() + " =>" +
-                          newCar.GetComponent<NetworkObject>().NetworkObjectId);
-#endif
-                if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null)
-                {
-                    // ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
-                    //  .AssignCarTransformClientRPC(newCar.GetComponent<NetworkObject>(), GetOrder(clientID), lang,
-                    //        clientRpcParams);
+                case ParticipantObjectSpawnType.CAR:
+                    var newCar =
+                        Instantiate(CarPrefab,
+                        tempPose.Value.position, tempPose.Value.rotation);
 
-                    ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
-                        .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientID);
-                }
 
-                else
-                {
-                    Debug.LogError("Could not find player as I am spawning the CAR. Broken please fix.");
-                }
+                    newCar.GetComponent<NetworkObject>().Spawn(true);
+
+                    if (!fakeCar)
+                    {
+                        newCar.GetComponent<NetworkVehicleController>().AssignClient(clientID, GetOrder(clientID));
+
+                        if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null)
+                        {
+                            ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
+                                .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientID);
+                        }
+
+                        else
+                        {
+                            Debug.LogError("Could not find player as I am spawning the CAR. Broken please fix.");
+                        }
+                    }
+
+                    ClientObjects[clientID].Add(ParticipantObjectSpawnType.CAR, newCar.GetComponent<NetworkObject>());
+
+
+                    break;
+
+                case ParticipantObjectSpawnType.PEDESTRIAN:
+
+                    //ToDo: callibrate stuff!! 
+
+                    break;
+
             }
-
-            ClientObjects[clientID].Add(ParticipantObjectSpawnType.CAR, newCar.GetComponent<NetworkObject>());
 
             return true;
         }
@@ -464,7 +473,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         ParticipantOrder temp = GetOrder(clientID);
         if (temp == ParticipantOrder.None) return false;
 
-        if (_prepareSpawing(clientID, out Pose? tempPose))
+        if (_prepareSpawing(clientID, out Pose? tempPose, out ParticipantObjectSpawnType type))
         {
             tempPose ??= Pose.identity;
 
@@ -501,7 +510,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         //byte[] connectionData, ulong clientId,
         // NetworkManager.ConnectionApprovedDelegate callback){
         bool approve = false;
-        ParticipantOrder temp = (ParticipantOrder) request.Payload[0];
+        ParticipantOrder temp = (ParticipantOrder)request.Payload[0];
 
         approve = AddParticipant(temp, request.ClientNetworkId);
 
@@ -531,7 +540,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     public void StartAsServer(string pairName)
     {
         Application.targetFrameRate = 72;
-      
+
         gameObject.AddComponent<farlab_logger>();
 
         SteeringWheelManager.Singleton.enabled = true;
@@ -540,7 +549,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
 
         GetComponent<TrafficLightSupervisor>().enabled = true;
-       
+
 
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
         NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected;
@@ -598,11 +607,11 @@ public class ConnectionAndSpawing : MonoBehaviour
         Debug.Log(SuccessFullyConnected + " CHECK HERE");
     }
 
-   
+
 
     private void SetParticipantOrder(ParticipantOrder val)
     {
-        NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] {(byte) val}; // assigning ID
+        NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] { (byte)val }; // assigning ID
         _participantOrder = val;
         ParticipantOrder_Set = true;
     }
@@ -671,7 +680,7 @@ public class ConnectionAndSpawing : MonoBehaviour
     public void StartReRun()
     {
         ServerState = ActionState.RERUN;
-       // FindObjectOfType<RerunLayoutManager>().?enabled = true;
+        // FindObjectOfType<RerunLayoutManager>().?enabled = true;
         m_ReRunManager.RegisterPreLoadHandler(LoadSceneReRun);
         NetworkManager.Singleton.enabled = false;
         GetComponent<OVRManager>().enabled = false;
@@ -990,7 +999,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                         {
                             Send = new ClientRpcSendParams
                             {
-                                TargetClientIds = new ulong[] {clientID}
+                                TargetClientIds = new ulong[] { clientID }
                             }
                         };
 
@@ -1060,11 +1069,11 @@ public class ConnectionAndSpawing : MonoBehaviour
         foreach (ParticipantOrder or in dict.Keys)
         {
             ulong? cid = GetClientID(or);
-            if (cid != null && ClientObjects.ContainsKey((ulong) cid))
+            if (cid != null && ClientObjects.ContainsKey((ulong)cid))
             {
-                ClientObjects[(ulong) cid][ParticipantObjectSpawnType.MAIN]
+                ClientObjects[(ulong)cid][ParticipantObjectSpawnType.MAIN]
                     .GetComponent<ParticipantInputCapture>().CurrentDirection.Value = dict[or];
-                ClientObjects[(ulong) cid][ParticipantObjectSpawnType.CAR]
+                ClientObjects[(ulong)cid][ParticipantObjectSpawnType.CAR]
                     .GetComponentInChildren<GpsController>().SetDirection(dict[or]);
             }
         }
@@ -1225,7 +1234,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                     car.transform.GetComponent<Rigidbody>().velocity =
                         Vector3.zero; // Unsafe we are not sure that it has a rigid body
                     car.transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-                    _prepareSpawing(ClinetID.Value, out Pose? tempPose);
+                    _prepareSpawing(ClinetID.Value, out Pose? tempPose, out ParticipantObjectSpawnType spawnType);
                     if (!tempPose.HasValue)
                     {
                         Debug.LogWarning("Did not find a position to reset the participant to." + po);
