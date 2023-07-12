@@ -2,12 +2,13 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.Netcode;
 
 /// <summary>
 /// 
 /// </summary>
 [DisallowMultipleComponent]
-public class ZEDBodyTrackingManager : MonoBehaviour
+public class ZEDBodyTrackingManager : NetworkBehaviour
 {
     public enum BODY_MODE
     {

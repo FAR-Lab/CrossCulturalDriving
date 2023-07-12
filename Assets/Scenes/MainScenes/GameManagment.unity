@@ -245,6 +245,7 @@ MonoBehaviour:
   CarPrefab: {fileID: 102736, guid: 76bfb64261b6b4eb080dcd0e2fa84572, type: 3}
   VRUIStartPrefab: {fileID: 8770236260572045539, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
   ref_ServerTimingDisplay: {fileID: 4979024292393695789, guid: 8a4223da181b88748a21a53936689ba9, type: 3}
+  ZEDInitializationManager: {fileID: 662522266}
   IncludedScenes:
   - m_SceneAsset: {fileID: 102900000, guid: 7968dc8a7830bb74184d7c8f71b24880, type: 3}
     m_SceneName: CP1
@@ -599,6 +600,7 @@ GameObject:
   m_Component:
   - component: {fileID: 662522268}
   - component: {fileID: 662522267}
+  - component: {fileID: 662522269}
   m_Layer: 0
   m_Name: ZEDManager
   m_TagString: Untagged
@@ -633,6 +635,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &662522269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662522266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1342990714
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1334481668
 GameObject:
   m_ObjectHideFlags: 0

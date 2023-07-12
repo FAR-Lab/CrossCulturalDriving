@@ -27,7 +27,11 @@ public class SC_TrackingManager : MonoBehaviour
 
     void Update()
     {
-
+        if (Input.GetKey(KeyCode.Tab))
+        {
+            if(Input.GetKeyDown(KeyCode.C))
+                Calibrate();
+        }
     }
 
     void Calibrate(){
@@ -41,18 +45,12 @@ public class SC_TrackingManager : MonoBehaviour
 
     void OffsetPosition(){
         player.GetComponent<ZEDSkeletonAnimator>().OffsetAngle();
-
-
         Vector3 difference = anchor.position - hip.position;
-
         zedBodyTrackingManager.manualOffset = difference;
-
         zedBodyTrackingManager.manualOffset.y = 0;
-
     }
 
     public void FindZedManager(){
-        // find component in scene
         zedBodyTrackingManager = transform.parent.GetComponentInChildren<ZEDBodyTrackingManager>();
     }
 

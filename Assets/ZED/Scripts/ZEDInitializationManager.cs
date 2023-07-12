@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class ZEDInitializationManager : MonoBehaviour
+public class ZEDInitializationManager : NetworkBehaviour
 {
     public GameObject ZEDManager;
 
@@ -10,17 +11,22 @@ public class ZEDInitializationManager : MonoBehaviour
     {
         DontDestroyOnLoad(this.gameObject);
 
-        ConnectionAndSpawing.Singleton.SetupServerFunctionality += SetupZED;
-        
-    }
+        ConnectionAndSpawing.Singleton.ServerStateChange += SetupZED;
 
-    // Update is called once per frame
-    void Update()
+        //ConnectionAndSpawing.Singleton.SetupServerFunctionality += SetupZED;
+
+    }
+    public void SetupZED(ActionState actionState)
     {
-        
-    }
+        if (actionState == ActionState.READY)
+        {
+            GameObject ZEDManagerInstance = Instantiate(ZEDManager, this.transform);
+            // create a cube
+            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.AddComponent<NetworkObject>();
+            cube.GetComponent<NetworkObject>().Spawn();
+        }
 
-    public void SetupZED(string pairName){
-        GameObject ZEDManagerInstance = Instantiate(ZEDManager, this.transform);
+
     }
 }

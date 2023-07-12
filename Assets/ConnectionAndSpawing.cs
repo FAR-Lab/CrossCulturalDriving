@@ -20,6 +20,9 @@ public class ConnectionAndSpawing : MonoBehaviour
     public GameObject VRUIStartPrefab;
     public GameObject ref_ServerTimingDisplay;
 
+    // New Patch 
+    public GameObject ZEDInitializationManager;
+
     public List<SceneField> IncludedScenes = new List<SceneField>();
     public string LastLoadedVisualScene;
     public static string WaitingRoomSceneName = "WaitingRoom";
@@ -86,7 +89,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         }
 
         return outval;
-    }
+    } 
 
     private void RemoveParticipant(ulong id)
     {
@@ -454,9 +457,20 @@ public class ConnectionAndSpawing : MonoBehaviour
 
                     break;
 
+                // checkpoint1
                 case ParticipantObjectSpawnType.PEDESTRIAN:
+                    // find player object with tag -- just for testing the calibration. might need to change in the future.
+                    GameObject tempAvatar = GameObject.FindWithTag("Avatar");
+                    SC_Container tempContainer = tempAvatar.GetComponentInChildren<SC_Container>();
+                    Transform hip = tempAvatar.transform.Find("mixamorig:Hips");
+                    ZEDBodyTrackingManager tempTrackingManager = ZEDInitializationManager.GetComponentInChildren<ZEDBodyTrackingManager>();
+                    tempAvatar.GetComponent<ZEDSkeletonAnimator>().OffsetAngle();
 
-                    //ToDo: callibrate stuff!! 
+                    Pose? anchor = tempPose;
+                    Vector3 difference = anchor.Value.position-hip.position;
+                    tempTrackingManager.manualOffset = difference;
+                    tempTrackingManager.manualOffset.y = 0;
+
 
                     break;
 
@@ -550,6 +564,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
         GetComponent<TrafficLightSupervisor>().enabled = true;
 
+        SetupServerFunctionality?.Invoke(pairName);
 
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
         NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected;
@@ -558,7 +573,6 @@ public class ConnectionAndSpawing : MonoBehaviour
 
         SteeringWheelManager.Singleton.Init();
 
-        SetupServerFunctionality?.Invoke(pairName);
 
 
         m_ReRunManager.SetRecordingFolder(pairName);
@@ -730,10 +744,6 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     private void SwitchToWaitingRoom()
     {
-        // find avatar and make it dont destroy on load (temporary fix)
-        GameObject tempAvatar = GameObject.FindWithTag("Avatar");
-        DontDestroyOnLoad(tempAvatar);
-
         if (m_ReRunManager.IsRecording())
         {
             m_ReRunManager.StopRecording();
@@ -742,7 +752,13 @@ public class ConnectionAndSpawing : MonoBehaviour
         }
 
         ServerState = ActionState.WAITINGROOM;
-        LocalLoadScene(WaitingRoomSceneName);
+        Debug.Log("Switching to Waiting Room");
+        StartCoroutine(WaitThenLoadWaitingRoom());
+    }
+
+    private IEnumerator WaitThenLoadWaitingRoom(){
+        yield return new WaitForSeconds(4);
+        LocalLoadScene(WaitingRoomSceneName); // remember to remove
     }
 
     private void SwitchToLoading(string name)
@@ -759,8 +775,12 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     private string LastLoadedScene = "";
 
+    public delegate void ServerStateChange_delegate(ActionState state);
+    // Checkpoint
+    public ServerStateChange_delegate ServerStateChange;
     private void SwitchToReady()
     {
+        ServerStateChange.Invoke(ActionState.READY);
         ServerState = ActionState.READY;
     }
 
@@ -1249,9 +1269,6 @@ public class ConnectionAndSpawing : MonoBehaviour
                 {
                     return false;
                 }
-
-
-                break;
             case ParticipantObjectSpawnType.PEDESTRIAN:
                 break;
             default:

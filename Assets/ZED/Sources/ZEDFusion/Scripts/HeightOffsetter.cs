@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-public class HeightOffsetter : MonoBehaviour
+public class HeightOffsetter : NetworkBehaviour
 {
     #region vars
 

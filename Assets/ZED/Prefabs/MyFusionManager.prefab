@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9176203047860055492}
   - component: {fileID: 2765332768126944533}
   - component: {fileID: 2765332768126944532}
+  - component: {fileID: 1289396444985177368}
   m_Layer: 0
   m_Name: MyFusionManager
   m_TagString: Untagged
@@ -28,7 +29,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -65,8 +65,7 @@ MonoBehaviour:
   maximumNumberOfDetections: 1
   avatars:
   - {fileID: 9118140948381514423, guid: 1d1c1191852267e4ea599f59e2196d2c, type: 3}
-  skeletonBaseMaterial: {fileID: 2100000, guid: 604a4fd1091665141aad5776f95cd50b,
-    type: 2}
+  skeletonBaseMaterial: {fileID: 2100000, guid: 604a4fd1091665141aad5776f95cd50b, type: 2}
   displaySDKSkeleton: 0
   offsetSDKSkeleton: {x: 1, y: 0, z: 0}
   mirrorMode: 0
@@ -88,3 +87,19 @@ MonoBehaviour:
   increaseSkeOffsetXKey: 276
   decreaseSkeOffsetXKey: 275
   zedStreamingClient: {fileID: 2765332768126944533}
+--- !u!114 &1289396444985177368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8169392245641681218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1

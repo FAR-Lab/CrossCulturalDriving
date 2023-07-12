@@ -966,11 +966,15 @@ public class SkeletonHandler : ScriptableObject
     {
         humanoid = (GameObject)Instantiate(h, bodyTrackingManager.transform.position, Quaternion.identity);
         animator = humanoid.GetComponent<Animator>();
+        //humanoid.transform.SetParent(bodyTrackingManager.transform);
+        
 
         BodyFormat = body_format;
 
         zedSkeletonAnimator = humanoid.GetComponent<ZEDSkeletonAnimator>();
         zedSkeletonAnimator.Skhandler = this;
+
+        zedSkeletonAnimator.SetUpAvatar();
 
         // Init list of bones that will be updated by the data retrieved from the ZED SDK
         rigBone = new Dictionary<HumanBodyBones, RigBone>();

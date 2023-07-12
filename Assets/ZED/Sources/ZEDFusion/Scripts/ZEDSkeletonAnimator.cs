@@ -74,6 +74,8 @@ public class ZEDSkeletonAnimator : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("ZED set dont destroy on load");
+
         if(!NetworkManager.Singleton.IsServer)
         {
             // destroy height offsetter if not server
@@ -95,19 +97,25 @@ public class ZEDSkeletonAnimator : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        // set network spawn to true
-        if (NetworkManager.Singleton.IsServer)
-        {
-            NetworkObject networkObject = GetComponent<NetworkObject>();
-            networkObject.Spawn(true);
-        }
 
         // lookat Initialization
         lookAtTarget = GameObject.Find("LookAt");
     }
 
+    public void SetUpAvatar(){
+        if (NetworkManager.Singleton.IsServer)
+        {
+            NetworkObject networkObject = GetComponent<NetworkObject>();
+            networkObject.Spawn(false);
+            //DontDestroyOnLoad(networkObject);
+        }
+    }
+
     private void Update()
     {
+        // print instance ID of this object
+        //Debug.Log("ZEDSkeletonAnimatorID: " + this.GetInstanceID());
+
         // reset automatic height offset calibration
         if (Input.GetKeyDown(resetAutomaticOffset))
         {
