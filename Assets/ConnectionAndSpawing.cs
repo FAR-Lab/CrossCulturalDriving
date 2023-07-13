@@ -464,7 +464,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                     SC_Container tempContainer = tempAvatar.GetComponentInChildren<SC_Container>();
                     Transform hip = tempAvatar.transform.Find("mixamorig:Hips");
                     ZEDBodyTrackingManager tempTrackingManager = ZEDInitializationManager.GetComponentInChildren<ZEDBodyTrackingManager>();
-                    tempAvatar.GetComponent<ZEDSkeletonAnimator>().OffsetAngle();
+                    //tempAvatar.GetComponent<ZEDSkeletonAnimator>().OffsetAngle();
 
                     Pose? anchor = tempPose;
                     Vector3 difference = anchor.Value.position-hip.position;
@@ -753,12 +753,7 @@ public class ConnectionAndSpawing : MonoBehaviour
 
         ServerState = ActionState.WAITINGROOM;
         Debug.Log("Switching to Waiting Room");
-        StartCoroutine(WaitThenLoadWaitingRoom());
-    }
-
-    private IEnumerator WaitThenLoadWaitingRoom(){
-        yield return new WaitForSeconds(4);
-        LocalLoadScene(WaitingRoomSceneName); // remember to remove
+        LocalLoadScene(WaitingRoomSceneName); 
     }
 
     private void SwitchToLoading(string name)

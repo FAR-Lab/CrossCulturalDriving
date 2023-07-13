@@ -36,7 +36,6 @@ public class ZEDSkeletonAnimator : MonoBehaviour
     public KeyCode resetAutomaticOffset = KeyCode.R;
 
     public Vector3 angleOffset = Vector3.zero;
-    private GameObject lookAtTarget = null;
 
     #endregion
 
@@ -99,7 +98,6 @@ public class ZEDSkeletonAnimator : MonoBehaviour
         animator = GetComponent<Animator>();
 
         // lookat Initialization
-        lookAtTarget = GameObject.Find("LookAt");
     }
 
     public void SetUpAvatar(){
@@ -123,16 +121,30 @@ public class ZEDSkeletonAnimator : MonoBehaviour
         }
     }
 
-    public void OffsetAngle(){
-        Vector3 initialAngle = animator.bodyRotation.eulerAngles;
-        Vector3 direction = lookAtTarget.transform.position - animator.bodyPosition;
-        if(direction.magnitude > 0.1f) 
-        {
-            Quaternion toRotation = Quaternion.FromToRotation(animator.bodyRotation.eulerAngles, direction);
-            Debug.Log(toRotation);
-            angleOffset.y = - toRotation.eulerAngles.y;
-        }
+public void OffsetAngle(Transform lookat){
+    // get transform of hip
+    Transform hip = animator.GetBoneTransform(HumanBodyBones.Hips);
+    Quaternion hipRotation = hip.rotation;
+
+    Vector3 direction = hip.position - lookat.position;
+
+    if(direction.magnitude > 0.1f) 
+    {
+        Vector3 hipForward = hip.forward;
+        hipForward = new Vector3(hipForward.x, 0, hipForward.z);
+        Vector3 toDirection = direction.normalized;
+        toDirection = new Vector3(toDirection.x, 0, -toDirection.z);
+
+        Debug.Log("hipForward: " + hipForward);
+        Debug.Log("toDirection: " + toDirection);
+
+        // calculate arctan between hip forward and direction
+        float angle = Vector3.SignedAngle(hipForward, toDirection, Vector3.up);
+        Debug.Log("angleOffset: " + angle);
+        angleOffset.y += angle;
     }
+}
+
 
 
 
@@ -281,12 +293,6 @@ public class ZEDSkeletonAnimator : MonoBehaviour
         if (animator != null)
         {
             animator.bodyPosition += rootHeightOffset;
-
-            // hack around
-            Vector3 tempEuler = animator.bodyRotation.eulerAngles;
-            tempEuler += angleOffset;
-            animator.bodyRotation = Quaternion.Euler(tempEuler);
-            
         }
         else { 
             transform.position = Skhandler.TargetBodyPositionWithHipOffset + rootHeightOffset; 
@@ -360,6 +366,12 @@ public class ZEDSkeletonAnimator : MonoBehaviour
                 ? skhandler.TargetBodyPositionWithHipOffset
                 : new Vector3(skhandler.TargetBodyPositionWithHipOffset.x, animator.bodyPosition.y, skhandler.TargetBodyPositionWithHipOffset.z);
             animator.bodyRotation = skhandler.TargetBodyOrientationSmoothed;
+
+
+            // hack around (Set bodyrotation of avatar)
+            // Vector3 tempRotation = animator.bodyRotation.eulerAngles;
+            // animator.bodyRotation = Quaternion.Euler(tempRotation);
+
 
             // Store raycast info data
             bool hitSuccessfulL; bool hitSuccessfulR;
@@ -490,7 +502,7 @@ public class ZEDSkeletonAnimator : MonoBehaviour
         //transform.rotation = Quaternion.Euler(0,skhandler.TargetBodyOrientationSmoothed.eulerAngles.y,0);
         Skhandler.TargetBodyOrientationSmoothed = Quaternion.Euler(0, skhandler.TargetBodyOrientationSmoothed.eulerAngles.y, 0);
         transform.rotation = skhandler.TargetBodyOrientationSmoothed;
-
+    
         // Find anim speed depending on if going forward or backward
         //float sc = Vector3.Dot(transform.forward, skhandler.rootVelocity);
         float sc = Vector3.Dot(transform.forward, skhandler.rootVelocity);

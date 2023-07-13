@@ -5,6 +5,33 @@ using UnityEngine.UI;
 
 public class SC_TrackingManager : MonoBehaviour
 {
+    # region Singleton
+    public static SC_TrackingManager Singleton { get; private set; }
+
+    private void SetSingleton()
+    {
+        Singleton = this;
+    }
+
+    private void OnEnable()
+    {
+        if (Singleton != null && Singleton != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        SetSingleton();
+    }
+
+    private void OnDestroy()
+    {
+        if (Singleton != null && Singleton == this)
+        {
+            Singleton = null;
+        }
+    }
+    #endregion
+
     public ZEDBodyTrackingManager zedBodyTrackingManager;
 
     //[SerializeField] private Transform origin;
@@ -14,44 +41,66 @@ public class SC_TrackingManager : MonoBehaviour
     private GameObject player;
     private Transform hip;
     private SC_Container container;
-
-    private Button calibrateButton;
-
-
-
-    void Start()
-    {
-        calibrateButton = GameObject.Find("Calibrate").GetComponent<Button>();
-        calibrateButton.onClick.AddListener(Calibrate);
-    }
+    private Transform lookat;
+    public Vector3 positionOffset = Vector3.zero;
 
     void Update()
     {
         if (Input.GetKey(KeyCode.Tab))
         {
-            if(Input.GetKeyDown(KeyCode.C))
-                Calibrate();
+            if(Input.GetKeyDown(KeyCode.C)){
+                Calibrate();}
+            if(Input.GetKeyDown(KeyCode.R)){
+                CalibrateRotation();
+            }
         }
+
+
+        // draw debug lines
+        if(hip != null & lookat != null)
+        {
+        Debug.DrawLine (hip.position, hip.position + hip.forward, Color.green);
+        Debug.DrawLine (hip.position, lookat.position, Color.red);
+        }
+
     }
 
     void Calibrate(){
-        player = GameObject.FindWithTag("Avatar");
-        container = player.GetComponentInChildren<SC_Container>();
-        hip = player.transform.Find("mixamorig:Hips");
-        FindZedManager();
+
+        FindDependencies();
         OffsetPosition();
-        container.Calibrate();
+        //container.Calibrate();
+    }
+
+    void CalibrateRotation(){
+                FindDependencies();
+
+        player.GetComponent<ZEDSkeletonAnimator>().OffsetAngle(lookat);
+
     }
 
     void OffsetPosition(){
-        player.GetComponent<ZEDSkeletonAnimator>().OffsetAngle();
-        Vector3 difference = anchor.position - hip.position;
-        zedBodyTrackingManager.manualOffset = difference;
-        zedBodyTrackingManager.manualOffset.y = 0;
+
+        // offset position
+        positionOffset = anchor.position - hip.position;
+        zedBodyTrackingManager.manualOffset += positionOffset;
+        //zedBodyTrackingManager.manualOffset.y = 0;
+
+        // offset rotation
+
     }
 
-    public void FindZedManager(){
-        zedBodyTrackingManager = transform.parent.GetComponentInChildren<ZEDBodyTrackingManager>();
+    public void FindDependencies(){
+        // player Related
+        player = GameObject.FindWithTag("Avatar");
+        container = player.GetComponentInChildren<SC_Container>();
+        hip = player.transform.Find("mixamorig:Hips");
+        zedBodyTrackingManager = transform.GetComponentInChildren<ZEDBodyTrackingManager>();
+    
+        // Calibration Related
+        anchor = GameObject.FindWithTag("Anchor").transform;
+        lookat = GameObject.FindWithTag("Lookat").transform;
+
     }
 
 

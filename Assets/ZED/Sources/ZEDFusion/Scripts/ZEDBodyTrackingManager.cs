@@ -98,6 +98,7 @@ public class ZEDBodyTrackingManager : NetworkBehaviour
     public bool EnableSmoothing { get => enableSmoothing; set => enableSmoothing = value; }
     public bool EnableFootIK { get => enableFootIK; set => enableFootIK = value; }
     public bool EnableFootLocking { get => enableFootLocking; set => enableFootLocking = value; }
+
     #endregion
 
     /// <summary>
@@ -248,6 +249,21 @@ public class ZEDBodyTrackingManager : NetworkBehaviour
             normalizedLocalJointsRot[i] = data.local_orientation_per_joint[i].normalized;
         }
         Quaternion worldGlobalRotation = data.global_root_orientation;
+
+        ZEDSkeletonAnimator skeletonAnimator = FindObjectOfType<ZEDSkeletonAnimator>();
+        if(skeletonAnimator != null)
+        {
+            Vector3 tempAngle = worldGlobalRotation.eulerAngles;
+            tempAngle += skeletonAnimator.angleOffset;
+            
+            worldGlobalRotation = Quaternion.Euler(tempAngle);
+            // construct a rotation matrix from the angle offset
+            Matrix4x4 rotationMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(skeletonAnimator.angleOffset), Vector3.one);
+            // apply the rotation to the joint position root
+            //worldJointsPos[0] += SC_TrackingManager.Singleton.positionOffset;
+            worldJointsPos[0] = rotationMatrix.MultiplyPoint(worldJointsPos[0]);
+            
+        }
 
         if (data.local_orientation_per_joint.Length > 0 && data.keypoint.Length > 0 && data.keypoint_confidence.Length > 0)
         {

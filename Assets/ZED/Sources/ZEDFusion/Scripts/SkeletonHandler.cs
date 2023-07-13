@@ -1224,6 +1224,7 @@ public class SkeletonHandler : ScriptableObject
 
         if (useAvatar)
         {
+            // THIS
             SetHumanPoseControl(jointsPosition[0], rootRotation, jointsRotation, _mirrorOnYAxis);
 
             if (ZEDBodyTrackingManager.DisplaySDKSkeleton)
