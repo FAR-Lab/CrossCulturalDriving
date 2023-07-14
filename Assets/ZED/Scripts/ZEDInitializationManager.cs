@@ -21,10 +21,6 @@ public class ZEDInitializationManager : NetworkBehaviour
         if (actionState == ActionState.READY)
         {
             GameObject ZEDManagerInstance = Instantiate(ZEDManager, this.transform);
-            // create a cube
-            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.AddComponent<NetworkObject>();
-            cube.GetComponent<NetworkObject>().Spawn();
         }
 
 

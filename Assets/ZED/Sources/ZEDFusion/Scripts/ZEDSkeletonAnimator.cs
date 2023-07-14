@@ -121,26 +121,29 @@ public class ZEDSkeletonAnimator : MonoBehaviour
         }
     }
 
-public void OffsetAngle(Transform lookat){
+public void OffsetAngle(Vector3 lookat){
     // get transform of hip
     Transform hip = animator.GetBoneTransform(HumanBodyBones.Hips);
     Quaternion hipRotation = hip.rotation;
 
-    Vector3 direction = hip.position - lookat.position;
+    // find the lookat vector
+    Vector3 direction = hip.position - lookat;
 
     if(direction.magnitude > 0.1f) 
     {
+        // normalize both hip and direction
+        // ZED space and Unity Space's direction is different - need extra flipping for vectors
         Vector3 hipForward = hip.forward;
         hipForward = new Vector3(hipForward.x, 0, hipForward.z);
-        Vector3 toDirection = direction.normalized;
-        toDirection = new Vector3(toDirection.x, 0, -toDirection.z);
+        Vector3 normalizedDirection = direction.normalized;
+        normalizedDirection = new Vector3(normalizedDirection.x, 0, -normalizedDirection.z);
 
-        Debug.Log("hipForward: " + hipForward);
-        Debug.Log("toDirection: " + toDirection);
+        //Debug.Log("hipForward: " + hipForward);
+        //Debug.Log("toDirection: " + toDirection);
 
         // calculate arctan between hip forward and direction
-        float angle = Vector3.SignedAngle(hipForward, toDirection, Vector3.up);
-        Debug.Log("angleOffset: " + angle);
+        float angle = Vector3.SignedAngle(hipForward, normalizedDirection, Vector3.up);
+        //Debug.Log("angleOffset: " + angle);
         angleOffset.y += angle;
     }
 }

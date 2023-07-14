@@ -93,7 +93,7 @@ public class ZEDBodyTrackingManager : NetworkBehaviour
     public KeyCode increaseSkeOffsetXKey = KeyCode.LeftArrow;
     public KeyCode decreaseSkeOffsetXKey = KeyCode.RightArrow;
 
-    public Dictionary<int,SkeletonHandler> avatarControlList;
+    public Dictionary<int, SkeletonHandler> avatarControlList;
     public ZEDStreamingClient zedStreamingClient;
     public bool EnableSmoothing { get => enableSmoothing; set => enableSmoothing = value; }
     public bool EnableFootIK { get => enableFootIK; set => enableFootIK = value; }
@@ -105,12 +105,12 @@ public class ZEDBodyTrackingManager : NetworkBehaviour
     /// Start this instance.
     /// </summary>
 
-    
+
     private void Start()
     {
         QualitySettings.vSyncCount = 1; // Activate vsync
 
-        avatarControlList = new Dictionary<int,SkeletonHandler> ();
+        avatarControlList = new Dictionary<int, SkeletonHandler>();
         if (!zedStreamingClient)
         {
             zedStreamingClient = FindObjectOfType<ZEDStreamingClient>();
@@ -119,7 +119,7 @@ public class ZEDBodyTrackingManager : NetworkBehaviour
         zedStreamingClient.OnNewDetection += UpdateSkeletonData;
     }
 
-	private void OnDestroy()
+    private void OnDestroy()
     {
         if (zedStreamingClient)
         {
@@ -127,17 +127,17 @@ public class ZEDBodyTrackingManager : NetworkBehaviour
         }
     }
 
-	/// <summary>
-	/// Updates the skeleton data from ZEDCamera call and send it to Skeleton Handler script.
-	/// </summary>
+    /// <summary>
+    /// Updates the skeleton data from ZEDCamera call and send it to Skeleton Handler script.
+    /// </summary>
     private void UpdateSkeletonData(sl.Bodies bodies)
     {
-		List<int> remainingKeyList = new List<int>(avatarControlList.Keys);
-		List<sl.BodyData> newBodies = new List<sl.BodyData>(bodies.body_list);
+        List<int> remainingKeyList = new List<int>(avatarControlList.Keys);
+        List<sl.BodyData> newBodies = new List<sl.BodyData>(bodies.body_list);
 
         foreach (sl.BodyData bodyData in newBodies)
         {
-			int person_id = bodyData.id;
+            int person_id = bodyData.id;
 
             if (bodyData.tracking_state == sl.OBJECT_TRACK_STATE.OK)
             {
@@ -164,66 +164,66 @@ public class ZEDBodyTrackingManager : NetworkBehaviour
                     }
                 }
             }
-		}
+        }
 
         foreach (int index in remainingKeyList)
-		{
-			SkeletonHandler handler = avatarControlList[index];
-			handler.Destroy();
-			avatarControlList.Remove(index);
-		}
+        {
+            SkeletonHandler handler = avatarControlList[index];
+            handler.Destroy();
+            avatarControlList.Remove(index);
+        }
     }
 
-	public void Update()
-	{
+    public void Update()
+    {
         DisplaySDKSkeleton = displaySDKSkeleton;
         OffsetSDKSkeleton = offsetSDKSkeleton;
 
-            //if (Input.GetKeyDown(KeyCode.Space))
-            //{
-            //    useAvatar = !useAvatar;
-            //}
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    useAvatar = !useAvatar;
+        //}
 
-            if (Input.GetKeyDown(KeyCode.Keypad0))
-            {
-                displaySDKSkeleton = !displaySDKSkeleton;
-            }
+        if (Input.GetKeyDown(KeyCode.Keypad0))
+        {
+            displaySDKSkeleton = !displaySDKSkeleton;
+        }
 
-            if (Input.GetKeyDown(toggleFootIK))
-            {
-                enableFootIK = !enableFootIK;
-            }
+        if (Input.GetKeyDown(toggleFootIK))
+        {
+            enableFootIK = !enableFootIK;
+        }
 
-            if (Input.GetKeyDown(toggleFootLock))
-            {
-                enableFootLocking = !enableFootLocking;
-            }
+        if (Input.GetKeyDown(toggleFootLock))
+        {
+            enableFootLocking = !enableFootLocking;
+        }
 
-            if (Input.GetKeyDown(toggleMirrorMode))
-            {
-                mirrorMode = !mirrorMode;
-            }
+        if (Input.GetKeyDown(toggleMirrorMode))
+        {
+            mirrorMode = !mirrorMode;
+        }
 
-            if (Input.GetKeyDown(increaseOffsetKey))
-            {
-                manualOffset.y += offsetStep;
-            }
-            else if (Input.GetKeyDown(decreaseOffsetKey))
-            {
-                manualOffset.y -= offsetStep;
-            }
-            else if (Input.GetKeyDown(increaseSkeOffsetXKey))
-            {
-                offsetSDKSkeleton.x += offsetStep;
-            }
-            else if (Input.GetKeyDown(decreaseSkeOffsetXKey))
-            {
-                offsetSDKSkeleton.x -= offsetStep;
-            }
-            if (Input.GetKeyDown(toggleAutomaticHeightOffset))
-            {
-                automaticOffset = !automaticOffset;
-            }
+        if (Input.GetKeyDown(increaseOffsetKey))
+        {
+            manualOffset.y += offsetStep;
+        }
+        else if (Input.GetKeyDown(decreaseOffsetKey))
+        {
+            manualOffset.y -= offsetStep;
+        }
+        else if (Input.GetKeyDown(increaseSkeOffsetXKey))
+        {
+            offsetSDKSkeleton.x += offsetStep;
+        }
+        else if (Input.GetKeyDown(decreaseSkeOffsetXKey))
+        {
+            offsetSDKSkeleton.x -= offsetStep;
+        }
+        if (Input.GetKeyDown(toggleAutomaticHeightOffset))
+        {
+            automaticOffset = !automaticOffset;
+        }
 
 
         // Display avatars or not depending on useAvatar setting.
@@ -250,19 +250,23 @@ public class ZEDBodyTrackingManager : NetworkBehaviour
         }
         Quaternion worldGlobalRotation = data.global_root_orientation;
 
+        // custom modifications
         ZEDSkeletonAnimator skeletonAnimator = FindObjectOfType<ZEDSkeletonAnimator>();
-        if(skeletonAnimator != null)
+        if (skeletonAnimator != null)
         {
+            // Modify root rotation
+            // This only rotate the *visual rotation* of the mesh. Does not modify walking path (position)
+            // Walking direction/ root position is independent from root
             Vector3 tempAngle = worldGlobalRotation.eulerAngles;
             tempAngle += skeletonAnimator.angleOffset;
-            
             worldGlobalRotation = Quaternion.Euler(tempAngle);
+
+            // Modify root position to ensure straight walking path
             // construct a rotation matrix from the angle offset
             Matrix4x4 rotationMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(skeletonAnimator.angleOffset), Vector3.one);
             // apply the rotation to the joint position root
             //worldJointsPos[0] += SC_TrackingManager.Singleton.positionOffset;
             worldJointsPos[0] = rotationMatrix.MultiplyPoint(worldJointsPos[0]);
-            
         }
 
         if (data.local_orientation_per_joint.Length > 0 && data.keypoint.Length > 0 && data.keypoint_confidence.Length > 0)

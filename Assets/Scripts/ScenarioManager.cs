@@ -18,7 +18,7 @@ public class ScenarioManager : MonoBehaviour
     public SceneField VisualSceneToUse;
     QNSelectionManager qnmanager;
     public bool ready{ get; private set; } // property
-    private Dictionary<ParticipantOrder, Pose> MySpawnPositions;
+    public Dictionary<ParticipantOrder, Pose> MySpawnPositions;
 
 
     private Transform MyLocalClient;

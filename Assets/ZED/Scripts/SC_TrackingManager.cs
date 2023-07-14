@@ -33,73 +33,74 @@ public class SC_TrackingManager : MonoBehaviour
     #endregion
 
     public ZEDBodyTrackingManager zedBodyTrackingManager;
-
-    //[SerializeField] private Transform origin;
-    
-    [SerializeField] private Transform anchor;
-
+    [SerializeField] private Vector3 anchor;
     private GameObject player;
     private Transform hip;
     private SC_Container container;
-    private Transform lookat;
+    private Vector3 lookat;
     public Vector3 positionOffset = Vector3.zero;
+
+    // set in inspector
+    public ParticipantOrder participantOrder;
+
+    private ScenarioManager scenarioManager;
+
+    void start()
+    {
+
+    }
 
     void Update()
     {
         if (Input.GetKey(KeyCode.Tab))
         {
-            if(Input.GetKeyDown(KeyCode.C)){
-                Calibrate();}
-            if(Input.GetKeyDown(KeyCode.R)){
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                CalibratePosition();
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
                 CalibrateRotation();
             }
         }
 
 
         // draw debug lines
-        if(hip != null & lookat != null)
+        if (hip != null & lookat != null)
         {
-        Debug.DrawLine (hip.position, hip.position + hip.forward, Color.green);
-        Debug.DrawLine (hip.position, lookat.position, Color.red);
+            Debug.DrawLine(hip.position, hip.position + hip.forward, Color.green);
+            Debug.DrawLine(hip.position, lookat, Color.red);
         }
 
     }
 
-    void Calibrate(){
-
+    void CalibratePosition()
+    {
         FindDependencies();
-        OffsetPosition();
-        //container.Calibrate();
-    }
-
-    void CalibrateRotation(){
-                FindDependencies();
-
-        player.GetComponent<ZEDSkeletonAnimator>().OffsetAngle(lookat);
-
-    }
-
-    void OffsetPosition(){
-
-        // offset position
-        positionOffset = anchor.position - hip.position;
+        // find the difference vector
+        positionOffset = anchor - hip.position;
+        // apply difference
         zedBodyTrackingManager.manualOffset += positionOffset;
-        //zedBodyTrackingManager.manualOffset.y = 0;
-
-        // offset rotation
-
     }
 
-    public void FindDependencies(){
+    void CalibrateRotation()
+    {
+        FindDependencies();
+        player.GetComponent<ZEDSkeletonAnimator>().OffsetAngle(lookat);
+    }
+
+    public void FindDependencies()
+    {
         // player Related
         player = GameObject.FindWithTag("Avatar");
         container = player.GetComponentInChildren<SC_Container>();
         hip = player.transform.Find("mixamorig:Hips");
         zedBodyTrackingManager = transform.GetComponentInChildren<ZEDBodyTrackingManager>();
-    
-        // Calibration Related
-        anchor = GameObject.FindWithTag("Anchor").transform;
-        lookat = GameObject.FindWithTag("Lookat").transform;
+
+        scenarioManager = FindObjectOfType<ScenarioManager>();
+        Pose spawnPose = scenarioManager.MySpawnPositions[participantOrder];
+        anchor = spawnPose.position;
+        lookat = spawnPose.position + spawnPose.forward;
 
     }
 

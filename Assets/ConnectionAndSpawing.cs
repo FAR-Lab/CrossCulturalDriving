@@ -240,6 +240,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         }
         else
         {
+            // finish loading visual scene
             SwitchToReady();
         }
     }
@@ -260,6 +261,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                 }
                 else if (ServerState == ActionState.LOADINGVISUALS)
                 {
+                    Debug.Log("SwitchToReady");
                     SwitchToReady();
                 }
 
@@ -418,6 +420,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         }
     }
 
+    // might need to change name here
     private bool SpawnACar_Immediate(ulong clientID)
     {
         ParticipantOrder temp = GetOrder(clientID);
@@ -459,6 +462,9 @@ public class ConnectionAndSpawing : MonoBehaviour
 
                 // checkpoint1
                 case ParticipantObjectSpawnType.PEDESTRIAN:
+                    /* 
+                    SC_TrackingManager pedestrainTrackingManager = SC_TrackingManager.Singleton;
+
                     // find player object with tag -- just for testing the calibration. might need to change in the future.
                     GameObject tempAvatar = GameObject.FindWithTag("Avatar");
                     SC_Container tempContainer = tempAvatar.GetComponentInChildren<SC_Container>();
@@ -470,6 +476,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                     Vector3 difference = anchor.Value.position-hip.position;
                     tempTrackingManager.manualOffset = difference;
                     tempTrackingManager.manualOffset.y = 0;
+                    */
 
 
                     break;
