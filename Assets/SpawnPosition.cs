@@ -7,7 +7,7 @@ using UnityEngine;
 public class SpawnPosition : MonoBehaviour
 {
     public ParticipantOrder StartingId;
-    public ConnectionAndSpawing.ParticipantObjectSpawnType SpawnType;
+    public ConnectionAndSpawing.ParticipantObjectSpawnType SpawnType = ConnectionAndSpawing.ParticipantObjectSpawnType.MAIN;
 
     private Vector3 InitialFacingDirection;
 

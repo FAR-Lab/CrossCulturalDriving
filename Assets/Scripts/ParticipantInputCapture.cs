@@ -24,6 +24,9 @@ public class ParticipantInputCapture : NetworkBehaviour
     public bool ReadyForAssignment = false;
 
     private NetworkVehicleController NetworkedVehicle;
+    private ZEDSkeletonAnimator ZEDAnimator;
+    [SerializeField]
+    private ConnectionAndSpawing.ParticipantObjectSpawnType mySpawnType;
 
     public NetworkVariable<GpsController.Direction> CurrentDirection =
         new NetworkVariable<GpsController.Direction>();
@@ -84,6 +87,8 @@ public class ParticipantInputCapture : NetworkBehaviour
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
             GetComponent<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder);
         }
+
+        //Debug.Log()
     }
 
 
@@ -150,7 +155,6 @@ public class ParticipantInputCapture : NetworkBehaviour
 
                 Debug.Log("Tried to get a new car. Its my Car!");
             }
-
             _transform = NetworkedVehicle.transform.Find("CameraPosition");
         }
         else{
@@ -158,6 +162,34 @@ public class ParticipantInputCapture : NetworkBehaviour
                 "Did not manage to get my Car assigned interactions will not work. Maybe try calling this RPC later.");
         }
     }
+
+    public void SetMySpawnType(ConnectionAndSpawing.ParticipantObjectSpawnType spawnType){
+        mySpawnType = spawnType;
+    }
+
+    public void AssignPedestrianTransform(ZEDSkeletonAnimator tempZEDAnimator, ulong targetClinet){
+        if (IsServer){
+            ZEDAnimator = tempZEDAnimator;
+            _transform = ZEDAnimator.animator.GetBoneTransform(HumanBodyBones.Head);
+            AssignPedestrianTransformClientRPC(ZEDAnimator.NetworkObject, targetClinet);
+        }
+    }
+
+    [ClientRpc]
+    private void AssignPedestrianTransformClientRPC(NetworkObjectReference myPedestrian, ulong targetClient){
+        if (myPedestrian.TryGet(out NetworkObject targetObject)){
+            if (targetClient == OwnerClientId){
+                ZEDAnimator = targetObject.transform.GetComponentInChildren<ZEDSkeletonAnimator>();
+
+                Debug.Log("Tried to get a new pedestrian! Its my pedestrian! ");
+            }
+            _transform = ZEDAnimator.animator.GetBoneTransform(HumanBodyBones.Head);
+        }
+        else{
+            Debug.LogWarning(
+                "Did not manage to get my pedestrian.");
+        }    
+}
 
 
     public void De_AssignCarTransform(ulong targetClient){
@@ -225,23 +257,28 @@ public class ParticipantInputCapture : NetworkBehaviour
 
 
     private void LateUpdate(){
-        if (_transform != null){
-            var transform1 = transform;
-            var transform2 = _transform;
-            transform1.rotation = transform2.rotation * offsetRotation;
-            if (!init && IsLocalPlayer){
-                LastRot = transform1.rotation;
-                init = true;
-                ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
+            if (_transform != null){
+                var transform1 = transform;
+                var transform2 = _transform;
+                transform1.rotation = transform2.rotation * offsetRotation;
+                if (!init && IsLocalPlayer){
+                    LastRot = transform1.rotation;
+                    init = true;
+                    ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
+                }
+
+                transform1.position = transform2.position +
+                                    ((transform1.rotation * Quaternion.Inverse(LastRot)) * offsetPositon);   
             }
-
-            transform1.position = transform2.position +
-                                  ((transform1.rotation * Quaternion.Inverse(LastRot)) * offsetPositon);
-
-            //  if (IsServer) {
-            //   Debug.Log("Updating relative positon on server with: "+offsetPositon.ToString()+" and "+offsetRotation.ToString() );
-            //  }
+     
+        if(mySpawnType == ConnectionAndSpawing.ParticipantObjectSpawnType.PEDESTRIAN){
+            Transform VRCam = transform.FindChildRecursive("CenterEyeAnchor").transform;
+            VRCam.transform.localPosition = Vector3.zero;
         }
+
+        
+
+
     }
 
 

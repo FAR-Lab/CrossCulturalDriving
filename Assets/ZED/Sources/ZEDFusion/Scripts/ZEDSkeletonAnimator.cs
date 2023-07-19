@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-public class ZEDSkeletonAnimator : MonoBehaviour
+public class ZEDSkeletonAnimator : NetworkBehaviour
 {
-    protected Animator animator;
+    public Animator animator;
     private HeightOffsetter heightOffsetter;
 
     #region inspector vars
@@ -105,7 +105,7 @@ public class ZEDSkeletonAnimator : MonoBehaviour
         {
             NetworkObject networkObject = GetComponent<NetworkObject>();
             networkObject.Spawn(false);
-            //DontDestroyOnLoad(networkObject);
+            //Networked version of DontDestroyOnLoad();
         }
     }
 
@@ -121,20 +121,27 @@ public class ZEDSkeletonAnimator : MonoBehaviour
         }
     }
 
-public void OffsetAngle(Vector3 lookat){
+public void OffsetAngle(Vector3 lookat, bool useHead = false){
     // get transform of hip
     Transform hip = animator.GetBoneTransform(HumanBodyBones.Hips);
-    Quaternion hipRotation = hip.rotation;
+    Transform head = animator.GetBoneTransform(HumanBodyBones.Head);
+
+    Transform basePoint;
+    if(useHead){
+        basePoint = head;
+    } else {
+        basePoint = hip;
+    }
 
     // find the lookat vector
-    Vector3 direction = hip.position - lookat;
+    Vector3 direction = basePoint.position - lookat;
 
     if(direction.magnitude > 0.1f) 
     {
         // normalize both hip and direction
         // ZED space and Unity Space's direction is different - need extra flipping for vectors
-        Vector3 hipForward = hip.forward;
-        hipForward = new Vector3(hipForward.x, 0, hipForward.z);
+        Vector3 baseForward = basePoint.forward;
+        baseForward = new Vector3(baseForward.x, 0, baseForward.z);
         Vector3 normalizedDirection = direction.normalized;
         normalizedDirection = new Vector3(normalizedDirection.x, 0, -normalizedDirection.z);
 
@@ -142,7 +149,7 @@ public void OffsetAngle(Vector3 lookat){
         //Debug.Log("toDirection: " + toDirection);
 
         // calculate arctan between hip forward and direction
-        float angle = Vector3.SignedAngle(hipForward, normalizedDirection, Vector3.up);
+        float angle = Vector3.SignedAngle(baseForward, normalizedDirection, Vector3.up);
         //Debug.Log("angleOffset: " + angle);
         angleOffset.y += angle;
     }

@@ -81,7 +81,6 @@ public class ConnectionAndSpawing : MonoBehaviour
             _OrderToClient.Add(or, id);
             _ClientToOrder.Add(id, or);
 
-
             ClientObjects.Add(id, new Dictionary<ParticipantObjectSpawnType, NetworkObject>());
 
 
@@ -393,15 +392,20 @@ public class ConnectionAndSpawing : MonoBehaviour
         SpawnAPlayer(ClientID, true);
     }
 
-    private bool _prepareSpawing(ulong clientID, out Pose? tempPose, out ParticipantObjectSpawnType SpawnType)
+    private bool _prepareSpawing(ulong clientID, out Pose? tempPose, out ParticipantObjectSpawnType spawnType)
     {
-        SpawnType = ParticipantObjectSpawnType.PEDESTRIAN;
-        bool success = true;
-        tempPose = GetScenarioManager().GetStartPose(GetOrder(clientID));
+        // initialize to main for now to avoid errors. Could be removed later
+        spawnType = ParticipantObjectSpawnType.MAIN;
+        
+        bool success = GetScenarioManager().GetStartPose(GetOrder(clientID), out Pose outPose, out ParticipantObjectSpawnType outSpawnType);
+        
+        tempPose = outPose;
         if (tempPose == null)
         {
             success = false;
         }
+
+        spawnType = outSpawnType;
 
         return success;
     }
@@ -416,6 +420,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                 ClientObjects[clientID].ContainsKey(ParticipantObjectSpawnType.MAIN) &&
                 ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null
             );
+            yield return new WaitForSeconds(3);
             SpawnACar_Immediate(clientID);
         }
     }
@@ -435,10 +440,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                     var newCar =
                         Instantiate(CarPrefab,
                         tempPose.Value.position, tempPose.Value.rotation);
-
-
                     newCar.GetComponent<NetworkObject>().Spawn(true);
-
                     if (!fakeCar)
                     {
                         newCar.GetComponent<NetworkVehicleController>().AssignClient(clientID, GetOrder(clientID));
@@ -448,36 +450,23 @@ public class ConnectionAndSpawing : MonoBehaviour
                             ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
                                 .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientID);
                         }
-
                         else
                         {
                             Debug.LogError("Could not find player as I am spawning the CAR. Broken please fix.");
                         }
                     }
-
                     ClientObjects[clientID].Add(ParticipantObjectSpawnType.CAR, newCar.GetComponent<NetworkObject>());
-
-
                     break;
 
-                // checkpoint1
                 case ParticipantObjectSpawnType.PEDESTRIAN:
-                    /* 
-                    SC_TrackingManager pedestrainTrackingManager = SC_TrackingManager.Singleton;
+                    // checkpoint: pedestrain transform
+                    // are these two the same thing?
+                    //GetClientHead(GetOrder(clientID));
 
-                    // find player object with tag -- just for testing the calibration. might need to change in the future.
-                    GameObject tempAvatar = GameObject.FindWithTag("Avatar");
-                    SC_Container tempContainer = tempAvatar.GetComponentInChildren<SC_Container>();
-                    Transform hip = tempAvatar.transform.Find("mixamorig:Hips");
-                    ZEDBodyTrackingManager tempTrackingManager = ZEDInitializationManager.GetComponentInChildren<ZEDBodyTrackingManager>();
-                    //tempAvatar.GetComponent<ZEDSkeletonAnimator>().OffsetAngle();
-
-                    Pose? anchor = tempPose;
-                    Vector3 difference = anchor.Value.position-hip.position;
-                    tempTrackingManager.manualOffset = difference;
-                    tempTrackingManager.manualOffset.y = 0;
-                    */
-
+                    ParticipantInputCapture tempInputCapture = ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>();
+                    ZEDSkeletonAnimator ZEDAnimator = FindObjectOfType<ZEDSkeletonAnimator>();
+                    tempInputCapture.AssignPedestrianTransform(ZEDAnimator, clientID);
+                    tempInputCapture.SetMySpawnType(ParticipantObjectSpawnType.PEDESTRIAN);
 
                     break;
 
@@ -531,9 +520,12 @@ public class ConnectionAndSpawing : MonoBehaviour
         //byte[] connectionData, ulong clientId,
         // NetworkManager.ConnectionApprovedDelegate callback){
         bool approve = false;
-        ParticipantOrder temp = (ParticipantOrder)request.Payload[0];
+        ParticipantOrder tempParticipantOrder = (ParticipantOrder)request.Payload[0];
 
-        approve = AddParticipant(temp, request.ClientNetworkId);
+        approve = AddParticipant(tempParticipantOrder, request.ClientNetworkId);
+        
+        // 23.07.18 try to add participant order to zedmanager
+        ZEDInitializationManager.GetComponentInChildren<SC_TrackingManager>().spawnPositionToCalibrateTo = tempParticipantOrder;
 
         if (!approve)
         {
@@ -635,6 +627,10 @@ public class ConnectionAndSpawing : MonoBehaviour
         NetworkManager.Singleton.NetworkConfig.ConnectionData = new byte[] { (byte)val }; // assigning ID
         _participantOrder = val;
         ParticipantOrder_Set = true;
+
+        // set participant order of ZED manager
+        ZEDInitializationManager.GetComponentInChildren<SC_TrackingManager>().spawnPositionToCalibrateTo = val;
+        Debug.Log($"DEBUGG: set participant order to {val}");
     }
 
     private void Setlanguage(string lang_)
@@ -1024,12 +1020,14 @@ public class ConnectionAndSpawing : MonoBehaviour
                                 TargetClientIds = new ulong[] { clientID }
                             }
                         };
-
-                        ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
-                            .CalibrateClientRPC(clientRpcParams);
+                        // checkpoint - calibrate rpc
+                        ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>().CalibrateClientRPC(clientRpcParams);
                     }
-
                     y += 50;
+                }
+
+                if(GUI.Button(new Rect(400, 200 + y, 100, 25), "Calibrate Pedestrian")){
+
                 }
             }
 

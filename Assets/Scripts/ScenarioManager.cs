@@ -19,7 +19,8 @@ public class ScenarioManager : MonoBehaviour
     QNSelectionManager qnmanager;
     public bool ready{ get; private set; } // property
     public Dictionary<ParticipantOrder, Pose> MySpawnPositions;
-
+    // Get Spawn Type based on Order
+    public Dictionary<ParticipantOrder, ConnectionAndSpawing.ParticipantObjectSpawnType> OrderToType;
 
     private Transform MyLocalClient;
 
@@ -58,15 +59,19 @@ public class ScenarioManager : MonoBehaviour
 
     void Update(){ }
 
-    public Pose? GetStartPose(ParticipantOrder val){
+    public bool GetStartPose(ParticipantOrder val, out Pose pose, out ConnectionAndSpawing.ParticipantObjectSpawnType spawnType){
         GetSpawnPoints();
 
         if (MySpawnPositions != null && MySpawnPositions.Count > 0 && MySpawnPositions.ContainsKey(val)){
-            return MySpawnPositions[val];
+            pose = MySpawnPositions[val];
+            spawnType = OrderToType[val];
+            return true;
         }
         else{
             Debug.Log("Did not find an assigned spawn point");
-            return null;
+            pose = new Pose();
+            spawnType = new ConnectionAndSpawing.ParticipantObjectSpawnType();
+            return false;
         }
     }
 
@@ -74,9 +79,12 @@ public class ScenarioManager : MonoBehaviour
     private void GetSpawnPoints(){
         if (MySpawnPositions == null || MySpawnPositions.Count == 0){
             MySpawnPositions = new Dictionary<ParticipantOrder, Pose>();
+            OrderToType = new Dictionary<ParticipantOrder, ConnectionAndSpawing.ParticipantObjectSpawnType>();
             foreach (SpawnPosition sp in GetComponentsInChildren<SpawnPosition>()){
                 var transform1 = sp.transform;
                 MySpawnPositions[sp.StartingId] = new Pose(transform1.position, transform1.rotation);
+                Debug.Log($"DEBUGG {sp.StartingId} {sp.SpawnType}");
+                OrderToType[sp.StartingId] = sp.SpawnType;
             }
         }
     }

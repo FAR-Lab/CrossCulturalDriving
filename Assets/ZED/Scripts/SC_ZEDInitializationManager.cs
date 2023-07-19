@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-public class ZEDInitializationManager : NetworkBehaviour
+public class SC_ZEDInitializationManager : NetworkBehaviour
 {
     public GameObject ZEDManager;
 
@@ -22,7 +22,5 @@ public class ZEDInitializationManager : NetworkBehaviour
         {
             GameObject ZEDManagerInstance = Instantiate(ZEDManager, this.transform);
         }
-
-
     }
 }

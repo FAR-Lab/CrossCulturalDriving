@@ -263,6 +263,7 @@ public class ZEDBodyTrackingManager : NetworkBehaviour
 
             // Modify root position to ensure straight walking path
             // construct a rotation matrix from the angle offset
+            
             Matrix4x4 rotationMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(skeletonAnimator.angleOffset), Vector3.one);
             // apply the rotation to the joint position root
             //worldJointsPos[0] += SC_TrackingManager.Singleton.positionOffset;

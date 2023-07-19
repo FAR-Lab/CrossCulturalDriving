@@ -35,15 +35,25 @@ public class SC_TrackingManager : MonoBehaviour
     public ZEDBodyTrackingManager zedBodyTrackingManager;
     [SerializeField] private Vector3 anchor;
     private GameObject player;
+    [SerializeField]
     private Transform hip;
+    [SerializeField]
+    private Transform head;
     private SC_Container container;
     private Vector3 lookat;
     public Vector3 positionOffset = Vector3.zero;
+    public bool useHead = true;
 
-    // set in inspector
-    public ParticipantOrder participantOrder;
+    // TODO: which avatar to calibrate - for multi participant applications
+    // Foreseeable issue: ZED's code acutlly doesn't support moving avatars individually, major changes to ZED's code might be needed
+    public ParticipantOrder participantToCalibrateFor;
+
+    // where to calibrate the avatar to
+    public ParticipantOrder spawnPositionToCalibrateTo;
 
     private ScenarioManager scenarioManager;
+
+    private Transform VRHead;
 
     void start()
     {
@@ -62,17 +72,38 @@ public class SC_TrackingManager : MonoBehaviour
             {
                 CalibrateRotation();
             }
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                CalibrateHead();
+            }
         }
 
 
-        // draw debug lines
-        if (hip != null & lookat != null)
+
+    }
+
+    private void CalibrateHead(){
+        VRHead = ConnectionAndSpawing.Singleton.GetClientHead(participantToCalibrateFor);
+        SC_Container container = FindObjectOfType<SC_Container>();
+        container.VRcam = VRHead.gameObject;
+        container.Calibrate();
+
+    }
+
+    void OnDrawGizmos()
+    {
+        if (hip != null & lookat != null & head != null)
         {
-            Debug.DrawLine(hip.position, hip.position + hip.forward, Color.green);
-            Debug.DrawLine(hip.position, lookat, Color.red);
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(hip.position, hip.position + hip.forward * 1000);
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(hip.position, lookat);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(head.position, head.position + head.forward * 1000);
         }
 
     }
+
 
     void CalibratePosition()
     {
@@ -86,7 +117,7 @@ public class SC_TrackingManager : MonoBehaviour
     void CalibrateRotation()
     {
         FindDependencies();
-        player.GetComponent<ZEDSkeletonAnimator>().OffsetAngle(lookat);
+        player.GetComponent<ZEDSkeletonAnimator>().OffsetAngle(lookat, useHead);
     }
 
     public void FindDependencies()
@@ -94,11 +125,13 @@ public class SC_TrackingManager : MonoBehaviour
         // player Related
         player = GameObject.FindWithTag("Avatar");
         container = player.GetComponentInChildren<SC_Container>();
-        hip = player.transform.Find("mixamorig:Hips");
+        hip = player.GetComponentInChildren<ZEDSkeletonAnimator>().animator.GetBoneTransform(HumanBodyBones.Hips);
+        head = player.GetComponentInChildren<ZEDSkeletonAnimator>().animator.GetBoneTransform(HumanBodyBones.Head);
+
         zedBodyTrackingManager = transform.GetComponentInChildren<ZEDBodyTrackingManager>();
 
         scenarioManager = FindObjectOfType<ScenarioManager>();
-        Pose spawnPose = scenarioManager.MySpawnPositions[participantOrder];
+        Pose spawnPose = scenarioManager.MySpawnPositions[spawnPositionToCalibrateTo];
         anchor = spawnPose.position;
         lookat = spawnPose.position + spawnPose.forward;
 
