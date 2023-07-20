@@ -144,6 +144,7 @@ public class ParticipantInputCapture : NetworkBehaviour
             NetworkedVehicle = MyCar;
             _transform = NetworkedVehicle.transform.Find("CameraPosition");
             AssignCarTransformClientRPC(MyCar.NetworkObject, targetClient);
+            // 
         }
     }
 
@@ -156,6 +157,7 @@ public class ParticipantInputCapture : NetworkBehaviour
                 Debug.Log("Tried to get a new car. Its my Car!");
             }
             _transform = NetworkedVehicle.transform.Find("CameraPosition");
+            //
         }
         else{
             Debug.LogWarning(
@@ -175,15 +177,13 @@ public class ParticipantInputCapture : NetworkBehaviour
         }
     }
 
+    // Checkpoint: clientRPC
     [ClientRpc]
     private void AssignPedestrianTransformClientRPC(NetworkObjectReference myPedestrian, ulong targetClient){
         if (myPedestrian.TryGet(out NetworkObject targetObject)){
-            if (targetClient == OwnerClientId){
-                ZEDAnimator = targetObject.transform.GetComponentInChildren<ZEDSkeletonAnimator>();
-
-                Debug.Log("Tried to get a new pedestrian! Its my pedestrian! ");
-            }
-            _transform = ZEDAnimator.animator.GetBoneTransform(HumanBodyBones.Head);
+            ZEDAnimator = targetObject.transform.GetComponentInChildren<ZEDSkeletonAnimator>();
+            Debug.Log("Tried to get a new pedestrian! Its my pedestrian! "); 
+            _transform = ZEDAnimator.animator.GetBoneTransform(HumanBodyBones.Head);   
         }
         else{
             Debug.LogWarning(
@@ -257,30 +257,29 @@ public class ParticipantInputCapture : NetworkBehaviour
 
 
     private void LateUpdate(){
-            if (_transform != null){
-                var transform1 = transform;
-                var transform2 = _transform;
-                transform1.rotation = transform2.rotation * offsetRotation;
-                if (!init && IsLocalPlayer){
-                    LastRot = transform1.rotation;
-                    init = true;
-                    ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
-                }
 
-                transform1.position = transform2.position +
-                                    ((transform1.rotation * Quaternion.Inverse(LastRot)) * offsetPositon);   
+        if (_transform != null)
+        {
+            var VrWorldTransform = transform;
+            var FollowObjectTransform = _transform;
+            VrWorldTransform.rotation = FollowObjectTransform.rotation * offsetRotation;
+            if (!init && IsLocalPlayer)
+            {
+                LastRot = VrWorldTransform.rotation;
+                init = true;
+                ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
             }
+
+            VrWorldTransform.position = FollowObjectTransform.position +
+                                ((VrWorldTransform.rotation * Quaternion.Inverse(LastRot)) * offsetPositon);
+        }
+
      
         if(mySpawnType == ConnectionAndSpawing.ParticipantObjectSpawnType.PEDESTRIAN){
             Transform VRCam = transform.FindChildRecursive("CenterEyeAnchor").transform;
             VRCam.transform.localPosition = Vector3.zero;
         }
-
-        
-
-
     }
-
 
     public void SetNewRotationOffset(Quaternion yawCorrection){
         offsetRotation *= yawCorrection;
