@@ -39,7 +39,8 @@ public class DisableComponents : NetworkBehaviour
 
         else {
             GetComponentInChildren<OVRScreenFade>().enabled = true;
-            GetComponent<OVRCameraRig>().enabled = true;
+            // modified here from true to false for testing
+            GetComponent<OVRCameraRig>().enabled = false;
             GetComponent<OVRCameraRig>().disableEyeAnchorCameras = false;
             foreach (OVRHand tf in GetComponentsInChildren<OVRHand>()) {
                 tf.enabled = true;

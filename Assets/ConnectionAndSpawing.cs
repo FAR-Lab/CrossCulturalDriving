@@ -465,8 +465,9 @@ public class ConnectionAndSpawing : MonoBehaviour
 
                     ParticipantInputCapture tempInputCapture = ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>();
                     ZEDSkeletonAnimator ZEDAnimator = FindObjectOfType<ZEDSkeletonAnimator>();
-                    tempInputCapture.AssignPedestrianTransform(ZEDAnimator, clientID);
                     tempInputCapture.SetMySpawnType(ParticipantObjectSpawnType.PEDESTRIAN);
+
+                    tempInputCapture.AssignPedestrianTransform(ZEDAnimator, clientID);
 
                     break;
 

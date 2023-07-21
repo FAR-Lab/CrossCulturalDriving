@@ -73,8 +73,6 @@ public class ZEDSkeletonAnimator : NetworkBehaviour
 
     private void Awake()
     {
-        Debug.Log("ZED set dont destroy on load");
-
         if(!NetworkManager.Singleton.IsServer)
         {
             // destroy height offsetter if not server

@@ -170,27 +170,42 @@ public class ParticipantInputCapture : NetworkBehaviour
     }
 
     public void AssignPedestrianTransform(ZEDSkeletonAnimator tempZEDAnimator, ulong targetClinet){
+        /*
         if (IsServer){
             ZEDAnimator = tempZEDAnimator;
             _transform = ZEDAnimator.animator.GetBoneTransform(HumanBodyBones.Head);
             AssignPedestrianTransformClientRPC(ZEDAnimator.NetworkObject, targetClinet);
         }
+        */
+        if (IsServer){
+            ZEDAnimator = FindObjectOfType<ZEDSkeletonAnimator>();
+            _transform = ZEDAnimator.animator.GetBoneTransform(HumanBodyBones.Head);
+        }
+
+        AssignPedestrianTransformClientRPC();
     }
 
     // Checkpoint: clientRPC
     [ClientRpc]
-    private void AssignPedestrianTransformClientRPC(NetworkObjectReference myPedestrian, ulong targetClient){
+    private void AssignPedestrianTransformClientRPC(){
+    //private void AssignPedestrianTransformClientRPC(NetworkObjectReference myPedestrian, ulong targetClient){
+        /*
         if (myPedestrian.TryGet(out NetworkObject targetObject)){
-            ZEDAnimator = targetObject.transform.GetComponentInChildren<ZEDSkeletonAnimator>();
+            ZEDAnimator = targetObject.transform.GetComponent<ZEDSkeletonAnimator>();
+
             Debug.Log("Tried to get a new pedestrian! Its my pedestrian! "); 
             _transform = ZEDAnimator.animator.GetBoneTransform(HumanBodyBones.Head);   
+
         }
         else{
             Debug.LogWarning(
                 "Did not manage to get my pedestrian.");
         }    
-}
+        */
 
+        ZEDAnimator = FindObjectOfType<ZEDSkeletonAnimator>();
+        _transform = ZEDAnimator.animator.GetBoneTransform(HumanBodyBones.Head);
+    }
 
     public void De_AssignCarTransform(ulong targetClient){
         if (IsServer){
@@ -275,10 +290,13 @@ public class ParticipantInputCapture : NetworkBehaviour
         }
 
      
+        /*
         if(mySpawnType == ConnectionAndSpawing.ParticipantObjectSpawnType.PEDESTRIAN){
             Transform VRCam = transform.FindChildRecursive("CenterEyeAnchor").transform;
             VRCam.transform.localPosition = Vector3.zero;
         }
+        */
+        
     }
 
     public void SetNewRotationOffset(Quaternion yawCorrection){
