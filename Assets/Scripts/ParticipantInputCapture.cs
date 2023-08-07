@@ -25,6 +25,8 @@ public class ParticipantInputCapture : NetworkBehaviour
 
     private NetworkVehicleController NetworkedVehicle;
 
+    [SerializeField]private ConnectionAndSpawing.ParticipantObjectSpawnType mySpawnType;
+
     public NetworkVariable<GpsController.Direction> CurrentDirection =
         new NetworkVariable<GpsController.Direction>();
 
@@ -41,6 +43,10 @@ public class ParticipantInputCapture : NetworkBehaviour
 
     public ParticipantOrder getMyOrder(){
         return m_participantOrder;
+    }
+
+    public void SetMySpawnType(ConnectionAndSpawing.ParticipantObjectSpawnType spawnType){
+        mySpawnType = spawnType;
     }
 
     public static ParticipantInputCapture GetMyPIC(){

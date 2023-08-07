@@ -403,14 +403,20 @@ public class ConnectionAndSpawing : MonoBehaviour
         SpawnAPlayer(ClientID, true);
     }
 
-    private bool _prepareSpawing(ulong clientID, out Pose? tempPose)
+    // 2023.8.7 modification: add another out value of ParticipantObjectSpawnType
+    private bool _prepareSpawing(ulong clientID, out Pose? tempPose, out ParticipantObjectSpawnType spawnType)
     {
-        bool success = true;
-        tempPose = GetScenarioManager().GetStartPose(GetOrder(clientID));
+        // get the start pose from senarioManager using clientID -> participantOrder
+        ParticipantOrder clientParticipantOrder = GetOrder(clientID);
+        bool success = GetScenarioManager().GetStartPose(clientParticipantOrder, out Pose outPose, out ParticipantObjectSpawnType outSpawnType);
+        
+        tempPose = outPose;
         if (tempPose == null)
         {
             success = false;
         }
+
+        spawnType = outSpawnType;
 
         return success;
     }
@@ -434,44 +440,52 @@ public class ConnectionAndSpawing : MonoBehaviour
         ParticipantOrder temp = GetOrder(clientID);
         if (temp == ParticipantOrder.None) return false;
 
-        if (_prepareSpawing(clientID, out Pose? tempPose))
+        if (_prepareSpawing(clientID, out Pose? tempPose, out ParticipantObjectSpawnType spawnType))
         {
-            var newCar =
-                Instantiate(CarPrefab,
-                    tempPose.Value.position, tempPose.Value.rotation);
+            // get input capture script of this client
+            ParticipantInputCapture clientInputCapture = ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>();
 
+            // switch spawnType. If car, instantiate. If pedestrian, set up pedestrian.
+            switch (spawnType){
+                case ParticipantObjectSpawnType.CAR:
+                    var newCar =
+                        Instantiate(CarPrefab,
+                            tempPose.Value.position, tempPose.Value.rotation);
 
-            newCar.GetComponent<NetworkObject>().Spawn(true);
+                    newCar.GetComponent<NetworkObject>().Spawn(true);
 
-            if (!fakeCare)
-            {
-                newCar.GetComponent<NetworkVehicleController>().AssignClient(clientID, GetOrder(clientID));
+                    if (!fakeCare)
+                    {
+                        newCar.GetComponent<NetworkVehicleController>().AssignClient(clientID, GetOrder(clientID));
 
-#if SPAWNDEBUG
-                Debug.Log("Assigning car to a new partcipant with clinetID:" + clientID.ToString() + " =>" +
-                          newCar.GetComponent<NetworkObject>().NetworkObjectId);
-#endif
-                if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null)
-                {
-                    // ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
-                    //  .AssignCarTransformClientRPC(newCar.GetComponent<NetworkObject>(), GetOrder(clientID), lang,
-                    //        clientRpcParams);
+                        #if SPAWNDEBUG
+                        Debug.Log("Assigning car to a new partcipant with clinetID:" + clientID.ToString() + " =>" +
+                                newCar.GetComponent<NetworkObject>().NetworkObjectId);
+                        #endif
+                        if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null)
+                        {
+                            ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
+                                .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientID);
+                        }
 
-                    ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
-                        .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientID);
-                }
+                        else
+                        {
+                            Debug.LogError("Could not find player as I am spawning the CAR. Broken please fix.");
+                        }
+                    }
+                    clientInputCapture.SetMySpawnType(ParticipantObjectSpawnType.CAR);
 
-                else
-                {
-                    Debug.LogError("Could not find player as I am spawning the CAR. Broken please fix.");
-                }
+                    break;
+
+                case ParticipantObjectSpawnType.PEDESTRIAN:
+                    clientInputCapture.SetMySpawnType(ParticipantObjectSpawnType.PEDESTRIAN);
+                    // maybe use callback here to
+                    // 1. turn off position tracking
+                    // 2. attach VRHead to avatar head (position only, rotation is for calibration process)
+                    break;
             }
-
-            ClientObjects[clientID].Add(ParticipantObjectSpawnType.CAR, newCar.GetComponent<NetworkObject>());
-
             return true;
         }
-
         return false;
     }
 
@@ -480,7 +494,7 @@ public class ConnectionAndSpawing : MonoBehaviour
         ParticipantOrder temp = GetOrder(clientID);
         if (temp == ParticipantOrder.None) return false;
 
-        if (_prepareSpawing(clientID, out Pose? tempPose))
+        if (_prepareSpawing(clientID, out Pose? tempPose, out ParticipantObjectSpawnType spawnType))
         {
             tempPose ??= Pose.identity;
 
@@ -753,6 +767,8 @@ public class ConnectionAndSpawing : MonoBehaviour
     private void SwitchToReady()
     {
         ServerStateChange.Invoke(ActionState.READY);
+        
+
         ServerState = ActionState.READY;
     }
 
@@ -1226,7 +1242,7 @@ public class ConnectionAndSpawing : MonoBehaviour
                     car.transform.GetComponent<Rigidbody>().velocity =
                         Vector3.zero; // Unsafe we are not sure that it has a rigid body
                     car.transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-                    _prepareSpawing(ClinetID.Value, out Pose? tempPose);
+                    _prepareSpawing(ClinetID.Value, out Pose? tempPose, out ParticipantObjectSpawnType spawnType);
                     if (!tempPose.HasValue)
                     {
                         Debug.LogWarning("Did not find a position to reset the participant to." + po);

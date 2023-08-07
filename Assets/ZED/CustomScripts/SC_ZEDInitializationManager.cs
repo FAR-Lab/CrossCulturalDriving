@@ -22,7 +22,10 @@ public class SC_ZEDInitializationManager : MonoBehaviour
     {
         if (actionState == ActionState.READY)
         {
-            GameObject ZEDManagerInstance = Instantiate(ZEDManager, this.transform);
+            // if there isn't instance of ZEDManager exist, instantiate it on server
+            if(FindObjectsOfType<ZEDBodyTrackingManager>() == null){
+                GameObject ZEDManagerInstance = Instantiate(ZEDManager, this.transform);
+            }
         }
     }
 }
