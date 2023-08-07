@@ -746,8 +746,13 @@ public class ConnectionAndSpawing : MonoBehaviour
 
     private string LastLoadedScene = "";
 
+    // modification 1: Add ServerStateChange deledate
+    public delegate void ServerStateChange_delegate(ActionState state);
+    public ServerStateChange_delegate ServerStateChange;
+
     private void SwitchToReady()
     {
+        ServerStateChange.Invoke(ActionState.READY);
         ServerState = ActionState.READY;
     }
 
