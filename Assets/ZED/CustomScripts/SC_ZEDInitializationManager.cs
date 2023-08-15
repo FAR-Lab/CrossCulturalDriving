@@ -1,3 +1,4 @@
+#if USING_ZED
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,3 +30,5 @@ public class SC_ZEDInitializationManager : MonoBehaviour
         }
     }
 }
+
+#endif
