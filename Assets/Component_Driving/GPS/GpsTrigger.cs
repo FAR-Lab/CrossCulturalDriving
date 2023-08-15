@@ -31,7 +31,7 @@ public class GpsTrigger : MonoBehaviour {
                     {ParticipantOrder.E, setDirectionParticipantE},
                     {ParticipantOrder.F, setDirectionParticipantF}
                 };
-            ConnectionAndSpawing.Singleton.UpdateAllGPS(temp);
+            ConnectionAndSpawning.Singleton.UpdateAllGPS(temp);
         }
     }
 }

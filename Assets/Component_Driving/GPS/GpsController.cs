@@ -26,7 +26,7 @@ public class GpsController : ReplayBehaviour
     {
         gpsImagePlane.sprite = spriteForDirection(defaultDirection);
         // AltLanguge = SceneStateManager.Instance.UseHebrewLanguage;
-        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
+        if (ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN)
         {
             GetComponentInChildren<Canvas>().enabled = true;
             GetComponentInChildren<Image>().enabled = true;
@@ -41,7 +41,7 @@ public class GpsController : ReplayBehaviour
             GpsAudioPlayer = GetComponent<AudioSource>();
         }
 
-        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
+        if (ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN)
         {
             if (previousDirection != (Direction) recordingDirection)
             {
@@ -102,7 +102,7 @@ public class GpsController : ReplayBehaviour
                 GpsAudioPlayer.Play();
             }
 
-            if (ConnectionAndSpawing.Singleton.ServerisRunning)
+            if (ConnectionAndSpawning.Singleton.ServerisRunning)
             {
                 recordingDirection = (int) newDirection;
             }

@@ -245,7 +245,7 @@ public class NetworkVehicleController : NetworkBehaviour
     void Update() {
         if (!IsServer) return;
 
-        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.DRIVE)
+        if (ConnectionAndSpawning.Singleton.ServerState == ActionState.DRIVE)
         {
             if (SteeringWheelManager.Singleton == null || useKeyBoard)
             {
@@ -310,7 +310,7 @@ public class NetworkVehicleController : NetworkBehaviour
                 breakIsOn = false;
             }
         }
-        else if (ConnectionAndSpawing.Singleton.ServerState == ActionState.QUESTIONS)
+        else if (ConnectionAndSpawning.Singleton.ServerState == ActionState.QUESTIONS)
         {
             SteeringInput = 0;
             ThrottleInput = -1;

@@ -39,7 +39,7 @@ public class Speedometer : ReplayBehaviour
             speedTextUnit.gameObject.GetComponent<TextMeshProUGUI>().text = "km/h";
         }
         
-        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
+        if (ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN)
         {
             UpdateSpeed(mySpeed, true);
             GetComponentInChildren<Canvas>().enabled = true;
@@ -56,7 +56,7 @@ public class Speedometer : ReplayBehaviour
 
     private void Update()
     {
-        if (ConnectionAndSpawing.Singleton.ServerState == ActionState.RERUN)
+        if (ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN)
         {
             UpdateSpeed(mySpeed, true);
         }

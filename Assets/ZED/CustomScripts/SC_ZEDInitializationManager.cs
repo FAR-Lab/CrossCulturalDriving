@@ -17,7 +17,7 @@ public class SC_ZEDInitializationManager : MonoBehaviour
     {
         DontDestroyOnLoad(this.gameObject);
 
-        ConnectionAndSpawing.Singleton.ServerStateChange += SetupZED;
+        ConnectionAndSpawning.Singleton.ServerStateChange += SetupZED;
     }
     public void SetupZED(ActionState actionState)
     {
