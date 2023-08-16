@@ -7,85 +7,132 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using UltimateReplay;
 using Unity.Collections;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
-using UnityEngine.UIElements;
 
-public class ParticipantInputCapture : NetworkBehaviour
-{
-    private StateManager _localStateManager;
-    public bool ReadyForAssignment = false;
+public class ParticipantInputCapture : NetworkBehaviour {
+    private const string OffsetFileName = "offset";
+    public bool ReadyForAssignment;
 
-    private NetworkVehicleController NetworkedVehicle;
+    [SerializeField] private ConnectionAndSpawning.ParticipantObjectSpawnType mySpawnType;
 
-    [SerializeField]private ConnectionAndSpawning.ParticipantObjectSpawnType mySpawnType;
-
-    public NetworkVariable<GpsController.Direction> CurrentDirection =
-        new NetworkVariable<GpsController.Direction>();
-
-    private GpsController m_GpsController;
+    public NetworkVariable<GpsController.Direction> CurrentDirection = new();
 
 
     public Transform _transform;
-    public string lang{ private set; get; }
-    private const string OffsetFileName = "offset";
 
-    void Awake(){
+
+    public NetworkVariable<bool> ButtonPushed; // This is only active during QN time 
+    private StateManager _localStateManager;
+    private bool HasNewData;
+    private bool init;
+
+    private NetworkedQuestionnaireQuestion lastQuestion;
+
+    private Quaternion LastRot = Quaternion.identity;
+
+
+    private bool lastValue;
+
+    private GpsController m_GpsController;
+
+    private ParticipantOrder m_participantOrder = ParticipantOrder.None;
+
+    private NetworkVehicleController NetworkedVehicle;
+    private Vector3 offsetPositon = Vector3.zero;
+
+
+    private Quaternion offsetRotation = Quaternion.identity;
+    public string lang { get; }
+
+
+    // OK so I know this is not an elegant solution. We are feeding the image data through the playerobject. Really not great.
+    // maybe we would want to use reliable message 
+
+
+    public bool FinishedImageSending { get; private set; }
+
+    private void Awake() {
         ReadyForAssignment = false;
     }
 
-    public ParticipantOrder getMyOrder(){
+    private void Start() {
+    }
+
+    private void Update() {
+        if (IsLocalPlayer)
+            if (m_GpsController == null && _transform != null) {
+                m_GpsController = _transform.parent.GetComponentInChildren<GpsController>();
+                if (m_GpsController != null) m_GpsController.SetDirection(CurrentDirection.Value);
+            }
+
+        if (IsServer) ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
+    }
+
+
+    private void LateUpdate() {
+        if (_transform != null) {
+            var transform1 = transform;
+            var transform2 = _transform;
+            transform1.rotation = transform2.rotation * offsetRotation;
+            if (!init && IsLocalPlayer) {
+                LastRot = transform1.rotation;
+                init = true;
+                ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
+            }
+
+            transform1.position = transform2.position +
+                                  transform1.rotation * Quaternion.Inverse(LastRot) * offsetPositon;
+
+            //  if (IsServer) {
+            //   Debug.Log("Updating relative positon on server with: "+offsetPositon.ToString()+" and "+offsetRotation.ToString() );
+            //  }
+        }
+    }
+
+    private void OnGUI() {
+        if (IsLocalPlayer)
+            GUI.Label(new Rect(200, 5, 150, 100), "Client State" + _localStateManager.GlobalState.Value);
+    }
+
+    public ParticipantOrder getMyOrder() {
         return m_participantOrder;
     }
 
-    public void SetMySpawnType(ConnectionAndSpawning.ParticipantObjectSpawnType spawnType){
+    public void SetMySpawnType(ConnectionAndSpawning.ParticipantObjectSpawnType spawnType) {
         mySpawnType = spawnType;
     }
 
-    public static ParticipantInputCapture GetMyPIC(){
-        foreach (ParticipantInputCapture pic in FindObjectsOfType<ParticipantInputCapture>()){
-            if (pic.IsLocalPlayer){
+    public static ParticipantInputCapture GetMyPIC() {
+        foreach (var pic in FindObjectsOfType<ParticipantInputCapture>())
+            if (pic.IsLocalPlayer)
                 return pic;
-            }
-        }
 
         return null;
     }
 
-    private void Start(){ }
-
-    private void NewGpsDirection(GpsController.Direction previousvalue, GpsController.Direction newvalue){
-        if (m_GpsController != null){
-            m_GpsController.SetDirection(newvalue);
-        }
+    private void NewGpsDirection(GpsController.Direction previousvalue, GpsController.Direction newvalue) {
+        if (m_GpsController != null) m_GpsController.SetDirection(newvalue);
     }
 
 
-    public override void OnNetworkSpawn(){
+    public override void OnNetworkSpawn() {
         if (IsClient && !IsLocalPlayer) return;
-        if (IsLocalPlayer){
+        if (IsLocalPlayer) {
             CurrentDirection.OnValueChanged += NewGpsDirection;
             _localStateManager = GetComponent<StateManager>();
             //ToDo delete
             // NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(
             // QNDataStorageServer.QNContentMessageName, AddQuestionsToTheQueue);
 
-            ConfigFileLoading conf = new ConfigFileLoading();
+            var conf = new ConfigFileLoading();
             conf.Init(OffsetFileName);
-            if (conf.FileAvalible()){
-                conf.LoadLocalOffset(out offsetPositon, out offsetRotation);
-            }
+            if (conf.FileAvalible()) conf.LoadLocalOffset(out offsetPositon, out offsetRotation);
 
             m_participantOrder = ConnectionAndSpawning.Singleton.ParticipantOrder;
         }
-        else if (IsServer){
+        else if (IsServer) {
             m_participantOrder = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
             GetComponent<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder);
@@ -94,32 +141,26 @@ public class ParticipantInputCapture : NetworkBehaviour
 
 
     [ClientRpc]
-    public void UpdateTrafficLightsClientRPC(TrafficLightSupervisor.trafficLightStatus msg){
+    public void UpdateTrafficLightsClientRPC(TrafficLightSupervisor.trafficLightStatus msg) {
         if (!IsLocalPlayer || IsServer) return;
-        foreach (var tmp in FindObjectsOfType<TrafficLightController>()){
-            tmp.UpdatedTrafficlight(msg);
-        }
+        foreach (var tmp in FindObjectsOfType<TrafficLightController>()) tmp.UpdatedTrafficlight(msg);
     }
 
-    private ParticipantOrder m_participantOrder = ParticipantOrder.None;
-
-
-    public NetworkVariable<bool> ButtonPushed; // This is only active during QN time 
-
-    public void GoForPostQuestion(){
+    public void GoForPostQuestion() {
         if (!IsLocalPlayer) return;
         Debug.Log("Waiting for picture upload to finish!");
         StartCoroutine(AwaidFinishingPictureUpload());
     }
 
-    IEnumerator AwaidFinishingPictureUpload(){
+    private IEnumerator AwaidFinishingPictureUpload() {
         yield return new WaitUntil(() =>
             FinishedImageSending
         );
         PostQuestionServerRPC(OwnerClientId);
     }
+
     [ServerRpc]
-    public void PostQuestionServerRPC(ulong clientID){
+    public void PostQuestionServerRPC(ulong clientID) {
         ConnectionAndSpawning.Singleton.FinishedQuestionair(clientID);
     }
 
@@ -131,17 +172,12 @@ public class ParticipantInputCapture : NetworkBehaviour
 
 
     [ClientRpc]
-    public void SetGPSClientRpc(GpsController.Direction[] dir){
+    public void SetGPSClientRpc(GpsController.Direction[] dir) {
         // GetComponentInChildren<GpsController>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
     }
 
-    private void OnGUI(){
-        if (IsLocalPlayer)
-            GUI.Label(new Rect(200, 5, 150, 100), "Client State" + _localStateManager.GlobalState.Value);
-    }
-
-    public void AssignCarTransform(NetworkVehicleController MyCar, ulong targetClient){
-        if (IsServer){
+    public void AssignCarTransform(NetworkVehicleController MyCar, ulong targetClient) {
+        if (IsServer) {
             NetworkedVehicle = MyCar;
             _transform = NetworkedVehicle.transform.Find("CameraPosition");
             AssignCarTransformClientRPC(MyCar.NetworkObject, targetClient);
@@ -149,9 +185,9 @@ public class ParticipantInputCapture : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void AssignCarTransformClientRPC(NetworkObjectReference MyCar, ulong targetClient){
-        if (MyCar.TryGet(out NetworkObject targetObject)){
-            if (targetClient == OwnerClientId){
+    private void AssignCarTransformClientRPC(NetworkObjectReference MyCar, ulong targetClient) {
+        if (MyCar.TryGet(out var targetObject)) {
+            if (targetClient == OwnerClientId) {
                 NetworkedVehicle = targetObject.transform.GetComponent<NetworkVehicleController>();
 
                 Debug.Log("Tried to get a new car. Its my Car!");
@@ -159,22 +195,22 @@ public class ParticipantInputCapture : NetworkBehaviour
 
             _transform = NetworkedVehicle.transform.Find("CameraPosition");
         }
-        else{
+        else {
             Debug.LogWarning(
                 "Did not manage to get my Car assigned interactions will not work. Maybe try calling this RPC later.");
         }
     }
 
 
-    public void De_AssignCarTransform(ulong targetClient){
-        if (IsServer){
+    public void De_AssignCarTransform(ulong targetClient) {
+        if (IsServer) {
             NetworkedVehicle = null;
             De_AssignCarTransformClientRPC(targetClient);
         }
     }
 
     [ClientRpc]
-    private void De_AssignCarTransformClientRPC(ulong targetClient){
+    private void De_AssignCarTransformClientRPC(ulong targetClient) {
         NetworkedVehicle = null;
         _transform = null;
         DontDestroyOnLoad(gameObject);
@@ -183,7 +219,7 @@ public class ParticipantInputCapture : NetworkBehaviour
 
 
     [ClientRpc]
-    public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default){
+    public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default) {
         if (!IsLocalPlayer) return;
         GetComponent<SeatCalibration>().StartCalibration(
             NetworkedVehicle.transform.Find("SteeringCenter"),
@@ -192,82 +228,35 @@ public class ParticipantInputCapture : NetworkBehaviour
         Debug.Log("Calibrate ClientRPC");
     }
 
-    void Update(){
-        if (IsLocalPlayer){
-            if (m_GpsController == null && _transform != null){
-                m_GpsController = _transform.parent.GetComponentInChildren<GpsController>();
-                if (m_GpsController != null){
-                    m_GpsController.SetDirection(CurrentDirection.Value);
-                }
-            }
-        }
-
-        if (IsServer){
-            ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
-        }
-    }
-
-
-    private bool lastValue = false;
-
-    public bool ButtonPush(){
-        if (lastValue == true && ButtonPushed.Value == false){
+    public bool ButtonPush() {
+        if (lastValue && ButtonPushed.Value == false) {
             lastValue = ButtonPushed.Value;
             Debug.Log("Button Got pushed!!");
             return true;
         }
-        else{
-            lastValue = ButtonPushed.Value;
-            return false;
-        }
+
+        lastValue = ButtonPushed.Value;
+        return false;
     }
 
 
-    private Quaternion offsetRotation = Quaternion.identity;
-    private Vector3 offsetPositon = Vector3.zero;
-
-    private Quaternion LastRot = Quaternion.identity;
-    private bool init = false;
-
-
-    private void LateUpdate(){
-        if (_transform != null){
-            var transform1 = transform;
-            var transform2 = _transform;
-            transform1.rotation = transform2.rotation * offsetRotation;
-            if (!init && IsLocalPlayer){
-                LastRot = transform1.rotation;
-                init = true;
-                ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
-            }
-
-            transform1.position = transform2.position +
-                                  ((transform1.rotation * Quaternion.Inverse(LastRot)) * offsetPositon);
-
-            //  if (IsServer) {
-            //   Debug.Log("Updating relative positon on server with: "+offsetPositon.ToString()+" and "+offsetRotation.ToString() );
-            //  }
-        }
-    }
-
-
-    public void SetNewRotationOffset(Quaternion yawCorrection){
+    public void SetNewRotationOffset(Quaternion yawCorrection) {
         offsetRotation *= yawCorrection;
     }
 
-    public void SetNewPositionOffset(Vector3 positionOffset){
+    public void SetNewPositionOffset(Vector3 positionOffset) {
         offsetPositon += positionOffset;
     }
 
-    public void FinishedCalibration(){
-        ConfigFileLoading conf = new ConfigFileLoading();
+    public void FinishedCalibration() {
+        var conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
         conf.StoreLocalOffset(offsetPositon, offsetRotation);
         ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
     }
 
     [ServerRpc]
-    public void ShareOffsetServerRPC(Vector3 offsetPositon, Quaternion offsetRotation, Quaternion InitRotation){
+    public void ShareOffsetServerRPC(Vector3 offsetPositon, Quaternion offsetRotation, Quaternion InitRotation) {
         UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, InitRotation);
         this.offsetPositon = offsetPositon;
         this.offsetRotation = offsetRotation;
@@ -277,7 +266,7 @@ public class ParticipantInputCapture : NetworkBehaviour
 
     [ClientRpc]
     public void UpdateOffsetRemoteClientRPC(Vector3 _offsetPositon, Quaternion _offsetRotation,
-        Quaternion InitRotation){
+        Quaternion InitRotation) {
         if (IsLocalPlayer) return;
 
         offsetPositon = _offsetPositon;
@@ -287,25 +276,25 @@ public class ParticipantInputCapture : NetworkBehaviour
         Debug.Log("Updated Callibrated offsets based on remote poisiton");
     }
 
-    public Transform GetMyCar(){
+    public Transform GetMyCar() {
         return NetworkedVehicle.transform;
     }
 
-    public bool DeleteCallibrationFile(){
-        ConfigFileLoading conf = new ConfigFileLoading();
+    public bool DeleteCallibrationFile() {
+        var conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
         return conf.DeleteFile();
     }
 
 
     [ClientRpc]
-    public void StartQuestionairClientRPC(){
+    public void StartQuestionairClientRPC() {
         if (!IsLocalPlayer) return;
         FindObjectOfType<ScenarioManager>().RunQuestionairNow(transform);
     }
 
 
-    public void SendQNAnswer(int id, int answerIndex, string lang){
+    public void SendQNAnswer(int id, int answerIndex, string lang) {
         if (!IsLocalPlayer) return;
         HasNewData = false;
         SendQNAnswerServerRPC(id, answerIndex, lang);
@@ -313,61 +302,49 @@ public class ParticipantInputCapture : NetworkBehaviour
 
 
     [ServerRpc]
-    public void SendQNAnswerServerRPC(int id, int answerIndex, string lang){
+    public void SendQNAnswerServerRPC(int id, int answerIndex, string lang) {
         if (!IsServer) return;
         ConnectionAndSpawning.Singleton.QNNewDataPoint(m_participantOrder, id, answerIndex, lang);
     }
 
     [ClientRpc]
-    public void RecieveNewQuestionClientRPC(NetworkedQuestionnaireQuestion newq){
+    public void RecieveNewQuestionClientRPC(NetworkedQuestionnaireQuestion newq) {
         if (!IsLocalPlayer) return;
         Debug.Log("Got new data and updated varaible" + HasNewData);
-        if (HasNewData){
+        if (HasNewData)
             Debug.LogWarning("I still had a question ready to go. Losing data here. this should not happen.");
-        }
-        else{
+        else
             HasNewData = true;
-        }
 
         lastQuestion = newq;
     }
 
-    private NetworkedQuestionnaireQuestion lastQuestion;
-    private bool HasNewData = false;
-
-    public bool HasNewQuestion(){
+    public bool HasNewQuestion() {
         return HasNewData;
     }
 
-    public NetworkedQuestionnaireQuestion GetNewQuestion(){
-        if (HasNewData){
+    public NetworkedQuestionnaireQuestion GetNewQuestion() {
+        if (HasNewData) {
             HasNewData = false;
             return lastQuestion;
         }
-        else{
-            Debug.LogError("I did have a new question yet I was asked for one quitting the QN early!");
-            return new NetworkedQuestionnaireQuestion{reply = replyType.FINISHED};
-        }
+
+        Debug.LogError("I did have a new question yet I was asked for one quitting the QN early!");
+        return new NetworkedQuestionnaireQuestion { reply = replyType.FINISHED };
     }
 
     [ClientRpc]
-    public void SetTotalQNCountClientRpc(int outval){
+    public void SetTotalQNCountClientRpc(int outval) {
         if (!IsLocalPlayer) return;
 
         FindObjectOfType<QNSelectionManager>()?.SetTotalQNCount(outval);
     }
 
-
-    // OK so I know this is not an elegant solution. We are feeding the image data through the playerobject. Really not great.
-    // maybe we would want to use reliable message 
-
-
-    public bool FinishedImageSending{ get; private set; }
-
-    public void NewScenario(){
-        FinishedImageSending=true;
+    public void NewScenario() {
+        FinishedImageSending = true;
     }
-    public void InitiateImageTransfere(byte[] Image){
+
+    public void InitiateImageTransfere(byte[] Image) {
         if (!IsLocalPlayer) return;
         if (IsServer) return;
         FinishedImageSending = false;
@@ -376,35 +353,31 @@ public class ParticipantInputCapture : NetworkBehaviour
 
 
 //https://answers.unity.com/questions/1113376/unet-send-big-amount-of-data-over-network-how-to-s.html
-    IEnumerator SendImageData(ParticipantOrder po, byte[] ImageArray){
-        int CurrentDataIndex = 0;
-        int TotalBufferSize = ImageArray.Length;
-        int DebugCounter = 0;
-        while (CurrentDataIndex < TotalBufferSize - 1){
+    private IEnumerator SendImageData(ParticipantOrder po, byte[] ImageArray) {
+        var CurrentDataIndex = 0;
+        var TotalBufferSize = ImageArray.Length;
+        var DebugCounter = 0;
+        while (CurrentDataIndex < TotalBufferSize - 1) {
             //determine the remaining amount of bytes, still need to be sent.
-            int bufferSize = QNDataStorageServer.ByteArraySize;
-            int remaining = TotalBufferSize - CurrentDataIndex;
-            if (remaining < bufferSize){
-                bufferSize = remaining;
-            }
+            var bufferSize = QNDataStorageServer.ByteArraySize;
+            var remaining = TotalBufferSize - CurrentDataIndex;
+            if (remaining < bufferSize) bufferSize = remaining;
 
-            byte[] buffer = new byte[bufferSize];
+            var buffer = new byte[bufferSize];
             Array.Copy(ImageArray, CurrentDataIndex, buffer, 0, bufferSize);
 
-            BasicByteArraySender tmp = new BasicByteArraySender{DataSendArray = buffer};
+            var tmp = new BasicByteArraySender { DataSendArray = buffer };
 
-            FastBufferWriter writer = new FastBufferWriter(bufferSize + 8, Allocator.TempJob);
+            var writer = new FastBufferWriter(bufferSize + 8, Allocator.TempJob);
             writer.WriteNetworkSerializable(tmp);
             NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
-                QNDataStorageServer.imageDataPrefix + po.ToString(),
+                QNDataStorageServer.imageDataPrefix + po,
                 NetworkManager.ServerClientId,
-                writer,
-                NetworkDelivery.ReliableSequenced);
+                writer);
 
             CurrentDataIndex += bufferSize;
 
 
-            
             yield return null;
             writer.Dispose();
         }
@@ -412,12 +385,11 @@ public class ParticipantInputCapture : NetworkBehaviour
         Debug.Log("Finished Sending Picture!");
         FinishedImageSending = true;
         FinishPictureSendingServerRPC(po, TotalBufferSize);
-       
     }
 
 
     [ServerRpc]
-    public void FinishPictureSendingServerRPC(ParticipantOrder po, int length){
+    public void FinishPictureSendingServerRPC(ParticipantOrder po, int length) {
         if (!IsServer) return;
 
         ConnectionAndSpawning.Singleton.GetQnStorageServer().NewRemoteImage(po, length);

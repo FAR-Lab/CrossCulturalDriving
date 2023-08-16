@@ -1,128 +1,109 @@
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
+using sl;
 using UnityEngine;
 
-public class ZEDStreamingClient : MonoBehaviour
-{
-    UdpClient clientData;
-
-    IPEndPoint ipEndPointData;
+public class ZEDStreamingClient : MonoBehaviour {
+    public delegate void onNewDetectionTriggerDelegate(Bodies bodies);
 
     public bool useMulticast = true;
 
     public int port = 20000;
     public string multicastIpAddress = "230.0.0.1";
 
-    public bool showZEDFusionMetrics = false;
-    
-    private object obj = null;
-    private System.AsyncCallback AC;
-    byte[] receivedBytes;
+    public bool showZEDFusionMetrics;
+    private AsyncCallback AC;
 
-    int bufferSize = 10;
-    LinkedList<byte[]> receivedDataBuffer;
+    private readonly int bufferSize = 10;
+    private UdpClient clientData;
+    private DetectionData data;
 
-    bool newDataAvailable = false;
-    sl.DetectionData data;
+    private IPEndPoint ipEndPointData;
 
-    public delegate void onNewDetectionTriggerDelegate(sl.Bodies bodies);
-    public event onNewDetectionTriggerDelegate OnNewDetection;
+    private bool newDataAvailable;
 
-    void Start()
-    {
+    private readonly object obj = null;
+    private byte[] receivedBytes;
+    private LinkedList<byte[]> receivedDataBuffer;
+
+    private void Start() {
         InitializeUDPListener();
     }
-    public void InitializeUDPListener()
-    {
+
+
+    private void Update() {
+        if (IsNewDataAvailable()) {
+            OnNewDetection(GetLastBodiesData());
+            newDataAvailable = false;
+
+            if (ShowFusionMetrics()) {
+                var metrics = GetLastFusionMetrics();
+                var tmpdbg = "";
+                foreach (var camera in metrics.camera_individual_stats)
+                    tmpdbg += "SN : " + camera.sn + " Synced Latency: " + camera.synced_latency + "FPS : " +
+                              camera.received_fps + "\n";
+                Debug.Log(tmpdbg);
+            }
+        }
+    }
+
+    private void OnDestroy() {
+        if (clientData != null) {
+            Debug.Log("Stop receiving ..");
+            clientData.Close();
+        }
+    }
+
+    public event onNewDetectionTriggerDelegate OnNewDetection;
+
+    public void InitializeUDPListener() {
         receivedDataBuffer = new LinkedList<byte[]>();
 
         ipEndPointData = new IPEndPoint(IPAddress.Any, port);
         clientData = new UdpClient();
-        clientData.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, optionValue: true);
+        clientData.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
         clientData.ExclusiveAddressUse = false;
         clientData.EnableBroadcast = false;
 
-        if (useMulticast)
-        {
-            clientData.JoinMulticastGroup(IPAddress.Parse(multicastIpAddress));
-
-        }
+        if (useMulticast) clientData.JoinMulticastGroup(IPAddress.Parse(multicastIpAddress));
         clientData.Client.Bind(ipEndPointData);
 
         clientData.DontFragment = true;
-        AC = new System.AsyncCallback(ReceivedUDPPacket);
+        AC = ReceivedUDPPacket;
         clientData.BeginReceive(AC, obj);
         Debug.Log("UDP - Start Receiving..");
     }
 
-    void ReceivedUDPPacket(System.IAsyncResult result)
-    {
+    private void ReceivedUDPPacket(IAsyncResult result) {
         //stopwatch.Start();
         receivedBytes = clientData.EndReceive(result, ref ipEndPointData);
         ParsePacket();
         clientData.BeginReceive(AC, obj);
     } // ReceiveCallBack
 
-    void ParsePacket()
-    {
-
+    private void ParsePacket() {
         if (receivedDataBuffer.Count == bufferSize) receivedDataBuffer.RemoveFirst();
         receivedDataBuffer.AddLast(receivedBytes);
         newDataAvailable = true;
     }
 
-    public bool IsNewDataAvailable()
-    {
+    public bool IsNewDataAvailable() {
         return newDataAvailable;
     }
 
-    public sl.Bodies GetLastBodiesData()
-    {
-       data = sl.DetectionData.CreateFromJSON(receivedDataBuffer.Last.Value);
+    public Bodies GetLastBodiesData() {
+        data = DetectionData.CreateFromJSON(receivedDataBuffer.Last.Value);
 
-       return data.bodies;
+        return data.bodies;
     }
 
-    public sl.FusionMetrics GetLastFusionMetrics()
-    {
+    public FusionMetrics GetLastFusionMetrics() {
         return data.fusionMetrics;
     }
 
-    public bool ShowFusionMetrics()
-    {
+    public bool ShowFusionMetrics() {
         return showZEDFusionMetrics && data.fusionMetrics != null;
-    }
-
-
-    private void Update()
-    {
-        if (IsNewDataAvailable())
-        {
-            OnNewDetection(GetLastBodiesData());
-            newDataAvailable = false;
-
-            if (ShowFusionMetrics())
-            {
-                sl.FusionMetrics metrics = GetLastFusionMetrics();
-                string tmpdbg = "";
-                foreach (var camera in metrics.camera_individual_stats)
-                {
-                    tmpdbg += "SN : " + camera.sn + " Synced Latency: " + camera.synced_latency + "FPS : " + camera.received_fps + "\n";
-                }
-                Debug.Log(tmpdbg);
-            }
-        }
-    }
-
-    void OnDestroy()
-    {
-        if (clientData != null)
-        {
-            Debug.Log("Stop receiving ..");
-            clientData.Close();
-        }
     }
 }

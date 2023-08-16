@@ -1,27 +1,22 @@
 ﻿//#define debug
 
-using System.IO;
 using System;
-using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
-
-public class QNSelectionManager : MonoBehaviour
-{
+public class QNSelectionManager : MonoBehaviour {
     public GameObject ButtonPrefab;
 
-    public enum QNStates
-    {
+    public enum QNStates {
         IDLE,
         WAITINGFORQUESTION,
         LOADINGQUESTION,
         RESPONSEWAIT,
         FINISH
-    };
+    }
 
     public QNStates m_interalState = QNStates.IDLE;
 
@@ -29,44 +24,44 @@ public class QNSelectionManager : MonoBehaviour
     // private InputAction selectAction;
 
 
-    Text QustionField;
-    selectionBarAnimation sba;
-    List<RectTransform> AnswerFields = new List<RectTransform>();
+    private Text QustionField;
+    private selectionBarAnimation sba;
+    private readonly List<RectTransform> AnswerFields = new();
 
     private ParticipantInputCapture m_MyLocalClient;
-    LayerMask m_RaycastCollidableLayers;
+    private LayerMask m_RaycastCollidableLayers;
 
     private string m_LanguageSelect;
 
     private RectTransform BackButton;
     private Text CountDisplay;
-    NetworkedQuestionnaireQuestion currentActiveQustion;
+    private NetworkedQuestionnaireQuestion currentActiveQustion;
 
-    private int _answerCount = 0;
-    private int _totalCount = 0;
+    private int _answerCount;
+    private int _totalCount;
 
 #if debug
     public List<TextAsset> QNFiles;
 #endif
 
-    Transform ParentPosition;
+    private Transform ParentPosition;
     [FormerlySerializedAs("up")] public float xOffset;
     [FormerlySerializedAs("forward")] public float yOffset;
     [FormerlySerializedAs("left")] public float zOffset;
 
 
-    public void ChangeLanguage(string lang){
+    public void ChangeLanguage(string lang) {
         m_LanguageSelect = lang;
     }
 
-    public void setRelativePosition(Transform t, float up_, float forward_, float left_){
+    public void setRelativePosition(Transform t, float up_, float forward_, float left_) {
         ParentPosition = t;
         xOffset = up_;
         yOffset = forward_;
         zOffset = left_;
     }
 
-    void Start(){
+    private void Start() {
         /*
         selectAction = new InputAction("Select");
         selectAction.AddBinding("<Keyboard>/space");
@@ -108,29 +103,27 @@ public class QNSelectionManager : MonoBehaviour
     public GameObject ScenarioImageHolder;
 
 
-    private Transform newImageHolder = null;
+    private Transform newImageHolder;
 
-    public void AddImage(Texture2D CaptureScenarioImage){
-        if (ScenarioImageHolder == null){
+    public void AddImage(Texture2D CaptureScenarioImage) {
+        if (ScenarioImageHolder == null) {
             Debug.LogError("This is not good. Could not show a picture even-though I was supposed to.!");
             return;
         }
 
-        if (CaptureScenarioImage == null || CaptureScenarioImage.height <= 1 || CaptureScenarioImage.width <= 0){
+        if (CaptureScenarioImage == null || CaptureScenarioImage.height <= 1 || CaptureScenarioImage.width <= 0) {
             Debug.LogWarning("Was supposed to show a picture but did not get anything usable");
             return;
         }
 
-        if (newImageHolder == null){
-            newImageHolder = Instantiate(ScenarioImageHolder, transform).transform;
-        }
+        if (newImageHolder == null) newImageHolder = Instantiate(ScenarioImageHolder, transform).transform;
 
         newImageHolder.gameObject.SetActive(true);
         Debug.Log("Set an image for the image screen!");
         CaptureScenarioImage.Apply();
         const float width = 300;
-        float factor = width / (CaptureScenarioImage.width - 10);
-        if (newImageHolder.GetChild(0).GetComponent<RawImage>() != null){
+        var factor = width / (CaptureScenarioImage.width - 10);
+        if (newImageHolder.GetChild(0).GetComponent<RawImage>() != null) {
             newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical,
                 factor * CaptureScenarioImage.height);
             newImageHolder.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,
@@ -138,7 +131,7 @@ public class QNSelectionManager : MonoBehaviour
             newImageHolder.GetChild(0).GetComponent<RawImage>().texture = CaptureScenarioImage;
             newImageHolder.transform.localPosition = new Vector3(0, factor * CaptureScenarioImage.height + 80, 0f);
         }
-        else{
+        else {
             Debug.Log("Was trying to show a screenshot but well didnt know were really?");
         }
     }
@@ -148,8 +141,8 @@ public class QNSelectionManager : MonoBehaviour
 
     // Update is called once per frame
     public void startAskingTheQuestionairs(Transform mylocalclient, string Condition,
-        string lang){
-        if (m_interalState == QNStates.IDLE){
+        string lang) {
+        if (m_interalState == QNStates.IDLE) {
             ChangeLanguage(lang);
             m_MyLocalClient = mylocalclient.GetComponent<ParticipantInputCapture>();
 
@@ -158,81 +151,70 @@ public class QNSelectionManager : MonoBehaviour
             m_interalState = QNStates.WAITINGFORQUESTION;
             m_MyLocalClient.SendQNAnswerServerRPC(-1, 0, m_LanguageSelect);
         }
-        else{
+        else {
             Debug.LogError("I should really only once start the Questionnaire.");
         }
     }
 
-    void Update(){
-        if (Input.GetKeyUp(KeyCode.Q)){
-            m_interalState = QNStates.FINISH;
-        }
+    private void Update() {
+        if (Input.GetKeyUp(KeyCode.Q)) m_interalState = QNStates.FINISH;
 
-        if (ParentPosition != null){
+        if (ParentPosition != null) {
             transform.rotation = ParentPosition.rotation;
             transform.position = ParentPosition.position +
                                  ParentPosition.rotation * new Vector3(xOffset, yOffset, zOffset);
         }
 
-        switch (m_interalState){
+        switch (m_interalState) {
             case QNStates.IDLE:
                 //Nothing is happening just waiting for something to happen.
                 break;
 
             case QNStates.WAITINGFORQUESTION:
 
-                if (m_MyLocalClient.HasNewQuestion()){
+                if (m_MyLocalClient.HasNewQuestion()) {
                     currentActiveQustion = m_MyLocalClient.GetNewQuestion();
 
-                    if (currentActiveQustion.reply == replyType.NEWQUESTION){
+                    if (currentActiveQustion.reply == replyType.NEWQUESTION)
                         m_interalState = QNStates.LOADINGQUESTION;
-                    }
-                    else if (currentActiveQustion.reply == replyType.FINISHED){
-                        m_interalState = QNStates.FINISH;
-                    }
+                    else if (currentActiveQustion.reply == replyType.FINISHED) m_interalState = QNStates.FINISH;
                 }
 
                 break;
             case QNStates.LOADINGQUESTION:
 
                 updateCountDisaply();
-                foreach (RectTransform r in AnswerFields){
-                    Destroy(r.gameObject);
-                }
+                foreach (var r in AnswerFields) Destroy(r.gameObject);
 
                 AnswerFields.Clear();
 
                 QustionField.text = SetText(currentActiveQustion.QuestionText);
 
-                if (currentActiveQustion.QnImagePath.Length > 0){
-                    try{
+                if (currentActiveQustion.QnImagePath.Length > 0) {
+                    try {
                         AddImage(Resources.Load<Texture2D>(currentActiveQustion.QnImagePath));
                     }
-                    catch(Exception e){
+                    catch (Exception e) {
                         Debug.LogWarning(
                             "I tried to add an image but did not find the image in the referenced path (or something similar). The path was: " +
-                            currentActiveQustion.QnImagePath+e.ToString());
-                        if (newImageHolder != null){
-                            newImageHolder.gameObject.SetActive(false);
-                        }
+                            currentActiveQustion.QnImagePath + e);
+                        if (newImageHolder != null) newImageHolder.gameObject.SetActive(false);
                     }
                 }
-                else{
-                    if (newImageHolder != null){
-                        newImageHolder.gameObject.SetActive(false);
-                    }
+                else {
+                    if (newImageHolder != null) newImageHolder.gameObject.SetActive(false);
                 }
 
-                int i = 0;
+                var i = 0;
 
-                foreach (int a in currentActiveQustion.Answers.Keys){
-                    rayCastButton rcb = Instantiate(ButtonPrefab, this.transform).transform
+                foreach (var a in currentActiveQustion.Answers.Keys) {
+                    var rcb = Instantiate(ButtonPrefab, transform).transform
                         .GetComponentInChildren<rayCastButton>();
                     rcb.initButton(SetText(currentActiveQustion.Answers[a]), a);
-                    RectTransform rtrans = rcb.transform.parent.GetComponentInParent<RectTransform>();
+                    var rtrans = rcb.transform.parent.GetComponentInParent<RectTransform>();
                     AnswerFields.Add(rtrans);
-                    Vector2 tempVector = new Vector2(rtrans.anchoredPosition.x,
-                        (-i * (165 / (currentActiveQustion.Answers.Count))) + 55);
+                    var tempVector = new Vector2(rtrans.anchoredPosition.x,
+                        -i * (165 / currentActiveQustion.Answers.Count) + 55);
                     rtrans.anchoredPosition = tempVector;
                     i++;
                 }
@@ -242,40 +224,40 @@ public class QNSelectionManager : MonoBehaviour
 
 
             case QNStates.RESPONSEWAIT:
-                List<RaycastResult> results = new List<RaycastResult>();
+                var results = new List<RaycastResult>();
                 RaycastHit hit;
-                if (Camera.main == null){
+                if (Camera.main == null) {
                     Debug.Log("This is interesting unloading");
                     return;
                 }
 
-                Ray ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2f,
+                var ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2f,
                     Camera.main.pixelHeight / 2f));
                 LayerMask layerMask = 1 << 5;
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.UseGlobal)){
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.UseGlobal)) {
                     rayCastButton rcb = null;
-                    Transform objectHit = hit.transform;
-                    bool onTarget = false;
+                    var objectHit = hit.transform;
+                    var onTarget = false;
 
-                    if (hit.transform == transform){
+                    if (hit.transform == transform) {
                         sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
                     }
-                    else{
+                    else {
                         rcb = hit.transform.GetComponent<rayCastButton>();
-                        if (rcb != null){
+                        if (rcb != null) {
                             onTarget = true;
                             sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
-                            if (m_MyLocalClient.ButtonPush()){
-                                int AnswerIndex = rcb.activateNextQuestions();
+                            if (m_MyLocalClient.ButtonPush()) {
+                                var AnswerIndex = rcb.activateNextQuestions();
                                 m_MyLocalClient.SendQNAnswer(currentActiveQustion.ID, AnswerIndex, m_LanguageSelect);
                                 _answerCount++;
                                 m_interalState = QNStates.WAITINGFORQUESTION;
                             }
                         }
-                        else{
-                            if (hit.transform.GetComponent<RectTransform>() == BackButton){
+                        else {
+                            if (hit.transform.GetComponent<RectTransform>() == BackButton) {
                                 sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
-                                if (m_MyLocalClient.ButtonPush()){
+                                if (m_MyLocalClient.ButtonPush()) {
                                     _answerCount--;
                                     if (_answerCount < 0) _answerCount = 0;
                                     m_MyLocalClient.SendQNAnswer(-1, -1, m_LanguageSelect);
@@ -289,15 +271,13 @@ public class QNSelectionManager : MonoBehaviour
                 break;
             case QNStates.FINISH:
 
-                if (m_MyLocalClient != null && m_MyLocalClient.IsLocalPlayer){
+                if (m_MyLocalClient != null && m_MyLocalClient.IsLocalPlayer) {
                     m_MyLocalClient.GoForPostQuestion();
 
 
-                    foreach (RectTransform r in AnswerFields){
-                        Destroy(r.gameObject);
-                    }
+                    foreach (var r in AnswerFields) Destroy(r.gameObject);
 
-                    switch (m_LanguageSelect){
+                    switch (m_LanguageSelect) {
                         case "Hebrew":
                             QustionField.text = StringExtension.RTLText("המתן בבקשה");
                             break;
@@ -310,7 +290,7 @@ public class QNSelectionManager : MonoBehaviour
 
                     m_interalState = QNStates.IDLE;
                 }
-                else{
+                else {
                     Debug.LogError("Did not get my local player dont know who to report back to.");
                 }
 
@@ -321,16 +301,16 @@ public class QNSelectionManager : MonoBehaviour
         }
     }
 
-    private string SetText(string text){
+    private string SetText(string text) {
         return m_LanguageSelect.Contains("Hebrew") ? StringExtension.RTLText(text) : text;
     }
 
-    public void SetTotalQNCount(int outval){
+    public void SetTotalQNCount(int outval) {
         _totalCount = outval;
     }
 
-    private void updateCountDisaply(){
-        CountDisplay.text = (1 + _answerCount).ToString() + " / " + _totalCount.ToString();
+    private void updateCountDisaply() {
+        CountDisplay.text = 1 + _answerCount + " / " + _totalCount;
     }
 }
 

@@ -1,61 +1,65 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UltimateReplay;
+﻿using UltimateReplay;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GpsController : ReplayBehaviour
-{
-  public enum Direction:int  { Straight, Left, Right, Stop, Hurry ,Loading,None, StartRight, StartStraight, ComeToStop};
-  [ReplayVar(false)] public int recordingDirection = (int)Direction.None;
+public class GpsController : ReplayBehaviour {
+    public enum Direction {
+        Straight,
+        Left,
+        Right,
+        Stop,
+        Hurry,
+        Loading,
+        None,
+        StartRight,
+        StartStraight,
+        ComeToStop
+    }
+
+    [ReplayVar(false)] public int recordingDirection = (int)Direction.None;
 
 
-
-
-    public Sprite straightImage, leftImage, rightImage, StopImage, HurryImage, LoadingImage, StartRightImage, StartSraightImage, ComeToStopImage;
-    AudioSource GpsAudioPlayer;
+    public Sprite straightImage,
+        leftImage,
+        rightImage,
+        StopImage,
+        HurryImage,
+        LoadingImage,
+        StartRightImage,
+        StartSraightImage,
+        ComeToStopImage;
 
     public Sprite HurryImageEnglish, StopImageEnglish, LoadingImageEnglish;
     public Image gpsImagePlane;
-    bool AltLanguge = false; // should get this from the scene maager
     public Direction defaultDirection;
-    private Direction previousDirection=Direction.None;
+    private readonly bool AltLanguge = false; // should get this from the scene maager
+    private AudioSource GpsAudioPlayer;
+    private Direction previousDirection = Direction.None;
 
     // Use this for initialization
-    void Start()
-    {
+    private void Start() {
         gpsImagePlane.sprite = spriteForDirection(defaultDirection);
         // AltLanguge = SceneStateManager.Instance.UseHebrewLanguage;
-        if (ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN)
-        {
+        if (ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN) {
             GetComponentInChildren<Canvas>().enabled = true;
             GetComponentInChildren<Image>().enabled = true;
         }
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        if (GpsAudioPlayer == null)
-        {
-            GpsAudioPlayer = GetComponent<AudioSource>();
-        }
+    private void Update() {
+        if (GpsAudioPlayer == null) GpsAudioPlayer = GetComponent<AudioSource>();
 
         if (ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN)
-        {
-            if (previousDirection != (Direction) recordingDirection)
-            {
-                SetDirection((Direction) recordingDirection);
-                previousDirection = (Direction) recordingDirection;
+            if (previousDirection != (Direction)recordingDirection) {
+                SetDirection((Direction)recordingDirection);
+                previousDirection = (Direction)recordingDirection;
                 Debug.Log("We are playing back updated the GPS!");
             }
-        }
     }
 
-    Sprite spriteForDirection(Direction d)
-    {
-        switch (d)
-        {
+    private Sprite spriteForDirection(Direction d) {
+        switch (d) {
             case Direction.Straight:
                 return straightImage;
             case Direction.Left:
@@ -64,22 +68,12 @@ public class GpsController : ReplayBehaviour
                 return rightImage;
             case Direction.Stop:
                 if (AltLanguge)
-                {
                     return StopImage;
-                }
-                else
-                {
-                    return StopImageEnglish;
-                }
+                return StopImageEnglish;
             case Direction.Hurry:
                 if (AltLanguge)
-                {
                     return HurryImage;
-                }
-                else
-                {
-                    return HurryImageEnglish;
-                }
+                return HurryImageEnglish;
             case Direction.StartStraight:
                 return StartSraightImage;
             case Direction.StartRight:
@@ -91,21 +85,13 @@ public class GpsController : ReplayBehaviour
         }
     }
 
-    public void SetDirection(Direction newDirection)
-    {
-        if (previousDirection != newDirection)
-        {
+    public void SetDirection(Direction newDirection) {
+        if (previousDirection != newDirection) {
             previousDirection = newDirection;
             gpsImagePlane.sprite = spriteForDirection(newDirection);
-            if (GpsAudioPlayer != null)
-            {
-                GpsAudioPlayer.Play();
-            }
+            if (GpsAudioPlayer != null) GpsAudioPlayer.Play();
 
-            if (ConnectionAndSpawning.Singleton.ServerisRunning)
-            {
-                recordingDirection = (int) newDirection;
-            }
+            if (ConnectionAndSpawning.Singleton.ServerisRunning) recordingDirection = (int)newDirection;
         }
     }
 }

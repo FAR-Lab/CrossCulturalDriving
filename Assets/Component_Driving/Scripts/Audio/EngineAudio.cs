@@ -5,14 +5,13 @@
  * Mozilla Public License is at https://www.mozilla.org/MPL/2.0/
  */
 
-using UnityEngine;
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Audio;
 
-[System.Serializable]
-public class Sample
-{
+[Serializable]
+public class Sample {
     public AudioClip clip;
     public float minRpm;
     public float maxRpm;
@@ -20,15 +19,12 @@ public class Sample
     public float volume;
 }
 
-public class SampleInstance
-{
+public class SampleInstance {
     public Sample sample;
     public AudioSource source;
 }
 
-public class EngineAudio : MonoBehaviour
-{
-
+public class EngineAudio : MonoBehaviour {
     public AudioMixerGroup group;
     public string volumeParamName;
     public List<Sample> samples;
@@ -37,11 +33,9 @@ public class EngineAudio : MonoBehaviour
     private List<SampleInstance> sampleInstances;
 
     // Use this for initialization
-    void Start()
-    {
+    private void Start() {
         sampleInstances = new List<SampleInstance>();
-        foreach (Sample s in samples)
-        {
+        foreach (var s in samples) {
             var instance = new SampleInstance();
             instance.sample = s;
             instance.source = gameObject.AddComponent<AudioSource>();
@@ -52,45 +46,38 @@ public class EngineAudio : MonoBehaviour
             instance.source.loop = true;
             instance.sample.volume = DbToLinear(instance.sample.volume);
             sampleInstances.Add(instance);
-            
         }
     }
 
-    public static float DbToLinear(float db)
-    {
-        return Mathf.Pow(10f, (db / 20f));
+    public static float DbToLinear(float db) {
+        return Mathf.Pow(10f, db / 20f);
     }
 
-    public void SetRPM(float rpm)
-    {
+    public void SetRPM(float rpm) {
         if (sampleInstances == null)
             return;
 
-        for (int i = 0; i < sampleInstances.Count; i++)
-        {
-            SampleInstance instance = sampleInstances[i];
-            if (rpm < instance.sample.minRpm || rpm > instance.sample.maxRpm)
-            {
+        for (var i = 0; i < sampleInstances.Count; i++) {
+            var instance = sampleInstances[i];
+            if (rpm < instance.sample.minRpm || rpm > instance.sample.maxRpm) {
                 instance.source.volume = 0f;
             }
-            else
-            {
+            else {
                 //crossfade
-                if (i >= 1 && sampleInstances[i - 1].sample.maxRpm > rpm)
-                {
+                if (i >= 1 && sampleInstances[i - 1].sample.maxRpm > rpm) {
                     var prevInstance = sampleInstances[i - 1];
-                    float max = prevInstance.sample.maxRpm;
-                    float min = instance.sample.minRpm;
-                    float t = (rpm - min) / (max - min);
+                    var max = prevInstance.sample.maxRpm;
+                    var min = instance.sample.minRpm;
+                    var t = (rpm - min) / (max - min);
                     instance.source.volume = fadeCurve.Evaluate(t) * instance.sample.volume;
                     prevInstance.source.volume = fadeCurve.Evaluate(1 - t) * prevInstance.sample.volume;
                 }
-                else
-                {
+                else {
                     instance.source.volume = instance.sample.volume;
                 }
+
                 //autopitch
-                float pitch = (1 / (instance.sample.autoPitchRoot)) * rpm;
+                var pitch = 1 / instance.sample.autoPitchRoot * rpm;
                 instance.source.pitch = pitch;
             }
         }

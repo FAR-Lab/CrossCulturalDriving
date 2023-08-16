@@ -6,20 +6,20 @@
  */
 
 using UnityEngine;
-using System.Collections;
 
-public enum CollisionStrength { SOFT, MEDIUM, HARD }
+public enum CollisionStrength {
+    SOFT,
+    MEDIUM,
+    HARD
+}
 
 public class CollisionAudio : MonoBehaviour {
-
     public AudioClip[] sidesHard;
     public AudioClip[] frontHard;
     public AudioClip[] sidesMed;
     public AudioClip[] frontMed;
     public AudioClip[] sidesSoft;
     public AudioClip[] frontSoft;
-
-    private AudioSource source;
 
     public float hardVelocity;
     public float mediumVelocity;
@@ -28,55 +28,48 @@ public class CollisionAudio : MonoBehaviour {
     public float mediumVol;
     public float softVol;
 
-    public void Awake()
-    {
+    private AudioSource source;
+
+    public void Awake() {
         source = GetComponent<AudioSource>();
     }
 
-    private static AudioClip SelectRandom(AudioClip[] clips)
-    {
+    private static AudioClip SelectRandom(AudioClip[] clips) {
         return clips[Mathf.RoundToInt(Random.Range(0, clips.Length - 1))];
     }
 
-    public void PlayCollision(Vector3 worldPosition, float relativeVelocity)
-    {
-        Vector3 collisionVec = (worldPosition - transform.root.position);
+    public void PlayCollision(Vector3 worldPosition, float relativeVelocity) {
+        var collisionVec = worldPosition - transform.root.position;
         collisionVec.y = 0;
-        Vector3 flatForward = transform.root.forward;
+        var flatForward = transform.root.forward;
         flatForward.y = 0;
 
         if (collisionVec == Vector3.zero || flatForward == Vector3.zero)
             return;
 
-        bool front = Mathf.Abs(Vector3.Dot(collisionVec.normalized, flatForward.normalized)) > 0.5f;
+        var front = Mathf.Abs(Vector3.Dot(collisionVec.normalized, flatForward.normalized)) > 0.5f;
 
         transform.position = worldPosition;
 
         CollisionStrength strength;
-        float vol = 1f;
-        if (relativeVelocity > hardVelocity)
-        {
+        var vol = 1f;
+        if (relativeVelocity > hardVelocity) {
             strength = CollisionStrength.HARD;
             vol = hardVol;
         }
-        else if (relativeVelocity > mediumVelocity)
-        {
+        else if (relativeVelocity > mediumVelocity) {
             strength = CollisionStrength.MEDIUM;
             vol = mediumVol;
         }
-        else
-        {
+        else {
             strength = CollisionStrength.SOFT;
             vol = softVol;
         }
 
 
-
-        AudioClip clip = frontSoft[0];
+        var clip = frontSoft[0];
         if (front)
-        {
-            switch(strength)
-            {
+            switch (strength) {
                 case CollisionStrength.HARD:
                     clip = SelectRandom(frontHard);
                     break;
@@ -86,11 +79,9 @@ public class CollisionAudio : MonoBehaviour {
                 case CollisionStrength.SOFT:
                     clip = SelectRandom(frontSoft);
                     break;
-            }         
-        } else
-        {
-            switch (strength)
-            {
+            }
+        else
+            switch (strength) {
                 case CollisionStrength.HARD:
                     clip = SelectRandom(sidesHard);
                     break;
@@ -101,9 +92,7 @@ public class CollisionAudio : MonoBehaviour {
                     clip = SelectRandom(sidesSoft);
                     break;
             }
-        }
-        
-        source.PlayOneShot(clip, vol);
 
+        source.PlayOneShot(clip, vol);
     }
 }

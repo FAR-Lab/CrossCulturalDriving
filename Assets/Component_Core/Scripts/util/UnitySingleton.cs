@@ -8,84 +8,73 @@
 using UnityEngine;
 
 /// <summary>
-/// Abstract Unity Component Singleton.
+///     Abstract Unity Component Singleton.
 /// </summary>
-public abstract class UnitySingleton<T> : MonoBehaviour where T : Component
-{
-    protected static T _instance = default(T);
+public abstract class UnitySingleton<T> : MonoBehaviour where T : Component {
+    protected static T _instance;
 
-    public static bool IsInstantiated { get { return _instance != default(T); } }
+    public static bool IsInstantiated => _instance != default(T);
 
-    public static T Instance
-    {
-        get
-        {
-            if(_instance == null)
-            {
-                T t = (T)FindObjectOfType(typeof(T));
-                if(t)
-                {
+    public static T Instance {
+        get {
+            if (_instance == null) {
+                var t = (T)FindObjectOfType(typeof(T));
+                if (t) {
                     _instance = t;
                 }
-                else
-                {
-                    GameObject go = new GameObject();
+                else {
+                    var go = new GameObject();
                     _instance = go.AddComponent<T>();
                     go.name = typeof(T).ToString();
                 }
             }
+
             return _instance;
         }
     }
 
     public static T GetInstance<U>() where U : T {
-        
-        if(_instance == null || !(_instance is U))
-        {
-            U u = FindObjectOfType(typeof(U)) as U;
-            if(u != null)
-            {
+        if (_instance == null || !(_instance is U)) {
+            var u = FindObjectOfType(typeof(U)) as U;
+            if (u != null) {
                 _instance = u;
             }
-            else
-            {
-                GameObject go = new GameObject();
+            else {
+                var go = new GameObject();
                 _instance = go.AddComponent<U>();
                 go.name = typeof(U).ToString();
             }
         }
+
         return _instance;
     }
 
     #region Unity events
-    protected virtual void Awake()
-    {
-         _instance = Instance;
+
+    protected virtual void Awake() {
+        _instance = Instance;
     }
 
 
-    protected virtual void OnDestroy()
-    {
-        if(_instance == this)
-            _instance = default(T);
+    protected virtual void OnDestroy() {
+        if (_instance == this)
+            _instance = default;
     }
 
 
-    protected virtual void OnApplicationQuit()
-    {
-        if(_instance == this)
-            _instance = default(T);
+    protected virtual void OnApplicationQuit() {
+        if (_instance == this)
+            _instance = default;
     }
+
     #endregion
 }
 
 
-public abstract class PersistentUnitySingleton<T> : UnitySingleton<T> where T : Component
-{
-    protected override void Awake()
-    {
+public abstract class PersistentUnitySingleton<T> : UnitySingleton<T> where T : Component {
+    protected override void Awake() {
         base.Awake();
-        if(_instance == this)
+        if (_instance == this)
             DontDestroyOnLoad(gameObject);
     }
 }

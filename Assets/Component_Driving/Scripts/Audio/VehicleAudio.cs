@@ -6,12 +6,8 @@
  */
 
 using UnityEngine;
-using System.Collections;
-using UnityEngine.Audio;
-
 
 public class VehicleAudio : MonoBehaviour {
-
     public EngineAudio engineLoad;
     public EngineAudio engineNoLoad;
     public EngineAudio exhaustLoad;
@@ -21,14 +17,13 @@ public class VehicleAudio : MonoBehaviour {
     public float load;
 
     public AnimationCurve loadFade;
-    public float maxLoadAtten = 0f;
+    public float maxLoadAtten;
     public float maxNoLoadAtten = -3f;
     public float minAtten = -80;
 
     public float maxRpm = 7500;
-    
-	void Update () {
 
+    private void Update() {
         rpm = Mathf.Clamp(rpm, 0, maxRpm);
         load = Mathf.Clamp(load, 0, 1);
 
@@ -37,14 +32,13 @@ public class VehicleAudio : MonoBehaviour {
         engineLoad.SetRPM(rpm);
         exhaustLoad.SetRPM(rpm);
 
-        float loadAtten = minAtten + (loadFade.Evaluate(load) * (maxLoadAtten - minAtten));
-        float noLoadAtten = minAtten + (loadFade.Evaluate(1 - load) * (maxNoLoadAtten - minAtten));
+        var loadAtten = minAtten + loadFade.Evaluate(load) * (maxLoadAtten - minAtten);
+        var noLoadAtten = minAtten + loadFade.Evaluate(1 - load) * (maxNoLoadAtten - minAtten);
 
-        engineNoLoad.group.audioMixer.SetFloat(engineNoLoad.volumeParamName, noLoadAtten);       
+        engineNoLoad.group.audioMixer.SetFloat(engineNoLoad.volumeParamName, noLoadAtten);
         exhaustNoLoad.group.audioMixer.SetFloat(exhaustNoLoad.volumeParamName, noLoadAtten);
 
         engineLoad.group.audioMixer.SetFloat(engineLoad.volumeParamName, loadAtten);
         exhaustLoad.group.audioMixer.SetFloat(exhaustLoad.volumeParamName, loadAtten);
-
     }
 }
