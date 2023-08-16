@@ -6,32 +6,28 @@
  */
 
 using UnityEngine;
-using System.Collections;
 
 public class VehicleAudioTester : MonoBehaviour {
-
-    private float rpmTest;
     private float loadTest;
 
-    VehicleAudio vehicle;
+    private float rpmTest;
 
-	// Use this for initialization
-	void Awake () {
+    private VehicleAudio vehicle;
+
+    // Use this for initialization
+    private void Awake() {
         vehicle = GetComponent<VehicleAudio>();
-	}
+    }
 
-    void OnGUI()
-    {
+    private void Update() {
+        vehicle.rpm = rpmTest;
+        vehicle.load = loadTest;
+    }
+
+    private void OnGUI() {
         rpmTest = GUI.HorizontalSlider(new Rect(20, 20, 400, 40), rpmTest, 500, 7000);
         loadTest = GUI.HorizontalSlider(new Rect(20, 80, 400, 40), loadTest, 0, 1);
         GUI.Label(new Rect(440, 20, 100, 100), "RPM: " + rpmTest);
         GUI.Label(new Rect(440, 80, 100, 100), "Load: " + loadTest);
     }
-
-    void Update()
-    {
-        vehicle.rpm = rpmTest;
-        vehicle.load = loadTest;
-    }
-
 }

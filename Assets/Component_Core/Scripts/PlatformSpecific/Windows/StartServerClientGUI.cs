@@ -1,26 +1,22 @@
 using System;
-using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
+using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
-using Button = UnityEngine.UI.Button;
 
-
-public class StartServerClientGUI : MonoBehaviour
-{
+public class StartServerClientGUI : MonoBehaviour {
     public GameObject ServerStartGUI;
     private Transform ServerGuiSintance;
 
 
     private Text SessionName;
 
-    private void Start(){
+    private void Start() {
 #if UNITY_EDITOR || UNITY_STANDALONE
 
-      
+
         if (ServerStartGUI == null) return;
-        ServerGuiSintance = GameObject.Instantiate(ServerStartGUI).transform;
+        ServerGuiSintance = Instantiate(ServerStartGUI).transform;
 
         SessionName = ServerGuiSintance.Find("PairName")?.GetComponent<InputField>()?.textComponent;
         ServerGuiSintance.Find("IpAddress").GetComponent<Text>().text = LocalIPAddress();
@@ -37,40 +33,7 @@ public class StartServerClientGUI : MonoBehaviour
 #endif
     }
 
-
-    public void StartAsReRuInterfaceCallback(){
-        Debug.Log("Starting as Rerun Button Call!");
-        ConnectionAndSpawning.Singleton.StartReRun();
-        Destroy(ServerGuiSintance.gameObject);
-        this.enabled = false;
-    }
-
-    public void StartAsServerInterfaceCallback(){
-        string tmp = SessionName.text;
-        if (tmp.Length <= 1){
-            tmp = "Unnamed_" + DateTime.Now.ToString("yyyyMMddTHHmmss");
-        }
-
-        ConnectionAndSpawning.Singleton.StartAsServer(tmp);
-        Destroy(ServerGuiSintance.gameObject);
-        this.enabled = false;
-    }
-
-    public void StartAsClientAInterfaceCallback(){
-        ConnectionAndSpawning.Singleton.StartAsClient("English", ParticipantOrder.A, "127.0.0.1", 7777,
-            ResponseDelegate);
-        Destroy(ServerGuiSintance.gameObject);
-        this.enabled = false;
-    }
-
-    public void StartAsClientBInterfaceCallback(){
-        ConnectionAndSpawning.Singleton.StartAsClient("English", ParticipantOrder.B, "127.0.0.1", 7777,
-            ResponseDelegate);
-        Destroy(ServerGuiSintance.gameObject);
-        this.enabled = false;
-    }
-
-    void OnGUI(){
+    private void OnGUI() {
         /*
         if (ServerStarted || ClientStarted)
             return;
@@ -119,29 +82,59 @@ public class StartServerClientGUI : MonoBehaviour
         */
     }
 
-    private void ResponseDelegate(ConnectionAndSpawning.ClienConnectionResponse response){
-        switch (response){
+
+    public void StartAsReRuInterfaceCallback() {
+        Debug.Log("Starting as Rerun Button Call!");
+        ConnectionAndSpawning.Singleton.StartReRun();
+        Destroy(ServerGuiSintance.gameObject);
+        enabled = false;
+    }
+
+    public void StartAsServerInterfaceCallback() {
+        var tmp = SessionName.text;
+        if (tmp.Length <= 1) tmp = "Unnamed_" + DateTime.Now.ToString("yyyyMMddTHHmmss");
+
+        ConnectionAndSpawning.Singleton.StartAsServer(tmp);
+        Destroy(ServerGuiSintance.gameObject);
+        enabled = false;
+    }
+
+    public void StartAsClientAInterfaceCallback() {
+        ConnectionAndSpawning.Singleton.StartAsClient("English", ParticipantOrder.A, "127.0.0.1", 7777,
+            ResponseDelegate);
+        Destroy(ServerGuiSintance.gameObject);
+        enabled = false;
+    }
+
+    public void StartAsClientBInterfaceCallback() {
+        ConnectionAndSpawning.Singleton.StartAsClient("English", ParticipantOrder.B, "127.0.0.1", 7777,
+            ResponseDelegate);
+        Destroy(ServerGuiSintance.gameObject);
+        enabled = false;
+    }
+
+    private void ResponseDelegate(ConnectionAndSpawning.ClienConnectionResponse response) {
+        switch (response) {
             case ConnectionAndSpawning.ClienConnectionResponse.FAILED:
                 Debug.Log("Connection Failed maybe change IP address, participant order (A,b,C, etc.) or the port");
                 Start();
                 break;
             case ConnectionAndSpawning.ClienConnectionResponse.SUCCESS:
                 Debug.Log("We are connected you can stop showing the UI now!");
-                this.enabled = false;
+                enabled = false;
                 break;
         }
     }
 
-    public static string LocalIPAddress(){
+    public static string LocalIPAddress() {
         IPHostEntry host;
-        string localIP = "0.0.0.0";
+        var localIP = "0.0.0.0";
         host = Dns.GetHostEntry(Dns.GetHostName());
-        foreach (IPAddress ip in host.AddressList){
-            if (ip.AddressFamily == AddressFamily.InterNetwork){
+        foreach (var ip in host.AddressList)
+            if (ip.AddressFamily == AddressFamily.InterNetwork) {
                 localIP = ip.ToString();
                 break;
             }
-        }
 
         return localIP;
     }

@@ -6,21 +6,18 @@
  */
 
 using UnityEngine;
-using System.Collections;
 
 public class WindAudio : MonoBehaviour {
-
     public AudioSource wind;
-    public float speed = 0f;
+    public float speed;
     public AnimationCurve speedCurve;
     public float maxSpeed = 100f;
 
-    void Start()
-    {
+    private void Start() {
         wind.Play();
     }
-    
-	void Update () {
+
+    private void Update() {
         wind.volume = speedCurve.Evaluate(speed / maxSpeed);
-	}
+    }
 }

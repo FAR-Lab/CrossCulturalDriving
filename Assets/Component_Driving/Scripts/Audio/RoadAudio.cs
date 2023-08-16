@@ -5,35 +5,37 @@
  * Mozilla Public License is at https://www.mozilla.org/MPL/2.0/
  */
 
-using UnityEngine;
-using System.Collections;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Audio;
+using Random = UnityEngine.Random;
 
-[System.Serializable]
-public class TireSound
-{
+[Serializable]
+public class TireSound {
     public AudioClip clip;
-    public bool usesSpeedCurve = false;
+    public bool usesSpeedCurve;
     public AnimationCurve speedCurve;
     public float maxSpeed;
-    public bool usesTractionCurve = false;
+    public bool usesTractionCurve;
     public AnimationCurve tractionCurve;
     public TractionType tractionType;
     public AudioMixerGroup mixerGroup;
 }
 
-public enum TractionType { ACCELL, BRAKE, MIN}
-
-public class TireSoundInstance
-{
-    public AudioSource source;
-    public TireSound details;
+public enum TractionType {
+    ACCELL,
+    BRAKE,
+    MIN
 }
-public class RoadAudio : MonoBehaviour {
 
+public class TireSoundInstance {
+    public TireSound details;
+    public AudioSource source;
+}
+
+public class RoadAudio : MonoBehaviour {
     public List<TireSound> tireSounds;
-    private List<TireSoundInstance> instances;
 
     public float accellTraction;
     public float brakeTraction;
@@ -47,12 +49,11 @@ public class RoadAudio : MonoBehaviour {
     public AudioSource surfaceBump;
     public List<AudioClip> surfaceBumpClips;
     public AnimationCurve surfaceBumpSpeedCurve;
+    private List<TireSoundInstance> instances;
 
-    public void Awake( )
-    {
+    public void Awake() {
         instances = new List<TireSoundInstance>();
-        foreach (var sound in tireSounds)
-        {
+        foreach (var sound in tireSounds) {
             var instance = new TireSoundInstance();
             instance.details = sound;
             instance.source = gameObject.AddComponent<AudioSource>();
@@ -63,43 +64,31 @@ public class RoadAudio : MonoBehaviour {
             instance.source.loop = true;
             instances.Add(instance);
         }
-
     }
 
-    public void PlaySurfaceBump()
-    {
-        AudioClip clip = surfaceBumpClips[Mathf.RoundToInt(Random.Range(0, surfaceBumpClips.Count - 1))];
-        surfaceBump.PlayOneShot(clip, surfaceBumpSpeedCurve.Evaluate(speed / 100));
-    }
-
-    public void Update()
-    {
-        if(surface == RoadSurface.Offroad)
-        {
+    public void Update() {
+        if (surface == RoadSurface.Offroad) {
             mixer.SetFloat(tarmacVolumeString, -80f);
             mixer.SetFloat(offroadVolumeString, 0f);
-        } else if(surface == RoadSurface.Tarmac)
-        {
+        }
+        else if (surface == RoadSurface.Tarmac) {
             mixer.SetFloat(tarmacVolumeString, 0f);
             mixer.SetFloat(offroadVolumeString, -80f);
         }
-        else if(surface == RoadSurface.Airborne)
-        {
+        else if (surface == RoadSurface.Airborne) {
             mixer.SetFloat(tarmacVolumeString, -80f);
             mixer.SetFloat(offroadVolumeString, -80f);
         }
 
-        foreach(var instance in instances)
-        {
-            float volDB = 0f;
-            if(instance.details.usesSpeedCurve)
-            {
-                float vol = instance.details.speedCurve.Evaluate(speed / instance.details.maxSpeed);
+        foreach (var instance in instances) {
+            var volDB = 0f;
+            if (instance.details.usesSpeedCurve) {
+                var vol = instance.details.speedCurve.Evaluate(speed / instance.details.maxSpeed);
                 volDB -= (1 - vol) * 80f;
             }
-            if(instance.details.usesTractionCurve)
-            {
-                float traction = 1f;
+
+            if (instance.details.usesTractionCurve) {
+                var traction = 1f;
                 switch (instance.details.tractionType) {
                     case TractionType.ACCELL:
                         traction = accellTraction;
@@ -111,12 +100,17 @@ public class RoadAudio : MonoBehaviour {
                         traction = Mathf.Min(accellTraction, brakeTraction);
                         break;
                 }
-                float vol = instance.details.tractionCurve.Evaluate(traction);
+
+                var vol = instance.details.tractionCurve.Evaluate(traction);
                 volDB -= (1 - vol) * 80f;
             }
+
             instance.source.volume = EngineAudio.DbToLinear(volDB);
         }
+    }
 
-
+    public void PlaySurfaceBump() {
+        var clip = surfaceBumpClips[Mathf.RoundToInt(Random.Range(0, surfaceBumpClips.Count - 1))];
+        surfaceBump.PlayOneShot(clip, surfaceBumpSpeedCurve.Evaluate(speed / 100));
     }
 }

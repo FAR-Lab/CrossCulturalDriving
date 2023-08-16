@@ -5,12 +5,12 @@
  * Mozilla Public License is at https://www.mozilla.org/MPL/2.0/
  */
 
-using UnityEngine;
+using System;
 using System.Collections;
+using UnityEngine;
 using UnityEngine.Audio;
 
 public class IgnitionAudio : MonoBehaviour {
-
     public AudioClip engineClip;
     public GameObject enginePosition;
     public AudioClip exhaustClip;
@@ -18,14 +18,13 @@ public class IgnitionAudio : MonoBehaviour {
 
     public AudioMixerGroup mixerGroup;
 
-    private AudioSource engine;
-    private AudioSource exhaust;
-
     public float fadeOutDelay;
     public float fadeOutTime;
 
-    void Awake()
-    {
+    private AudioSource engine;
+    private AudioSource exhaust;
+
+    private void Awake() {
         engine = enginePosition.AddComponent<AudioSource>();
         exhaust = exhaustPosition.AddComponent<AudioSource>();
 
@@ -40,8 +39,7 @@ public class IgnitionAudio : MonoBehaviour {
         exhaust.playOnAwake = false;
     }
 
-    public void Play(System.Action OnComplete)
-    {
+    public void Play(Action OnComplete) {
         engine.volume = 1;
         exhaust.volume = 1;
         engine.Stop();
@@ -51,15 +49,10 @@ public class IgnitionAudio : MonoBehaviour {
         StartCoroutine(_FadeOut(OnComplete));
     }
 
-    IEnumerator _FadeOut(System.Action OnComplete)
-    {
+    private IEnumerator _FadeOut(Action OnComplete) {
         yield return new WaitForSeconds(fadeOutDelay);
 
         if (OnComplete != null)
             OnComplete();
     }
-
-
-
-
 }

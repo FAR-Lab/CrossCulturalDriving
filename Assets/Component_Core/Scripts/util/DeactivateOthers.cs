@@ -1,28 +1,17 @@
-﻿using System;
-using  Unity.Netcode;
-
+﻿using Unity.Netcode;
 using UnityEngine;
-using System.Collections.Generic;
 
+public class DeactivateOthers : NetworkBehaviour {
+    // Update is called once per frame
+    private void Update() {
+    }
 
-public class DeactivateOthers :NetworkBehaviour  {
-  
-    public override void OnNetworkSpawn ()
-    {
-        if (!IsServer)
-        {
+    public override void OnNetworkSpawn() {
+        if (!IsServer) {
             GetComponent<VehicleController>().enabled = false;
-            
-            GetComponent<ForceFeedback>().enabled = false;
-            foreach (WheelCollider wc in GetComponentsInChildren<WheelCollider>())
-            {
-	            wc.enabled = false;
-            }
-        }
-	}
 
-	// Update is called once per frame
-	void Update () {
-     
+            GetComponent<ForceFeedback>().enabled = false;
+            foreach (var wc in GetComponentsInChildren<WheelCollider>()) wc.enabled = false;
+        }
     }
 }

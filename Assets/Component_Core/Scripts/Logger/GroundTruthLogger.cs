@@ -1,33 +1,28 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GroundTruthLogger
-{
-    private Dictionary<ParticipantOrder, NetworkVehicleController> _vehicles;
-    private Dictionary<ParticipantOrder, List<float>> _speeds;
+public class GroundTruthLogger {
+    private Dictionary<ParticipantOrder, bool> _breaks;
+    private Dictionary<ParticipantOrder, bool> _hazardLights;
     private Dictionary<ParticipantOrder, bool> _horn;
 
     private Dictionary<ParticipantOrder, bool> _leftSignal;
     private Dictionary<ParticipantOrder, bool> _rightSignal;
-    private Dictionary<ParticipantOrder, bool> _hazardLights;
-    
-    private Dictionary<ParticipantOrder, bool> _breaks;
+    private Dictionary<ParticipantOrder, List<float>> _speeds;
+    private Dictionary<ParticipantOrder, NetworkVehicleController> _vehicles;
 
     private List<ParticipantOrder> CurrentScenarioPOList;
 
-    
+
     // Start is called before the first frame update
-    public void Init()
-    {
+    public void Init() {
     }
 
-    public void StartScenario(ParticipantOrder[] participantstoCollectFor)
-    {
+    public void StartScenario(ParticipantOrder[] participantstoCollectFor) {
         CurrentScenarioPOList = new List<ParticipantOrder>(participantstoCollectFor);
-        
+
         _vehicles ??= new Dictionary<ParticipantOrder, NetworkVehicleController>();
         _vehicles.Clear();
 
@@ -43,12 +38,11 @@ public class GroundTruthLogger
         _rightSignal.Clear();
         _hazardLights ??= new Dictionary<ParticipantOrder, bool>();
         _hazardLights.Clear();
-        
+
         _breaks ??= new Dictionary<ParticipantOrder, bool>();
         _breaks.Clear();
 
-        foreach (ParticipantOrder po in CurrentScenarioPOList)
-        {
+        foreach (var po in CurrentScenarioPOList) {
             if (po == ParticipantOrder.None) continue;
             Debug.Log(po);
             _vehicles.Add(po, null);
@@ -59,23 +53,18 @@ public class GroundTruthLogger
             _hazardLights.Add(po, false);
             _breaks.Add(po, false);
         }
-       
     }
 
 
-    public void GatherGroundTruth(ref ScenarioLog log)
-    {
+    public void GatherGroundTruth(ref ScenarioLog log) {
         //https://stackoverflow.com/questions/8945272/check-difference-in-seconds-between-two-times
-        log.facts.Add("scenario length", (log.endTime - log.startTime).TotalSeconds.ToString()); 
-        foreach (var po in CurrentScenarioPOList)
-        {
-            if (_speeds[po].Count() > 1)
-            {
+        log.facts.Add("scenario length", (log.endTime - log.startTime).TotalSeconds.ToString());
+        foreach (var po in CurrentScenarioPOList) {
+            if (_speeds[po].Count() > 1) {
                 log.facts.Add(po + " Average Speed: ", _speeds[po].Average().ToString("F4"));
                 log.facts.Add(po + " Standard deviation Speed: ", _speeds[po].StandardDeviation().ToString("F4"));
             }
-            else
-            {
+            else {
                 log.facts.Add(po + " Speed: ", "Failed to collect speed data.");
             }
 
@@ -84,68 +73,54 @@ public class GroundTruthLogger
             log.facts.Add(po + " Left indicator use: ", _leftSignal[po] ? "Yes" : "No");
             log.facts.Add(po + " Right indicator use: ", _rightSignal[po] ? "Yes" : "No");
             log.facts.Add(po + " Hazard indicator use: ", _hazardLights[po] ? "Yes" : "No");
-            
+
             log.facts.Add(po + " break used: ", _breaks[po] ? "Yes" : "No");
-            
         }
+
         CurrentScenarioPOList.Clear();
     }
 
 
     // Update is called once per frame
-    public void Update()
-    {
-        if(
-        _vehicles==null ||
-        _speeds==null ||
-        _horn==null ||
-        _leftSignal==null ||
-        _rightSignal==null||
-        _hazardLights==null ||
-        _breaks==null ){Debug.LogWarning("Started logging but my Dictionaries where not yet set up. :-( very sad!! "); return;}
-           
-        foreach (var po in CurrentScenarioPOList)
-        {
-            
-            
+    public void Update() {
+        if (
+            _vehicles == null ||
+            _speeds == null ||
+            _horn == null ||
+            _leftSignal == null ||
+            _rightSignal == null ||
+            _hazardLights == null ||
+            _breaks == null) {
+            Debug.LogWarning("Started logging but my Dictionaries where not yet set up. :-( very sad!! ");
+            return;
+        }
+
+        foreach (var po in CurrentScenarioPOList) {
             if (_vehicles[po] == null)
-            {
                 _vehicles[po] = ConnectionAndSpawning.Singleton
                     .GetClientObject(po, ConnectionAndSpawning.ParticipantObjectSpawnType.CAR)
                     ?.GetComponent<NetworkVehicleController>();
-            }
 
-            if (_vehicles[po] != null)
-            {
+            if (_vehicles[po] != null) {
                 _speeds[po].Add(_vehicles[po].CurrentSpeed.Value);
-                if (SteeringWheelManager.Singleton.GetButtonInput(po))
-                {
-                    _horn[po] = true;
-                }
+                if (SteeringWheelManager.Singleton.GetButtonInput(po)) _horn[po] = true;
 
-                _vehicles[po].GetIndicatorState(out bool left, out bool right);
+                _vehicles[po].GetIndicatorState(out var left, out var right);
                 if (left) _leftSignal[po] = true;
                 if (right) _rightSignal[po] = true;
                 if (left && right) _hazardLights[po] = true;
 
-                if (SteeringWheelManager.Singleton.GetAccelInput(po) < 0)
-                {
-                    _breaks[po] = true;
-                }
-                
+                if (SteeringWheelManager.Singleton.GetAccelInput(po) < 0) _breaks[po] = true;
             }
         }
     }
 }
 
 
-
 //From https://stackoverflow.com/a/6252351
-public static class Extend
-{
-    public static float StandardDeviation(this IEnumerable<float> values)
-    {
+public static class Extend {
+    public static float StandardDeviation(this IEnumerable<float> values) {
         double avg = values.Average();
-        return (float) Math.Sqrt(values.Average(v => Math.Pow(v - avg, 2)));
+        return (float)Math.Sqrt(values.Average(v => Math.Pow(v - avg, 2)));
     }
 }
