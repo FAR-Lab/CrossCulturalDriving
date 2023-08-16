@@ -46,10 +46,11 @@ public class QNDataStorageServer : MonoBehaviour
 
     public void StartScenario(string name, string sessionName){
         CurrentScenarioLog = new ScenarioLog(name, sessionName);
-        Debug.Log("startedAnewQuestionnaire");
+        Debug.Log("Started a new questionnaire");
 
-        gtLogger.StartScenario(ConnectionAndSpawning.Singleton.GetClientList()
-            .ConvertAll(x => ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(x)).ToArray());
+        gtLogger.StartScenario(
+            ConnectionAndSpawning.Singleton.GetCurrentlyConnectedClients().ToArray()
+            );
     }
 
 
