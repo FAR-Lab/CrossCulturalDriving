@@ -290,7 +290,7 @@ public class farlab_logger : MonoBehaviour {
 
         if (CarA == null) {
             CarA = ConnectionAndSpawning.Singleton.GetClientObject(ParticipantOrder.A,
-                ConnectionAndSpawning.ParticipantObjectSpawnType.CAR);
+                ConnectionAndSpawning.SpawnType.CAR);
         }
         else {
             if (carARigidbody == null) carARigidbody = CarA.GetComponent<Rigidbody>();
@@ -300,7 +300,7 @@ public class farlab_logger : MonoBehaviour {
 
         if (CarB == null) {
             CarB = ConnectionAndSpawning.Singleton.GetClientObject(ParticipantOrder.B,
-                ConnectionAndSpawning.ParticipantObjectSpawnType.CAR);
+                ConnectionAndSpawning.SpawnType.CAR);
         }
         else {
             if (carBRigidbody == null) carBRigidbody = CarB.GetComponent<Rigidbody>();

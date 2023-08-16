@@ -67,9 +67,9 @@ public class SeatCalibration : MonoBehaviour {
 
 
     private Transform cam;
-    private ParticipantInputCapture myPic;
+    private VR_Participant myPic;
 
-    public void StartCalibration(Transform SteeringWheel, Transform camera, ParticipantInputCapture pic) {
+    public void StartCalibration(Transform SteeringWheel, Transform camera, VR_Participant pic) {
         if (callibrationState != SearCalibrationState.CALIBRATING ||
             callibrationState != SearCalibrationState.STARTCALIBRATING) {
             steeringWheelCenter = SteeringWheel;

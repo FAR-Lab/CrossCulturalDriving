@@ -12,7 +12,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     public delegate void ReponseDelegate(ClienConnectionResponse response);
 
 
-    public enum ParticipantObjectSpawnType {
+    public enum SpawnType {
         MAIN,
         CAR,
         PEDESTRIAN
@@ -53,7 +53,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private readonly ParticipantOrderMapping _participants = new();
     private readonly bool ClientListInitDone = false;
 
-    private readonly Dictionary<ulong, Dictionary<ParticipantObjectSpawnType, NetworkObject>> ClientObjects = new();
+    private readonly Dictionary<ulong, Dictionary<SpawnType, NetworkObject>> ClientObjects = new();
 
     private ScenarioManager CurrentScenarioManager;
     private bool FinishedRunningAwaitCorutine = true;
@@ -92,6 +92,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     private void Start() {
+        
+        /*
+         * moved to StartUpManager.cs
+         
         if (Application.platform == RuntimePlatform.Android) {
             // StartAsClient("English", ParticipantOrder.A, "192.168.1.160", 7777, ResponseDelegate);
 
@@ -101,7 +105,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         else {
             GetComponent<StartServerClientGUI>().enabled = true;
         }
-
+*/
         if (FindObjectsOfType<RerunManager>().Length > 1) {
             Debug.LogError("We found more than 1 RerunManager. This is not support. Check your Hiracy");
             Application.Quit();
@@ -119,9 +123,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
         if (NetworkManager.Singleton.IsServer) {
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.Space)) {
                 if (Input.GetKeyUp(KeyCode.A))
-                    ResetParticipantObject(ParticipantOrder.A, ParticipantObjectSpawnType.CAR);
+                    ResetParticipantObject(ParticipantOrder.A, SpawnType.CAR);
                 else if (Input.GetKeyUp(KeyCode.B))
-                    ResetParticipantObject(ParticipantOrder.B, ParticipantObjectSpawnType.CAR);
+                    ResetParticipantObject(ParticipantOrder.B, SpawnType.CAR);
             }
 
             switch (ServerState) {
@@ -219,7 +223,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                             }
                         };
 
-                        ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
+                        ClientObjects[clientID][SpawnType.MAIN].GetComponent<VR_Participant>()
                             .CalibrateClientRPC(clientRpcParams);
                     }
 
@@ -277,7 +281,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     private void ClientDisconnected_client(ulong ClientID) {
-        //        Debug.Log(SuccessFullyConnected);
         if (SuccessFullyConnected) {
             Debug.Log("Quitting due to disconnection.");
             Application.Quit();
@@ -318,7 +321,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         SetupTransport(ip, port);
         Setlanguage(lang_);
         SetParticipantOrder(val);
-        Debug.Log("Starting as Client");
+        Debug.Log("Starting as Client.");
 
         NetworkManager.Singleton.StartClient();
     }
@@ -362,7 +365,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         FindObjectOfType<RerunInputManager>().enabled = true;
 
         SceneManager.sceneLoaded += VisualsceneLoadReRun;
-
+ 
 
         GetComponent<TrafficLightSupervisor>().enabled = true;
     }
@@ -405,8 +408,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     public Transform GetMainClientObject(ulong senderClientId) {
         if (!ClientObjects.ContainsKey(senderClientId)) return null;
-        return ClientObjects[senderClientId].ContainsKey(ParticipantObjectSpawnType.MAIN)
-            ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
+        return ClientObjects[senderClientId].ContainsKey(SpawnType.MAIN)
+            ? ClientObjects[senderClientId][SpawnType.MAIN].transform
             : null;
     }
 
@@ -414,8 +417,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
         bool success= _participants.GetClientID(po, out ulong senderClientId);
         if(!success) return null;
         if (!ClientObjects.ContainsKey(senderClientId)) return null;
-        return ClientObjects[senderClientId].ContainsKey(ParticipantObjectSpawnType.MAIN)
-            ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
+        return ClientObjects[senderClientId].ContainsKey(SpawnType.MAIN)
+            ? ClientObjects[senderClientId][SpawnType.MAIN].transform
             : null;
     }
 
@@ -423,13 +426,13 @@ public class ConnectionAndSpawning : MonoBehaviour {
         bool success= _participants.GetClientID(po, out ulong senderClientId);
         if(!success) return null;
         if (!ClientObjects.ContainsKey(senderClientId)) return null;
-        return ClientObjects[senderClientId].ContainsKey(ParticipantObjectSpawnType.MAIN)
-            ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
+        return ClientObjects[senderClientId].ContainsKey(SpawnType.MAIN)
+            ? ClientObjects[senderClientId][SpawnType.MAIN].transform
                 .FindChildRecursive("CenterEyeAnchor").transform
             : null;
     }
 
-    public Transform GetClientObject(ParticipantOrder po, ParticipantObjectSpawnType type) {
+    public Transform GetClientObject(ParticipantOrder po, SpawnType type) {
         bool success= _participants.GetClientID(po, out ulong senderClientId);
         if(!success) return null;
         if (!ClientObjects.ContainsKey(senderClientId)) return null;
@@ -440,15 +443,13 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     public Transform GetMainClientCameraObject(ParticipantOrder po) {
         if (ServerState == ActionState.RERUN) {
-            foreach (var pic in FindObjectsOfType<ParticipantInputCapture>())
+            foreach (var pic in FindObjectsOfType<VR_Participant>())
                 if (pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder() == po) {
                     Debug.Log("Found the correct participant order trying to find eye anchor");
                     return pic.transform.FindChildRecursive("CenterEyeAnchor");
                     ;
                 }
 
-            //   Debug.Log(po.ToString() +
-            //         pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder());
             Debug.LogWarning("Never found eye anchor for participant: " + po);
             return null;
         }
@@ -456,8 +457,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
         bool success= _participants.GetClientID(po, out ulong senderClientId);
         if(!success) return null;
         if (!ClientObjects.ContainsKey(senderClientId)) return null;
-        var returnVal = ClientObjects[senderClientId].ContainsKey(ParticipantObjectSpawnType.MAIN)
-            ? ClientObjects[senderClientId][ParticipantObjectSpawnType.MAIN].transform
+        var returnVal = ClientObjects[senderClientId].ContainsKey(SpawnType.MAIN)
+            ? ClientObjects[senderClientId][SpawnType.MAIN].transform
             : null;
         return returnVal.FindChildRecursive("CenterEyeAnchor");
     }
@@ -486,8 +487,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
     public void SendNewQuestionToParticipant(ParticipantOrder participantOrder, NetworkedQuestionnaireQuestion outval) {
         bool success = _participants.GetClientID(participantOrder, out ulong clientID);
         if (success) {
-            ClientObjects[clientID][ParticipantObjectSpawnType.MAIN]
-                .GetComponent<ParticipantInputCapture>().RecieveNewQuestionClientRPC(outval);
+            ClientObjects[clientID][SpawnType.MAIN]
+                .GetComponent<VR_Participant>().RecieveNewQuestionClientRPC(outval);
         }
     }
 
@@ -495,9 +496,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
     public void SendTotalQNCount(ParticipantOrder participantOrder, int count) {
         bool success = _participants.GetClientID(participantOrder, out ulong clientID);
         if (success) {
-            ClientObjects[clientID][ParticipantObjectSpawnType.MAIN]
-                .GetComponent<ParticipantInputCapture>().SetTotalQNCountClientRpc(count);
-            Debug.Log("just send total QN count to client: " + participantOrder);
+            ClientObjects[clientID][SpawnType.MAIN]
+                .GetComponent<VR_Participant>().SetTotalQNCountClientRpc(count);
+            Debug.Log("Just send total QN count to client: " + participantOrder);
         }
     }
 
@@ -505,26 +506,26 @@ public class ConnectionAndSpawning : MonoBehaviour {
         return m_ReRunManager;
     }
 
-    private bool ResetParticipantObject(ParticipantOrder po, ParticipantObjectSpawnType objectType) {
+    private bool ResetParticipantObject(ParticipantOrder po, SpawnType objectType) {
         switch (objectType) {
-            case ParticipantObjectSpawnType.MAIN:
+            case SpawnType.MAIN:
                 break;
-            case ParticipantObjectSpawnType.CAR:
+            case SpawnType.CAR:
                 bool success = _participants.GetClientID(po,out ulong ClinetID);
                 if (success && ClientObjects.ContainsKey(ClinetID) &&
-                    ClientObjects[ClinetID].ContainsKey(ParticipantObjectSpawnType.CAR)) {
-                    var car = ClientObjects[ClinetID][ParticipantObjectSpawnType.CAR];
+                    ClientObjects[ClinetID].ContainsKey(SpawnType.CAR)) {
+                    var car = ClientObjects[ClinetID][SpawnType.CAR];
                     car.transform.GetComponent<Rigidbody>().velocity =
                         Vector3.zero; // Unsafe we are not sure that it has a rigid body
                     car.transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-                    _prepareSpawing(ClinetID, out var tempPose, out var spawnType);
-                    if (!tempPose.HasValue) {
+                    success = _GetCurrentSpawingData(ClinetID, out var tempPose, out var spawnType);
+                    if (!success) {
                         Debug.LogWarning("Did not find a position to reset the participant to." + po);
                         return false;
                     }
 
-                    car.transform.position = tempPose.Value.position;
-                    car.transform.rotation = tempPose.Value.rotation;
+                    car.transform.position = tempPose.position;
+                    car.transform.rotation = tempPose.rotation;
                     return true;
                 }
 
@@ -532,7 +533,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
                 break;
-            case ParticipantObjectSpawnType.PEDESTRIAN:
+            case SpawnType.PEDESTRIAN:
                 break;
         }
 
@@ -552,7 +553,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         var testValue = 0f;
         foreach (var val in _participants.GetAllConnectedClients()) {
             var po = GetParticipantOrderClientId(val);
-            var tf = GetClientObject(po, ParticipantObjectSpawnType.CAR);
+            var tf = GetClientObject(po, SpawnType.CAR);
             if (tf != null) {
                 var rb = tf.GetComponent<Rigidbody>();
                 if (rb != null) testValue += rb.velocity.magnitude;
@@ -606,20 +607,16 @@ public class ConnectionAndSpawning : MonoBehaviour {
         NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected;
         NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
         NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
-
-
+        
         NetworkManager.Singleton.StartServer();
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;
-
 
         SteeringWheelManager.Singleton.Init();
     }
 
 
-    private void LocalLoadScene(string name) {
-        DestroyAllClientObjects(new List<ParticipantObjectSpawnType> { ParticipantObjectSpawnType.CAR });
-
-
+    private void ServerLoadScene(string name) {
+        DestroyAllClientObjects(new List<SpawnType> { SpawnType.CAR });
         NetworkManager.Singleton.SceneManager.LoadScene(name, LoadSceneMode.Single);
     }
 
@@ -656,7 +653,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                 if (ServerState == ActionState.READY || ServerState == ActionState.LOADINGVISUALS ||
                     ServerState == ActionState.WAITINGROOM) {
                     Debug.Log("Trying to Spawn A Car!");
-                    StartCoroutine(SpawnACar_Await(sceneEvent.ClientId));
+                    StartCoroutine(Spawn_Interactable_Await(sceneEvent.ClientId));
                 }
                 else {
                     Debug.Log("A client Finished loading But we are not gonna Spawn cause the visuals are missing!");
@@ -668,16 +665,16 @@ public class ConnectionAndSpawning : MonoBehaviour {
             default: throw new ArgumentOutOfRangeException();
         }
     }
-    // DestroyAllClientObjects_OfType(ParticipantObjectSpawnType TypeToDestroy)// TODO would make implementing more features easier
+    // DestroyAllClientObjects_OfType(SpawnType TypeToDestroy)// TODO would make implementing more features easier
 
-    private void DestroyAllClientObjects(List<ParticipantObjectSpawnType> TypesToDestroy) {
-        var destroyMain = TypesToDestroy.Contains(ParticipantObjectSpawnType.MAIN);
-        if (destroyMain) TypesToDestroy.Remove(ParticipantObjectSpawnType.MAIN);
+    private void DestroyAllClientObjects(List<SpawnType> TypesToDestroy) {
+        var destroyMain = TypesToDestroy.Contains(SpawnType.MAIN);
+        if (destroyMain) TypesToDestroy.Remove(SpawnType.MAIN);
 
         foreach (var id in ClientObjects.Keys) {
             foreach (var enumval in TypesToDestroy) DespawnObjectOfType(id, enumval);
 
-            if (destroyMain) DespawnObjectOfType(id, ParticipantObjectSpawnType.MAIN);
+            if (destroyMain) DespawnObjectOfType(id, SpawnType.MAIN);
         }
     }
 
@@ -692,30 +689,30 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private void DespawnAllObjectsforParticipant(ulong clientID) {
         if (ClientObjects.ContainsKey(clientID) && ClientObjects[clientID] != null) {
             var despawnList =
-                new List<ParticipantObjectSpawnType>(ClientObjects[clientID].Keys);
-            if (despawnList.Contains(ParticipantObjectSpawnType.MAIN))
-                despawnList.Remove(ParticipantObjectSpawnType.MAIN);
+                new List<SpawnType>(ClientObjects[clientID].Keys);
+            if (despawnList.Contains(SpawnType.MAIN))
+                despawnList.Remove(SpawnType.MAIN);
 
             foreach (var spawntype in despawnList) DespawnObjectOfType(clientID, spawntype);
         }
     }
 
-    private void DespawnObjectOfType(ulong clientID, ParticipantObjectSpawnType oType) {
+    private void DespawnObjectOfType(ulong clientID, SpawnType oType) {
         if (ClientObjects[clientID].ContainsKey(oType)) {
             Debug.Log("Removing for:" + clientID + " object:" + oType);
             var no = ClientObjects[clientID][oType];
             switch (oType) {
-                case ParticipantObjectSpawnType.MAIN:
+                case SpawnType.MAIN:
                     Debug.Log("WARNING despawing MAIN!");
                     break;
-                case ParticipantObjectSpawnType.CAR:
+                case SpawnType.CAR:
 
-                    if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null)
-                        ClientObjects[clientID][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
+                    if (ClientObjects[clientID][SpawnType.MAIN] != null)
+                        ClientObjects[clientID][SpawnType.MAIN].GetComponent<VR_Participant>()
                             .De_AssignCarTransform(clientID);
 
                     break;
-                case ParticipantObjectSpawnType.PEDESTRIAN: break;
+                case SpawnType.PEDESTRIAN: break;
                 default: throw new ArgumentOutOfRangeException(nameof(oType), oType, null);
             }
 
@@ -753,27 +750,18 @@ public class ConnectionAndSpawning : MonoBehaviour {
         SpawnAPlayer(ClientID, true);
     }
 
-    // 2023.8.7 modification: add another out value of ParticipantObjectSpawnType
-    private bool _prepareSpawing(ulong clientID, out Pose? tempPose, out ParticipantObjectSpawnType spawnType) {
-        // get the start pose from senarioManager using clientID -> participantOrder
+    // 2023.8.7 modification: add another out value of SpawnType
+    private bool _GetCurrentSpawingData(ulong clientID, out Pose tempPose, out SpawnType spawnType) {
         
-         
         if ( ! _participants.GetOrder(clientID,out  ParticipantOrder clientParticipantOrder)) {
             ErrFailToSpawn();
-            tempPose = null;
-            spawnType = ParticipantObjectSpawnType.CAR;
+            tempPose = new Pose();
+            spawnType = SpawnType.CAR;
             return false;
         }
         
-        bool success = GetScenarioManager().GetStartPose(clientParticipantOrder, out var outPose,
-            out var outSpawnType);
-
-        tempPose = outPose;
-        if (tempPose == null) success = false;
-
-        spawnType = outSpawnType;
-
-        return success;
+         return GetScenarioManager().GetStartPose(clientParticipantOrder, out tempPose,
+            out  spawnType);
     }
 
     private void ErrFailToSpawn() {
@@ -781,32 +769,32 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
 
-    private IEnumerator SpawnACar_Await(ulong clientID) {
+    private IEnumerator Spawn_Interactable_Await(ulong clientID) {
         var success = _participants.GetOrder(clientID, out var participantOrder);
         if (participantOrder != ParticipantOrder.None || success == false) {
             yield return new WaitUntil(() =>
-                ClientObjects[clientID].ContainsKey(ParticipantObjectSpawnType.MAIN) &&
-                ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null
+                ClientObjects[clientID].ContainsKey(SpawnType.MAIN) &&
+                ClientObjects[clientID][SpawnType.MAIN] != null
             );
-            SpawnACar_Immediate(clientID);
+            Spawn_Interactable_Immediate(clientID);
         }
     }
 
-    private bool SpawnACar_Immediate(ulong clientID) {
+    private bool Spawn_Interactable_Immediate(ulong clientID) {
         var success = _participants.GetOrder(clientID, out var participantOrder);
         if (participantOrder == ParticipantOrder.None || success == false) return false;
 
-        if (_prepareSpawing(clientID, out var tempPose, out var spawnType)) {
+        if (_GetCurrentSpawingData(clientID, out var tempPose, out var spawnType)) {
             // get input capture script of this client
-            var clientInputCapture = ClientObjects[clientID][ParticipantObjectSpawnType.MAIN]
-                .GetComponent<ParticipantInputCapture>();
+            var clientInputCapture = ClientObjects[clientID][SpawnType.MAIN]
+                .GetComponent<VR_Participant>();
 
             // switch spawnType. If car, instantiate. If pedestrian, set up pedestrian.
             switch (spawnType) {
-                case ParticipantObjectSpawnType.CAR:
+                case SpawnType.CAR:
                     var newCar =
                         Instantiate(CarPrefab,
-                            tempPose.Value.position, tempPose.Value.rotation);
+                            tempPose.position, tempPose.rotation);
 
                     newCar.GetComponent<NetworkObject>().Spawn(true);
 
@@ -818,21 +806,21 @@ public class ConnectionAndSpawning : MonoBehaviour {
                         Debug.Log("Assigning car to a new partcipant with clinetID:" + clientID.ToString() + " =>" +
                                 newCar.GetComponent<NetworkObject>().NetworkObjectId);
 #endif
-                        if (ClientObjects[clientID][ParticipantObjectSpawnType.MAIN] != null)
-                            ClientObjects[clientID][ParticipantObjectSpawnType.MAIN]
-                                .GetComponent<ParticipantInputCapture>()
+                        if (ClientObjects[clientID][SpawnType.MAIN] != null)
+                            ClientObjects[clientID][SpawnType.MAIN]
+                                .GetComponent<VR_Participant>()
                                 .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientID);
 
                         else
                             Debug.LogError("Could not find player as I am spawning the CAR. Broken please fix.");
                     }
 
-                    clientInputCapture.SetMySpawnType(ParticipantObjectSpawnType.CAR);
+                    clientInputCapture.SetMySpawnType(SpawnType.CAR);
 
                     break;
 
-                case ParticipantObjectSpawnType.PEDESTRIAN:
-                    clientInputCapture.SetMySpawnType(ParticipantObjectSpawnType.PEDESTRIAN);
+                case SpawnType.PEDESTRIAN:
+                    clientInputCapture.SetMySpawnType(SpawnType.PEDESTRIAN);
                     // maybe use callback here to
                     // 1. turn off position tracking
                     // 2. attach VRHead to avatar head (position only, rotation is for calibration process)
@@ -849,15 +837,15 @@ public class ConnectionAndSpawning : MonoBehaviour {
         var foundPlayer = _participants.GetOrder(clientID, out var _participantOrder);
         if (_participantOrder == ParticipantOrder.None || foundPlayer == false) return false;
 
-        if (_prepareSpawing(clientID, out var tempPose, out var spawnType)) {
-            tempPose ??= Pose.identity;
+        if (_GetCurrentSpawingData(clientID, out Pose tempPose, out SpawnType spawnType)) {
+          
 
             var newPlayer =
                 Instantiate(PlayerPrefab,
-                    tempPose.Value.position, tempPose.Value.rotation);
+                    tempPose.position, tempPose.rotation);
 
             newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, !persistent);
-            ClientObjects[clientID].Add(ParticipantObjectSpawnType.MAIN, newPlayer.GetComponent<NetworkObject>());
+            ClientObjects[clientID].Add(SpawnType.MAIN, newPlayer.GetComponent<NetworkObject>());
             m_QNDataStorageServer.SetupForNewRemoteImage(_participantOrder);
             return true;
         }
@@ -890,7 +878,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                       " tried to join, but we already have a participant with that order. ");
         }
         else {
-            ClientObjects.Add(request.ClientNetworkId, new Dictionary<ParticipantObjectSpawnType, NetworkObject>());
+            ClientObjects.Add(request.ClientNetworkId, new Dictionary<SpawnType, NetworkObject>());
             Debug.Log("Client will connect now!");
         }
 
@@ -913,12 +901,12 @@ public class ConnectionAndSpawning : MonoBehaviour {
         }
 
         ServerState = ActionState.WAITINGROOM;
-        LocalLoadScene(WaitingRoomSceneName);
+        ServerLoadScene(WaitingRoomSceneName);
     }
 
     private void SwitchToLoading(string name) {
         ServerState = ActionState.LOADINGSCENARIO;
-        LocalLoadScene(name);
+        ServerLoadScene(name);
         LastLoadedScene = name;
     }
 
@@ -971,7 +959,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         }
 
         foreach (var p in ClientObjects.Keys)
-            ClientObjects[p][ParticipantObjectSpawnType.MAIN].GetComponent<ParticipantInputCapture>()
+            ClientObjects[p][SpawnType.MAIN].GetComponent<VR_Participant>()
                 .StartQuestionairClientRPC();
 
         m_QNDataStorageServer.StartQn(GetScenarioManager(), m_ReRunManager);
@@ -1004,9 +992,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
         foreach (var pO in dict.Keys) {
             bool success = _participants.GetClientID(pO, out ulong cid);
             if (success && ClientObjects.ContainsKey(cid)) {
-                ClientObjects[cid][ParticipantObjectSpawnType.MAIN]
-                    .GetComponent<ParticipantInputCapture>().CurrentDirection.Value = dict[pO];
-                ClientObjects[cid][ParticipantObjectSpawnType.CAR]
+                ClientObjects[cid][SpawnType.MAIN]
+                    .GetComponent<VR_Participant>().CurrentDirection.Value = dict[pO];
+                ClientObjects[cid][SpawnType.CAR]
                     .GetComponentInChildren<GpsController>().SetDirection(dict[pO]);
             }
         }

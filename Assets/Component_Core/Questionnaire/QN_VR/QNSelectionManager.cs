@@ -28,7 +28,7 @@ public class QNSelectionManager : MonoBehaviour {
     private selectionBarAnimation sba;
     private readonly List<RectTransform> AnswerFields = new();
 
-    private ParticipantInputCapture m_MyLocalClient;
+    private VR_Participant m_MyLocalClient;
     private LayerMask m_RaycastCollidableLayers;
 
     private string m_LanguageSelect;
@@ -144,7 +144,7 @@ public class QNSelectionManager : MonoBehaviour {
         string lang) {
         if (m_interalState == QNStates.IDLE) {
             ChangeLanguage(lang);
-            m_MyLocalClient = mylocalclient.GetComponent<ParticipantInputCapture>();
+            m_MyLocalClient = mylocalclient.GetComponent<VR_Participant>();
 
             m_condition = Condition;
 

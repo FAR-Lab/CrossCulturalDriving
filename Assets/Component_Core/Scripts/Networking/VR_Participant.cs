@@ -11,11 +11,11 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class ParticipantInputCapture : NetworkBehaviour {
+public class VR_Participant : NetworkBehaviour {
     private const string OffsetFileName = "offset";
     public bool ReadyForAssignment;
 
-    [SerializeField] private ConnectionAndSpawning.ParticipantObjectSpawnType mySpawnType;
+    [SerializeField] private ConnectionAndSpawning.SpawnType mySpawnType;
 
     public NetworkVariable<GpsController.Direction> CurrentDirection = new();
 
@@ -100,12 +100,12 @@ public class ParticipantInputCapture : NetworkBehaviour {
         return m_participantOrder;
     }
 
-    public void SetMySpawnType(ConnectionAndSpawning.ParticipantObjectSpawnType spawnType) {
+    public void SetMySpawnType(ConnectionAndSpawning.SpawnType spawnType) {
         mySpawnType = spawnType;
     }
 
-    public static ParticipantInputCapture GetMyPIC() {
-        foreach (var pic in FindObjectsOfType<ParticipantInputCapture>())
+    public static VR_Participant GetMyPIC() {
+        foreach (var pic in FindObjectsOfType<VR_Participant>())
             if (pic.IsLocalPlayer)
                 return pic;
 

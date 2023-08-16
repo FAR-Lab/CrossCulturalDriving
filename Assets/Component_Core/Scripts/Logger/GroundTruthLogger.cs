@@ -98,7 +98,7 @@ public class GroundTruthLogger {
         foreach (var po in CurrentScenarioPOList) {
             if (_vehicles[po] == null)
                 _vehicles[po] = ConnectionAndSpawning.Singleton
-                    .GetClientObject(po, ConnectionAndSpawning.ParticipantObjectSpawnType.CAR)
+                    .GetClientObject(po, ConnectionAndSpawning.SpawnType.CAR)
                     ?.GetComponent<NetworkVehicleController>();
 
             if (_vehicles[po] != null) {

@@ -46,7 +46,7 @@ public class TrafficLightSupervisor : ReplayBehaviour {
         }
 
         foreach (var po in FElem.AllPossPart)
-            ConnectionAndSpawning.Singleton.GetMainClientObject(po)?.GetComponent<ParticipantInputCapture>()
+            ConnectionAndSpawning.Singleton.GetMainClientObject(po)?.GetComponent<VR_Participant>()
                 .UpdateTrafficLightsClientRPC(status);
 
 

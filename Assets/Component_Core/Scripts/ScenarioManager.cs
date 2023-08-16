@@ -14,7 +14,7 @@ public class ScenarioManager : MonoBehaviour {
 
     public SceneField VisualSceneToUse;
 
-    public Dictionary<ParticipantOrder, ConnectionAndSpawning.ParticipantObjectSpawnType> OrderToType;
+    public Dictionary<ParticipantOrder, ConnectionAndSpawning.SpawnType> OrderToType;
 
 
     public GpsController.Direction StartingDirectionParticipantA;
@@ -51,7 +51,7 @@ public class ScenarioManager : MonoBehaviour {
     }
 
     public bool GetStartPose(ParticipantOrder participantOrder, out Pose pose,
-        out ConnectionAndSpawning.ParticipantObjectSpawnType spawnType) {
+        out ConnectionAndSpawning.SpawnType spawnType) {
         GetSpawnPoints();
 
         if (MySpawnPositions != null) {
@@ -63,13 +63,13 @@ public class ScenarioManager : MonoBehaviour {
 
             Debug.Log("Did not find an assigned spawn point");
             pose = new Pose();
-            spawnType = new ConnectionAndSpawning.ParticipantObjectSpawnType();
+            spawnType = new ConnectionAndSpawning.SpawnType();
             return false;
         }
 
         Debug.Log("SpawnPoint is null");
         pose = new Pose();
-        spawnType = new ConnectionAndSpawning.ParticipantObjectSpawnType();
+        spawnType = new ConnectionAndSpawning.SpawnType();
         return false;
     }
 
@@ -77,7 +77,7 @@ public class ScenarioManager : MonoBehaviour {
     private void GetSpawnPoints() {
         if (MySpawnPositions == null || MySpawnPositions.Count == 0) {
             MySpawnPositions = new Dictionary<ParticipantOrder, Pose>();
-            OrderToType = new Dictionary<ParticipantOrder, ConnectionAndSpawning.ParticipantObjectSpawnType>();
+            OrderToType = new Dictionary<ParticipantOrder, ConnectionAndSpawning.SpawnType>();
             foreach (var sp in GetComponentsInChildren<SpawnPosition>()) {
                 var transform1 = sp.transform;
                 MySpawnPositions[sp.StartingId] = new Pose(transform1.position, transform1.rotation);
@@ -91,8 +91,8 @@ public class ScenarioManager : MonoBehaviour {
 
     public void RunQuestionairNow(Transform MyLocalClient_) {
         MyLocalClient = MyLocalClient_;
-        var MyCar = MyLocalClient.GetComponent<ParticipantInputCapture>().GetMyCar();
-        MyLocalClient.GetComponent<ParticipantInputCapture>().NewScenario();
+        var MyCar = MyLocalClient.GetComponent<VR_Participant>().GetMyCar();
+        MyLocalClient.GetComponent<VR_Participant>().NewScenario();
 
         qnmanager.gameObject.SetActive(true);
         qnmanager.transform.localScale *= 0.1f;
@@ -107,7 +107,7 @@ public class ScenarioManager : MonoBehaviour {
             if (screenShot.ContainsPO(ConnectionAndSpawning.Singleton.ParticipantOrder))
                 if (screenShot.triggered) {
                     qnmanager.AddImage(screenShot.GetTexture());
-                    MyLocalClient.GetComponent<ParticipantInputCapture>()
+                    MyLocalClient.GetComponent<VR_Participant>()
                         .InitiateImageTransfere(screenShot.GetTexture().EncodeToJPG(50));
                     break;
                 }
