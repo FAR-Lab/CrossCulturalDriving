@@ -93,10 +93,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     private void Start() {
-        
-        /*
-         * moved to StartUpManager.cs
-         
         if (Application.platform == RuntimePlatform.Android) {
             // StartAsClient("English", ParticipantOrder.A, "192.168.1.160", 7777, ResponseDelegate);
 
@@ -106,7 +102,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         else {
             GetComponent<StartServerClientGUI>().enabled = true;
         }
-*/
+
         if (FindObjectsOfType<RerunManager>().Length > 1) {
             Debug.LogError("We found more than 1 RerunManager. This is not support. Check your Hiracy");
             Application.Quit();
