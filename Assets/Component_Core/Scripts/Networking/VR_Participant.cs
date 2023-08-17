@@ -15,7 +15,7 @@ public class VR_Participant : Client_Object {
     private const string OffsetFileName = "offset";
     public bool ReadyForAssignment;
 
-    [SerializeField] private ConnectionAndSpawning.SpawnType mySpawnType;
+    private ConnectionAndSpawning.SpawnType mySpawnType;
 
     public NetworkVariable<GpsController.Direction> CurrentDirection = new();
 
@@ -39,7 +39,8 @@ public class VR_Participant : Client_Object {
 
     private ParticipantOrder m_participantOrder = ParticipantOrder.None;
 
-    private NetworkVehicleController NetworkedVehicle;
+    [NonSerialized]
+    private Interactable_Object NetworkedInteractableObject;
     private Vector3 offsetPositon = Vector3.zero;
 
 
@@ -100,9 +101,6 @@ public class VR_Participant : Client_Object {
         return m_participantOrder;
     }
 
-    public void SetMySpawnType(ConnectionAndSpawning.SpawnType spawnType) {
-        mySpawnType = spawnType;
-    }
 
     public static VR_Participant GetMyPIC() {
         foreach (var pic in FindObjectsOfType<VR_Participant>())
@@ -165,35 +163,40 @@ public class VR_Participant : Client_Object {
     }
 
 
-    // [ClientRpc]
-    //public void StartQuestionnaireClientRpc() {
-    //      if (IsLocalPlayer) { FindObjectOfType<ScenarioManager>().RunQuestionairNow(transform); }
-    // }
-
 
     [ClientRpc]
     public void SetGPSClientRpc(GpsController.Direction[] dir) {
         // GetComponentInChildren<GpsController>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
     }
 
-    public void AssignFollowTransform(Interactable_Object MyCar, ulong targetClient) {
+   
+
+    public override void SetSpawnType(ConnectionAndSpawning.SpawnType _spawnType) {
+        mySpawnType = _spawnType;
+    }
+
+    public override void AssignFollowTransform(Interactable_Object MyCar, ulong targetClient) {
         if (IsServer) {
-            NetworkedVehicle = MyCar;
-            _transform = NetworkedVehicle.transform.Find("CameraPosition");
+            NetworkedInteractableObject = MyCar;
+            _transform = NetworkedInteractableObject.GetCameraPositionObject();
             AssignCarTransformClientRPC(MyCar.NetworkObject, targetClient);
         }
+    }
+
+    public override Transform GetMainCamera() {
+        return transform.FindChildRecursive("CenterEyeAnchor");
     }
 
     [ClientRpc]
     private void AssignCarTransformClientRPC(NetworkObjectReference MyCar, ulong targetClient) {
         if (MyCar.TryGet(out var targetObject)) {
             if (targetClient == OwnerClientId) {
-                NetworkedVehicle = targetObject.transform.GetComponent<NetworkVehicleController>();
+                NetworkedInteractableObject = targetObject.transform.GetComponent<NetworkVehicleController>();
 
                 Debug.Log("Tried to get a new car. Its my Car!");
             }
 
-            _transform = NetworkedVehicle.transform.Find("CameraPosition");
+            _transform = NetworkedInteractableObject.transform.Find("CameraPosition");
         }
         else {
             Debug.LogWarning(
@@ -202,32 +205,36 @@ public class VR_Participant : Client_Object {
     }
 
 
-    public void De_AssignCarTransform(ulong targetClient) {
+    public override void  De_AssignFollowTransform(ulong targetClient,NetworkObject netobj) {
         if (IsServer) {
-            NetworkedVehicle = null;
-            De_AssignCarTransformClientRPC(targetClient);
+            NetworkedInteractableObject = null;
+            De_AssignFollowTransformClientRPC(targetClient);
         }
     }
 
     [ClientRpc]
-    private void De_AssignCarTransformClientRPC(ulong targetClient) {
-        NetworkedVehicle = null;
+    private void De_AssignFollowTransformClientRPC(ulong targetClient) {
+        //ToDo: currently we just deassigned everything but NetworkInteractable object and _transform could turn into lists etc...
+        NetworkedInteractableObject = null;
         _transform = null;
         DontDestroyOnLoad(gameObject);
         Debug.Log("De_assign Car ClientRPC");
     }
 
+    public override void CalibrateClient(ClientRpcParams clientRpcParams) {
+        CalibrateClientRPC(clientRpcParams);
+        
+    }
 
     [ClientRpc]
     public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default) {
         if (!IsLocalPlayer) return;
         GetComponent<SeatCalibration>().StartCalibration(
-            NetworkedVehicle.transform.Find("SteeringCenter"),
-            transform.Find("TrackingSpace").Find("CenterEyeAnchor"),
+            NetworkedInteractableObject.transform.Find("SteeringCenter"),
+            GetMainCamera(),
             this);
         Debug.Log("Calibrate ClientRPC");
     }
-
     public bool ButtonPush() {
         if (lastValue && ButtonPushed.Value == false) {
             lastValue = ButtonPushed.Value;
@@ -277,7 +284,7 @@ public class VR_Participant : Client_Object {
     }
 
     public Transform GetMyCar() {
-        return NetworkedVehicle.transform;
+        return NetworkedInteractableObject.transform;
     }
 
     public bool DeleteCallibrationFile() {

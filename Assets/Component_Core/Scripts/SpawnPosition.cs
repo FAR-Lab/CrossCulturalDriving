@@ -3,9 +3,7 @@ using UnityEngine;
 public class SpawnPosition : MonoBehaviour {
     public ParticipantOrder StartingId;
 
-    // Spawn type will determine what kind of participant will spawn at this spawn point
-    public ConnectionAndSpawning.SpawnType SpawnType =
-        ConnectionAndSpawning.SpawnType.MAIN;
+ 
 
     // Initial facing of the participant. Not exposed. Just change the transform of the spawnpoint to adjust.
     private Vector3 InitialFacingDirection;

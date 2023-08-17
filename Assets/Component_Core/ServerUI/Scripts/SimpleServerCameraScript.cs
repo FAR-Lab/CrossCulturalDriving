@@ -137,7 +137,7 @@ public class SimpleServerCameraScript : MonoBehaviour
                 if (m_Cameras.ContainsKey(cameraSetupXc.targetNumber))
                 {
                     Transform val =
-                        ConnectionAndSpawning.Singleton.GetMainClientCameraObject(cameraSetupXc.ParticipantToFollow);
+                        ConnectionAndSpawning.Singleton.GetClientMainCameraObject(cameraSetupXc.ParticipantToFollow);
                     ApplyValues(cameraSetupXc, m_Cameras[cameraSetupXc.targetNumber],val);
                 }
             }

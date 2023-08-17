@@ -2,31 +2,35 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Rerun;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using Newtonsoft.Json;
 
 public class ConnectionAndSpawning : MonoBehaviour {
-
     public struct NetworkConnectionMessage {
-        public JoinType  _jointype;
+        public JoinType _jointype;
         public SpawnType _spawnType;
         public ParticipantOrder _participantOrder;
     }
 
+
     public static string WaitingRoomSceneName = "WaitingRoom";
+
     public enum JoinType {
         SERVER,
-        SCREEN
+        SCREEN,
         VR,
         ROBOT
     }
-    public Dictionary<SpawnType, Client_Object> JoinType_To_Client_Object;
+
+    public Dictionary<JoinType, Client_Object> JoinType_To_Client_Object;
+
     public enum SpawnType {
-        MAIN,
+        NONE,
         CAR,
         PEDESTRIAN,
         PASSENGER,
@@ -34,8 +38,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     public Dictionary<SpawnType, Interactable_Object> SpawnType_To_InteractableObjects;
-
-    public static bool fakeCare = false;
 
 
     private static readonly Dictionary<ParticipantOrder, GpsController.Direction> StopDict =
@@ -48,25 +50,26 @@ public class ConnectionAndSpawning : MonoBehaviour {
             { ParticipantOrder.F, GpsController.Direction.Stop }
         };
 
-    public GameObject PlayerPrefab;
-    public GameObject CarPrefab;
+
     public GameObject VRUIStartPrefab;
     public GameObject ref_ServerTimingDisplay;
 
     public List<SceneField> IncludedScenes = new();
     private string LastLoadedVisualScene;
-    private bool ServerisRunning;
+    public bool ServerisRunning { private set; get; }
 
     public delegate void ReponseDelegate(ClienConnectionResponse response);
-    public GUIStyle NotVisitedButton; 
+
+    public GUIStyle NotVisitedButton;
     public GUIStyle VisitendButton;
 
     [SerializeField] private GUIStyle style;
 
-    private readonly ParticipantOrderMapping _participants = new();
+    private ParticipantOrderMapping _participants;
     private readonly bool ClientListInitDone = false;
 
-    private readonly Dictionary<ulong, Dictionary<SpawnType, NetworkObject>> ClientObjects = new();
+    private Dictionary<ParticipantOrder, Client_Object> Main_ParticipantObjects;
+    private Dictionary<ParticipantOrder, List<Interactable_Object>> Interactable_ParticipantObjects;
 
     private ScenarioManager CurrentScenarioManager;
     private bool FinishedRunningAwaitCorutine = true;
@@ -96,13 +99,17 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private readonly Dictionary<SceneField, bool> VisitedScenes = new();
 
 
-  
     public ParticipantOrder ParticipantOrder { get; private set; } = ParticipantOrder.None;
 
 
     public ActionState ServerState { get; private set; }
     public string lang { private set; get; }
 
+    private void Awake() {
+        _participants = new ParticipantOrderMapping();
+        Main_ParticipantObjects = new Dictionary<ParticipantOrder, Client_Object>();
+        Interactable_ParticipantObjects = new Dictionary<ParticipantOrder, List<Interactable_Object>>();
+    }
 
     private void Start() {
         if (Application.platform == RuntimePlatform.Android) {
@@ -132,9 +139,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
         if (NetworkManager.Singleton.IsServer) {
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.Space)) {
                 if (Input.GetKeyUp(KeyCode.A))
-                    ResetParticipantObject(ParticipantOrder.A, SpawnType.CAR);
+                    ResetInteractableObject(ParticipantOrder.A);
                 else if (Input.GetKeyUp(KeyCode.B))
-                    ResetParticipantObject(ParticipantOrder.B, SpawnType.CAR);
+                    ResetInteractableObject(ParticipantOrder.B);
             }
 
             switch (ServerState) {
@@ -203,7 +210,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer) {
             GUI.Label(new Rect(5, 5, 150, 50), "Server: " + ParticipantOrder + " " +
                                                NetworkManager.Singleton.ConnectedClients.Count + " " +
-                                               _participants.GetParticipantCount() + "  " +
+                                               (_participants.GetParticipantCount() - 1).ToString() + "  " +
                                                ServerState + "  " + Time.timeScale);
             if (ServerState == ActionState.WAITINGROOM) {
                 var y = 50;
@@ -231,9 +238,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                                 TargetClientIds = new[] { clientID }
                             }
                         };
-
-                        ClientObjects[clientID][SpawnType.MAIN].GetComponent<VR_Participant>()
-                            .CalibrateClientRPC(clientRpcParams);
+                        Main_ParticipantObjects[p].CalibrateClient(clientRpcParams);
                     }
 
                     y += 50;
@@ -277,7 +282,17 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
         GetComponent<TrafficLightSupervisor>().enabled = true;
-        SetupServerFunctionality();
+        NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
+        NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected;
+        NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
+        NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
+
+        NetworkManager.Singleton.StartServer();
+        _participants.AddParticipant(ParticipantOrder.None, NetworkManager.Singleton.LocalClientId, SpawnType.NONE,
+            JoinType.SERVER);
+        NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;
+
+        SteeringWheelManager.Singleton.Init();
         m_ReRunManager.SetRecordingFolder(pairName);
         Debug.Log("Starting Server for session: " + pairName);
 
@@ -315,7 +330,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     private void SetParticipantOrder(ParticipantOrder val) {
-        NetworkManager.Singleton.NetworkConfig.ConnectionData = new[] { (byte)val }; // assigning ID
         ParticipantOrder = val;
         ParticipantOrder_Set = true;
     }
@@ -324,13 +338,24 @@ public class ConnectionAndSpawning : MonoBehaviour {
         lang = lang_;
     }
 
-    public void StartAsClient(string lang_, ParticipantOrder val, string ip, int port, ReponseDelegate result) {
+    public void StartAsClient(string lang_, ParticipantOrder po, string ip, int port, ReponseDelegate result,
+        SpawnType _spawnTypeIN = SpawnType.CAR, JoinType _joinTypeIN = JoinType.VR) {
         SetupClientFunctionality();
         ReponseHandler += result;
         SetupTransport(ip, port);
         Setlanguage(lang_);
-        SetParticipantOrder(val);
+        SetParticipantOrder(po);
+        ConnectionDataRequest connectionDataRequest = new ConnectionDataRequest() {
+            po = po,
+            st = _spawnTypeIN,
+            jt = _joinTypeIN
+        };
+        string jsonstring = JsonConvert.SerializeObject(connectionDataRequest);
+
+        NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(jsonstring); // assigning ID
+
         Debug.Log("Starting as Client.");
+
 
         NetworkManager.Singleton.StartClient();
     }
@@ -374,7 +399,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
         FindObjectOfType<RerunInputManager>().enabled = true;
 
         SceneManager.sceneLoaded += VisualsceneLoadReRun;
- 
 
         GetComponent<TrafficLightSupervisor>().enabled = true;
     }
@@ -413,75 +437,70 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
 
-   
-
     public Transform GetMainClientObject(ulong senderClientId) {
-        if (!ClientObjects.ContainsKey(senderClientId)) return null;
-        return ClientObjects[senderClientId].ContainsKey(SpawnType.MAIN)
-            ? ClientObjects[senderClientId][SpawnType.MAIN].transform
-            : null;
+        bool success = _participants.GetOrder(senderClientId, out ParticipantOrder po);
+        if (success) {
+            return GetMainClientObject(po);
+        }
+
+        return null;
     }
 
     public Transform GetMainClientObject(ParticipantOrder po) {
-        bool success= _participants.GetClientID(po, out ulong senderClientId);
-        if(!success) return null;
-        if (!ClientObjects.ContainsKey(senderClientId)) return null;
-        return ClientObjects[senderClientId].ContainsKey(SpawnType.MAIN)
-            ? ClientObjects[senderClientId][SpawnType.MAIN].transform
-            : null;
+        if (!Main_ParticipantObjects.ContainsKey(po)) return null;
+        return Main_ParticipantObjects[po].transform;
     }
 
-    public Transform GetClientHead(ParticipantOrder po) {
-        bool success= _participants.GetClientID(po, out ulong senderClientId);
-        if(!success) return null;
-        if (!ClientObjects.ContainsKey(senderClientId)) return null;
-        return ClientObjects[senderClientId].ContainsKey(SpawnType.MAIN)
-            ? ClientObjects[senderClientId][SpawnType.MAIN].transform
-                .FindChildRecursive("CenterEyeAnchor").transform
-            : null;
+
+    public List<Interactable_Object> GetInteractableObjects_For_Participants(ulong senderClientId) {
+        bool success = _participants.GetOrder(senderClientId, out ParticipantOrder po);
+        if (success) {
+            return GetInteractableObjects_For_Participants(po);
+        }
+
+        return null;
     }
 
-    public Transform GetClientObject(ParticipantOrder po, SpawnType type) {
-        bool success= _participants.GetClientID(po, out ulong senderClientId);
-        if(!success) return null;
-        if (!ClientObjects.ContainsKey(senderClientId)) return null;
-        return ClientObjects[senderClientId].ContainsKey(type)
-            ? ClientObjects[senderClientId][type].transform
-            : null;
+    public List<Interactable_Object> GetInteractableObjects_For_Participants(ParticipantOrder po) {
+        if (!Interactable_ParticipantObjects.ContainsKey(po)) return null;
+        return Interactable_ParticipantObjects[po];
     }
 
-    public Transform GetMainClientCameraObject(ParticipantOrder po) {
+
+    public Transform GetClientMainCameraObject(ulong senderClientId) {
+        bool success = _participants.GetOrder(senderClientId, out ParticipantOrder po);
+        if (success) {
+            return GetClientMainCameraObject(po);
+        }
+
+        return null;
+    }
+
+    public Transform GetClientMainCameraObject(ParticipantOrder po) {
         if (ServerState == ActionState.RERUN) {
-            foreach (var pic in FindObjectsOfType<VR_Participant>())
+            foreach (var pic in FindObjectsOfType<Client_Object>())
                 if (pic.GetComponent<ParticipantOrderReplayComponent>().GetParticipantOrder() == po) {
                     Debug.Log("Found the correct participant order trying to find eye anchor");
-                    return pic.transform.FindChildRecursive("CenterEyeAnchor");
-                    ;
+                    return pic.GetMainCamera();
                 }
 
             Debug.LogWarning("Never found eye anchor for participant: " + po);
             return null;
         }
 
-        bool success= _participants.GetClientID(po, out ulong senderClientId);
-        if(!success) return null;
-        if (!ClientObjects.ContainsKey(senderClientId)) return null;
-        var returnVal = ClientObjects[senderClientId].ContainsKey(SpawnType.MAIN)
-            ? ClientObjects[senderClientId][SpawnType.MAIN].transform
-            : null;
-        return returnVal.FindChildRecursive("CenterEyeAnchor");
+        if (!Main_ParticipantObjects.ContainsKey(po)) return null;
+        return Main_ParticipantObjects[po].GetMainCamera();
     }
+
 
     public ParticipantOrder GetParticipantOrderClientId(ulong clientid) {
         _participants.GetOrder(clientid, out ParticipantOrder outval);
         return outval;
     }
 
-
-    public bool GetClientIdParticipantOrder(ParticipantOrder po, out  ulong outValue) {
-         outValue = 0;
-        bool var =   _participants.GetClientID(po, out outValue);
-        
+    public bool GetClientIdParticipantOrder(ParticipantOrder po, out ulong outValue) {
+        outValue = 0;
+        bool var = _participants.GetClientID(po, out outValue);
         return var;
     }
 
@@ -494,59 +513,36 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     public void SendNewQuestionToParticipant(ParticipantOrder participantOrder, NetworkedQuestionnaireQuestion outval) {
-        bool success = _participants.GetClientID(participantOrder, out ulong clientID);
-        if (success) {
-            ClientObjects[clientID][SpawnType.MAIN]
+       
+      
+            Main_ParticipantObjects[participantOrder]
                 .GetComponent<VR_Participant>().RecieveNewQuestionClientRPC(outval);
-        }
+        
     }
 
 
     public void SendTotalQNCount(ParticipantOrder participantOrder, int count) {
-        bool success = _participants.GetClientID(participantOrder, out ulong clientID);
-        if (success) {
-            ClientObjects[clientID][SpawnType.MAIN]
-                .GetComponent<VR_Participant>().SetTotalQNCountClientRpc(count);
-            Debug.Log("Just send total QN count to client: " + participantOrder);
-        }
+        Main_ParticipantObjects[participantOrder]
+        .GetComponent<VR_Participant>().SetTotalQNCountClientRpc(count);
+            
     }
 
     public RerunManager GetReRunManager() {
         return m_ReRunManager;
     }
 
-    private bool ResetParticipantObject(ParticipantOrder po, SpawnType objectType) {
-        switch (objectType) {
-            case SpawnType.MAIN:
-                break;
-            case SpawnType.CAR:
-                bool success = _participants.GetClientID(po,out ulong ClinetID);
-                if (success && ClientObjects.ContainsKey(ClinetID) &&
-                    ClientObjects[ClinetID].ContainsKey(SpawnType.CAR)) {
-                    var car = ClientObjects[ClinetID][SpawnType.CAR];
-                    car.transform.GetComponent<Rigidbody>().velocity =
-                        Vector3.zero; // Unsafe we are not sure that it has a rigid body
-                    car.transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-                    success = _GetCurrentSpawingData(ClinetID, out var tempPose, out var spawnType);
-                    if (!success) {
-                        Debug.LogWarning("Did not find a position to reset the participant to." + po);
-                        return false;
-                    }
-
-                    car.transform.position = tempPose.position;
-                    car.transform.rotation = tempPose.rotation;
-                    return true;
+    private void ResetInteractableObject(ParticipantOrder po) {
+        if (Interactable_ParticipantObjects.ContainsKey(po)) {
+            foreach (Interactable_Object io in Interactable_ParticipantObjects[po]) {
+                bool success = _GetCurrentSpawingData(po, out var tempPose);
+                if (!success) {
+                    Debug.LogWarning("Did not find a position to reset the participant to." + po);
+                    return;
                 }
 
-                return false;
-
-
-                break;
-            case SpawnType.PEDESTRIAN:
-                break;
+                io.SetStartingPose(tempPose);
+            }
         }
-
-        return false;
     }
 
     public void AwaitQN() {
@@ -558,15 +554,11 @@ public class ConnectionAndSpawning : MonoBehaviour {
         i_AwaitCarStopped = StartCoroutine(AwaitCarStopped());
     }
 
-    private float totalSpeedReturn() {
-        var testValue = 0f;
-        foreach (var val in _participants.GetAllConnectedClients()) {
-            var po = GetParticipantOrderClientId(val);
-            var tf = GetClientObject(po, SpawnType.CAR);
-            if (tf != null) {
-                var rb = tf.GetComponent<Rigidbody>();
-                if (rb != null) testValue += rb.velocity.magnitude;
-            }
+    private bool AllActionStopped() {
+        bool testValue = true;
+        foreach (var po in _participants.GetAllConnectedParticipants()) {
+            foreach (var IO in Interactable_ParticipantObjects[po])
+                testValue &= IO.GetComponent<Interactable_Object>().HasActionStopped();
         }
 
         return testValue;
@@ -574,7 +566,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private IEnumerator AwaitCarStopped() {
         yield return new WaitUntil(() =>
-            totalSpeedReturn() <= 0.1f
+            AllActionStopped()
         );
         SwitchToQN();
         FinishedRunningAwaitCorutine = true;
@@ -611,21 +603,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     #region SpawningAndConnecting
 
-    private void SetupServerFunctionality() {
-        NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
-        NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected;
-        NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
-        NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
-        
-        NetworkManager.Singleton.StartServer();
-        NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;
-
-        SteeringWheelManager.Singleton.Init();
-    }
-
-
     private void ServerLoadScene(string name) {
-        DestroyAllClientObjects(new List<SpawnType> { SpawnType.CAR });
+        DestroyAllClientObjects(false);
         NetworkManager.Singleton.SceneManager.LoadScene(name, LoadSceneMode.Single);
     }
 
@@ -676,57 +655,51 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
     // DestroyAllClientObjects_OfType(SpawnType TypeToDestroy)// TODO would make implementing more features easier
 
-    private void DestroyAllClientObjects(List<SpawnType> TypesToDestroy) {
-        var destroyMain = TypesToDestroy.Contains(SpawnType.MAIN);
-        if (destroyMain) TypesToDestroy.Remove(SpawnType.MAIN);
-
-        foreach (var id in ClientObjects.Keys) {
-            foreach (var enumval in TypesToDestroy) DespawnObjectOfType(id, enumval);
-
-            if (destroyMain) DespawnObjectOfType(id, SpawnType.MAIN);
+    private void DestroyAllClientObjects(bool destroyMain = false) {
+        foreach (var po in _participants.GetAllConnectedParticipants()) {
+            foreach (var id in Interactable_ParticipantObjects[po]) {
+                DespawnAllInteractableObject(po);
+                if (destroyMain) {
+                    DespawnMainObject(po);
+                }
+            }
         }
     }
 
+    
     private void DespawnAllObjectsforParticipant(ParticipantOrder po) {
         if (po == ParticipantOrder.None) return;
-        if (_participants.GetClientID(po, out ulong clientID)) {
-            DespawnAllObjectsforParticipant(clientID);
+        DespawnAllInteractableObject(po);
+        DespawnMainObject(po);
+       
+    }
+
+    private void DespawnMainObject(ParticipantOrder po) {
+        if (Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null) {
+            Main_ParticipantObjects[po].GetComponent<NetworkObject>().Despawn();
         }
+
+        Main_ParticipantObjects.Remove(po);
     }
 
 
-    private void DespawnAllObjectsforParticipant(ulong clientID) {
-        if (ClientObjects.ContainsKey(clientID) && ClientObjects[clientID] != null) {
-            var despawnList =
-                new List<SpawnType>(ClientObjects[clientID].Keys);
-            if (despawnList.Contains(SpawnType.MAIN))
-                despawnList.Remove(SpawnType.MAIN);
 
-            foreach (var spawntype in despawnList) DespawnObjectOfType(clientID, spawntype);
-        }
-    }
 
-    private void DespawnObjectOfType(ulong clientID, SpawnType oType) {
-        if (ClientObjects[clientID].ContainsKey(oType)) {
-            Debug.Log("Removing for:" + clientID + " object:" + oType);
-            var no = ClientObjects[clientID][oType];
-            switch (oType) {
-                case SpawnType.MAIN:
-                    Debug.Log("WARNING despawing MAIN!");
-                    break;
-                case SpawnType.CAR:
+    private void DespawnAllInteractableObject(ParticipantOrder po) {
+        if (Interactable_ParticipantObjects.ContainsKey(po)) {
+            foreach (var io in Interactable_ParticipantObjects[po]) {
+                if (Main_ParticipantObjects[po] != null) {
+                    bool success = _participants.GetClientID(po, out ulong clientID);
+                    if (success) {
+                        Main_ParticipantObjects[po]
+                            .De_AssignFollowTransform(clientID, io.GetComponent<NetworkObject>());
+                    }
+                }
 
-                    if (ClientObjects[clientID][SpawnType.MAIN] != null)
-                        ClientObjects[clientID][SpawnType.MAIN].GetComponent<VR_Participant>()
-                            .De_AssignCarTransform(clientID);
-
-                    break;
-                case SpawnType.PEDESTRIAN: break;
-                default: throw new ArgumentOutOfRangeException(nameof(oType), oType, null);
+                io.GetComponent<NetworkObject>().Despawn();
             }
 
-            no.Despawn();
-            ClientObjects[clientID].Remove(oType);
+            Interactable_ParticipantObjects.Remove(po);
         }
     }
 
@@ -736,123 +709,110 @@ public class ConnectionAndSpawning : MonoBehaviour {
         FAILED
     }
 
-    private void RemoveParticipant(ulong ClientID) {
-        if (ClientObjects.ContainsKey(ClientID)) {
-            ClientObjects.Remove(ClientID);
-        }
-    }
+    
 
 
-    private void ClientDisconnected(ulong ClientID) {
-        if (ClientObjects.ContainsKey(ClientID) && ClientObjects[ClientID] != null) {
-            DespawnAllObjectsforParticipant(ClientID);
-            if (_participants.GetOrder(ClientID, out ParticipantOrder po)) {
-                m_QNDataStorageServer.DeRegisterHandler(po);
-                RemoveParticipant(ClientID);
-            }
+    private void ClientDisconnected(ulong clientID) {
+        bool success = _participants.GetOrder(clientID, out ParticipantOrder po);
+        if (success && Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null) {
+            m_QNDataStorageServer.DeRegisterHandler(po);
+            DespawnAllObjectsforParticipant(po);
+            
         }
     }
 
     private void ClientConnected(ulong ClientID) {
-        Debug.Log("on Client Connect CallBack Was called!");
-        // Whats important here is that this doesnt get called 
+        Debug.Log("On Client Connect CallBack Was called!");
+       
         Spawn_Client(ClientID, true);
     }
 
-    // 2023.8.7 modification: add another out value of SpawnType
-    private bool _GetCurrentSpawingData(ulong clientID, out Pose tempPose, out SpawnType spawnType) {
-        
-        if ( ! _participants.GetOrder(clientID,out  ParticipantOrder clientParticipantOrder)) {
+
+    private bool _GetCurrentSpawingData(ulong clientID, out Pose tempPose) {
+        if (!_participants.GetOrder(clientID, out ParticipantOrder clientParticipantOrder)) {
             ErrFailToSpawn();
             tempPose = new Pose();
-            spawnType = SpawnType.CAR;
             return false;
         }
-        
-         return GetScenarioManager().GetStartPose(clientParticipantOrder, out tempPose,
-            out  spawnType);
+
+        return _GetCurrentSpawingData(clientParticipantOrder, out tempPose);
+    }
+
+    private bool _GetCurrentSpawingData(ParticipantOrder po, out Pose tempPose) {
+        return GetScenarioManager().GetStartPose(po, out tempPose);
     }
 
     private void ErrFailToSpawn() {
-       Debug.LogError("Failed To Spawn");
+        Debug.LogError("Failed To Spawn");
     }
 
 
     private IEnumerator Spawn_Interactable_Await(ulong clientID) {
-        var success = _participants.GetOrder(clientID, out var participantOrder);
-        if (participantOrder != ParticipantOrder.None || success == false) {
+        var success = _participants.GetOrder(clientID, out var po);
+        if (po != ParticipantOrder.None || success) { //ToDO this was success==false feels wrong but check 
             yield return new WaitUntil(() =>
-                ClientObjects[clientID].ContainsKey(SpawnType.MAIN) &&
-                ClientObjects[clientID][SpawnType.MAIN] != null
+                Main_ParticipantObjects.ContainsKey(po) &&
+                Main_ParticipantObjects[po] != null
             );
             Spawn_Interactable_Immediate(clientID);
         }
     }
 
-    private bool Spawn_Interactable_Immediate(ulong clientID) {
-        var success = _participants.GetOrder(clientID, out var participantOrder);
-        if (participantOrder == ParticipantOrder.None || success == false) return false;
+    private bool _VerifyPrefabAvalible(SpawnType st) {
+        bool tmp = (SpawnType_To_InteractableObjects.ContainsKey(st) && SpawnType_To_InteractableObjects[st] != null);
 
-        if (_GetCurrentSpawingData(clientID, out var tempPose, out var spawnType)) {
-            // get input capture script of this client
-            var clientInputCapture = ClientObjects[clientID][SpawnType.MAIN]
-                .GetComponent<VR_Participant>();
-
-            // switch spawnType. If car, instantiate. If pedestrian, set up pedestrian.
-            switch (spawnType) {
-                case SpawnType.CAR:
-                    var newCar =
-                        Instantiate(CarPrefab,
-                            tempPose.position, tempPose.rotation);
-
-                    newCar.GetComponent<NetworkObject>().Spawn(true);
-
-                    if (!fakeCare && _participants.GetOrder(clientID, out ParticipantOrder pO)) {
-                        
-                        newCar.GetComponent<Interactable_Object>().AssignClient(clientID, pO);
-
-                        if (ClientObjects[clientID][SpawnType.MAIN] != null)
-                            ClientObjects[clientID][SpawnType.MAIN]
-                                .GetComponent<VR_Participant>()
-                                .AssignFollowTransform(newCar.GetComponent<Interactable_Object>(), clientID);
-
-                        else
-                            Debug.LogError("Could not find player as I am spawning the Car. Broken please fix.");
-                    }
-
-                    clientInputCapture.SetMySpawnType(SpawnType.CAR);
-
-                    break;
-
-                case SpawnType.PEDESTRIAN:
-                    clientInputCapture.SetMySpawnType(SpawnType.PEDESTRIAN);
-                    break;
-            }
-
-            return true;
-        }
-
-        return false;
+        return tmp;
     }
 
-    private bool Spawn_Client(ulong clientID, bool persistent) {
-        var foundPlayer = _participants.GetOrder(clientID, out var _participantOrder);
-        if (_participantOrder == ParticipantOrder.None || foundPlayer == false) return false;
+    private bool _VerifyPrefabAvalible(JoinType jt) {
+        return (JoinType_To_Client_Object.ContainsKey(jt) && JoinType_To_Client_Object[jt] != null);
+    }
 
-        if (_GetCurrentSpawingData(clientID, out Pose tempPose, out SpawnType spawnType)) {
-          
+    private void Spawn_Interactable_Immediate(ulong clientID) {
+        var success = _participants.GetOrder(clientID, out ParticipantOrder po);
+        if (po == ParticipantOrder.None || success == false) return;
 
-            var newPlayer =
-                Instantiate(PlayerPrefab,
-                    tempPose.position, tempPose.rotation);
+        if (_GetCurrentSpawingData(po, out var tempPose)) {
+            Client_Object clientInputCapture = Main_ParticipantObjects[po];
+            success = _participants.GetSpawnType(po, out SpawnType spawnType);
+            if (_VerifyPrefabAvalible(spawnType) && success) {
+                var newInteractableObject =
+                    Instantiate(SpawnType_To_InteractableObjects[spawnType],
+                        tempPose.position, tempPose.rotation);
 
-            newPlayer.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, !persistent);
-            ClientObjects[clientID].Add(SpawnType.MAIN, newPlayer.GetComponent<NetworkObject>());
-            m_QNDataStorageServer.SetupForNewRemoteImage(_participantOrder);
-            return true;
+                newInteractableObject.GetComponent<NetworkObject>().Spawn(true);
+
+                newInteractableObject.GetComponent<Interactable_Object>().AssignClient(clientID, po);
+
+                if (Main_ParticipantObjects[po] != null)
+                    Main_ParticipantObjects[po]
+                        .AssignFollowTransform(newInteractableObject.GetComponent<Interactable_Object>(), clientID);
+
+                else {
+                    Debug.LogError("Could not find Client as I am spawning the Interactable. Broken please fix.");
+                }
+            }
+
+            clientInputCapture.SetSpawnType(spawnType);
         }
+    }
 
-        return false;
+    private void Spawn_Client(ulong clientID, bool persistent) {
+        var success = _participants.GetOrder(clientID, out ParticipantOrder po);
+        if (po == ParticipantOrder.None || success == false) return;
+
+        if (_GetCurrentSpawingData(clientID, out Pose tempPose)) {
+            success = _participants.GetJoinType(po, out JoinType joinType);
+            if (success && _VerifyPrefabAvalible(joinType)) {
+                var newClient =
+                    Instantiate(JoinType_To_Client_Object[joinType],
+                        tempPose.position, tempPose.rotation);
+
+                newClient.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, !persistent);
+                Main_ParticipantObjects.Add(po, newClient.GetComponent<Client_Object>());
+                m_QNDataStorageServer.SetupForNewRemoteImage(po);
+            }
+        }
     }
 
     public ScenarioManager GetScenarioManager() {
@@ -864,23 +824,29 @@ public class ConnectionAndSpawning : MonoBehaviour {
         return CurrentScenarioManager;
     }
 
+    public struct ConnectionDataRequest {
+        public ParticipantOrder po;
+        public SpawnType st;
+        public JoinType jt;
+    }
 
-    // https://docs-multiplayer.unity3d.com/netcode/current/basics/connection-approval
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request,
         NetworkManager.ConnectionApprovalResponse response) {
-        //byte[] connectionData, ulong clientId,
-        // NetworkManager.ConnectionApprovedDelegate callback){
         var approve = false;
-        var participantOrder = (ParticipantOrder)request.Payload[0];
 
-        approve = _participants.AddParticipant(participantOrder, request.ClientNetworkId);
+
+        ConnectionDataRequest cdr =
+            JsonConvert.DeserializeObject<ConnectionDataRequest>(Encoding.ASCII.GetString(request.Payload));
+
+
+        approve = _participants.AddParticipant(cdr.po, request.ClientNetworkId, cdr.st, cdr.jt);
 
         if (!approve) {
             Debug.Log("Participant Order " + request.Payload[0] +
                       " tried to join, but we already have a participant with that order. ");
         }
         else {
-            ClientObjects.Add(request.ClientNetworkId, new Dictionary<SpawnType, NetworkObject>());
+            // ParticipantObjects.Add(request.ClientNetworkId, new Dictionary<SpawnType, NetworkObject>());
             Debug.Log("Client will connect now!");
         }
 
@@ -888,7 +854,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
         response.Approved = approve;
         response.CreatePlayerObject = false;
         response.Pending = false;
-        //Spawn_Client(request.ClientNetworkId, true);
     }
 
     #endregion
@@ -957,11 +922,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
         foreach (var no in FindObjectsOfType<Interactable_Object>()) {
             no.Stop_Action();
-         
         }
 
-        foreach (var p in ClientObjects.Keys)
-            ClientObjects[p][SpawnType.MAIN].GetComponent<VR_Participant>()
+        foreach (var po in Main_ParticipantObjects.Keys)
+            Main_ParticipantObjects[po].GetComponent<VR_Participant>() //ToDo turn this into an abstracct function
                 .StartQuestionairClientRPC();
 
         m_QNDataStorageServer.StartQn(GetScenarioManager(), m_ReRunManager);
@@ -976,7 +940,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private void SwitchToPostQN() {
         m_QNDataStorageServer.StopScenario(m_ReRunManager);
         if (farlab_logger.Instance.isRecording()) StartCoroutine(farlab_logger.Instance.StopRecording());
-
         ServerState = ActionState.POSTQUESTIONS;
         SwitchToWaitingRoom();
     }
@@ -991,13 +954,13 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     public void UpdateAllGPS(Dictionary<ParticipantOrder, GpsController.Direction> dict) {
-        foreach (var pO in dict.Keys) {
-            bool success = _participants.GetClientID(pO, out ulong cid);
-            if (success && ClientObjects.ContainsKey(cid)) {
-                ClientObjects[cid][SpawnType.MAIN]
-                    .GetComponent<VR_Participant>().CurrentDirection.Value = dict[pO];
-                ClientObjects[cid][SpawnType.CAR]
-                    .GetComponentInChildren<GpsController>().SetDirection(dict[pO]);
+        foreach (var po in dict.Keys) {
+            bool success = _participants.GetClientID(po, out ulong cid);
+            if (success && Main_ParticipantObjects.ContainsKey(po)) {
+                Main_ParticipantObjects[po]
+                    .GetComponent<VR_Participant>().CurrentDirection.Value = dict[po];
+                Interactable_ParticipantObjects[po]
+                    .ForEach(io => io.GetComponentInChildren<GpsController>().SetDirection(dict[po]));
             }
         }
     }

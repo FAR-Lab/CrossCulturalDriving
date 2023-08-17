@@ -326,6 +326,27 @@ public class NetworkVehicleController : Interactable_Object
         }
     }
 
+    public override Transform GetCameraPositionObject() {
+        return transform.Find("CameraPosition");
+    }
+
+    public override void SetStartingPose(Pose _pose) {
+        if (! IsServer) return;
+        transform.GetComponent<Rigidbody>().velocity =
+            Vector3.zero; // Unsafe we are not sure that it has a rigid body
+        transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        transform.position = _pose.position;
+        transform.rotation = _pose.rotation;
+    }
+
+    public override bool HasActionStopped() {
+        if (transform.GetComponent<Rigidbody>().velocity.magnitude < 0.01f) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     private void SceneManager_OnSceneEvent(SceneEvent sceneEvent)
     {

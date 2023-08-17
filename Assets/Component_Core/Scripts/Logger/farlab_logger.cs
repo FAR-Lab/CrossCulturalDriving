@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using Rerun;
 using UnityEngine;
@@ -282,16 +283,17 @@ public class farlab_logger : MonoBehaviour {
 
 
         if (PlayerHeadA == null)
-            PlayerHeadA = ConnectionAndSpawning.Singleton.GetMainClientCameraObject(ParticipantOrder.A);
+            PlayerHeadA = ConnectionAndSpawning.Singleton.GetClientMainCameraObject(ParticipantOrder.A);
 
         if (PlayerHeadB == null)
-            PlayerHeadB = ConnectionAndSpawning.Singleton.GetMainClientCameraObject(ParticipantOrder.B);
+            PlayerHeadB = ConnectionAndSpawning.Singleton.GetClientMainCameraObject(ParticipantOrder.B);
 
 
         if (CarA == null) {
-            CarA = ConnectionAndSpawning.Singleton.GetClientObject(ParticipantOrder.A,
-                ConnectionAndSpawning.SpawnType.CAR);
-        }
+            CarA = ConnectionAndSpawning.Singleton.GetInteractableObjects_For_Participants(ParticipantOrder.A).First()
+                .transform;
+        
+    }
         else {
             if (carARigidbody == null) carARigidbody = CarA.GetComponent<Rigidbody>();
 
@@ -299,8 +301,8 @@ public class farlab_logger : MonoBehaviour {
         }
 
         if (CarB == null) {
-            CarB = ConnectionAndSpawning.Singleton.GetClientObject(ParticipantOrder.B,
-                ConnectionAndSpawning.SpawnType.CAR);
+            CarB = ConnectionAndSpawning.Singleton.GetInteractableObjects_For_Participants(ParticipantOrder.B).First()
+                .transform;
         }
         else {
             if (carBRigidbody == null) carBRigidbody = CarB.GetComponent<Rigidbody>();

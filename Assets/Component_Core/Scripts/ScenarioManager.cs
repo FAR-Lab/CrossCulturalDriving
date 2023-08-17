@@ -14,9 +14,6 @@ public class ScenarioManager : MonoBehaviour {
 
     public SceneField VisualSceneToUse;
 
-    public Dictionary<ParticipantOrder, ConnectionAndSpawning.SpawnType> OrderToType;
-
-
     public GpsController.Direction StartingDirectionParticipantA;
     public GpsController.Direction StartingDirectionParticipantB;
     public GpsController.Direction StartingDirectionParticipantC;
@@ -41,35 +38,29 @@ public class ScenarioManager : MonoBehaviour {
         GetSpawnPoints();
         ready = true;
 
-        if (ConnectionAndSpawning.Singleton.ServerisRunning ||
-            ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN) {
-        }
+    
     }
 
 
     private void Update() {
     }
 
-    public bool GetStartPose(ParticipantOrder participantOrder, out Pose pose,
-        out ConnectionAndSpawning.SpawnType spawnType) {
+    public bool GetStartPose(ParticipantOrder participantOrder, out Pose pose) {
         GetSpawnPoints();
 
         if (MySpawnPositions != null) {
             if (MySpawnPositions.Count > 0 && MySpawnPositions.ContainsKey(participantOrder)) {
                 pose = MySpawnPositions[participantOrder];
-                spawnType = OrderToType[participantOrder];
                 return true;
             }
 
             Debug.Log("Did not find an assigned spawn point");
             pose = new Pose();
-            spawnType = new ConnectionAndSpawning.SpawnType();
             return false;
         }
 
         Debug.Log("SpawnPoint is null");
         pose = new Pose();
-        spawnType = new ConnectionAndSpawning.SpawnType();
         return false;
     }
 
@@ -77,13 +68,12 @@ public class ScenarioManager : MonoBehaviour {
     private void GetSpawnPoints() {
         if (MySpawnPositions == null || MySpawnPositions.Count == 0) {
             MySpawnPositions = new Dictionary<ParticipantOrder, Pose>();
-            OrderToType = new Dictionary<ParticipantOrder, ConnectionAndSpawning.SpawnType>();
+           
             foreach (var sp in GetComponentsInChildren<SpawnPosition>()) {
                 var transform1 = sp.transform;
                 MySpawnPositions[sp.StartingId] = new Pose(transform1.position, transform1.rotation);
 
-                // modification 2023-08-07: populate Order To Type
-                OrderToType[sp.StartingId] = sp.SpawnType;
+               
             }
         }
     }
