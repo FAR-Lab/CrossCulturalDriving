@@ -15,7 +15,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
     public enum SpawnType {
         MAIN,
         CAR,
-        PEDESTRIAN
+        PEDESTRIAN,
+        PASSENGER
     }
 
     public static string WaitingRoomSceneName = "WaitingRoom";
@@ -747,7 +748,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private void ClientConnected(ulong ClientID) {
         Debug.Log("on Client Connect CallBack Was called!");
         // Whats important here is that this doesnt get called 
-        SpawnAPlayer(ClientID, true);
+        Spawn_Client(ClientID, true);
     }
 
     // 2023.8.7 modification: add another out value of SpawnType
@@ -798,21 +799,17 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
                     newCar.GetComponent<NetworkObject>().Spawn(true);
 
-                    if (!fakeCare && _participants.GetOrder(clientID,out ParticipantOrder pO)) {
+                    if (!fakeCare && _participants.GetOrder(clientID, out ParticipantOrder pO)) {
                         
                         newCar.GetComponent<NetworkVehicleController>().AssignClient(clientID, pO);
 
-#if SPAWNDEBUG
-                        Debug.Log("Assigning car to a new partcipant with clinetID:" + clientID.ToString() + " =>" +
-                                newCar.GetComponent<NetworkObject>().NetworkObjectId);
-#endif
                         if (ClientObjects[clientID][SpawnType.MAIN] != null)
                             ClientObjects[clientID][SpawnType.MAIN]
                                 .GetComponent<VR_Participant>()
                                 .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientID);
 
                         else
-                            Debug.LogError("Could not find player as I am spawning the CAR. Broken please fix.");
+                            Debug.LogError("Could not find player as I am spawning the Car. Broken please fix.");
                     }
 
                     clientInputCapture.SetMySpawnType(SpawnType.CAR);
@@ -821,9 +818,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
                 case SpawnType.PEDESTRIAN:
                     clientInputCapture.SetMySpawnType(SpawnType.PEDESTRIAN);
-                    // maybe use callback here to
-                    // 1. turn off position tracking
-                    // 2. attach VRHead to avatar head (position only, rotation is for calibration process)
                     break;
             }
 
@@ -833,7 +827,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         return false;
     }
 
-    private bool SpawnAPlayer(ulong clientID, bool persistent) {
+    private bool Spawn_Client(ulong clientID, bool persistent) {
         var foundPlayer = _participants.GetOrder(clientID, out var _participantOrder);
         if (_participantOrder == ParticipantOrder.None || foundPlayer == false) return false;
 
@@ -886,7 +880,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         response.Approved = approve;
         response.CreatePlayerObject = false;
         response.Pending = false;
-        //SpawnAPlayer(request.ClientNetworkId, true);
+        //Spawn_Client(request.ClientNetworkId, true);
     }
 
     #endregion
