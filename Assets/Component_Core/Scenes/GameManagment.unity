@@ -175,13 +175,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b84c2d8dfe509a34fb59e2b81f8e1319, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MessageBufferSize: 5120
-  MaxConnections: 100
-  MaxSentMessageQueueSize: 128
-  ConnectAddress: 192.168.1.163
-  ConnectPort: 7777
-  ServerListenPort: 7777
-  MessageSendMode: 0
 --- !u!114 &476093109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -928,6 +921,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myNumber: 4
   FollowTransform: {fileID: 0}
+  AdjustableCamera: 0
+  m_FlySpeed: 25
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

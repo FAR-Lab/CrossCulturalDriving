@@ -14,7 +14,7 @@ using UltimateReplay;
 using UnityEngine.Serialization;
 
 
-public class NetworkVehicleController : NetworkBehaviour
+public class NetworkVehicleController : Interactable_Object
 {
     public Transform CameraPosition;
 
@@ -69,28 +69,19 @@ public class NetworkVehicleController : NetworkBehaviour
         CurrentSurface.Value = controller.CurrentSurface;
     }
 
-
-    public void StartTheCar()
-    {
-        GetComponent<VehicleAudioController>().PlayIgnition();
-        StartTheCarClientRpc();
+    public override void Stop_Action() {GetComponent<Rigidbody>().velocity = Vector3.zero;
+       GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
     }
 
-    [ClientRpc]
-    public void StartTheCarClientRpc()
-    {
-        GetComponent<VehicleAudioController>().PlayIgnition();
-    }
-
+    
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
         m_Speedometer = GetComponentInChildren<Speedometer>();
         CurrentSpeed.OnValueChanged += NewSpeedRecieved;
         if (IsServer)
         {
-            controller = GetComponent<VehicleController>();
             GetComponent<ParticipantOrderReplayComponent>().enabled = true;
+            controller = GetComponent<VehicleController>();
         }
     }
 
@@ -319,7 +310,7 @@ public class NetworkVehicleController : NetworkBehaviour
         UpdateSounds();
     }
 
-    public void AssignClient(ulong CLID_, ParticipantOrder _participantOrder_)
+    public override void AssignClient(ulong CLID_, ParticipantOrder _participantOrder_)
     {
         if (IsServer)
         {

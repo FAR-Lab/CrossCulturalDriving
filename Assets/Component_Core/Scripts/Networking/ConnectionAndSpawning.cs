@@ -8,21 +8,33 @@ using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class ConnectionAndSpawning : MonoBehaviour {
-    public delegate void ReponseDelegate(ClienConnectionResponse response);
 
+    public struct NetworkConnectionMessage {
+        public JoinType  _jointype;
+        public SpawnType _spawnType;
+        public ParticipantOrder _participantOrder;
+    }
 
+    public static string WaitingRoomSceneName = "WaitingRoom";
+    public enum JoinType {
+        SERVER,
+        SCREEN
+        VR,
+        ROBOT
+    }
+    public Dictionary<SpawnType, Client_Object> JoinType_To_Client_Object;
     public enum SpawnType {
         MAIN,
         CAR,
         PEDESTRIAN,
-        PASSENGER
+        PASSENGER,
+        ROBOT
     }
 
-    public static string WaitingRoomSceneName = "WaitingRoom";
+    public Dictionary<SpawnType, Interactable_Object> SpawnType_To_InteractableObjects;
 
-
-    //   public bool RunAsServer;
     public static bool fakeCare = false;
 
 
@@ -42,11 +54,11 @@ public class ConnectionAndSpawning : MonoBehaviour {
     public GameObject ref_ServerTimingDisplay;
 
     public List<SceneField> IncludedScenes = new();
-    public string LastLoadedVisualScene;
-    public bool ServerisRunning;
+    private string LastLoadedVisualScene;
+    private bool ServerisRunning;
 
-
-    public GUIStyle NotVisitedButton;
+    public delegate void ReponseDelegate(ClienConnectionResponse response);
+    public GUIStyle NotVisitedButton; 
     public GUIStyle VisitendButton;
 
     [SerializeField] private GUIStyle style;
@@ -797,12 +809,12 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
                     if (!fakeCare && _participants.GetOrder(clientID, out ParticipantOrder pO)) {
                         
-                        newCar.GetComponent<NetworkVehicleController>().AssignClient(clientID, pO);
+                        newCar.GetComponent<Interactable_Object>().AssignClient(clientID, pO);
 
                         if (ClientObjects[clientID][SpawnType.MAIN] != null)
                             ClientObjects[clientID][SpawnType.MAIN]
                                 .GetComponent<VR_Participant>()
-                                .AssignCarTransform(newCar.GetComponent<NetworkVehicleController>(), clientID);
+                                .AssignFollowTransform(newCar.GetComponent<Interactable_Object>(), clientID);
 
                         else
                             Debug.LogError("Could not find player as I am spawning the Car. Broken please fix.");
@@ -943,9 +955,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
         foreach (var po in _participants.GetAllConnectedParticipants()) QNFinished.Add(po, false);
 
 
-        foreach (var no in FindObjectsOfType<NetworkVehicleController>()) {
-            no.transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            no.transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        foreach (var no in FindObjectsOfType<Interactable_Object>()) {
+            no.Stop_Action();
+         
         }
 
         foreach (var p in ClientObjects.Keys)

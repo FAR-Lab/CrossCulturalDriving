@@ -11,7 +11,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class VR_Participant : NetworkBehaviour {
+public class VR_Participant : Client_Object {
     private const string OffsetFileName = "offset";
     public bool ReadyForAssignment;
 
@@ -176,7 +176,7 @@ public class VR_Participant : NetworkBehaviour {
         // GetComponentInChildren<GpsController>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
     }
 
-    public void AssignCarTransform(NetworkVehicleController MyCar, ulong targetClient) {
+    public void AssignFollowTransform(Interactable_Object MyCar, ulong targetClient) {
         if (IsServer) {
             NetworkedVehicle = MyCar;
             _transform = NetworkedVehicle.transform.Find("CameraPosition");
