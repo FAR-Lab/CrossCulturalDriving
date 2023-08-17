@@ -5,7 +5,6 @@ using TMPro;
 using UnityEngine.UI;
 using System.IO;
 using Newtonsoft.Json;
-using UnityEngine.Serialization;
 
 public class VRUIManager : MonoBehaviour
 {
@@ -21,6 +20,7 @@ public class VRUIManager : MonoBehaviour
     public string fileName = "ParticipantConfig.json";
 
     private ParticipantConfig currentConfig;
+    private TouchScreenKeyboard overlayKeyboard;
 
     [Serializable]
     public struct ParticipantConfig
@@ -44,11 +44,30 @@ public class VRUIManager : MonoBehaviour
         {
             Debug.Log("Current Config: " + currentConfig.ParticipantIDString + " " + currentConfig.LanguageString + " " + currentConfig.ServerIPString);
         }
+        
+        CheckKeyboardInput();
+    }
+    
+    void OpenKeyboardOverlay()
+    {
+        overlayKeyboard = TouchScreenKeyboard.Open(defaultServerIP, TouchScreenKeyboardType.Default);
+        // set the keyboard to the default value
+        overlayKeyboard.text = defaultServerIP;
+    }
+    
+    void CheckKeyboardInput()
+    {
+        if (overlayKeyboard != null && overlayKeyboard.status == TouchScreenKeyboard.Status.Done)
+        {
+            ServerIPField.text = overlayKeyboard.text;
+            overlayKeyboard = null;
+        }
     }
 
     void PopulateUI()
     {
         saveConfigButton.onClick.AddListener(delegate { SaveConfiguration(); });
+        ServerIPField.onSelect.AddListener(delegate { OpenKeyboardOverlay(); });
 
         PopulateDropdown(ParticipantDropdown, new List<string> { "A", "B", "C", "D", "E", "F" });
         PopulateDropdown(LanguageDropdown, new List<string> { "English", "Hebrew", "Chinese", "German" });
