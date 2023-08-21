@@ -123,6 +123,51 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &110153599
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 110153601}
+  - component: {fileID: 110153600}
+  m_Layer: 0
+  m_Name: StartupManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &110153600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110153599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ba122cf75f0ba84a9b13bfa98221ca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VRUIStartPrefab: {fileID: 8770236260572045539, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
+--- !u!4 &110153601
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110153599}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.8916674, y: -3.1019316, z: 6.850836}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &476093106
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,8 +269,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f22dd40787c7434449f1f52151313a02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerPrefab: {fileID: 4178240877513323451, guid: 580bdbbad0ed7714ea9cb545f404aaa3, type: 3}
-  CarPrefab: {fileID: 102736, guid: 76bfb64261b6b4eb080dcd0e2fa84572, type: 3}
   VRUIStartPrefab: {fileID: 8770236260572045539, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
   ref_ServerTimingDisplay: {fileID: 4979024292393695789, guid: 8a4223da181b88748a21a53936689ba9, type: 3}
   IncludedScenes:
@@ -253,8 +296,6 @@ MonoBehaviour:
     m_SceneName: NSI2
   - m_SceneAsset: {fileID: 102900000, guid: 037735af4327b56478c01e2dbb57cb01, type: 3}
     m_SceneName: NSI3
-  LastLoadedVisualScene: 
-  ServerisRunning: 0
   NotVisitedButton:
     m_Name: 
     m_Normal:
@@ -463,7 +504,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 476093106}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b600a263d8f394499481a78c7dce490, type: 3}
   m_Name: 
@@ -602,9 +643,9 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 127.0.0.1
+    Address: 192.168.0.103
     Port: 7777
-    ServerListenAddress: 127.0.0.1
+    ServerListenAddress: 0.0.0.0
   DebugSimulator:
     PacketDelayMS: 0
     PacketJitterMS: 0
@@ -931,3 +972,4 @@ SceneRoots:
   - {fileID: 1334481671}
   - {fileID: 1852203067}
   - {fileID: 1286760093}
+  - {fileID: 110153601}

@@ -18,7 +18,7 @@ public abstract class Interactable_Object : NetworkBehaviour {
 public abstract class Client_Object : NetworkBehaviour {
     
     
-    public abstract void SetSpawnType(ConnectionAndSpawning.SpawnType _spawnType);
+    public abstract void SetSpawnType(SpawnType _spawnType);
     public abstract void AssignFollowTransform(Interactable_Object MyCar, ulong targetClient);
     public abstract void De_AssignFollowTransform(ulong clientID,NetworkObject netobj);
     public abstract Transform GetMainCamera();

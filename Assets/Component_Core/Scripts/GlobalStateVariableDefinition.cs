@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 
-public enum ActionState {
+public enum ActionState
+{
     DEFAULT,
     WAITINGROOM,
     LOADINGSCENARIO,
@@ -15,6 +17,14 @@ public enum ActionState {
     RERUN
 };
 
+[Serializable]
+public struct ParticipantConfig
+{
+    public string ServerIPString;
+    public string ParticipantIDString;
+    public string LanguageString;
+    public string SpawnTypeString;
+}
 
 public enum ParticipantOrder : byte {
     A = (byte) 'a',
@@ -26,7 +36,28 @@ public enum ParticipantOrder : byte {
     None = (byte) '-'
 };
 
+public enum Language {
+    English, 
+    Hebrew, 
+    Chinese, 
+    German
+}
 
+public enum JoinType {
+    SERVER,
+    SCREEN,
+    VR,
+    ROBOT
+}
+
+
+public enum SpawnType {
+    NONE,
+    CAR,
+    PEDESTRIAN,
+    PASSENGER,
+    ROBOT
+}
 
 public struct FElem
 {
@@ -37,14 +68,3 @@ public struct FElem
     };
 }
 
-
-/*
-public static class TextExtension
-{
-    public static SafeBu(this TextAsset val)
-    {
-        
-    }
-}
-
-*/

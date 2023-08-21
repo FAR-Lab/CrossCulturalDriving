@@ -5,8 +5,8 @@ using UnityEngine;
 public class ParticipantOrderMapping {
     private Dictionary<ulong, ParticipantOrder> _clientToOrder;
     private Dictionary<ParticipantOrder, ulong> _orderToClient;
-    private Dictionary<ParticipantOrder, ConnectionAndSpawning.SpawnType> _orderToSpawnType;
-    private Dictionary<ParticipantOrder, ConnectionAndSpawning.JoinType> _orderToJoinType;
+    private Dictionary<ParticipantOrder, SpawnType> _orderToSpawnType;
+    private Dictionary<ParticipantOrder, JoinType> _orderToJoinType;
 
     private bool initDone = false;
 
@@ -17,12 +17,12 @@ public class ParticipantOrderMapping {
     public ParticipantOrderMapping() {
         _orderToClient = new Dictionary<ParticipantOrder, ulong>();
         _clientToOrder = new Dictionary<ulong, ParticipantOrder>();
-        _orderToSpawnType = new Dictionary<ParticipantOrder, ConnectionAndSpawning.SpawnType>();
-        _orderToJoinType = new Dictionary<ParticipantOrder, ConnectionAndSpawning.JoinType>();
+        _orderToSpawnType = new Dictionary<ParticipantOrder, SpawnType>();
+        _orderToJoinType = new Dictionary<ParticipantOrder, JoinType>();
         initDone = true;
     }
 
-    public bool AddParticipant(ParticipantOrder po, ulong id,ConnectionAndSpawning.SpawnType st, ConnectionAndSpawning.JoinType jt) {
+    public bool AddParticipant(ParticipantOrder po, ulong id,SpawnType st, JoinType jt) {
         if (!initDone) {
             LogErrorNotInit();
             return false;
@@ -71,38 +71,38 @@ public class ParticipantOrderMapping {
         return _clientToOrder.ContainsKey(id);
     }
 
-    public bool GetSpawnType(ulong clientId,out ConnectionAndSpawning.SpawnType st) {
+    public bool GetSpawnType(ulong clientId,out SpawnType st) {
         if (!initDone ||  GetOrder(clientId, out ParticipantOrder po)) {
             LogErrorNotInit();
-            st = ConnectionAndSpawning.SpawnType.NONE;
+            st = SpawnType.NONE;
             return false;
         }
 
        
         return GetSpawnType(po, out st);
     }
-    public bool GetSpawnType(ParticipantOrder or,out ConnectionAndSpawning.SpawnType st) {
+    public bool GetSpawnType(ParticipantOrder or,out SpawnType st) {
         if (!initDone || !_orderToSpawnType.ContainsKey(or)) {
             LogErrorNotInit();
-            st = ConnectionAndSpawning.SpawnType.NONE;
+            st = SpawnType.NONE;
             return false;
         }
 
         st = _orderToSpawnType[or];
         return true;
     }
-    public bool GetJoinType(ulong clientId,out ConnectionAndSpawning.JoinType st) {
+    public bool GetJoinType(ulong clientId,out JoinType st) {
         if (!initDone ||  GetOrder(clientId, out ParticipantOrder po)) {
             LogErrorNotInit();
-            st = ConnectionAndSpawning.JoinType.SCREEN;
+            st = JoinType.SCREEN;
             return false;
         }
         return GetJoinType(po, out st);
     }
-    public bool GetJoinType(ParticipantOrder or,out ConnectionAndSpawning.JoinType st) {
+    public bool GetJoinType(ParticipantOrder or,out JoinType st) {
         if (!initDone || !_orderToSpawnType.ContainsKey(or)) {
             LogErrorNotInit();
-            st = ConnectionAndSpawning.JoinType.SCREEN;
+            st = JoinType.SCREEN;
             return false;
         }
 

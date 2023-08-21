@@ -15,7 +15,7 @@ public class VR_Participant : Client_Object {
     private const string OffsetFileName = "offset";
     public bool ReadyForAssignment;
 
-    private ConnectionAndSpawning.SpawnType mySpawnType;
+    private SpawnType mySpawnType;
 
     public NetworkVariable<GpsController.Direction> CurrentDirection = new();
 
@@ -171,7 +171,7 @@ public class VR_Participant : Client_Object {
 
    
 
-    public override void SetSpawnType(ConnectionAndSpawning.SpawnType _spawnType) {
+    public override void SetSpawnType(SpawnType _spawnType) {
         mySpawnType = _spawnType;
     }
 

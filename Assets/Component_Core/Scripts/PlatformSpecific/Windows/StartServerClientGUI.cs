@@ -5,10 +5,21 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class StartServerClientGUI : MonoBehaviour {
+    # region Singleton
+    public static StartServerClientGUI Singleton;   
+    private void Awake() {
+        if (Singleton == null) {
+            Singleton = this;
+        } else {
+            Destroy(this);
+        }
+    }
+    # endregion
+    
+    
     public GameObject ServerStartGUI;
     private Transform ServerGuiSintance;
-
-
+    
     private Text SessionName;
 
     private void Start() {

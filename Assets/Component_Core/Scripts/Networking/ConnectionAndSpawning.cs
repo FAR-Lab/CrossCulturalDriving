@@ -19,23 +19,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     public static string WaitingRoomSceneName = "WaitingRoom";
-
-    public enum JoinType {
-        SERVER,
-        SCREEN,
-        VR,
-        ROBOT
-    }
-
     public Dictionary<JoinType, Client_Object> JoinType_To_Client_Object;
 
-    public enum SpawnType {
-        NONE,
-        CAR,
-        PEDESTRIAN,
-        PASSENGER,
-        ROBOT
-    }
 
     public Dictionary<SpawnType, Interactable_Object> SpawnType_To_InteractableObjects;
 
@@ -112,16 +97,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     private void Start() {
-        if (Application.platform == RuntimePlatform.Android) {
-            // StartAsClient("English", ParticipantOrder.A, "192.168.1.160", 7777, ResponseDelegate);
-
-            Instantiate(VRUIStartPrefab);
-            Debug.Log("Started Client");
-        }
-        else {
-            GetComponent<StartServerClientGUI>().enabled = true;
-        }
-
         if (FindObjectsOfType<RerunManager>().Length > 1) {
             Debug.LogError("We found more than 1 RerunManager. This is not support. Check your Hiracy");
             Application.Quit();
@@ -316,8 +291,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     private void ClientConnected_client(ulong ClientID) {
+        Debug.Log("Debugg: Client connected");
         if (ClientID != NetworkManager.Singleton.LocalClient.ClientId) return;
-
+        Debug.Log("Debugg: Success!");
         SuccessFullyConnected = true;
         ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS);
         Debug.Log(SuccessFullyConnected + " CHECK HERE");
@@ -340,6 +316,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     public void StartAsClient(string lang_, ParticipantOrder po, string ip, int port, ReponseDelegate result,
         SpawnType _spawnTypeIN = SpawnType.CAR, JoinType _joinTypeIN = JoinType.VR) {
+        
+        Debug.Log($"Log: Starting as Client. IP: {ip} Port: {port} Language: {lang_} ParticipantOrder: {po} SpawnType: {_spawnTypeIN} JoinType: {_joinTypeIN}");
+        
         SetupClientFunctionality();
         ReponseHandler += result;
         SetupTransport(ip, port);
@@ -355,8 +334,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(jsonstring); // assigning ID
 
         Debug.Log("Starting as Client.");
-
-
+        
         NetworkManager.Singleton.StartClient();
     }
 
