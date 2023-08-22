@@ -1,3 +1,5 @@
+
+
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -271,8 +273,10 @@ public class farlab_logger : MonoBehaviour {
         doneSending = true;
     }
 
+    /*
     // Update is called once per frame
     private void Update() {
+        
         if (!RECORDING) return;
 
         if (PlayerVRCenterA == null)
@@ -310,6 +314,7 @@ public class farlab_logger : MonoBehaviour {
             if (VehicleB == null) VehicleB = CarB.GetComponent<NetworkVehicleController>();
         }
     }
+    */
 
     private void LateUpdate() {
         if (!RECORDING) return;

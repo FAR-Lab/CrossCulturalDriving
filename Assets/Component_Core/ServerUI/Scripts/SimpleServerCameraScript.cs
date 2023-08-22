@@ -21,6 +21,12 @@ public class SimpleServerCameraScript : MonoBehaviour
 
     void OnEnable()
     {
+        // if not server, return
+        if (!NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
+        
         NetworkManager.Singleton.OnClientConnectedCallback += DisableMe;
         NetworkManager.Singleton.OnServerStarted += StartingAsServer;
         
@@ -43,6 +49,8 @@ public class SimpleServerCameraScript : MonoBehaviour
 
     private void UnloadUnityAction(Scene arg0)
     {
+        Debug.Log("Unloading scene");
+        
         if (!initFinished)
         { 
             setupCameras();
@@ -57,6 +65,8 @@ public class SimpleServerCameraScript : MonoBehaviour
 
     private void LoadUnityAction(Scene arg0, LoadSceneMode arg1)
     {
+        
+        Debug.Log("Loading scene");
         
         if (ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN && arg0.name!=ConnectionAndSpawning.WaitingRoomSceneName)
         { 
@@ -80,7 +90,6 @@ public class SimpleServerCameraScript : MonoBehaviour
         Debug.Log(r.enabled);
         if (r != null)
         {
-
             r.EnableCameras();
         }
         else
@@ -106,6 +115,7 @@ public class SimpleServerCameraScript : MonoBehaviour
     }
     private void StartingAsServer()
     {
+        Debug.Log("111");
         if (NetworkManager.Singleton.SceneManager != null)
         {
             NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;

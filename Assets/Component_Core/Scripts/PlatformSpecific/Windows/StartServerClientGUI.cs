@@ -111,8 +111,14 @@ public class StartServerClientGUI : MonoBehaviour {
     }
 
     public void StartAsClientAInterfaceCallback() {
-        ConnectionAndSpawning.Singleton.StartAsClient("English", ParticipantOrder.A, "127.0.0.1", 7777,
-            ResponseDelegate);
+        ConnectionAndSpawning.Singleton.StartAsClient(lang_: "English", 
+            po: ParticipantOrder.A,
+            ip: "127.0.0.1",
+            port: 7777,
+            result:ResponseDelegate,
+            _spawnTypeIN: SpawnType.CAR,
+            _joinTypeIN: JoinType.SCREEN
+        );
         Destroy(ServerGuiSintance.gameObject);
         enabled = false;
     }

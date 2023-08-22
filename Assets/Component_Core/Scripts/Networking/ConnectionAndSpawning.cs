@@ -54,6 +54,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private readonly bool ClientListInitDone = false;
 
     private Dictionary<ParticipantOrder, Client_Object> Main_ParticipantObjects;
+
     private Dictionary<ParticipantOrder, List<Interactable_Object>> Interactable_ParticipantObjects;
 
     private ScenarioManager CurrentScenarioManager;
@@ -640,6 +641,11 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private void DestroyAllClientObjects(bool destroyMain = false) {
         foreach (var po in _participants.GetAllConnectedParticipants()) {
+            if (po == ParticipantOrder.None)
+            {
+                continue;
+            }
+            Debug.Log(po.ToString());
             foreach (var id in Interactable_ParticipantObjects[po]) {
                 DespawnAllInteractableObject(po);
                 if (destroyMain) {
@@ -821,6 +827,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         ConnectionDataRequest cdr =
             JsonConvert.DeserializeObject<ConnectionDataRequest>(Encoding.ASCII.GetString(request.Payload));
 
+        //Debug.Log($"cdr: po: {cdr.po}, st: {cdr.st}, jt: {cdr.jt}");
 
         approve = _participants.AddParticipant(cdr.po, request.ClientNetworkId, cdr.st, cdr.jt);
 
@@ -830,6 +837,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
         }
         else {
             // ParticipantObjects.Add(request.ClientNetworkId, new Dictionary<SpawnType, NetworkObject>());
+            // populate Interactable_ParticipantObjects with the current participant
+            Interactable_ParticipantObjects.Add(cdr.po, new List<Interactable_Object>());
             Debug.Log("Client will connect now!");
         }
 

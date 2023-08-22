@@ -5,9 +5,7 @@ using UnityEngine;
 public class StartupManager : MonoBehaviour
 {
     public GameObject VRUIStartPrefab;
-    public 
-    
-    void Start()
+    public void Start()
     {
         DetectPlatform();
     }

@@ -82,6 +82,7 @@ public class GroundTruthLogger {
 
 
     // Update is called once per frame
+    /*
     public void Update() {
         if (
             _vehicles == null ||
@@ -114,6 +115,8 @@ public class GroundTruthLogger {
             }
         }
     }
+    
+    */
 }
 
 

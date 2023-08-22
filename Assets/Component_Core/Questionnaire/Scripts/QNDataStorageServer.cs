@@ -40,7 +40,7 @@ public class QNDataStorageServer : MonoBehaviour
 
     private void Update(){
         if (ConnectionAndSpawning.Singleton.ServerState == ActionState.DRIVE){
-            gtLogger.Update();
+            //gtLogger.Update();
         }
     }
 
