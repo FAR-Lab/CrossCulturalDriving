@@ -4,8 +4,8 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 
-[CustomEditor(typeof(SO_EnumToGameobject<,>), true)]
-public class Editor_EnumToGameObject : Editor
+[CustomEditor(typeof(SO_EnumToValue<,>), true)]
+public class Editor_EnumToValue : Editor
 {
     private void OnEnable()
     {
@@ -30,7 +30,7 @@ public class Editor_EnumToGameObject : Editor
         }
 
         SerializedProperty listProperty = serializedObject.FindProperty("enumToValueList");
-        GUILayout.Label("Enum - GameObject Pairs:");
+        GUILayout.Label("Enum - Value Pairs:");
 
         for (int i = 0; i < listProperty.arraySize; i++)
         {
@@ -51,6 +51,13 @@ public class Editor_EnumToGameObject : Editor
     {
         ScriptableObject so = target as ScriptableObject;
         if (so == null)
+        {
+            return;
+        }
+        
+        // if there are already enumToValueList items, don't prepopulate
+        SerializedProperty listProperty = serializedObject.FindProperty("enumToValueList");
+        if (listProperty.arraySize > 0)
         {
             return;
         }

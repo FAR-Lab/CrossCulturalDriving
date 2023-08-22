@@ -32,4 +32,5 @@ public abstract class SO_EnumToValue<TEnum, TValue> : ScriptableObject
         }
         return dictionary;
     }
+    
 }

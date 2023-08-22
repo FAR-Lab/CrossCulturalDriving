@@ -19,9 +19,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     public static string WaitingRoomSceneName = "WaitingRoom";
+    public SO_JoinTypeToClientObject JoinTypeConfig;
     public Dictionary<JoinType, Client_Object> JoinType_To_Client_Object;
-
-
+    public SO_SpawnTypeToInteractableObject SpawnTypeConfig;
     public Dictionary<SpawnType, Interactable_Object> SpawnType_To_InteractableObjects;
 
 
@@ -94,6 +94,11 @@ public class ConnectionAndSpawning : MonoBehaviour {
         _participants = new ParticipantOrderMapping();
         Main_ParticipantObjects = new Dictionary<ParticipantOrder, Client_Object>();
         Interactable_ParticipantObjects = new Dictionary<ParticipantOrder, List<Interactable_Object>>();
+        
+        // populate the dictionaries
+        JoinType_To_Client_Object = JoinTypeConfig.EnumToValueDictionary;
+        SpawnType_To_InteractableObjects = SpawnTypeConfig.EnumToValueDictionary;
+
     }
 
     private void Start() {
