@@ -10,6 +10,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine.UI;
 
 
@@ -114,10 +115,18 @@ public class SteeringWheelManager : MonoBehaviour
     public void Init()
     {
         ready = true;
-        DirectInputWrapper.Init();
+        LogitechGSDK.LogiSteeringInitialize(false);
         AssignSteeringWheels();
         var initForceFeedback = InitForceFeedback();
         StartCoroutine(initForceFeedback);
+    }
+    
+    private int MapToPercentage(float originalValue, float originalMin = -10000, float originalMax = 10000, float newMin = 0, float newMax = 100)
+    {
+        float originalRange = originalMax - originalMin;
+        float newRange = newMax - newMin;
+        float newValue = (((originalValue - originalMin) * newRange) / originalRange) + newMin;
+        return (int)newValue;
     }
 
     IEnumerator SpringforceFix()
@@ -131,13 +140,41 @@ public class SteeringWheelManager : MonoBehaviour
     void AssignSteeringWheels()
     {
         ParticipantOrder po = ParticipantOrder.A;
-        for (int i = 0; i < DirectInputWrapper.DevicesCount(); i++)
+        for (int i = 0; i < GetNumberOfConnectedDevices(); i++)
         {
-            Debug.Log("We got the input controller called" + DirectInputWrapper.GetProductNameManaged(i) +
+            Debug.Log("We got the input controller called" + GetProductName(i) +
                       "Assigning it to participant: " + po.ToString());
             ActiveWheels.Add(po, new SteeringWheelData(i));
             po++;
         }
+    }
+    
+    public string GetProductName(int index)
+    {
+        int bufferSize = 256; 
+        StringBuilder productName = new StringBuilder(bufferSize);
+
+        if (LogitechGSDK.LogiGetFriendlyProductName(index, productName, bufferSize))
+        {
+            return productName.ToString();
+        }
+        else
+        {
+            return "Unknown";
+        }
+    }
+    
+    public static int GetNumberOfConnectedDevices()
+    {
+        int connectedDevicesCount = 0;
+        for (int i = 0; i < LogitechGSDK.LOGI_MAX_CONTROLLERS; i++)
+        {
+            if (LogitechGSDK.LogiIsConnected(i))
+            {
+                connectedDevicesCount++;
+            }
+        }
+        return connectedDevicesCount;
     }
 
 
@@ -190,21 +227,21 @@ public class SteeringWheelManager : MonoBehaviour
         foreach (SteeringWheelData swd in ActiveWheels.Values)
         {
             swd.forceFeedbackPlaying = false;
-            Debug.Log("stopping spring" + DirectInputWrapper.StopSpringForce(swd.wheelIndex));
+            
+            Debug.Log("stopping spring" + LogitechGSDK.LogiStopSpringForce(swd.wheelIndex));
         }
     }
 
     private IEnumerator _InitSpringForce(int sat, int coeff)
     {
         yield return new WaitForSeconds(1f);
-        long res = -1;
+        bool res = false;
         int tries = 0;
         foreach (SteeringWheelData swd in ActiveWheels.Values)
         {
-            while (res < 0)
+            while (res == false)
             {
-                res = DirectInputWrapper.PlaySpringForce(swd.wheelIndex, 0, Mathf.RoundToInt(sat * FFBGain),
-                    Mathf.RoundToInt(coeff * FFBGain));
+                res = LogitechGSDK.LogiPlaySpringForce(swd.wheelIndex, 0, MapToPercentage(Mathf.RoundToInt(sat * FFBGain)), Mathf.RoundToInt(coeff * FFBGain));
                 Debug.Log("starting spring for the wheel" + res);
 
                 tries++;
@@ -332,14 +369,15 @@ public class SteeringWheelManager : MonoBehaviour
     {
         if (!ready || ActiveWheels == null) return;
         if (Application.platform == RuntimePlatform.OSXEditor) return;
-        DirectInputWrapper.Update();
-        ready = DirectInputWrapper.DevicesCount() > 0;
+        LogitechGSDK.LogiUpdate();
+        ready = GetNumberOfConnectedDevices() > 0;
 
         FoundSteeringWheels = ActiveWheels.Count();
         foreach (SteeringWheelData swd in ActiveWheels.Values)
         {
-            DeviceState state;
-            state = DirectInputWrapper.GetStateManaged(swd.wheelIndex);
+            
+            LogitechGSDK.DIJOYSTATE2ENGINES state;
+            state = LogitechGSDK.LogiGetStateCSharp(swd.wheelIndex);
             swd.steerInput = state.lX / 32768f;
             // accelInput = (state.lY- 32768f) / -32768f;
             swd.gas = 0.9f * swd.gas + 0.1f * ((state.lY) / (-32768f));
@@ -372,14 +410,13 @@ public class SteeringWheelManager : MonoBehaviour
             if (swd.forceFeedbackPlaying)
             {
                 //  Debug.Log("playing force"+swd.wheelIndex+swd.ToString());
-                DirectInputWrapper.PlayConstantForce(swd.wheelIndex, Mathf.RoundToInt(swd.constant * FFBGain));
-                DirectInputWrapper.PlayDamperForce(swd.wheelIndex, Mathf.RoundToInt(swd.damper * FFBGain));
-                //DirectInputWrapper.PlaySpringForce(wheelIndex, 0, Mathf.RoundToInt(0 * FFBGain), springCoefficient);
+                LogitechGSDK.LogiPlayConstantForce(swd.wheelIndex, MapToPercentage(Mathf.RoundToInt(swd.damper * FFBGain)));
+                LogitechGSDK.LogiPlayDamperForce(swd.wheelIndex, MapToPercentage(Mathf.RoundToInt(swd.damper * FFBGain)));
 
+                LogitechGSDK.LogiPlaySpringForce(swd.wheelIndex, 0,
+                    MapToPercentage(Mathf.RoundToInt((swd.springSaturation <= 0 ? 1 : swd.springSaturation) * FFBGain)),
+                    MapToPercentage(swd.springCoefficient));
 
-                DirectInputWrapper.PlaySpringForce(swd.wheelIndex, 0,
-                    Mathf.RoundToInt((swd.springSaturation <= 0 ? 1 : swd.springSaturation) * FFBGain),
-                    swd.springCoefficient);
             }
 
 
