@@ -12,6 +12,9 @@ public abstract class Interactable_Object : NetworkBehaviour {
     public abstract void SetStartingPose(Pose _pose);
 
     public abstract bool HasActionStopped();
+    
+    public delegate bool serverUIRequest(string name);
+    
 }
 
 
@@ -22,7 +25,6 @@ public abstract class Client_Object : NetworkBehaviour {
     public abstract void AssignFollowTransform(Interactable_Object MyCar, ulong targetClient);
     public abstract void De_AssignFollowTransform(ulong clientID,NetworkObject netobj);
     public abstract Transform GetMainCamera();
-    
     public abstract void CalibrateClient(ClientRpcParams clientRpcParams);
 }
 

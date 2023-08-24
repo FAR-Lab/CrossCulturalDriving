@@ -103,8 +103,7 @@ public class SteeringWheelManager : MonoBehaviour
 
         SetSingleton();
         DontDestroyOnLoad(gameObject);
-
-        this.enabled = false;
+        
     }
 
     void Start()
@@ -121,13 +120,31 @@ public class SteeringWheelManager : MonoBehaviour
         StartCoroutine(initForceFeedback);
     }
     
-    private int MapToPercentage(float originalValue, float originalMin = -10000, float originalMax = 10000, float newMin = 0, float newMax = 100)
+    public static int IntRemap(float value, float from1 = -10000, float to1 = 10000, float from2 = -100, float to2 = 100)
     {
-        float originalRange = originalMax - originalMin;
-        float newRange = newMax - newMin;
-        float newValue = (((originalValue - originalMin) * newRange) / originalRange) + newMin;
-        return (int)newValue;
+        float returnVal = (value - from1) / (to1 - from1) * (to2 - from2) + from2;
+        return (int) returnVal;
     }
+    
+    // when this gets destroyed or the application quits, we need to clean up the steering wheel
+    void OnApplicationQuit()
+    {
+        CleanUp();
+        LogitechGSDK.LogiSteeringShutdown();
+    }
+
+    private void OnDisable()
+    {
+        CleanUp();
+        LogitechGSDK.LogiSteeringShutdown();
+    }
+
+    private void OnDestroy()
+    {
+        CleanUp();
+        LogitechGSDK.LogiSteeringShutdown();
+    }
+
 
     IEnumerator SpringforceFix()
     {
@@ -241,7 +258,7 @@ public class SteeringWheelManager : MonoBehaviour
         {
             while (res == false)
             {
-                res = LogitechGSDK.LogiPlaySpringForce(swd.wheelIndex, 0, MapToPercentage(Mathf.RoundToInt(sat * FFBGain)), Mathf.RoundToInt(coeff * FFBGain));
+                res = LogitechGSDK.LogiPlaySpringForce(swd.wheelIndex, 0, IntRemap(sat * FFBGain), IntRemap(coeff * FFBGain));
                 Debug.Log("starting spring for the wheel" + res);
 
                 tries++;
@@ -410,12 +427,12 @@ public class SteeringWheelManager : MonoBehaviour
             if (swd.forceFeedbackPlaying)
             {
                 //  Debug.Log("playing force"+swd.wheelIndex+swd.ToString());
-                LogitechGSDK.LogiPlayConstantForce(swd.wheelIndex, MapToPercentage(Mathf.RoundToInt(swd.damper * FFBGain)));
-                LogitechGSDK.LogiPlayDamperForce(swd.wheelIndex, MapToPercentage(Mathf.RoundToInt(swd.damper * FFBGain)));
+                LogitechGSDK.LogiPlayConstantForce(swd.wheelIndex, IntRemap(swd.damper * FFBGain));
+                LogitechGSDK.LogiPlayDamperForce(swd.wheelIndex, IntRemap(swd.damper * FFBGain));
 
                 LogitechGSDK.LogiPlaySpringForce(swd.wheelIndex, 0,
-                    MapToPercentage(Mathf.RoundToInt((swd.springSaturation <= 0 ? 1 : swd.springSaturation) * FFBGain)),
-                    MapToPercentage(swd.springCoefficient));
+                    IntRemap((swd.springSaturation <= 0 ? 1 : swd.springSaturation) * FFBGain),
+                    IntRemap(swd.springCoefficient));
 
             }
 

@@ -1,11 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class StartupManager : MonoBehaviour
 {
+    [FormerlySerializedAs("ZEDManager")] public GameObject ZEDInitializationManager;
+    public GameObject ServerUICanvas;
+    
     public GameObject VRUIStartPrefab;
-    public void Start()
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
+
+    private void Start()
     {
         DetectPlatform();
     }
@@ -19,6 +30,11 @@ public class StartupManager : MonoBehaviour
             case RuntimePlatform.WindowsPlayer:
                 // Do stuff for Windows
                 StartServerClientGUI.Singleton.enabled = true;
+                Instantiate(ServerUICanvas);
+                #if USING_ZED
+                Debug.Log("ZED is enabled");
+                Instantiate(ZEDInitializationManager);
+                # endif
                 break;
             case RuntimePlatform.Android:
                 // Do stuff for Oculus

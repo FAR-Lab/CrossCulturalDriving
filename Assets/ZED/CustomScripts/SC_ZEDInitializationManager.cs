@@ -17,7 +17,8 @@ public class SC_ZEDInitializationManager : MonoBehaviour {
     public void SetupZED(ActionState actionState) {
         if (actionState == ActionState.READY)
             // if there isn't instance of ZEDManager exist, instantiate it on server
-            if (FindObjectsOfType<ZEDBodyTrackingManager>() == null) {
+            if (FindObjectOfType<ZEDBodyTrackingManager>() == null) {
+                Debug.Log("Creating ZEDManager");
                 var ZEDManagerInstance = Instantiate(ZEDManager, transform);
             }
     }

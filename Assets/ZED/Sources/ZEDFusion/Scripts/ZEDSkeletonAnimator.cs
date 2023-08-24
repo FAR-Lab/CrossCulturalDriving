@@ -1,8 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(HeightOffsetter))]
 public class ZEDSkeletonAnimator : MonoBehaviour {
     public Animator animator;
     private HeightOffsetter heightOffsetter;

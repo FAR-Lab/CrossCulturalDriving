@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+
 using Rerun;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Newtonsoft.Json;
+using UnityEngine.InputSystem.UI;
 
 public class ConnectionAndSpawning : MonoBehaviour {
     public struct NetworkConnectionMessage {
@@ -23,8 +25,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     public Dictionary<JoinType, Client_Object> JoinType_To_Client_Object;
     public SO_SpawnTypeToInteractableObject SpawnTypeConfig;
     public Dictionary<SpawnType, Interactable_Object> SpawnType_To_InteractableObjects;
-
-
+    
     private static readonly Dictionary<ParticipantOrder, GpsController.Direction> StopDict =
         new() {
             { ParticipantOrder.A, GpsController.Direction.Stop },
@@ -36,7 +37,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
         };
 
 
-    public GameObject VRUIStartPrefab;
     public GameObject ref_ServerTimingDisplay;
 
     public List<SceneField> IncludedScenes = new();
@@ -50,10 +50,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     [SerializeField] private GUIStyle style;
 
-    private ParticipantOrderMapping _participants;
+    public ParticipantOrderMapping participants;
     private readonly bool ClientListInitDone = false;
 
-    private Dictionary<ParticipantOrder, Client_Object> Main_ParticipantObjects;
+    public Dictionary<ParticipantOrder, Client_Object> Main_ParticipantObjects;
 
     private Dictionary<ParticipantOrder, List<Interactable_Object>> Interactable_ParticipantObjects;
 
@@ -82,7 +82,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private bool SuccessFullyConnected;
 
 
-    private readonly Dictionary<SceneField, bool> VisitedScenes = new();
+    public readonly Dictionary<SceneField, bool> VisitedScenes = new();
 
 
     public ParticipantOrder ParticipantOrder { get; private set; } = ParticipantOrder.None;
@@ -92,7 +92,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     public string lang { private set; get; }
 
     private void Awake() {
-        _participants = new ParticipantOrderMapping();
+        participants = new ParticipantOrderMapping();
         Main_ParticipantObjects = new Dictionary<ParticipantOrder, Client_Object>();
         Interactable_ParticipantObjects = new Dictionary<ParticipantOrder, List<Interactable_Object>>();
         
@@ -103,6 +103,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     private void Start() {
+        DontDestroyOnLoad(FindObjectOfType<InputSystemUIInputModule>());
+        
         if (FindObjectsOfType<RerunManager>().Length > 1) {
             Debug.LogError("We found more than 1 RerunManager. This is not support. Check your Hiracy");
             Application.Quit();
@@ -185,64 +187,20 @@ public class ConnectionAndSpawning : MonoBehaviour {
             }
         }
     }
-
+    
+    
     private void OnGUI() {
         if (NetworkManager.Singleton == null && !ClientListInitDone) return;
         if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer) {
-            GUI.Label(new Rect(5, 5, 150, 50), "Server: " + ParticipantOrder + " " +
-                                               NetworkManager.Singleton.ConnectedClients.Count + " " +
-                                               (_participants.GetParticipantCount() - 1).ToString() + "  " +
-                                               ServerState + "  " + Time.timeScale);
-            if (ServerState == ActionState.WAITINGROOM) {
-                var y = 50;
-                foreach (var f in IncludedScenes) {
-                    if (!VisitedScenes.ContainsKey(f)) VisitedScenes.Add(f, false);
-
-                    if (GUI.Button(new Rect(5, 5 + y, 150, 25), f.SceneName,
-                            VisitedScenes[f] ? VisitendButton : NotVisitedButton)) {
-                        SwitchToLoading(f.SceneName);
-                        VisitedScenes[f] = true;
-                    }
-
-                    y += 27;
-                }
-
-                y = 50;
-                if (_participants == null) return;
-                foreach (var p in _participants.GetAllConnectedParticipants()) {
-                    if (GUI.Button(new Rect(200, 200 + y, 100, 25), "Calibrate " + p)) {
-                        var success = _participants.GetClientID(p, out var clientID);
-                        if (!success) continue;
-
-                        var clientRpcParams = new ClientRpcParams {
-                            Send = new ClientRpcSendParams {
-                                TargetClientIds = new[] { clientID }
-                            }
-                        };
-                        Main_ParticipantObjects[p].CalibrateClient(clientRpcParams);
-                    }
-
-                    y += 50;
-                }
-            }
-
-            else if (ServerState == ActionState.QUESTIONS) {
+            if (ServerState == ActionState.QUESTIONS) {
                 var y = 50;
                 foreach (var f in QNFinished.Keys) {
                     GUI.Label(new Rect(5, 5 + y, 150, 25), f + "  " + QNFinished[f]);
                     y += 27;
                 }
             }
-            else if (ServerState == ActionState.READY) {
-                if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
-                    GUI.Label(new Rect(5, 5, 150, 100), "Client: " +
-                                                        ParticipantOrder + " " +
-                                                        NetworkManager.Singleton.IsConnectedClient);
-            }
-
             if (ServerState == ActionState.DRIVE || ServerState == ActionState.READY ||
                 ServerState == ActionState.QUESTIONS || ServerState == ActionState.POSTQUESTIONS) {
-                GUI.Label(new Rect(10, Screen.height - 99, 150, 33), "Current scene: " + LastLoadedScene, style);
                 if (ServerState == ActionState.QUESTIONS) {
                     GUI.Label(new Rect(10, Screen.height - 66, 150, 33),
                         "QN A: " + m_QNDataStorageServer.GetCurrentQuestionForParticipant(ParticipantOrder.A), style);
@@ -254,13 +212,17 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
 
+    private void AddComponents()
+    {
+        gameObject.AddComponent<SteeringWheelManager>();
+        gameObject.AddComponent<farlab_logger>();
+        m_QNDataStorageServer = gameObject.AddComponent<QNDataStorageServer>();
+    }
+    
     public void StartAsServer(string pairName) {
         Application.targetFrameRate = 72;
-        gameObject.AddComponent<farlab_logger>();
-        SteeringWheelManager.Singleton.enabled = true;
-        m_QNDataStorageServer = GetComponent<QNDataStorageServer>();
-        m_QNDataStorageServer.enabled = true;
-
+        
+        AddComponents();
 
         GetComponent<TrafficLightSupervisor>().enabled = true;
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
@@ -269,7 +231,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
 
         NetworkManager.Singleton.StartServer();
-        _participants.AddParticipant(ParticipantOrder.None, NetworkManager.Singleton.LocalClientId, SpawnType.NONE,
+        participants.AddParticipant(ParticipantOrder.None, NetworkManager.Singleton.LocalClientId, SpawnType.NONE,
             JoinType.SERVER);
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;
 
@@ -375,6 +337,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     public void StartReRun() {
         ServerState = ActionState.RERUN;
+        ServerStateChange.Invoke(ActionState.RERUN);
+        
         // FindObjectOfType<RerunLayoutManager>().?enabled = true;
         m_ReRunManager.RegisterPreLoadHandler(LoadSceneReRun);
         NetworkManager.Singleton.enabled = false;
@@ -416,13 +380,13 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     public void FinishedQuestionair(ulong clientID) {
-        _participants.GetOrder(clientID, out var po);
+        participants.GetOrder(clientID, out var po);
         QNFinished[po] = true;
     }
 
 
     public Transform GetMainClientObject(ulong senderClientId) {
-        bool success = _participants.GetOrder(senderClientId, out ParticipantOrder po);
+        bool success = participants.GetOrder(senderClientId, out ParticipantOrder po);
         if (success) {
             return GetMainClientObject(po);
         }
@@ -437,7 +401,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     public List<Interactable_Object> GetInteractableObjects_For_Participants(ulong senderClientId) {
-        bool success = _participants.GetOrder(senderClientId, out ParticipantOrder po);
+        bool success = participants.GetOrder(senderClientId, out ParticipantOrder po);
         if (success) {
             return GetInteractableObjects_For_Participants(po);
         }
@@ -452,7 +416,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     public Transform GetClientMainCameraObject(ulong senderClientId) {
-        bool success = _participants.GetOrder(senderClientId, out ParticipantOrder po);
+        bool success = participants.GetOrder(senderClientId, out ParticipantOrder po);
         if (success) {
             return GetClientMainCameraObject(po);
         }
@@ -478,18 +442,18 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     public ParticipantOrder GetParticipantOrderClientId(ulong clientid) {
-        _participants.GetOrder(clientid, out ParticipantOrder outval);
+        participants.GetOrder(clientid, out ParticipantOrder outval);
         return outval;
     }
 
     public bool GetClientIdParticipantOrder(ParticipantOrder po, out ulong outValue) {
         outValue = 0;
-        bool var = _participants.GetClientID(po, out outValue);
+        bool var = participants.GetClientID(po, out outValue);
         return var;
     }
 
     public List<ParticipantOrder> GetCurrentlyConnectedClients() {
-        return new List<ParticipantOrder>(_participants.GetAllConnectedParticipants());
+        return new List<ParticipantOrder>(participants.GetAllConnectedParticipants());
     }
 
     public void QNNewDataPoint(ParticipantOrder po, int id, int answerIndex, string lang) {
@@ -540,7 +504,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private bool AllActionStopped() {
         bool testValue = true;
-        foreach (var po in _participants.GetAllConnectedParticipants()) {
+        foreach (var po in participants.GetAllConnectedParticipants()) {
             foreach (var IO in Interactable_ParticipantObjects[po])
                 testValue &= IO.GetComponent<Interactable_Object>().HasActionStopped();
         }
@@ -599,6 +563,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
             LastLoadedVisualScene = tmp.VisualSceneToUse.SceneName;
             NetworkManager.Singleton.SceneManager.LoadScene(tmp.VisualSceneToUse.SceneName, LoadSceneMode.Additive);
             ServerState = ActionState.LOADINGVISUALS;
+            ServerStateChange?.Invoke(ActionState.LOADINGVISUALS);
         }
         else {
             SwitchToReady();
@@ -640,7 +605,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     // DestroyAllClientObjects_OfType(SpawnType TypeToDestroy)// TODO would make implementing more features easier
 
     private void DestroyAllClientObjects(bool destroyMain = false) {
-        foreach (var po in _participants.GetAllConnectedParticipants()) {
+        foreach (var po in participants.GetAllConnectedParticipants()) {
             if (po == ParticipantOrder.None)
             {
                 continue;
@@ -649,7 +614,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
             foreach (var id in Interactable_ParticipantObjects[po]) {
                 DespawnAllInteractableObject(po);
                 if (destroyMain) {
-                    DespawnMainObject(po);
+                    DespawnClientObject(po);
                 }
             }
         }
@@ -659,11 +624,13 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private void DespawnAllObjectsforParticipant(ParticipantOrder po) {
         if (po == ParticipantOrder.None) return;
         DespawnAllInteractableObject(po);
-        DespawnMainObject(po);
+        DespawnClientObject(po);
        
     }
 
-    private void DespawnMainObject(ParticipantOrder po) {
+    private void DespawnClientObject(ParticipantOrder po) {
+        if (po == ParticipantOrder.None) return;
+
         if (Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null) {
             Main_ParticipantObjects[po].GetComponent<NetworkObject>().Despawn();
         }
@@ -671,14 +638,11 @@ public class ConnectionAndSpawning : MonoBehaviour {
         Main_ParticipantObjects.Remove(po);
     }
 
-
-
-
     private void DespawnAllInteractableObject(ParticipantOrder po) {
         if (Interactable_ParticipantObjects.ContainsKey(po)) {
             foreach (var io in Interactable_ParticipantObjects[po]) {
                 if (Main_ParticipantObjects[po] != null) {
-                    bool success = _participants.GetClientID(po, out ulong clientID);
+                    bool success = participants.GetClientID(po, out ulong clientID);
                     if (success) {
                         Main_ParticipantObjects[po]
                             .De_AssignFollowTransform(clientID, io.GetComponent<NetworkObject>());
@@ -702,9 +666,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     private void ClientDisconnected(ulong clientID) {
-        bool success = _participants.GetOrder(clientID, out ParticipantOrder po);
+        bool success = participants.GetOrder(clientID, out ParticipantOrder po);
         if (success && Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null) {
-            m_QNDataStorageServer.DeRegisterHandler(po);
+            //m_QNDataStorageServer.DeRegisterHandler(po);
             DespawnAllObjectsforParticipant(po);
             
         }
@@ -718,7 +682,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     private bool _GetCurrentSpawingData(ulong clientID, out Pose tempPose) {
-        if (!_participants.GetOrder(clientID, out ParticipantOrder clientParticipantOrder)) {
+        if (!participants.GetOrder(clientID, out ParticipantOrder clientParticipantOrder)) {
             ErrFailToSpawn();
             tempPose = new Pose();
             return false;
@@ -737,7 +701,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     private IEnumerator Spawn_Interactable_Await(ulong clientID) {
-        var success = _participants.GetOrder(clientID, out var po);
+        var success = participants.GetOrder(clientID, out var po);
         if (po != ParticipantOrder.None || success) { //ToDO this was success==false feels wrong but check 
             yield return new WaitUntil(() =>
                 Main_ParticipantObjects.ContainsKey(po) &&
@@ -758,12 +722,12 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     private void Spawn_Interactable_Immediate(ulong clientID) {
-        var success = _participants.GetOrder(clientID, out ParticipantOrder po);
+        var success = participants.GetOrder(clientID, out ParticipantOrder po);
         if (po == ParticipantOrder.None || success == false) return;
 
         if (_GetCurrentSpawingData(po, out var tempPose)) {
             Client_Object clientInputCapture = Main_ParticipantObjects[po];
-            success = _participants.GetSpawnType(po, out SpawnType spawnType);
+            success = participants.GetSpawnType(po, out SpawnType spawnType);
             if (_VerifyPrefabAvalible(spawnType) && success) {
                 var newInteractableObject =
                     Instantiate(SpawnType_To_InteractableObjects[spawnType],
@@ -787,11 +751,11 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     private void Spawn_Client(ulong clientID, bool persistent) {
-        var success = _participants.GetOrder(clientID, out ParticipantOrder po);
+        var success = participants.GetOrder(clientID, out ParticipantOrder po);
         if (po == ParticipantOrder.None || success == false) return;
 
         if (_GetCurrentSpawingData(clientID, out Pose tempPose)) {
-            success = _participants.GetJoinType(po, out JoinType joinType);
+            success = participants.GetJoinType(po, out JoinType joinType);
             if (success && _VerifyPrefabAvalible(joinType)) {
                 var newClient =
                     Instantiate(JoinType_To_Client_Object[joinType],
@@ -829,7 +793,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
         //Debug.Log($"cdr: po: {cdr.po}, st: {cdr.st}, jt: {cdr.jt}");
 
-        approve = _participants.AddParticipant(cdr.po, request.ClientNetworkId, cdr.st, cdr.jt);
+        approve = participants.AddParticipant(cdr.po, request.ClientNetworkId, cdr.st, cdr.jt);
 
         if (!approve) {
             Debug.Log("Participant Order " + request.Payload[0] +
@@ -860,11 +824,15 @@ public class ConnectionAndSpawning : MonoBehaviour {
         }
 
         ServerState = ActionState.WAITINGROOM;
+        ServerStateChange.Invoke(ActionState.WAITINGROOM);
+        
         ServerLoadScene(WaitingRoomSceneName);
     }
 
-    private void SwitchToLoading(string name) {
+    public void SwitchToLoading(string name) {
         ServerState = ActionState.LOADINGSCENARIO;
+        ServerStateChange.Invoke(ActionState.LOADINGSCENARIO);
+        
         ServerLoadScene(name);
         LastLoadedScene = name;
     }
@@ -880,11 +848,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     public ServerStateChange_delegate ServerStateChange;
 
-    private void SwitchToReady() {
-        ServerStateChange.Invoke(ActionState.READY);
-
-
+    private void SwitchToReady()
+    {
         ServerState = ActionState.READY;
+        ServerStateChange.Invoke(ActionState.READY);
     }
 
 
@@ -896,6 +863,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         }
 
         ServerState = ActionState.DRIVE;
+        ServerStateChange.Invoke(ActionState.DRIVE);
 
         m_ReRunManager.BeginRecording(LastLoadedScene);
         m_QNDataStorageServer.StartScenario(LastLoadedScene, m_ReRunManager.GetRecordingFolder());
@@ -908,8 +876,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
         m_ReRunManager.StopRecording();
 
         ServerState = ActionState.QUESTIONS;
+        ServerStateChange.Invoke(ActionState.QUESTIONS);
+        
         QNFinished = new Dictionary<ParticipantOrder, bool>();
-        foreach (var po in _participants.GetAllConnectedParticipants()) QNFinished.Add(po, false);
+        foreach (var po in participants.GetAllConnectedParticipants()) QNFinished.Add(po, false);
 
 
         foreach (var no in FindObjectsOfType<Interactable_Object>()) {
@@ -933,6 +903,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
         m_QNDataStorageServer.StopScenario(m_ReRunManager);
         if (farlab_logger.Instance.isRecording()) StartCoroutine(farlab_logger.Instance.StopRecording());
         ServerState = ActionState.POSTQUESTIONS;
+        ServerStateChange.Invoke(ActionState.POSTQUESTIONS);
+        
         SwitchToWaitingRoom();
     }
 
@@ -947,7 +919,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     public void UpdateAllGPS(Dictionary<ParticipantOrder, GpsController.Direction> dict) {
         foreach (var po in dict.Keys) {
-            bool success = _participants.GetClientID(po, out ulong cid);
+            bool success = participants.GetClientID(po, out ulong cid);
             if (success && Main_ParticipantObjects.ContainsKey(po)) {
                 Main_ParticipantObjects[po]
                     .GetComponent<VR_Participant>().CurrentDirection.Value = dict[po];

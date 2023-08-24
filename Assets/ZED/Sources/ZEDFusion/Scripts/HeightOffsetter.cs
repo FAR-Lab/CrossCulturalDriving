@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 public class HeightOffsetter : MonoBehaviour {
-    private void Awake() {
+    private void Start() {
         bodyTrackingManager = FindObjectOfType<ZEDBodyTrackingManager>();
         if (bodyTrackingManager == null) Debug.LogError("ZEDManagerIK: No body tracking manager loaded!");
         lastCallTime = Time.time;
