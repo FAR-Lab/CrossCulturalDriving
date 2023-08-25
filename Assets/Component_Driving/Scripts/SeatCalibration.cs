@@ -17,8 +17,8 @@ public class SeatCalibration : MonoBehaviour {
         FAILED
     }
 
-    public OVRCustomSkeleton HandModelL;
-    public OVRCustomSkeleton HandModelR;
+    public Transform HandModelL;
+    public Transform HandModelR;
 
     public Transform steeringWheelCenter;
 
@@ -76,10 +76,11 @@ public class SeatCalibration : MonoBehaviour {
             cam = camera;
             myPic = pic;
             if (HandModelL == null || HandModelR == null) {
-                foreach (var h in transform.GetComponentsInChildren<OVRCustomSkeleton>()) {
-                    if (h.GetSkeletonType() == OVRSkeleton.SkeletonType.HandLeft) { HandModelL = h; }
-                    else if (h.GetSkeletonType() == OVRSkeleton.SkeletonType.HandRight) { HandModelR = h; }
-                }
+                //TODO switch from OVR to openXR
+              //  foreach (var h in transform.GetComponentsInChildren<OVRCustomSkeleton>()) {
+             //       if (h.GetSkeletonType() == OVRSkeleton.SkeletonType.HandLeft) { HandModelL = h; }
+              //      else if (h.GetSkeletonType() == OVRSkeleton.SkeletonType.HandRight) { HandModelR = h; }
+             //   }
             }
 
             callibrationState = SearCalibrationState.STARTCALIBRATING;
@@ -107,7 +108,9 @@ public class SeatCalibration : MonoBehaviour {
             case SearCalibrationState.NONE: break;
           
             case SearCalibrationState.STARTCALIBRATING:
-                OVRPlugin.RecenterTrackingOrigin(OVRPlugin.RecenterFlags.Default);
+                //TODO switch from OVR to openXR
+              //  OVRPlugin.RecenterTrackingOrigin(OVRPlugin.RecenterFlags.Default);
+                
                 Quaternion rotation = Quaternion.FromToRotation(cam.forward, steeringWheelCenter.parent.forward);
                 Debug.Log("rotation.eulerAngles.y" + Quaternion.Euler(0, rotation.eulerAngles.y, 0));
 
@@ -116,11 +119,13 @@ public class SeatCalibration : MonoBehaviour {
                 callibrationTimer = 5f;
                 break;
             case SearCalibrationState.CALIBRATING:
-
-                if (HandModelL.IsDataHighConfidence && HandModelR.IsDataHighConfidence) {
+                //TODO switch from OVR to openXR
+                
+               if(true){// if (HandModelL.IsDataHighConfidence && HandModelR.IsDataHighConfidence) {
+                    
                     // if this does not work we might need to look further for getting the right bone
-                    Vector3 A = HandModelL.Bones[9].Transform.position; //HandModelL.transform.position;
-                    Vector3 B = HandModelR.Bones[9].Transform.position; //HandModelR.transform.position;
+                    Vector3 A = Vector3.zero;// HandModelL.Bones[9].Transform.position; //HandModelL.transform.position;  //TODO switch from OVR to openXR
+                    Vector3 B = Vector3.zero;// HandModelR.Bones[9].Transform.position; //HandModelR.transform.position; //TODO switch from OVR to openXR 
                     Vector3 AtoB = B - A;
 
                     Vector3 transformDifference = (A + (AtoB * 0.5f)) - steeringWheelCenter.position;

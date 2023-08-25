@@ -58,7 +58,7 @@ public class farlab_logger : MonoBehaviour {
         if (enabled) {
 #pragma warning disable 0219
 
-
+/*
             var LeftHandA = new LogVariable("LeftHandA",
                 delegate {
                     return HandDataStreamRecorder.Singleton != null
@@ -263,7 +263,7 @@ public class farlab_logger : MonoBehaviour {
                 delegate { return (1.0f / XRDevice.refreshRate).ToString(); });
 
             var frame = new LogVariable("Frame Number", delegate { return Time.frameCount.ToString(); });
-
+*/
 
 #pragma warning restore 0219
         }

@@ -342,7 +342,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
         // FindObjectOfType<RerunLayoutManager>().?enabled = true;
         m_ReRunManager.RegisterPreLoadHandler(LoadSceneReRun);
         NetworkManager.Singleton.enabled = false;
-        GetComponent<OVRManager>().enabled = false;
+            // GetComponent<OVRManager>().enabled = false;  //TODO ONly ""add what we need 
+        
+        
         FindObjectOfType<RerunGUI>().enabled = true;
         FindObjectOfType<RerunInputManager>().enabled = true;
 

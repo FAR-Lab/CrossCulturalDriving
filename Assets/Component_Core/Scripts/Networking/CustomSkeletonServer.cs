@@ -1,3 +1,4 @@
+#if USING_OVR
 /************************************************************************************
 Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
 
@@ -674,3 +675,4 @@ public class CustomSkeletonServer : MonoBehaviour {
         }
     }
 }
+#endif

@@ -7,11 +7,11 @@ using UnityEngine.EventSystems;
 public class HandTrackingUI : MonoBehaviour
 {
 
-    public OVRHand hand;
-    public OVRInputModule inputModule;
+  //  public OVRHand hand; //TODO Switch from OVR to generc  openXR
+   // public OVRInputModule inputModule; //TODO Switch from OVR to generc  openXR
 
     private void Start()
     {
-        inputModule.rayTransform = hand.PointerPose;
+       // inputModule.rayTransform = hand.PointerPose;
     }
 }

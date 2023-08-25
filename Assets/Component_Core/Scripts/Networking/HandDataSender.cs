@@ -1,9 +1,8 @@
 using System;
-
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Collections;
-
+#if USING_OVR
 
 public class HandDataSender : NetworkBehaviour {
     private FastBufferWriter _fastBufferWriter;
@@ -128,3 +127,4 @@ public class HandDataSender : NetworkBehaviour {
         _fastBufferWriter.Dispose();
     }
 }
+#endif

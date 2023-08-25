@@ -11,7 +11,7 @@ ANY KIND, either express or implied. See the License for the specific language g
 permissions and limitations under the License.
 ************************************************************************************/
 
-
+#if USING_OVR
 #if UNITY_EDITOR 
 
 using System.Collections;
@@ -65,4 +65,5 @@ public class CustomSkeletonServerEditor : Editor
 		}
 	}
 }
+#endif
 #endif

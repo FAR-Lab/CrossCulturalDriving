@@ -13,7 +13,7 @@ using Unity.Mathematics;
 
 //using  Unity.Netcode.Serialization.Pooled;
 //https://www.youtube.com/watch?v=lBzwUKQ3tbw
-
+#if USING_OVR
 public class HandDataStreamRecorder : MonoBehaviour
 {
     public GameObject RightHandReader_ReRun;
@@ -218,3 +218,4 @@ public struct NetworkSkeletonPoseData : INetworkSerializable
         serializer.SerializeValue(ref HandType);
     }
 }
+#endif

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using Unity.Netcode;
-
+#if USING_OVR
 //using  Unity.Netcode.Serialization.Pooled;
 
 //https://www.youtube.com/watch?v=lBzwUKQ3tbw
@@ -199,3 +199,5 @@ public class HandDataStreamerReader : NetworkBehaviour, OVRSkeleton.IOVRSkeleton
         return data;
     }
 }
+
+#endif

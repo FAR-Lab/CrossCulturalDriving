@@ -179,7 +179,8 @@ public class VR_Participant : Client_Object {
     }
 
     public override Transform GetMainCamera() {
-        return transform.FindChildRecursive("CenterEyeAnchor");
+        return transform.Find ("CenterEyeAnchor"); //TODO URGENT needs to be fixed
+        
     }
 
     [ClientRpc]

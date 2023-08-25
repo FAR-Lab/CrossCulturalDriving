@@ -86,7 +86,6 @@ AudioMixerGroupController:
   m_Send: 00000000000000000000000000000000
   m_Effects:
   - {fileID: 24407980}
-  - {fileID: 24485162}
   - {fileID: 24425472}
   m_UserColorIndex: 0
   m_Mute: 0
@@ -206,7 +205,7 @@ AudioMixerEffectController:
     m_GUID: d7aaa71f7bb2f4246b81f08a7e3081b4
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
-  m_Bypass: 1
+  m_Bypass: 0
 --- !u!244 &24457698
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -224,46 +223,6 @@ AudioMixerEffectController:
     m_GUID: f8f3cf48482fdd04a903f845a9463d6d
   - m_ParameterName: Maximum amp
     m_GUID: ab2ee9f9afc85ae42b567ace240725fb
-  m_SendTarget: {fileID: 0}
-  m_EnableWetMix: 0
-  m_Bypass: 0
---- !u!244 &24485162
-AudioMixerEffectController:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_EffectID: 5101c0ed6ce928d4893f12dcf758f36b
-  m_EffectName: Demo Equalizer
-  m_MixLevel: 6a556e7245861d74e8998c34408f698e
-  m_Parameters:
-  - m_ParameterName: MasterGain
-    m_GUID: 12b11d430b7791645b1b200b196aaaf4
-  - m_ParameterName: LowGain
-    m_GUID: e9d6e165abba87549ab6ba30a4a9966a
-  - m_ParameterName: MidGain
-    m_GUID: 86127c5effcce294aac312f7d3a9cd83
-  - m_ParameterName: HighGain
-    m_GUID: d12d283e62871f9448f10f0a841c4091
-  - m_ParameterName: LowFreq
-    m_GUID: 282c10439dce1934780e34f091161bff
-  - m_ParameterName: MidFreq
-    m_GUID: d68db90c9d965b34b97b967b308bc01c
-  - m_ParameterName: HighFreq
-    m_GUID: 570c7b6a0fc2207488e97bc431ced41c
-  - m_ParameterName: LowQ
-    m_GUID: 3c19077838914bb4bba2748c6faa053d
-  - m_ParameterName: MidQ
-    m_GUID: 1b173b4035a76bb49b341e3e83d28590
-  - m_ParameterName: HighQ
-    m_GUID: 00c28b59442698c4481217c5b20f7635
-  - m_ParameterName: UseLogScale
-    m_GUID: 1ae93906e092130479611cdf95bfec6f
-  - m_ParameterName: ShowSpectrum
-    m_GUID: 910bec10cf5b0b04ca920f1da4000970
-  - m_ParameterName: SpectrumDecay
-    m_GUID: 1c799a399306be84daf1e8f3c6263dc3
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
