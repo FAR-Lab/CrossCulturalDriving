@@ -7,7 +7,9 @@ using UnityEngine;
 /// </summary>
 public class SC_ZEDInitializationManager : MonoBehaviour {
     public GameObject ZEDManager;
-
+    
+    private GameObject ZEDManagerInstance;
+    
     private void Start() {
         DontDestroyOnLoad(gameObject);
 
@@ -15,12 +17,32 @@ public class SC_ZEDInitializationManager : MonoBehaviour {
     }
 
     public void SetupZED(ActionState actionState) {
-        if (actionState == ActionState.READY)
-            // if there isn't instance of ZEDManager exist, instantiate it on server
-            if (FindObjectOfType<ZEDBodyTrackingManager>() == null) {
-                Debug.Log("Creating ZEDManager");
-                var ZEDManagerInstance = Instantiate(ZEDManager, transform);
-            }
+        switch (actionState)
+        {
+            case ActionState.READY:
+                if (FindObjectOfType<ZEDBodyTrackingManager>() == null)
+                {
+                    Debug.Log("Creating ZEDManager");
+                    ZEDManagerInstance = Instantiate(ZEDManager, transform);
+                }
+                break;
+            case ActionState.WAITINGROOM:
+                // destroy ZedManager
+                if (ZEDManagerInstance != null)
+                {
+                    Destroy(ZEDManagerInstance);
+                }
+
+                // destroy all avatars
+                ZEDSkeletonAnimator[] avatars = GameObject.FindObjectsOfType<ZEDSkeletonAnimator>();
+                foreach (var avatar in avatars)
+                {
+                    Destroy(avatar.gameObject);
+                }
+                break;
+        }
+        
+        
     }
 }
 

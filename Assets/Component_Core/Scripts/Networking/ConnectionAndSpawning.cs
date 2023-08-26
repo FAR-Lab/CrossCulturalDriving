@@ -636,7 +636,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
         if (Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null) {
             Main_ParticipantObjects[po].GetComponent<NetworkObject>().Despawn();
         }
-
         Main_ParticipantObjects.Remove(po);
     }
 
@@ -694,7 +693,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     private bool _GetCurrentSpawingData(ParticipantOrder po, out Pose tempPose) {
-        return GetScenarioManager().GetStartPose(po, out tempPose);
+        return GetScenarioManager().GetSpawnPose(po, out tempPose);
     }
 
     private void ErrFailToSpawn() {

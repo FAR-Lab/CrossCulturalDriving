@@ -45,7 +45,7 @@ public class ScenarioManager : MonoBehaviour {
     private void Update() {
     }
 
-    public bool GetStartPose(ParticipantOrder participantOrder, out Pose pose) {
+    public bool GetSpawnPose(ParticipantOrder participantOrder, out Pose pose) {
         GetSpawnPoints();
 
         if (MySpawnPositions != null) {

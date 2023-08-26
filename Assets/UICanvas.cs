@@ -7,23 +7,24 @@ using TMPro;
 using Unity.Burst;
 using Unity.Netcode;
 using UnityEngine.Serialization;
+using UnityEngine.XR.Interaction.Toolkit.UI;
 
 public class UICanvas : MonoBehaviour
 {
     # region Prefabs
-    public GameObject buttonTemplate;
+    public GameObject buttonTemplate_NoIcon;
+    public GameObject buttonTemplate_HasIcon;
     # endregion
     
     # region Fields
     public GameObject scenarioButtons;
     public GameObject driverCalibrationButtons;
     public TextMeshProUGUI serverInformation;
-    public TextMeshProUGUI clientInformation;
     # endregion
     
     private ConnectionAndSpawning CAS;
-    private readonly Dictionary<Button, SceneField> _buttonToScene = new Dictionary<Button, SceneField>();
-    
+    private readonly Dictionary<GameObject, SceneField> _buttonToScene = new Dictionary<GameObject, SceneField>();
+    private Dictionary<SpawnType, Sprite> _spawnTypeToSprite;
     void Awake()
     {
         DontDestroyOnLoad(this);
@@ -33,13 +34,13 @@ public class UICanvas : MonoBehaviour
     {
         CAS = ConnectionAndSpawning.Singleton;
         
-        NetworkManager.Singleton.OnServerStarted += InitializeCanvas;
-        
-        
         CAS.ServerStateChange += UpdateScenarioButton;
         CAS.ServerStateChange += ToggleScenarioButtonVisibility;
         
-        NetworkManager.Singleton.OnClientConnectedCallback += CreateCalibrationButton;
+        NetworkManager.Singleton.OnServerStarted += InitializeCanvas;
+        NetworkManager.Singleton.OnClientConnectedCallback += CreateButton;
+        
+        _spawnTypeToSprite = Resources.Load<SO_SpawnTypeToSprite>("SO/SO_SpawnTypeToSprite").EnumToValueDictionary;
     }
 
     void Update()
@@ -61,12 +62,13 @@ public class UICanvas : MonoBehaviour
             {
                 CAS.VisitedScenes.Add(sceneField, false);
             }
-            GameObject button = Instantiate(buttonTemplate);
+            GameObject button = Instantiate(buttonTemplate_NoIcon);
             button.transform.SetParent(scenarioButtons.transform);
             button.name = sceneField.SceneName;
             button.GetComponentInChildren<TextMeshProUGUI>().text = sceneField.SceneName;
-            button.GetComponent<Button>().onClick.AddListener(() => { OnScenarioButtonPressed(sceneField); });
-            _buttonToScene.Add(button.GetComponent<Button>(), sceneField);
+            button.GetComponentInChildren<Button>().onClick.AddListener(() => { OnScenarioButtonPressed(sceneField); });
+            _buttonToScene.Add(button, sceneField);
+
         }
     }
 
@@ -105,9 +107,8 @@ public class UICanvas : MonoBehaviour
     # endregion
     
     # region Calibration Buttons
-    private void CreateCalibrationButton(ulong clientID)
+    private void CreateButton(ulong clientID)
     {
-
         ParticipantOrder participant;
         bool success = CAS.participants.GetOrder(clientID, out participant);
         if (!success)
@@ -115,11 +116,15 @@ public class UICanvas : MonoBehaviour
             return;
         }
         Debug.Log($"Creating button for {participant}");
-        GameObject button = Instantiate(buttonTemplate);
+        GameObject button = Instantiate(buttonTemplate_HasIcon);
         button.transform.SetParent(driverCalibrationButtons.transform);
         button.name = $"Calibrate {participant}";
         button.GetComponentInChildren<TextMeshProUGUI>().text = $"Calibrate {participant}";
-        button.GetComponent<Button>().onClick.AddListener(() => { OnCalibrationButtonPressed(participant); });
+        SpawnType spawnType;
+        CAS.participants.GetSpawnType(participant, out spawnType);
+        button.transform.Find("Icon").GetComponent<Image>().sprite = _spawnTypeToSprite[spawnType];
+        button.GetComponentInChildren<Button>().onClick.AddListener(() => { OnCalibrationButtonPressed(participant); });
+        
     }
 
     private void OnCalibrationButtonPressed(ParticipantOrder participant)

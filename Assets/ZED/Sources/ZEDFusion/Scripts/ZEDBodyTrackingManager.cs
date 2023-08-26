@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using sl;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// </summary>
@@ -43,9 +44,9 @@ public class ZEDBodyTrackingManager : MonoBehaviour {
         if (Input.GetKeyDown(toggleMirrorMode)) mirrorMode = !mirrorMode;
 
         if (Input.GetKeyDown(increaseOffsetKey))
-            manualOffset.y += offsetStep;
+            positionOffset.y += offsetStep;
         else if (Input.GetKeyDown(decreaseOffsetKey))
-            manualOffset.y -= offsetStep;
+            positionOffset.y -= offsetStep;
         else if (Input.GetKeyDown(increaseSkeOffsetXKey))
             offsetSDKSkeleton.x += offsetStep;
         else if (Input.GetKeyDown(decreaseSkeOffsetXKey)) offsetSDKSkeleton.x -= offsetStep;
@@ -114,7 +115,25 @@ public class ZEDBodyTrackingManager : MonoBehaviour {
         }
 
         var worldGlobalRotation = data.global_root_orientation;
+        
+        // custom modifications
+        ZEDSkeletonAnimator skeletonAnimator = FindObjectOfType<ZEDSkeletonAnimator>();
+        if (skeletonAnimator != null)
+        {
+            // Modify root rotation
+            // This only rotate the *visual rotation* of the mesh. Does not modify walking path (position)
+            // Walking direction/ root position is independent from root
+            worldGlobalRotation.eulerAngles = new Vector3(worldGlobalRotation.eulerAngles.x, worldGlobalRotation.eulerAngles.y + rotationOffset.y, worldGlobalRotation.eulerAngles.z);
 
+            // Modify root position to ensure straight walking path
+            // construct a rotation matrix from the angle offset
+            
+            Matrix4x4 rotationMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(rotationOffset), Vector3.one);
+            // apply the rotation to the joint position root
+            //worldJointsPos[0] += SC_TrackingManager.Singleton.positionOffset;
+            worldJointsPos[0] = rotationMatrix.MultiplyPoint(worldJointsPos[0]);
+        }
+        
         if (data.local_orientation_per_joint.Length > 0 && data.keypoint.Length > 0 &&
             data.keypoint_confidence.Length > 0) {
             handler.SetConfidences(data.keypoint_confidence);
@@ -173,7 +192,8 @@ public class ZEDBodyTrackingManager : MonoBehaviour {
     public BODY_MODE bodyMode = BODY_MODE.FULL_BODY;
 
     [Space(10)] [Header("------ Heigh Offset ------")] [Tooltip("Height offset applied to transform each frame.")]
-    public Vector3 manualOffset = Vector3.zero;
+    public Vector3 positionOffset = Vector3.zero;
+    public Vector3 rotationOffset = Vector3.zero;
 
     [Tooltip(
         "Automatic offset adjustment: Finds an automatic offset that sets both feet above ground, and at least one foot on the ground.")]

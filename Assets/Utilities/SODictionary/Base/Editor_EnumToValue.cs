@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -40,7 +41,7 @@ public class Editor_EnumToValue : Editor
 
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField(enumProperty.enumNames[enumProperty.enumValueIndex], GUILayout.Width(150));
-            goProperty.objectReferenceValue = EditorGUILayout.ObjectField(goProperty.objectReferenceValue, typeof(GameObject), false);
+            goProperty.objectReferenceValue = EditorGUILayout.ObjectField(goProperty.objectReferenceValue, typeof(Object), false);
             EditorGUILayout.EndHorizontal();
         }
 

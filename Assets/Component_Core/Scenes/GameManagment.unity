@@ -717,9 +717,10 @@ GameObject:
   - component: {fileID: 1852203069}
   - component: {fileID: 1852203066}
   - component: {fileID: 1852203070}
+  - component: {fileID: 1852203071}
   m_Layer: 0
   m_Name: ReRunComponents
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -827,6 +828,22 @@ MonoBehaviour:
   FollowTransform: {fileID: 0}
   AdjustableCamera: 0
   m_FlySpeed: 25
+--- !u!114 &1852203071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852203065}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c49b4cc203aa6414fae5c798d1d0e7d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_MaxRayIntersections: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

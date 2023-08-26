@@ -218,19 +218,32 @@ public class VR_Participant : Client_Object {
     }
 
     public override void CalibrateClient(ClientRpcParams clientRpcParams) {
-        CalibrateClientRPC(clientRpcParams);
+        CalibrateClientRPC(mySpawnType, clientRpcParams);
         
     }
 
     [ClientRpc]
-    public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default) {
+    public void CalibrateClientRPC(SpawnType spawnType = SpawnType.NONE, ClientRpcParams clientRpcParams = default) {
         if (!IsLocalPlayer) return;
-        GetComponent<SeatCalibration>().StartCalibration(
-            NetworkedInteractableObject.transform.Find("SteeringCenter"),
-            GetMainCamera(),
-            this);
-        Debug.Log("Calibrate ClientRPC");
+
+        switch (spawnType)
+        {
+            case SpawnType.CAR:
+                GetComponent<SeatCalibration>().StartCalibration(
+                    NetworkedInteractableObject.transform.Find("SteeringCenter"),
+                    GetMainCamera(),
+                    this);
+                Debug.Log("Calibrated ClientRPC");
+                break;
+            case SpawnType.PEDESTRIAN:
+                 
+                break;
+        }
+        
+        
+        
     }
+    
     public bool ButtonPush() {
         if (lastValue && ButtonPushed.Value == false) {
             lastValue = ButtonPushed.Value;

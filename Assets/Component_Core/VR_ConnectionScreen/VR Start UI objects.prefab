@@ -96,6 +96,8 @@ MonoBehaviour:
   defaultServerIP: 192.168.
   fileName: ParticipantConfig.json
   deleteSaveFile: 0
+  useDebug: 0
+  usePremadeConfig: 1
 --- !u!114 &1188147883036409423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5448,6 +5450,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8770236260572045540}
     m_Modifications:
+    - target: {fileID: 2243120531236429024, guid: 75dbed928484da249be1f3709948a384, type: 3}
+      propertyPath: m_controller
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2243120532010993201, guid: 75dbed928484da249be1f3709948a384, type: 3}
+      propertyPath: m_controller
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 2243120532331667638, guid: 75dbed928484da249be1f3709948a384, type: 3}
       propertyPath: m_Name
       value: OVRCameraRig

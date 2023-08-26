@@ -22,7 +22,6 @@ public class VRUIManager : MonoBehaviour
     
     public TMP_Text ServerConnectionStatusText;
     public Button saveConfigButton;
-    
 
     [Header("Config")]
     public string defaultServerIP = "192.168.";
@@ -31,7 +30,8 @@ public class VRUIManager : MonoBehaviour
     [Header("Debug")]
     public bool deleteSaveFile = false;
     public bool useDebug = false;
-    
+    public bool usePremadeConfig = false;
+
     private ParticipantConfig currentConfig;
     private bool loadConfigSuccess = false;
     private TouchScreenKeyboard overlayKeyboard;
@@ -50,6 +50,17 @@ public class VRUIManager : MonoBehaviour
         if (loadConfigSuccess)
         {
             AutoStartStudy();  
+        }
+
+        if (usePremadeConfig)
+        {
+            currentConfig = new ParticipantConfig();
+            currentConfig.ParticipantIDString = "C";
+            currentConfig.LanguageString = "English";
+            currentConfig.SpawnTypeString = "Pedestrian";
+            currentConfig.ServerIPString = "192.168.0.103";
+            AutoStartStudy();   
+
         }
     }
 

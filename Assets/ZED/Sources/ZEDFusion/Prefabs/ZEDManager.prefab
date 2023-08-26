@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6428892374721365409}
   - component: {fileID: 688287088}
   - component: {fileID: 688287089}
+  - component: {fileID: -1469671163365799202}
   m_Layer: 0
   m_Name: ZEDManager
   m_TagString: Untagged
@@ -25,12 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6287004698725560615}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 10.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &688287088
 MonoBehaviour:
@@ -69,7 +71,8 @@ MonoBehaviour:
   offsetSDKSkeleton: {x: 1, y: 0, z: 0}
   mirrorMode: 0
   bodyMode: 0
-  manualOffset: {x: 0, y: 0, z: 0}
+  positionOffset: {x: 0, y: 0, z: 0}
+  rotationOffset: {x: 0, y: 0, z: 0}
   automaticOffset: 0
   offsetStep: 0.1
   smoothingValue: 0
@@ -86,3 +89,17 @@ MonoBehaviour:
   increaseSkeOffsetXKey: 276
   decreaseSkeOffsetXKey: 275
   zedStreamingClient: {fileID: 688287088}
+--- !u!114 &-1469671163365799202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6287004698725560615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfd9afa353d2adf498e2c0bd70bfc7bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storedTarget: {fileID: 0}
+  POToMatch: 97

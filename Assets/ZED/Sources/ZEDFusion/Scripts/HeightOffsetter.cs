@@ -49,7 +49,7 @@ public class HeightOffsetter : MonoBehaviour {
         }
 
         // Automatic offset disabled
-        return bodyTrackingManager.manualOffset;
+        return bodyTrackingManager.positionOffset;
     }
 
     /// <summary>

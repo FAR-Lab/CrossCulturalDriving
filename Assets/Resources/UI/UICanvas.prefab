@@ -288,7 +288,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 0
+  m_Spacing: 1
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -373,10 +373,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -413,8 +413,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5958913b93a4cb54aac1596bee4b0845, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonTemplate: {fileID: 3242158318489703190, guid: 1224f2997ee571c45b72bf84464843df, type: 3}
+  buttonTemplate_NoIcon: {fileID: 3515944757342328654, guid: 513b834bb59b7b24db02f103b4fec410, type: 3}
+  buttonTemplate_HasIcon: {fileID: 3242158318489703190, guid: b18241012f6691a4da61112e65a8710c, type: 3}
   scenarioButtons: {fileID: 7399415185468579429}
   driverCalibrationButtons: {fileID: 5529983264732784630}
   serverInformation: {fileID: 945453022474916959}
-  clientInformation: {fileID: 0}
