@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -10,6 +12,8 @@ public class VRUIManager : MonoBehaviour
 {
     [Header("UI Elements")] 
     public GameObject UIPrefab;
+
+    public GameObject UIcanvas;
     
     public TMP_Dropdown ParticipantDropdown;
     public TMP_Text ParticipantText;
@@ -17,11 +21,11 @@ public class VRUIManager : MonoBehaviour
     public TMP_Text LanguageText;
     public TMP_Dropdown SpawnTypeDropdown;
     public TMP_Text SpawnTypeText;
-    public TMP_InputField ServerIPField;
     public TMP_Text ServerIPText;
     
     public TMP_Text ServerConnectionStatusText;
     public Button saveConfigButton;
+    public Button repositionCanvasButton;
 
     [Header("Config")]
     public string defaultServerIP = "192.168.";
@@ -34,8 +38,6 @@ public class VRUIManager : MonoBehaviour
 
     private ParticipantConfig currentConfig;
     private bool loadConfigSuccess = false;
-    private TouchScreenKeyboard overlayKeyboard;
-
     
     private void Start()
     {
@@ -46,6 +48,7 @@ public class VRUIManager : MonoBehaviour
         
         PopulateUI(); 
         TryLoadConfiguration();
+        MoveInFrontOfCamera();
         
         if (loadConfigSuccess)
         {
@@ -59,34 +62,46 @@ public class VRUIManager : MonoBehaviour
             currentConfig.LanguageString = "English";
             currentConfig.SpawnTypeString = "Pedestrian";
             currentConfig.ServerIPString = "192.168.0.103";
-            AutoStartStudy();   
-
+            AutoStartStudy();
         }
     }
 
     private void Update()
     {
+        
         // debug log the current config if it exists
         if (currentConfig.ParticipantIDString != null && useDebug)
         {
             Debug.Log($"Current Config: {currentConfig.ParticipantIDString}, {currentConfig.LanguageString}, {currentConfig.SpawnTypeString}, {currentConfig.ServerIPString}");
         }
+    }
+
+    private void MoveInFrontOfCamera()
+    {
+        // move UI in front of camera
+        Vector3 cameraPos = Camera.main.transform.position;
+        Vector3 cameraForward = Camera.main.transform.forward;
+        Vector3 cameraUp = Camera.main.transform.up;
+        Vector3 newPos = cameraPos + cameraForward * 0.5f + cameraUp * -0.15f;
+        UIcanvas.transform.position = newPos;
         
-        CheckKeyboardInput();
+        // look at camera by only rotating on y axis
+        Vector3 lookPos = new Vector3(Camera.main.transform.position.x, UIcanvas.transform.position.y, Camera.main.transform.position.z);
+        UIcanvas.transform.LookAt(lookPos);
+        UIcanvas.transform.Rotate(0, 180, 0);
     }
 
     #region UI
     void PopulateUI()
     {
         saveConfigButton.onClick.AddListener(delegate { SaveConfiguration(); });
-        ServerIPField.onSelect.AddListener(delegate { OpenKeyboardOverlay(); });
+        repositionCanvasButton.onClick.AddListener(delegate { MoveInFrontOfCamera(); });
 
         PopulateDropdown<ParticipantOrder>(ParticipantDropdown);
         PopulateDropdown<Language>(LanguageDropdown);
         PopulateDropdown<SpawnType>(SpawnTypeDropdown);
   
         // set text field to default value
-        ServerIPField.text = defaultServerIP;
         ServerIPText.text = "IP: " + defaultServerIP;
         
         // set dropdowns to default values
@@ -97,7 +112,6 @@ public class VRUIManager : MonoBehaviour
         ParticipantDropdown.onValueChanged.AddListener(delegate {     UpdateDropdownTextValue(ParticipantDropdown, ParticipantText, "ID: ", value => currentConfig.ParticipantIDString = value);});
         LanguageDropdown.onValueChanged.AddListener(delegate { UpdateDropdownTextValue(LanguageDropdown, LanguageText, "Lang: ", value => currentConfig.LanguageString = value); });
         SpawnTypeDropdown.onValueChanged.AddListener(delegate { UpdateDropdownTextValue(SpawnTypeDropdown, SpawnTypeText, "Spawn Type: ", value => currentConfig.SpawnTypeString = value); });
-        ServerIPField.onValueChanged.AddListener(delegate { UpdateInputFieldTextValue(ServerIPField, ServerIPText, "IP: ", ref currentConfig.ServerIPString); });
     }
 
     void PopulateDropdown(TMP_Dropdown dropdown, List<string> items)
@@ -127,7 +141,21 @@ public class VRUIManager : MonoBehaviour
             updateTargetField?.Invoke(value);
         }
     }
+    
+    public void AddTextToIPField(string text)
+    {
+        currentConfig.ServerIPString += text;
+        ServerIPText.text = "IP: " + currentConfig.ServerIPString;
+    }
 
+    public void RemoveTextFromIPField()
+    {
+        if (currentConfig.ServerIPString.Length > 0)
+        {
+            currentConfig.ServerIPString = currentConfig.ServerIPString.Remove(currentConfig.ServerIPString.Length - 1);
+            ServerIPText.text = "IP: " + currentConfig.ServerIPString;
+        }
+    }
 
 
     void UpdateInputFieldTextValue(TMP_InputField inputField, TMP_Text textBox, string prefix, ref string targetField)
@@ -163,7 +191,8 @@ public class VRUIManager : MonoBehaviour
             ParticipantDropdown.value = 0;
             LanguageDropdown.value = 0;
             SpawnTypeDropdown.value = 0;
-            ServerIPText.text = "IP: ";
+            ServerIPText.text = "IP: " + defaultServerIP;
+            currentConfig.ServerIPString = defaultServerIP;
             loadConfigSuccess = false;
             
             ServerConnectionStatusText.text = "No Config Found";
@@ -187,10 +216,10 @@ public class VRUIManager : MonoBehaviour
         if (currentConfig.ServerIPString == null)
         {
             currentConfig.ServerIPString = "192.168.";
+            ServerIPText.text = "IP: " + currentConfig.ServerIPString;
         }
 
         // Update UI
-        ServerIPField.text = currentConfig.ServerIPString;
         ParticipantDropdown.SetValueWithoutNotify(ParticipantDropdown.options.FindIndex(option => option.text == currentConfig.ParticipantIDString));
         LanguageDropdown.SetValueWithoutNotify(LanguageDropdown.options.FindIndex(option => option.text == currentConfig.LanguageString));
         SpawnTypeDropdown.SetValueWithoutNotify(SpawnTypeDropdown.options.FindIndex(option => option.text == currentConfig.SpawnTypeString));
@@ -199,9 +228,6 @@ public class VRUIManager : MonoBehaviour
         UpdateDropdownTextValue(ParticipantDropdown, ParticipantText, "ID: ");
         UpdateDropdownTextValue(LanguageDropdown, LanguageText, "Lang: ");
         UpdateDropdownTextValue(SpawnTypeDropdown, SpawnTypeText, "Spawn Type: ");
-        
-        UpdateInputFieldTextValue(ServerIPField, ServerIPText, "IP: ", ref currentConfig.ServerIPString);
-        
         return true;
     }
 
@@ -248,21 +274,7 @@ public class VRUIManager : MonoBehaviour
     }
     
     # region Keyboard
-    void OpenKeyboardOverlay()
-    {
-        overlayKeyboard = TouchScreenKeyboard.Open(defaultServerIP, TouchScreenKeyboardType.Default);
-        // set the keyboard to the default value
-        overlayKeyboard.text = defaultServerIP;
-    }
     
-    void CheckKeyboardInput()
-    {
-        if (overlayKeyboard != null && overlayKeyboard.status == TouchScreenKeyboard.Status.Done)
-        {
-            ServerIPField.text = overlayKeyboard.text;
-            overlayKeyboard = null;
-        }
-    }
     #endregion
 
 }
