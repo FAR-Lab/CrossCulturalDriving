@@ -154,7 +154,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ZEDInitializationManager: {fileID: 3401084868711829930, guid: 0735637623c666b469297a64df9361f4, type: 3}
   ServerUICanvas: {fileID: 8657355816666603434, guid: cb97d9b337b5d95489aeeb7c13096e45, type: 3}
-  VRUIStartPrefab: {fileID: 8770236260572045539, guid: 710734e9737b2dd4083b95ae75b64882, type: 3}
+  VRUIStartPrefab: {fileID: 4973966186663031564, guid: 4cc0bf20774eac84baae382206965e86, type: 3}
+  RerunCamera: {fileID: 1852203069}
+  ServerEventSystem: {fileID: 707386876}
 --- !u!4 &110153601
 Transform:
   m_ObjectHideFlags: 0
@@ -567,6 +569,7 @@ GameObject:
   - component: {fileID: 707386879}
   - component: {fileID: 707386878}
   - component: {fileID: 707386880}
+  - component: {fileID: 707386881}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -634,6 +637,45 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
+--- !u!114 &707386881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707386876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab68ce6587aab0146b8dabefbd806791, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_ClickSpeed: 0.3
+  m_MoveDeadzone: 0.6
+  m_RepeatDelay: 0.5
+  m_RepeatRate: 0.1
+  m_TrackedDeviceDragThresholdMultiplier: 2
+  m_TrackedScrollDeltaMultiplier: 5
+  m_ActiveInputMode: 1
+  m_MaxTrackedDeviceRaycastDistance: 1000
+  m_EnableXRInput: 1
+  m_EnableMouseInput: 1
+  m_EnableTouchInput: 1
+  m_PointAction: {fileID: 2869410428622933342, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  m_LeftClickAction: {fileID: 1855836014308820768, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  m_MiddleClickAction: {fileID: -6289560987278519447, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  m_RightClickAction: {fileID: -2562941478296515153, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  m_ScrollWheelAction: {fileID: 5825226938762934180, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  m_NavigateAction: {fileID: -7967456002180160679, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  m_SubmitAction: {fileID: 3994978066732806534, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  m_CancelAction: {fileID: 2387711382375263438, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  m_EnableBuiltinActionsAsFallback: 1
+  m_EnableGamepadInput: 1
+  m_EnableJoystickInput: 1
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
 --- !u!1001 &1723526171
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -682,6 +724,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1370842235534986728, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1370842235548541830, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1370842237000487607, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1671002158054165585, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1671002158183939299, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1671002159649351358, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1671002159929249416, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2751920820005047154, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
       propertyPath: isPrefab
       value: 0
@@ -695,7 +765,8 @@ PrefabInstance:
       value: Rerun-XC
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2751920820005047157, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}

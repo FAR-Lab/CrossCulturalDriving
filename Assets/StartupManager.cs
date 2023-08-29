@@ -6,11 +6,14 @@ using UnityEngine.Serialization;
 
 public class StartupManager : MonoBehaviour
 {
-    [FormerlySerializedAs("ZEDManager")] public GameObject ZEDInitializationManager;
+    public GameObject ZEDInitializationManager;
     public GameObject ServerUICanvas;
     
     public GameObject VRUIStartPrefab;
 
+    public Camera RerunCamera;
+    public GameObject ServerEventSystem;
+    
     private void Awake()
     {
         DontDestroyOnLoad(this);
@@ -38,6 +41,8 @@ public class StartupManager : MonoBehaviour
                 break;
             case RuntimePlatform.Android:
                 // Do stuff for Oculus
+                RerunCamera.enabled = false;
+                Destroy(ServerEventSystem);
                 Instantiate(VRUIStartPrefab);
                 break;
             case RuntimePlatform.LinuxPlayer:

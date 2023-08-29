@@ -35,7 +35,8 @@ public class VRUIManager : MonoBehaviour
     public bool deleteSaveFile = false;
     public bool useDebug = false;
     public bool usePremadeConfig = false;
-
+    public Button startStudyButton;
+    
     private ParticipantConfig currentConfig;
     private bool loadConfigSuccess = false;
     
@@ -48,22 +49,27 @@ public class VRUIManager : MonoBehaviour
         
         PopulateUI(); 
         TryLoadConfiguration();
-        MoveInFrontOfCamera();
+        StartCoroutine(MoveCanvasAfterDelay());
         
         if (loadConfigSuccess)
         {
-            AutoStartStudy();  
+            //AutoStartStudy();  
         }
-
-        if (usePremadeConfig)
+        else if (usePremadeConfig)
         {
             currentConfig = new ParticipantConfig();
             currentConfig.ParticipantIDString = "C";
             currentConfig.LanguageString = "English";
             currentConfig.SpawnTypeString = "Pedestrian";
             currentConfig.ServerIPString = "192.168.0.103";
-            AutoStartStudy();
+            //AutoStartStudy();
         }
+    }
+
+    private IEnumerator MoveCanvasAfterDelay()
+    {
+        yield return new WaitForSeconds(0.05f);
+        MoveInFrontOfCamera();
     }
 
     private void Update()
@@ -96,7 +102,8 @@ public class VRUIManager : MonoBehaviour
     {
         saveConfigButton.onClick.AddListener(delegate { SaveConfiguration(); });
         repositionCanvasButton.onClick.AddListener(delegate { MoveInFrontOfCamera(); });
-
+        startStudyButton.onClick.AddListener(delegate { AutoStartStudy(); });
+        
         PopulateDropdown<ParticipantOrder>(ParticipantDropdown);
         PopulateDropdown<Language>(LanguageDropdown);
         PopulateDropdown<SpawnType>(SpawnTypeDropdown);
@@ -216,8 +223,9 @@ public class VRUIManager : MonoBehaviour
         if (currentConfig.ServerIPString == null)
         {
             currentConfig.ServerIPString = "192.168.";
-            ServerIPText.text = "IP: " + currentConfig.ServerIPString;
         }
+        
+        ServerIPText.text = "IP: " + currentConfig.ServerIPString;
 
         // Update UI
         ParticipantDropdown.SetValueWithoutNotify(ParticipantDropdown.options.FindIndex(option => option.text == currentConfig.ParticipantIDString));
