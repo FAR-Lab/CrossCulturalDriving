@@ -35,7 +35,6 @@ public class VRUIManager : MonoBehaviour
     public bool deleteSaveFile = false;
     public bool useDebug = false;
     public bool usePremadeConfig = false;
-    public Button startStudyButton;
     
     private ParticipantConfig currentConfig;
     private bool loadConfigSuccess = false;
@@ -53,7 +52,7 @@ public class VRUIManager : MonoBehaviour
         
         if (loadConfigSuccess)
         {
-            //AutoStartStudy();  
+            AutoStartStudy();  
         }
         else if (usePremadeConfig)
         {
@@ -62,7 +61,7 @@ public class VRUIManager : MonoBehaviour
             currentConfig.LanguageString = "English";
             currentConfig.SpawnTypeString = "Pedestrian";
             currentConfig.ServerIPString = "192.168.0.103";
-            //AutoStartStudy();
+            AutoStartStudy();
         }
     }
 
@@ -102,7 +101,6 @@ public class VRUIManager : MonoBehaviour
     {
         saveConfigButton.onClick.AddListener(delegate { SaveConfiguration(); });
         repositionCanvasButton.onClick.AddListener(delegate { MoveInFrontOfCamera(); });
-        startStudyButton.onClick.AddListener(delegate { AutoStartStudy(); });
         
         PopulateDropdown<ParticipantOrder>(ParticipantDropdown);
         PopulateDropdown<Language>(LanguageDropdown);

@@ -45,9 +45,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     public delegate void ReponseDelegate(ClienConnectionResponse response);
 
-    public GUIStyle NotVisitedButton;
-    public GUIStyle VisitendButton;
-
     [SerializeField] private GUIStyle style;
 
     public ParticipantOrderMapping participants;
