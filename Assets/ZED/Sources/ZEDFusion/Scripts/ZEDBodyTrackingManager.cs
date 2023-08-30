@@ -19,10 +19,8 @@ public class ZEDBodyTrackingManager : MonoBehaviour {
     /// </summary>
     private void Start() {
         QualitySettings.vSyncCount = 1; // Activate vsync
-        DontDestroyOnLoad(this);
         avatarControlList = new Dictionary<int, SkeletonHandler>();
         if (!zedStreamingClient) zedStreamingClient = FindObjectOfType<ZEDStreamingClient>();
-
         zedStreamingClient.OnNewDetection += UpdateSkeletonData;
     }
 

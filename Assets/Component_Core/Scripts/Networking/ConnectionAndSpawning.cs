@@ -587,8 +587,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
             case SceneEventType.LoadComplete:
                 Debug.Log("Load completed!" + sceneEvent.ClientId + ServerState);
                 if (ServerState == ActionState.READY || ServerState == ActionState.LOADINGVISUALS ||
-                    ServerState == ActionState.WAITINGROOM) {
-                    Debug.Log("Trying to Spawn A Car!");
+                    ServerState == ActionState.WAITINGROOM)
+                {
+                    bool success = participants.GetOrder(sceneEvent.ClientId, out ParticipantOrder po);
+                    Debug.Log($"About to spawn an interactable for participant :{po}");
                     StartCoroutine(Spawn_Interactable_Await(sceneEvent.ClientId));
                 }
                 else {
@@ -700,7 +702,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private IEnumerator Spawn_Interactable_Await(ulong clientID) {
         var success = participants.GetOrder(clientID, out var po);
-        if (po != ParticipantOrder.None || success) { //ToDO this was success==false feels wrong but check 
+        if (po != ParticipantOrder.None && success) { 
             yield return new WaitUntil(() =>
                 Main_ParticipantObjects.ContainsKey(po) &&
                 Main_ParticipantObjects[po] != null
@@ -724,7 +726,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         if (po == ParticipantOrder.None || success == false) return;
 
         if (_GetCurrentSpawingData(po, out var tempPose)) {
-            Client_Object clientInputCapture = Main_ParticipantObjects[po];
+            Client_Object mainParticipantObject = Main_ParticipantObjects[po];
             success = participants.GetSpawnType(po, out SpawnType spawnType);
             if (_VerifyPrefabAvalible(spawnType) && success) {
                 var newInteractableObject =
@@ -732,7 +734,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
                         tempPose.position, tempPose.rotation);
 
                 newInteractableObject.GetComponent<NetworkObject>().Spawn(true);
-
                 newInteractableObject.GetComponent<Interactable_Object>().AssignClient(clientID, po);
 
                 if (Main_ParticipantObjects[po] != null)
@@ -744,7 +745,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                 }
             }
 
-            clientInputCapture.SetSpawnType(spawnType);
+            
         }
     }
 
@@ -752,17 +753,23 @@ public class ConnectionAndSpawning : MonoBehaviour {
         var success = participants.GetOrder(clientID, out ParticipantOrder po);
         if (po == ParticipantOrder.None || success == false) return;
 
-        if (_GetCurrentSpawingData(clientID, out Pose tempPose)) {
-            success = participants.GetJoinType(po, out JoinType joinType);
-            if (success && _VerifyPrefabAvalible(joinType)) {
-                var newClient =
+        if (_GetCurrentSpawingData(clientID, out Pose tempPose) && participants.GetJoinType(po, out JoinType joinType) &&  participants.GetSpawnType(po, out SpawnType spawnType)) {
+           
+            if (_VerifyPrefabAvalible(joinType)) {
+                var mainParticipantObject =
                     Instantiate(JoinType_To_Client_Object[joinType],
                         tempPose.position, tempPose.rotation);
 
-                newClient.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, !persistent);
-                Main_ParticipantObjects.Add(po, newClient.GetComponent<Client_Object>());
+                mainParticipantObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, !persistent);
+                Main_ParticipantObjects.Add(po, mainParticipantObject.GetComponent<Client_Object>());
                 m_QNDataStorageServer.SetupForNewRemoteImage(po);
+                mainParticipantObject.SetSpawnType(spawnType);
             }
+            else
+            {
+                Debug.LogError($"Could Not spawn a ClientObject for PO:{po} joinType:{joinType} spawnType:{spawnType}");
+            }
+            
         }
     }
 
@@ -909,6 +916,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     #endregion
 
 
+    
     #region GPSUpdate
 
     private void SetStartingGPSDirections() {
@@ -919,8 +927,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
         foreach (var po in dict.Keys) {
             bool success = participants.GetClientID(po, out ulong cid);
             if (success && Main_ParticipantObjects.ContainsKey(po)) {
-                Main_ParticipantObjects[po]
-                    .GetComponent<VR_Participant>().CurrentDirection.Value = dict[po];
+               // Main_ParticipantObjects[po]
+                  //  .GetComponent<VR_Participant>().CurrentDirection.Value = dict[po];
                 Interactable_ParticipantObjects[po]
                     .ForEach(io => io.GetComponentInChildren<GpsController>().SetDirection(dict[po]));
             }

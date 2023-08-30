@@ -326,7 +326,8 @@ public class NetworkVehicleController : Interactable_Object
         }
     }
 
-    public override Transform GetCameraPositionObject() {
+    public override Transform GetCameraPositionObject()
+    {
         return transform.Find("CameraPosition");
     }
 

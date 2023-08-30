@@ -5,21 +5,23 @@ using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.Serialization;
 
 public class VR_Participant : Client_Object {
     private const string OffsetFileName = "offset";
-    public bool ReadyForAssignment;
+   
+    private NetworkVariable<SpawnType> mySpawnType;
 
-    private SpawnType mySpawnType;
+    //public NetworkVariable<GpsController.Direction> CurrentDirection = new(); //ToDo shopuld be moved to the Navigation Screen
 
-    public NetworkVariable<GpsController.Direction> CurrentDirection = new();
+    
+    public Transform FollowTransform;
+    public bool FollowRotation = false;
+    public bool FollowLocation = false;
+    public Transform MyCamera;
 
-
-    public Transform _transform;
-
-
-    public NetworkVariable<bool> ButtonPushed; // This is only active during QN time 
-    private StateManager _localStateManager;
+    public NetworkVariable<bool> ButtonPushed; // This is only active during QN time
     private bool HasNewData;
     private bool init;
 
@@ -29,79 +31,75 @@ public class VR_Participant : Client_Object {
 
 
     private bool lastValue;
-
     private GpsController m_GpsController;
-
     private ParticipantOrder m_participantOrder = ParticipantOrder.None;
-
-    [NonSerialized]
-    private Interactable_Object NetworkedInteractableObject;
+    
+    public Interactable_Object NetworkedInteractableObject;
     private Vector3 offsetPositon = Vector3.zero;
 
 
     private Quaternion offsetRotation = Quaternion.identity;
-    public string lang { get; }
-
+    
 
     // OK so I know this is not an elegant solution. We are feeding the image data through the playerobject. Really not great.
     // maybe we would want to use reliable message 
 
+    private void Awake()
+    {
+        mySpawnType = new NetworkVariable<SpawnType>();
+    }
 
     public bool FinishedImageSending { get; private set; }
-
-    private void Awake() {
-        ReadyForAssignment = false;
-    }
-
-    private void Start() {
-    }
-
+    
     private void Update() {
         if (IsLocalPlayer)
-            if (m_GpsController == null && _transform != null) {
-                m_GpsController = _transform.parent.GetComponentInChildren<GpsController>();
-                if (m_GpsController != null) m_GpsController.SetDirection(CurrentDirection.Value);
-            }
+       //     if (m_GpsController == null && FollowTransform != null) {
+          //      m_GpsController = FollowTransform.parent.GetComponentInChildren<GpsController>();
+          //      if (m_GpsController != null) m_GpsController.SetDirection(CurrentDirection.Value);
+          //  }
 
         if (IsServer) ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
     }
 
 
-    private void LateUpdate() {
-        if (_transform != null) {
-            var transform1 = transform;
-            var transform2 = _transform;
-            transform1.rotation = transform2.rotation * offsetRotation;
-            if (!init && IsLocalPlayer) {
-                LastRot = transform1.rotation;
-                init = true;
-                ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
-            }
+    private void LateUpdate()
+    {
+        if (NetworkManager.Singleton.IsServer) return;
+        switch (mySpawnType.Value)
+        {
+            case SpawnType.CAR:
+                if (FollowTransform != null) {
+                    var transform1 = transform;
+                    var transform2 = FollowTransform;
+                    transform1.rotation = transform2.rotation * offsetRotation;
+                    if (!init && IsLocalPlayer) {
+                        LastRot = transform1.rotation;
+                        init = true;
+                        ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
+                    }
 
-            transform1.position = transform2.position +
-                                  transform1.rotation * Quaternion.Inverse(LastRot) * offsetPositon;
+                    transform1.position = transform2.position +
+                                          transform1.rotation * Quaternion.Inverse(LastRot) * offsetPositon;
+                }
+                break;
+            case SpawnType.PEDESTRIAN:
+                if (FollowTransform != null)
+                {
+                    transform.position = FollowTransform.position + (transform.position - MyCamera.position);
+                }
 
-            //  if (IsServer) {
-            //   Debug.Log("Updating relative positon on server with: "+offsetPositon.ToString()+" and "+offsetRotation.ToString() );
-            //  }
+                break;
         }
     }
 
-    private void OnGUI() {
-        if (IsLocalPlayer)
-            GUI.Label(new Rect(200, 5, 150, 100), "Client State" + _localStateManager.GlobalState.Value);
-    }
-
+  
     public ParticipantOrder getMyOrder() {
         return m_participantOrder;
     }
-
-
-    public static VR_Participant GetMyPIC() {
+    public static VR_Participant GetJoinTypeObject() {
         foreach (var pic in FindObjectsOfType<VR_Participant>())
             if (pic.IsLocalPlayer)
                 return pic;
-
         return null;
     }
 
@@ -113,12 +111,8 @@ public class VR_Participant : Client_Object {
     public override void OnNetworkSpawn() {
         if (IsClient && !IsLocalPlayer) return;
         if (IsLocalPlayer) {
-            CurrentDirection.OnValueChanged += NewGpsDirection;
-            _localStateManager = GetComponent<StateManager>();
-            //ToDo delete
-            // NetworkManager.Singleton.CustomMessagingManager.RegisterNamedMessageHandler(
-            // QNDataStorageServer.QNContentMessageName, AddQuestionsToTheQueue);
-
+           // CurrentDirection.OnValueChanged += NewGpsDirection;
+         
             var conf = new ConfigFileLoading();
             conf.Init(OffsetFileName);
             if (conf.FileAvalible()) conf.LoadLocalOffset(out offsetPositon, out offsetRotation);
@@ -142,10 +136,10 @@ public class VR_Participant : Client_Object {
     public void GoForPostQuestion() {
         if (!IsLocalPlayer) return;
         Debug.Log("Waiting for picture upload to finish!");
-        StartCoroutine(AwaidFinishingPictureUpload());
+        StartCoroutine(AwaitFinishingPictureUpload());
     }
 
-    private IEnumerator AwaidFinishingPictureUpload() {
+    private IEnumerator AwaitFinishingPictureUpload() {
         yield return new WaitUntil(() =>
             FinishedImageSending
         );
@@ -164,41 +158,59 @@ public class VR_Participant : Client_Object {
         // GetComponentInChildren<GpsController>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
     }
 
-   
-
+    
     public override void SetSpawnType(SpawnType _spawnType) {
-        mySpawnType = _spawnType;
+        mySpawnType.Value = _spawnType;
     }
 
-    public override void AssignFollowTransform(Interactable_Object MyCar, ulong targetClient) {
+    public override void AssignFollowTransform(Interactable_Object MyInteractableObject, ulong targetClient) {
         if (IsServer) {
-            NetworkedInteractableObject = MyCar;
-            _transform = NetworkedInteractableObject.GetCameraPositionObject();
-            AssignCarTransformClientRPC(MyCar.NetworkObject, targetClient);
+            NetworkedInteractableObject = MyInteractableObject;
+            FollowTransform = NetworkedInteractableObject.GetCameraPositionObject();
+            AssignInteractable_ClientRPC(MyInteractableObject.GetComponent<NetworkObject>(), targetClient);
         }
     }
 
     public override Transform GetMainCamera() {
-        return transform.Find ("CenterEyeAnchor"); //TODO URGENT needs to be fixed
-        
+        if(MyCamera==null)
+        {
+            MyCamera=transform.GetChild(0).Find("CenterEyeAnchor"); 
+        }
+        return MyCamera;
     }
 
     [ClientRpc]
-    private void AssignCarTransformClientRPC(NetworkObjectReference MyCar, ulong targetClient) {
-        if (MyCar.TryGet(out var targetObject)) {
+    private void AssignInteractable_ClientRPC(NetworkObjectReference MyInteractable, ulong targetClient) {
+        
+        Debug.Log($"MyInteractable{MyInteractable.NetworkObjectId} targetClient:{targetClient}, OwnerClientId:{OwnerClientId}");
+        if (MyInteractable.TryGet(out NetworkObject targetObject)) {
             if (targetClient == OwnerClientId) {
-                NetworkedInteractableObject = targetObject.transform.GetComponent<NetworkVehicleController>();
-
-                Debug.Log("Tried to get a new car. Its my Car!");
+                NetworkedInteractableObject = targetObject.transform.GetComponent<Interactable_Object>();
+                ReConnectWithFollowTransform();
             }
-
-            _transform = NetworkedInteractableObject.transform.Find("CameraPosition");
         }
         else {
-            Debug.LogWarning(
+            Debug.LogError(
                 "Did not manage to get my Car assigned interactions will not work. Maybe try calling this RPC later.");
         }
     }
+
+private  void  ReConnectWithFollowTransform()
+{
+    if (!IsLocalPlayer) return;
+
+   
+    switch (mySpawnType.Value)
+    {
+        case SpawnType.CAR:
+            FollowTransform = NetworkedInteractableObject.transform.Find("CameraPosition");
+            break;
+        case SpawnType.PEDESTRIAN:
+            FollowTransform = NetworkedInteractableObject.GetCameraPositionObject();
+            break;
+    }
+    
+}
 
 
     public override void  De_AssignFollowTransform(ulong targetClient,NetworkObject netobj) {
@@ -212,21 +224,20 @@ public class VR_Participant : Client_Object {
     private void De_AssignFollowTransformClientRPC(ulong targetClient) {
         //ToDo: currently we just deassigned everything but NetworkInteractable object and _transform could turn into lists etc...
         NetworkedInteractableObject = null;
-        _transform = null;
+        FollowTransform = null;
         DontDestroyOnLoad(gameObject);
         Debug.Log("De_assign Car ClientRPC");
     }
 
     public override void CalibrateClient(ClientRpcParams clientRpcParams) {
-        CalibrateClientRPC(mySpawnType, clientRpcParams);
-        
+        CalibrateClientRPC(clientRpcParams);
     }
 
     [ClientRpc]
-    public void CalibrateClientRPC(SpawnType spawnType = SpawnType.NONE, ClientRpcParams clientRpcParams = default) {
+    public void CalibrateClientRPC( ClientRpcParams clientRpcParams = default) {
         if (!IsLocalPlayer) return;
-
-        switch (spawnType)
+         
+        switch (mySpawnType.Value)
         {
             case SpawnType.CAR:
                 GetComponent<SeatCalibration>().StartCalibration(
@@ -236,7 +247,14 @@ public class VR_Participant : Client_Object {
                 Debug.Log("Calibrated ClientRPC");
                 break;
             case SpawnType.PEDESTRIAN:
-                 
+                var tmp = GetMainCamera();
+                tmp.GetComponent<TrackedPoseDriver>().trackingType = TrackedPoseDriver.TrackingType.RotationOnly;
+                FollowTransform = NetworkedInteractableObject.GetCameraPositionObject();
+                Debug.Log($"Got FollowTransform:{FollowTransform}, NetworkedInteractableObject{NetworkedInteractableObject.name}");
+                SetFollowMode(false, true);
+                SetNewRotationOffset(Quaternion.FromToRotation(tmp.forward, FollowTransform.forward));
+                SetNewPositionOffset(Vector3.zero);
+                FinishedCalibration();
                 break;
         }
         
@@ -247,17 +265,19 @@ public class VR_Participant : Client_Object {
     public bool ButtonPush() {
         if (lastValue && ButtonPushed.Value == false) {
             lastValue = ButtonPushed.Value;
-            Debug.Log("Button Got pushed!!");
             return true;
         }
-
         lastValue = ButtonPushed.Value;
         return false;
     }
 
-
-    public void SetNewRotationOffset(Quaternion yawCorrection) {
-        offsetRotation *= yawCorrection;
+    public void SetFollowMode(bool _followRotation, bool _followLocation)
+    {
+        FollowLocation = _followLocation;
+        FollowRotation = _followRotation;
+    }
+    public void SetNewRotationOffset(Quaternion offset) {
+        offsetRotation *= offset;
     }
 
     public void SetNewPositionOffset(Vector3 positionOffset) {

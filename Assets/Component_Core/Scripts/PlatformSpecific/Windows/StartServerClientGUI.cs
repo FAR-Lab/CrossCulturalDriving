@@ -116,8 +116,8 @@ public class StartServerClientGUI : MonoBehaviour {
             ip: "127.0.0.1",
             port: 7777,
             result:ResponseDelegate,
-            _spawnTypeIN: SpawnType.CAR,
-            _joinTypeIN: JoinType.SCREEN
+            _spawnTypeIN: SpawnType.PEDESTRIAN,
+            _joinTypeIN: JoinType.VR
         );
         Destroy(ServerGuiSintance.gameObject);
         enabled = false;

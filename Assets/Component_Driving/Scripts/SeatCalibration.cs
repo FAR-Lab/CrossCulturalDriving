@@ -113,7 +113,7 @@ public class SeatCalibration : MonoBehaviour {
                 
                 Quaternion rotation = Quaternion.FromToRotation(cam.forward, steeringWheelCenter.parent.forward);
                 Debug.Log("rotation.eulerAngles.y" + Quaternion.Euler(0, rotation.eulerAngles.y, 0));
-
+                myPic.SetFollowMode(true, true);
                 myPic.SetNewRotationOffset(Quaternion.Euler(0, rotation.eulerAngles.y, 0));
                 callibrationState = SearCalibrationState.CALIBRATING;
                 callibrationTimer = 5f;

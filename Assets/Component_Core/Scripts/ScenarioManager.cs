@@ -72,8 +72,6 @@ public class ScenarioManager : MonoBehaviour {
             foreach (var sp in GetComponentsInChildren<SpawnPosition>()) {
                 var transform1 = sp.transform;
                 MySpawnPositions[sp.StartingId] = new Pose(transform1.position, transform1.rotation);
-
-               
             }
         }
     }
