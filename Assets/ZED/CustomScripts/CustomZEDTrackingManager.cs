@@ -24,11 +24,6 @@ public class CustomZEDTrackingManager : MonoBehaviour
             StartCoroutine(CalibrateSequence());
 
         }
-        if (Input.GetKey(KeyCode.Tab) && Input.GetKeyDown(KeyCode.R))
-        {
-            FindDependencies();
-            CalibrateRotation();
-        }
     }
 
     private IEnumerator CalibrateSequence()
