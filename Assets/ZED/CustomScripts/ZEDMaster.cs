@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine.InputSystem;
 
 
@@ -22,16 +23,27 @@ public class ZEDMaster : Interactable_Object {
     private Pose destinationPose;
 
     
-    public NetworkVariable<NetworkObjectReference> SyncroizedHeadPositon;
-
-
+    public NetworkVariable<NetworkObjectReference> SyncroizedHeadPositon = new NetworkVariable<NetworkObjectReference>();
+   
     private void Start() {
+        
+    }
+
+  
+    
+      
+
+
+    private void FollowTransformVariableUpdate(NetworkObjectReference previousvalue, NetworkObjectReference newvalue)
+    {
+        Debug.Log($"SyncroizedHeadPositon.Value{newvalue.NetworkObjectId}");
+        
         
     }
 
     public override void OnNetworkSpawn()
     {
-        SyncroizedHeadPositon = new NetworkVariable<NetworkObjectReference>();
+        
         base.OnNetworkSpawn();
         if (IsServer)
         {
@@ -42,8 +54,11 @@ public class ZEDMaster : Interactable_Object {
         {
             GetComponent<ZEDBodyTrackingManager>().enabled = false;
             GetComponent<ZEDStreamingClient>().enabled = false;
+            
         }
-
+        Debug.Log($"Setting up syc reference");
+            SyncroizedHeadPositon.OnValueChanged += FollowTransformVariableUpdate;
+        
 
     }
 
@@ -108,7 +123,9 @@ public class ZEDMaster : Interactable_Object {
             yield return new WaitForSeconds(0.05f);
             CalibratePosition();
             yield return new WaitForSeconds(0.05f);
-            SyncroizedHeadPositon.Value = storedTarget.GetComponent<NetworkObjectReference>();
+            Debug.Log($"storedTargetNetworkObjectReference>{storedTarget.transform.GetComponent<NetworkObject>().NetworkObjectId}");
+            SyncroizedHeadPositon.Value = storedTarget.transform.GetComponent<NetworkObject>();
+            
         }
     }
 
@@ -206,33 +223,14 @@ public class ZEDMaster : Interactable_Object {
     public override Transform GetCameraPositionObject()
     {
         Debug.Log("Attempting to retrive  headposition for client in ZedMaster ");
+        Debug.Log($"SyncroizedHeadPositon{SyncroizedHeadPositon.IsDirty()}");
+
         if (SyncroizedHeadPositon.Value.TryGet(out NetworkObject no))
         {
             
             Transform headContainer = no.transform.GetComponentInChildren<HeadContainer>().transform;
             Debug.Log($"Found object on Client {headContainer.name}");
-            float hipRotY = storedTarget.GetComponent<ZEDSkeletonAnimator>().animator
-                .GetBoneTransform(HumanBodyBones.Hips).eulerAngles.y;
-            Client_Object obj= null;
-            
-            foreach (var cod in FindObjectsOfType<Client_Object>())
-            {
-                if (cod.OwnerClientId == CLID_)
-                {
-                    obj = cod;
-                    break;
-                }
-            }
-
-            if (obj == null)
-            {
-                return  null;
-            }
-            
-            float camRotY = obj.GetMainCamera().transform.localRotation.eulerAngles.y;
-            float rotationDifferenceY = hipRotY - camRotY;
-            Vector3 containerRotation = new Vector3(0, rotationDifferenceY, 0);
-            headContainer.localRotation = Quaternion.Euler(containerRotation);
+            headContainer.rotation = transform.rotation;
             return headContainer;
         }
         else

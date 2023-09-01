@@ -54,9 +54,9 @@ public class VR_Participant : Client_Object {
     private void Update() {
         if (IsLocalPlayer)
        //     if (m_GpsController == null && FollowTransform != null) {
-          //      m_GpsController = FollowTransform.parent.GetComponentInChildren<GpsController>();
-          //      if (m_GpsController != null) m_GpsController.SetDirection(CurrentDirection.Value);
-          //  }
+       //      m_GpsController = FollowTransform.parent.GetComponentInChildren<GpsController>();
+       // //      if (m_GpsController != null) m_GpsController.SetDirection(CurrentDirection.Value);
+       // //  }
 
         if (IsServer) ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
     }
@@ -65,6 +65,7 @@ public class VR_Participant : Client_Object {
     private void LateUpdate()
     {
         if (NetworkManager.Singleton.IsServer) return;
+        
         switch (mySpawnType.Value)
         {
             case SpawnType.CAR:
