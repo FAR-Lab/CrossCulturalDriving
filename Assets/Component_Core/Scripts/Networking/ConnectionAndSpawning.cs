@@ -555,7 +555,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     #region SpawningAndConnecting
 
     private void ServerLoadScene(string name) {
-        DestroyAllClientObjects(false);
+        DestroyALLInteractable_ALLClients();
         NetworkManager.Singleton.SceneManager.LoadScene(name, LoadSceneMode.Single);
     }
 
@@ -607,20 +607,14 @@ public class ConnectionAndSpawning : MonoBehaviour {
             default: throw new ArgumentOutOfRangeException();
         }
     }
-    // DestroyAllClientObjects_OfType(SpawnType TypeToDestroy)// TODO would make implementing more features easier
-
-    private void DestroyAllClientObjects(bool destroyMain = false) {
+    
+    private void DestroyALLInteractable_ALLClients() {
         foreach (var po in participants.GetAllConnectedParticipants()) {
-            if (po == ParticipantOrder.None)
-            {
-                continue;
-            }
-            Debug.Log(po.ToString());
+            if (po == ParticipantOrder.None)continue;
+            
+            Debug.Log($"Destroying Interactable for po:{po}");
             foreach (var id in Interactable_ParticipantObjects[po]) {
                 DespawnAllInteractableObject(po);
-                if (destroyMain) {
-                    DespawnClientObject(po);
-                }
             }
         }
     }
@@ -628,14 +622,14 @@ public class ConnectionAndSpawning : MonoBehaviour {
     
     private void DespawnAllObjectsforParticipant(ParticipantOrder po) {
         if (po == ParticipantOrder.None) return;
+        Debug.Log($"DespawnAllObjectsforParticipant for po:{po}");
         DespawnAllInteractableObject(po);
-        DespawnClientObject(po);
-       
+        DespawnMainClientObject(po);
     }
 
-    private void DespawnClientObject(ParticipantOrder po) {
+    private void DespawnMainClientObject(ParticipantOrder po) {
         if (po == ParticipantOrder.None) return;
-
+        Debug.Log($"DespawnMainClientObject for po:{po}");
         if (Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null) {
             Main_ParticipantObjects[po].GetComponent<NetworkObject>().Despawn();
         }
@@ -643,6 +637,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     private void DespawnAllInteractableObject(ParticipantOrder po) {
+        Debug.Log($"Despawning All interactables for po:{po}");
         if (Interactable_ParticipantObjects.ContainsKey(po)) {
             foreach (var io in Interactable_ParticipantObjects[po]) {
                 if (Main_ParticipantObjects[po] != null) {
@@ -652,10 +647,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
                             .De_AssignFollowTransform(clientID, io.GetComponent<NetworkObject>());
                     }
                 }
-
                 io.GetComponent<NetworkObject>().Despawn();
             }
-
             Interactable_ParticipantObjects.Remove(po);
         }
     }
@@ -671,8 +664,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private void ClientDisconnected(ulong clientID) {
         bool success = participants.GetOrder(clientID, out ParticipantOrder po);
-        if (success && Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null) {
-            //m_QNDataStorageServer.DeRegisterHandler(po);
+        if (success && Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null)
+        {
+            participants.RemoveParticipant(clientID);
             DespawnAllObjectsforParticipant(po);
             
         }
@@ -799,8 +793,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
         ConnectionDataRequest cdr =
             JsonConvert.DeserializeObject<ConnectionDataRequest>(Encoding.ASCII.GetString(request.Payload));
-
-        //Debug.Log($"cdr: po: {cdr.po}, st: {cdr.st}, jt: {cdr.jt}");
+        
 
         approve = participants.AddParticipant(cdr.po, request.ClientNetworkId, cdr.st, cdr.jt);
 

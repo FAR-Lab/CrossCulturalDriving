@@ -1,27 +1,25 @@
-
-
 using System;
 using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
-using UnityEngine.Serialization;
 
-public class VR_Participant : Client_Object {
+public class VR_Participant : Client_Object
+{
     private const string OffsetFileName = "offset";
-   
-    private NetworkVariable<SpawnType> mySpawnType;
 
     //public NetworkVariable<GpsController.Direction> CurrentDirection = new(); //ToDo shopuld be moved to the Navigation Screen
 
-    
+
     public Transform FollowTransform;
-    public bool FollowRotation = false;
-    public bool FollowLocation = false;
+    public bool FollowRotation;
+    public bool FollowLocation;
     public Transform MyCamera;
 
     public NetworkVariable<bool> ButtonPushed; // This is only active during QN time
+
+    public Interactable_Object NetworkedInteractableObject;
     private bool HasNewData;
     private bool init;
 
@@ -33,13 +31,15 @@ public class VR_Participant : Client_Object {
     private bool lastValue;
     private GpsController m_GpsController;
     private ParticipantOrder m_participantOrder = ParticipantOrder.None;
-    
-    public Interactable_Object NetworkedInteractableObject;
+
+    private NetworkVariable<SpawnType> mySpawnType;
     private Vector3 offsetPositon = Vector3.zero;
 
 
     private Quaternion offsetRotation = Quaternion.identity;
-    
+
+    public bool FinishedImageSending { get; private set; }
+
 
     // OK so I know this is not an elegant solution. We are feeding the image data through the playerobject. Really not great.
     // maybe we would want to use reliable message 
@@ -49,16 +49,16 @@ public class VR_Participant : Client_Object {
         mySpawnType = new NetworkVariable<SpawnType>();
     }
 
-    public bool FinishedImageSending { get; private set; }
-    
-    private void Update() {
+    private void Update()
+    {
         if (IsLocalPlayer)
-       //     if (m_GpsController == null && FollowTransform != null) {
-       //      m_GpsController = FollowTransform.parent.GetComponentInChildren<GpsController>();
-       // //      if (m_GpsController != null) m_GpsController.SetDirection(CurrentDirection.Value);
-       // //  }
+            //     if (m_GpsController == null && FollowTransform != null) {
+            //      m_GpsController = FollowTransform.parent.GetComponentInChildren<GpsController>();
+            // //      if (m_GpsController != null) m_GpsController.SetDirection(CurrentDirection.Value);
+            // //  }
 
-        if (IsServer) ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
+            if (IsServer)
+                ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
     }
 
 
@@ -66,61 +66,65 @@ public class VR_Participant : Client_Object {
     {
         if (NetworkManager.Singleton.IsServer) return;
         
-        switch (mySpawnType.Value)
+        var myTransform = transform;
+        var followTransform = FollowTransform;
+        
+        if (FollowTransform == null) return;
+
+        if (FollowLocation && FollowRotation)
         {
-            case SpawnType.CAR:
-                if (FollowTransform != null) {
-                    var transform1 = transform;
-                    var transform2 = FollowTransform;
-                    transform1.rotation = transform2.rotation * offsetRotation;
-                    if (!init && IsLocalPlayer) {
-                        LastRot = transform1.rotation;
-                        init = true;
-                        ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
-                    }
+            myTransform.rotation = followTransform.rotation * offsetRotation;
+            if (!init && IsLocalPlayer)
+            {
+                LastRot = myTransform.rotation;
+                init = true;
+                ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
+            }
+            myTransform.position = followTransform.position +
+                                   myTransform.rotation * Quaternion.Inverse(LastRot) * offsetPositon;
+        }
 
-                    transform1.position = transform2.position +
-                                          transform1.rotation * Quaternion.Inverse(LastRot) * offsetPositon;
-                }
-                break;
-            case SpawnType.PEDESTRIAN:
-                if (FollowTransform != null)
-                {
-                    transform.position = FollowTransform.position + (transform.position - MyCamera.position);
-                }
-
-                break;
+        if (FollowLocation && !FollowRotation)
+        {
+            myTransform.position = followTransform.position + (myTransform.position - MyCamera.position);
         }
     }
 
-  
-    public ParticipantOrder getMyOrder() {
+
+    public ParticipantOrder getMyOrder()
+    {
         return m_participantOrder;
     }
-    public static VR_Participant GetJoinTypeObject() {
+
+    public static VR_Participant GetJoinTypeObject()
+    {
         foreach (var pic in FindObjectsOfType<VR_Participant>())
             if (pic.IsLocalPlayer)
                 return pic;
         return null;
     }
 
-    private void NewGpsDirection(GpsController.Direction previousvalue, GpsController.Direction newvalue) {
+    private void NewGpsDirection(GpsController.Direction previousvalue, GpsController.Direction newvalue)
+    {
         if (m_GpsController != null) m_GpsController.SetDirection(newvalue);
     }
 
 
-    public override void OnNetworkSpawn() {
+    public override void OnNetworkSpawn()
+    {
         if (IsClient && !IsLocalPlayer) return;
-        if (IsLocalPlayer) {
-           // CurrentDirection.OnValueChanged += NewGpsDirection;
-         
+        if (IsLocalPlayer)
+        {
+            // CurrentDirection.OnValueChanged += NewGpsDirection;
+
             var conf = new ConfigFileLoading();
             conf.Init(OffsetFileName);
             if (conf.FileAvalible()) conf.LoadLocalOffset(out offsetPositon, out offsetRotation);
 
             m_participantOrder = ConnectionAndSpawning.Singleton.ParticipantOrder;
         }
-        else if (IsServer) {
+        else if (IsServer)
+        {
             m_participantOrder = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
             GetComponent<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder);
@@ -129,18 +133,21 @@ public class VR_Participant : Client_Object {
 
 
     [ClientRpc]
-    public void UpdateTrafficLightsClientRPC(TrafficLightSupervisor.trafficLightStatus msg) {
+    public void UpdateTrafficLightsClientRPC(TrafficLightSupervisor.trafficLightStatus msg)
+    {
         if (!IsLocalPlayer || IsServer) return;
         foreach (var tmp in FindObjectsOfType<TrafficLightController>()) tmp.UpdatedTrafficlight(msg);
     }
 
-    public void GoForPostQuestion() {
+    public void GoForPostQuestion()
+    {
         if (!IsLocalPlayer) return;
         Debug.Log("Waiting for picture upload to finish!");
         StartCoroutine(AwaitFinishingPictureUpload());
     }
 
-    private IEnumerator AwaitFinishingPictureUpload() {
+    private IEnumerator AwaitFinishingPictureUpload()
+    {
         yield return new WaitUntil(() =>
             FinishedImageSending
         );
@@ -148,96 +155,105 @@ public class VR_Participant : Client_Object {
     }
 
     [ServerRpc]
-    public void PostQuestionServerRPC(ulong clientID) {
+    public void PostQuestionServerRPC(ulong clientID)
+    {
         ConnectionAndSpawning.Singleton.FinishedQuestionair(clientID);
     }
 
 
-
     [ClientRpc]
-    public void SetGPSClientRpc(GpsController.Direction[] dir) {
+    public void SetGPSClientRpc(GpsController.Direction[] dir)
+    {
         // GetComponentInChildren<GpsController>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
     }
 
-    
-    public override void SetSpawnType(SpawnType _spawnType) {
+
+    public override void SetSpawnType(SpawnType _spawnType)
+    {
         mySpawnType.Value = _spawnType;
     }
 
-    public override void AssignFollowTransform(Interactable_Object MyInteractableObject, ulong targetClient) {
-        if (IsServer) {
+    public override void AssignFollowTransform(Interactable_Object MyInteractableObject, ulong targetClient)
+    {
+        if (IsServer)
+        {
             NetworkedInteractableObject = MyInteractableObject;
             FollowTransform = NetworkedInteractableObject.GetCameraPositionObject();
             AssignInteractable_ClientRPC(MyInteractableObject.GetComponent<NetworkObject>(), targetClient);
         }
     }
 
-    public override Transform GetMainCamera() {
-        if(MyCamera==null)
-        {
-            MyCamera=transform.GetChild(0).Find("CenterEyeAnchor"); 
-        }
+    public override Transform GetMainCamera()
+    {
+        if (MyCamera == null) MyCamera = transform.GetChild(0).Find("CenterEyeAnchor");
         return MyCamera;
     }
 
     [ClientRpc]
-    private void AssignInteractable_ClientRPC(NetworkObjectReference MyInteractable, ulong targetClient) {
-        
-        Debug.Log($"MyInteractable{MyInteractable.NetworkObjectId} targetClient:{targetClient}, OwnerClientId:{OwnerClientId}");
-        if (MyInteractable.TryGet(out NetworkObject targetObject)) {
-            if (targetClient == OwnerClientId) {
+    private void AssignInteractable_ClientRPC(NetworkObjectReference MyInteractable, ulong targetClient)
+    {
+        Debug.Log(
+            $"MyInteractable{MyInteractable.NetworkObjectId} targetClient:{targetClient}, OwnerClientId:{OwnerClientId}");
+        if (MyInteractable.TryGet(out var targetObject))
+        {
+            if (targetClient == OwnerClientId)
+            {
                 NetworkedInteractableObject = targetObject.transform.GetComponent<Interactable_Object>();
                 ReConnectWithFollowTransform();
             }
         }
-        else {
+        else
+        {
             Debug.LogError(
                 "Did not manage to get my Car assigned interactions will not work. Maybe try calling this RPC later.");
         }
     }
 
-private  void  ReConnectWithFollowTransform()
-{
-    if (!IsLocalPlayer) return;
-
-   
-    switch (mySpawnType.Value)
+    private void ReConnectWithFollowTransform()
     {
-        case SpawnType.CAR:
-            FollowTransform = NetworkedInteractableObject.transform.Find("CameraPosition");
-            break;
-        case SpawnType.PEDESTRIAN:
-            FollowTransform = NetworkedInteractableObject.GetCameraPositionObject();
-            break;
+        if (!IsLocalPlayer) return;
+        
+        switch (mySpawnType.Value)
+        {
+            case SpawnType.CAR:
+                FollowTransform = NetworkedInteractableObject.transform.Find("CameraPosition");
+                break;
+            case SpawnType.PEDESTRIAN:
+                FollowTransform = NetworkedInteractableObject.GetCameraPositionObject();
+                break;
+        }
     }
-    
-}
 
 
-    public override void  De_AssignFollowTransform(ulong targetClient,NetworkObject netobj) {
-        if (IsServer) {
+    public override void De_AssignFollowTransform(ulong targetClient, NetworkObject netobj)
+    {
+        if (IsServer)
+        {
             NetworkedInteractableObject = null;
             De_AssignFollowTransformClientRPC(targetClient);
         }
     }
 
     [ClientRpc]
-    private void De_AssignFollowTransformClientRPC(ulong targetClient) {
+    private void De_AssignFollowTransformClientRPC(ulong targetClient)
+    {
         //ToDo: currently we just deassigned everything but NetworkInteractable object and _transform could turn into lists etc...
         NetworkedInteractableObject = null;
         FollowTransform = null;
         DontDestroyOnLoad(gameObject);
-        Debug.Log("De_assign Car ClientRPC");
+        Debug.Log("De_assign Interactable ClientRPC");
     }
 
-    public override void CalibrateClient(ClientRpcParams clientRpcParams) {
+    public override void CalibrateClient(ClientRpcParams clientRpcParams)
+    {
         CalibrateClientRPC(clientRpcParams);
     }
 
     [ClientRpc]
-    public void CalibrateClientRPC( ClientRpcParams clientRpcParams = default) {
+    public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default)
+    {
         if (!IsLocalPlayer) return;
-         
+
         switch (mySpawnType.Value)
         {
             case SpawnType.CAR:
@@ -250,24 +266,28 @@ private  void  ReConnectWithFollowTransform()
             case SpawnType.PEDESTRIAN:
                 var tmp = GetMainCamera();
                 tmp.GetComponent<TrackedPoseDriver>().trackingType = TrackedPoseDriver.TrackingType.RotationOnly;
+                
                 FollowTransform = NetworkedInteractableObject.GetCameraPositionObject();
-                Debug.Log($"Got FollowTransform:{FollowTransform}, NetworkedInteractableObject{NetworkedInteractableObject.name}");
+                if (NetworkedInteractableObject == null || FollowTransform == null) return;
+                
                 SetFollowMode(false, true);
-                SetNewRotationOffset(Quaternion.FromToRotation(tmp.forward, FollowTransform.forward));
+                Quaternion quat = Quaternion.FromToRotation(tmp.forward, FollowTransform.forward);
+                transform.rotation *= quat;
+                SetNewRotationOffset(Quaternion.identity);
                 SetNewPositionOffset(Vector3.zero);
                 FinishedCalibration();
                 break;
         }
-        
-        
-        
     }
-    
-    public bool ButtonPush() {
-        if (lastValue && ButtonPushed.Value == false) {
+
+    public bool ButtonPush()
+    {
+        if (lastValue && ButtonPushed.Value == false)
+        {
             lastValue = ButtonPushed.Value;
             return true;
         }
+
         lastValue = ButtonPushed.Value;
         return false;
     }
@@ -277,15 +297,19 @@ private  void  ReConnectWithFollowTransform()
         FollowLocation = _followLocation;
         FollowRotation = _followRotation;
     }
-    public void SetNewRotationOffset(Quaternion offset) {
+
+    public void SetNewRotationOffset(Quaternion offset)
+    {
         offsetRotation *= offset;
     }
 
-    public void SetNewPositionOffset(Vector3 positionOffset) {
+    public void SetNewPositionOffset(Vector3 positionOffset)
+    {
         offsetPositon += positionOffset;
     }
 
-    public void FinishedCalibration() {
+    public void FinishedCalibration()
+    {
         var conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
         conf.StoreLocalOffset(offsetPositon, offsetRotation);
@@ -293,7 +317,8 @@ private  void  ReConnectWithFollowTransform()
     }
 
     [ServerRpc]
-    public void ShareOffsetServerRPC(Vector3 offsetPositon, Quaternion offsetRotation, Quaternion InitRotation) {
+    public void ShareOffsetServerRPC(Vector3 offsetPositon, Quaternion offsetRotation, Quaternion InitRotation)
+    {
         UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, InitRotation);
         this.offsetPositon = offsetPositon;
         this.offsetRotation = offsetRotation;
@@ -303,7 +328,8 @@ private  void  ReConnectWithFollowTransform()
 
     [ClientRpc]
     public void UpdateOffsetRemoteClientRPC(Vector3 _offsetPositon, Quaternion _offsetRotation,
-        Quaternion InitRotation) {
+        Quaternion InitRotation)
+    {
         if (IsLocalPlayer) return;
 
         offsetPositon = _offsetPositon;
@@ -313,11 +339,13 @@ private  void  ReConnectWithFollowTransform()
         Debug.Log("Updated Callibrated offsets based on remote poisiton");
     }
 
-    public Transform GetMyCar() {
+    public Transform GetMyCar()
+    {
         return NetworkedInteractableObject.transform;
     }
 
-    public bool DeleteCallibrationFile() {
+    public bool DeleteCallibrationFile()
+    {
         var conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
         return conf.DeleteFile();
@@ -325,13 +353,15 @@ private  void  ReConnectWithFollowTransform()
 
 
     [ClientRpc]
-    public void StartQuestionairClientRPC() {
+    public void StartQuestionairClientRPC()
+    {
         if (!IsLocalPlayer) return;
         FindObjectOfType<ScenarioManager>().RunQuestionairNow(transform);
     }
 
 
-    public void SendQNAnswer(int id, int answerIndex, string lang) {
+    public void SendQNAnswer(int id, int answerIndex, string lang)
+    {
         if (!IsLocalPlayer) return;
         HasNewData = false;
         SendQNAnswerServerRPC(id, answerIndex, lang);
@@ -339,13 +369,15 @@ private  void  ReConnectWithFollowTransform()
 
 
     [ServerRpc]
-    public void SendQNAnswerServerRPC(int id, int answerIndex, string lang) {
+    public void SendQNAnswerServerRPC(int id, int answerIndex, string lang)
+    {
         if (!IsServer) return;
         ConnectionAndSpawning.Singleton.QNNewDataPoint(m_participantOrder, id, answerIndex, lang);
     }
 
     [ClientRpc]
-    public void RecieveNewQuestionClientRPC(NetworkedQuestionnaireQuestion newq) {
+    public void RecieveNewQuestionClientRPC(NetworkedQuestionnaireQuestion newq)
+    {
         if (!IsLocalPlayer) return;
         Debug.Log("Got new data and updated varaible" + HasNewData);
         if (HasNewData)
@@ -356,12 +388,15 @@ private  void  ReConnectWithFollowTransform()
         lastQuestion = newq;
     }
 
-    public bool HasNewQuestion() {
+    public bool HasNewQuestion()
+    {
         return HasNewData;
     }
 
-    public NetworkedQuestionnaireQuestion GetNewQuestion() {
-        if (HasNewData) {
+    public NetworkedQuestionnaireQuestion GetNewQuestion()
+    {
+        if (HasNewData)
+        {
             HasNewData = false;
             return lastQuestion;
         }
@@ -371,17 +406,20 @@ private  void  ReConnectWithFollowTransform()
     }
 
     [ClientRpc]
-    public void SetTotalQNCountClientRpc(int outval) {
+    public void SetTotalQNCountClientRpc(int outval)
+    {
         if (!IsLocalPlayer) return;
 
         FindObjectOfType<QNSelectionManager>()?.SetTotalQNCount(outval);
     }
 
-    public void NewScenario() {
+    public void NewScenario()
+    {
         FinishedImageSending = true;
     }
 
-    public void InitiateImageTransfere(byte[] Image) {
+    public void InitiateImageTransfere(byte[] Image)
+    {
         if (!IsLocalPlayer) return;
         if (IsServer) return;
         FinishedImageSending = false;
@@ -390,11 +428,13 @@ private  void  ReConnectWithFollowTransform()
 
 
 //https://answers.unity.com/questions/1113376/unet-send-big-amount-of-data-over-network-how-to-s.html
-    private IEnumerator SendImageData(ParticipantOrder po, byte[] ImageArray) {
+    private IEnumerator SendImageData(ParticipantOrder po, byte[] ImageArray)
+    {
         var CurrentDataIndex = 0;
         var TotalBufferSize = ImageArray.Length;
         var DebugCounter = 0;
-        while (CurrentDataIndex < TotalBufferSize - 1) {
+        while (CurrentDataIndex < TotalBufferSize - 1)
+        {
             //determine the remaining amount of bytes, still need to be sent.
             var bufferSize = QNDataStorageServer.ByteArraySize;
             var remaining = TotalBufferSize - CurrentDataIndex;
@@ -426,7 +466,8 @@ private  void  ReConnectWithFollowTransform()
 
 
     [ServerRpc]
-    public void FinishPictureSendingServerRPC(ParticipantOrder po, int length) {
+    public void FinishPictureSendingServerRPC(ParticipantOrder po, int length)
+    {
         if (!IsServer) return;
 
         ConnectionAndSpawning.Singleton.GetQnStorageServer().NewRemoteImage(po, length);

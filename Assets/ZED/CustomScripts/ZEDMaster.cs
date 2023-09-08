@@ -91,7 +91,8 @@ public class ZEDMaster : Interactable_Object {
             if (Keyboard.current.rightArrowKey.wasPressedThisFrame)
             {
                 zedAvatars = new List<ZEDSkeletonAnimator>(FindObjectsOfType<ZEDSkeletonAnimator>());
-                storedTarget = zedAvatars[currentAvatarIndex].gameObject;
+                if (currentAvatarIndex >= zedAvatars.Count) return;
+                   storedTarget = zedAvatars[currentAvatarIndex].gameObject;
                 foreach (ZEDSkeletonAnimator zed in zedAvatars)
                 {
                     SetMaterialsColor(zed.gameObject, Color.white);
