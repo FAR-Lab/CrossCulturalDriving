@@ -624,6 +624,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         if (po == ParticipantOrder.None) return;
         Debug.Log($"DespawnAllObjectsforParticipant for po:{po}");
         DespawnAllInteractableObject(po);
+        
         DespawnMainClientObject(po);
     }
 
@@ -638,8 +639,11 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private void DespawnAllInteractableObject(ParticipantOrder po) {
         Debug.Log($"Despawning All interactables for po:{po}");
-        if (Interactable_ParticipantObjects.ContainsKey(po)) {
-            foreach (var io in Interactable_ParticipantObjects[po]) {
+        if (Interactable_ParticipantObjects.TryGetValue(po, out var interactableObjects))
+        {
+            HashSet<Interactable_Object> toRemove = new HashSet<Interactable_Object>(); // based on 4. in https://www.techiedelight.com/remove-elements-from-list-while-iterating-csharp/#:~:text=An%20elegant%20solution%20is%20to,()%20method%20for%20removing%20elements.
+            Debug.Log($"Found{interactableObjects.Count} interactable for po{po}.");
+            foreach (var io in interactableObjects) {
                 if (Main_ParticipantObjects[po] != null) {
                     bool success = participants.GetClientID(po, out ulong clientID);
                     if (success) {
@@ -647,9 +651,12 @@ public class ConnectionAndSpawning : MonoBehaviour {
                             .De_AssignFollowTransform(clientID, io.GetComponent<NetworkObject>());
                     }
                 }
+                Debug.Log($"Despawin interactiobleio{io.name}");
                 io.GetComponent<NetworkObject>().Despawn();
+                toRemove.Add(io);
+
             }
-            Interactable_ParticipantObjects.Remove(po);
+            Interactable_ParticipantObjects[po].RemoveAll(toRemove.Contains);
         }
     }
 
@@ -663,12 +670,16 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     private void ClientDisconnected(ulong clientID) {
+        
         bool success = participants.GetOrder(clientID, out ParticipantOrder po);
+        Debug.Log($"Got a client Disconnect for client:{po}");
         if (success && Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null)
         {
-            participants.RemoveParticipant(clientID);
             DespawnAllObjectsforParticipant(po);
-            
+            participants.RemoveParticipant(po);
+            Main_ParticipantObjects.Remove(po);
+            Interactable_ParticipantObjects.Remove(po);
+
         }
     }
 
@@ -731,13 +742,15 @@ public class ConnectionAndSpawning : MonoBehaviour {
                     Instantiate(SpawnType_To_InteractableObjects[spawnType],
                         tempPose.position, tempPose.rotation);
 
+                
                 newInteractableObject.GetComponent<NetworkObject>().Spawn(true);
                 newInteractableObject.GetComponent<Interactable_Object>().AssignClient(clientID, po);
-
+                
+                Interactable_ParticipantObjects[po].Add(newInteractableObject.GetComponent<Interactable_Object>());
                 if (Main_ParticipantObjects[po] != null)
                     Main_ParticipantObjects[po]
                         .AssignFollowTransform(newInteractableObject.GetComponent<Interactable_Object>(), clientID);
-
+                
                 else {
                     Debug.LogError("Could not find Client as I am spawning the Interactable. Broken please fix.");
                 }

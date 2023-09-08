@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
+using UltimateReplay;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.XR.Hands;
 
 public class VR_Participant : Client_Object
 {
@@ -48,6 +50,8 @@ public class VR_Participant : Client_Object
     {
         mySpawnType = new NetworkVariable<SpawnType>();
     }
+
+  
 
     private void Update()
     {
@@ -110,9 +114,9 @@ public class VR_Participant : Client_Object
     }
 
 
-    public override void OnNetworkSpawn()
+    public override void OnNetworkSpawn() //ToDo Turning on and off different elements could be done neater...
     {
-        if (IsClient && !IsLocalPlayer) return;
+        
         if (IsLocalPlayer)
         {
             // CurrentDirection.OnValueChanged += NewGpsDirection;
@@ -123,12 +127,45 @@ public class VR_Participant : Client_Object
 
             m_participantOrder = ConnectionAndSpawning.Singleton.ParticipantOrder;
         }
-        else if (IsServer)
+        else{
+            
+            foreach(var a in GetComponentsInChildren<SkinnedMeshRenderer>()){
+                a.enabled = true;// should happen twice to activate the hand
+            }
+            
+            foreach(var a in GetComponentsInChildren<XRHandTrackingEvents>()){
+                a.enabled = false;// should happen twice to activate the hand
+            }
+            foreach(var a in GetComponentsInChildren<XRHandSkeletonDriver>()){
+                a.enabled = false;// should happen twice to activate the hand
+            }
+            foreach(var a in GetComponentsInChildren<XRHandMeshController>()){
+                a.enabled = false;// should happen twice to activate the hand
+            }
+            foreach(var a in GetComponentsInChildren<Camera>()){
+                a.enabled = false;// should happen twice to activate the hand
+            }
+            foreach(var a in GetComponentsInChildren<AudioListener>()){
+                a.enabled = false;// should happen twice to activate the hand
+            }
+            foreach(var a in GetComponentsInChildren<TrackedPoseDriver>()){
+                a.enabled = false;// should happen twice to activate the hand
+            }
+        }
+        if (IsServer)
         {
             m_participantOrder = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
             GetComponent<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder);
         }
+        else
+        {
+            foreach(var a in GetComponentsInChildren<ReplayTransform>()){
+                a.enabled = false;// should happen twice to activate the hand
+            }
+        }
+
+       
     }
 
 
@@ -257,9 +294,13 @@ public class VR_Participant : Client_Object
         switch (mySpawnType.Value)
         {
             case SpawnType.CAR:
-                GetComponent<SeatCalibration>().StartCalibration(
-                    NetworkedInteractableObject.transform.Find("SteeringCenter"),
-                    GetMainCamera(),
+                var steering = NetworkedInteractableObject.transform.Find("SteeringCenter");
+                var cam = GetMainCamera();
+                var calib = GetComponent<SeatCalibration>();
+                Debug.Log($"Calib{calib}, SteeringCenterObject:{steering.name}, and Camera{cam}");
+                calib.StartCalibration(
+                    steering,
+                    cam,
                     this);
                 Debug.Log("Calibrated ClientRPC");
                 break;

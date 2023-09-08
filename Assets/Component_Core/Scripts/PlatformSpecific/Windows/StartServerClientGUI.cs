@@ -111,12 +111,12 @@ public class StartServerClientGUI : MonoBehaviour {
     }
 
     public void StartAsClientAInterfaceCallback() {
-        ConnectionAndSpawning.Singleton.StartAsClient(lang_: "English", 
+        ConnectionAndSpawning.Singleton.StartAsClient("English", 
             po: ParticipantOrder.A,
             ip: "127.0.0.1",
             port: 7777,
             result:ResponseDelegate,
-            _spawnTypeIN: SpawnType.PEDESTRIAN,
+            _spawnTypeIN: SpawnType.CAR,
             _joinTypeIN: JoinType.VR
         );
         Destroy(ServerGuiSintance.gameObject);
@@ -124,7 +124,10 @@ public class StartServerClientGUI : MonoBehaviour {
     }
 
     public void StartAsClientBInterfaceCallback() {
-        ConnectionAndSpawning.Singleton.StartAsClient("English", ParticipantOrder.B, "127.0.0.1", 7777,
+        ConnectionAndSpawning.Singleton.StartAsClient("English", 
+            ParticipantOrder.B,
+            "127.0.0.1", 
+            7777,
             ResponseDelegate);
         Destroy(ServerGuiSintance.gameObject);
         enabled = false;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -70,19 +71,18 @@ public class SeatCalibration : MonoBehaviour {
     private VR_Participant myPic;
 
     public void StartCalibration(Transform SteeringWheel, Transform camera, VR_Participant pic) {
+        Debug.Log("Starting Calibration");
         if (callibrationState != SearCalibrationState.CALIBRATING ||
             callibrationState != SearCalibrationState.STARTCALIBRATING) {
             steeringWheelCenter = SteeringWheel;
             cam = camera;
             myPic = pic;
-            if (HandModelL == null || HandModelR == null) {
-                //TODO switch from OVR to openXR
-              //  foreach (var h in transform.GetComponentsInChildren<OVRCustomSkeleton>()) {
-             //       if (h.GetSkeletonType() == OVRSkeleton.SkeletonType.HandLeft) { HandModelL = h; }
-              //      else if (h.GetSkeletonType() == OVRSkeleton.SkeletonType.HandRight) { HandModelR = h; }
-             //   }
+            if (HandModelL == null || HandModelR == null){
+                HandModelL= transform.Find("Camera Offset/Left Hand Tracking/L_Wrist/L_Palm");
+                HandModelR = transform.Find("Camera Offset/Right Hand Tracking/R_Wrist/R_Palm");
             }
 
+            Debug.Log(HandModelL.name);
             callibrationState = SearCalibrationState.STARTCALIBRATING;
         }
     }
@@ -109,10 +109,13 @@ public class SeatCalibration : MonoBehaviour {
           
             case SearCalibrationState.STARTCALIBRATING:
                 //TODO switch from OVR to openXR
-              //  OVRPlugin.RecenterTrackingOrigin(OVRPlugin.RecenterFlags.Default);
+                //OVRPlugin.RecenterTrackingOrigin(OVRPlugin.RecenterFlags.Default);
                 
                 Quaternion rotation = Quaternion.FromToRotation(cam.forward, steeringWheelCenter.parent.forward);
-                Debug.Log("rotation.eulerAngles.y" + Quaternion.Euler(0, rotation.eulerAngles.y, 0));
+                Debug.DrawRay(cam.position,cam.forward*10,Color.red,10);
+                Debug.DrawRay(steeringWheelCenter.position,steeringWheelCenter.parent.forward*10,Color.blue,10);
+                
+                Debug.Log($"rotation.eulerAngles.y { rotation.eulerAngles.y}");
                 myPic.SetFollowMode(true, true);
                 myPic.SetNewRotationOffset(Quaternion.Euler(0, rotation.eulerAngles.y, 0));
                 callibrationState = SearCalibrationState.CALIBRATING;
@@ -121,14 +124,15 @@ public class SeatCalibration : MonoBehaviour {
             case SearCalibrationState.CALIBRATING:
                 //TODO switch from OVR to openXR
                 
-               if(true){// if (HandModelL.IsDataHighConfidence && HandModelR.IsDataHighConfidence) {
+               if(true){// if (HandModelL.IsDataHighConfidence && HandModelR.IsDataHighConfidence) { //TODO switch from OVR to openXR
                     
                     // if this does not work we might need to look further for getting the right bone
-                    Vector3 A = Vector3.zero;// HandModelL.Bones[9].Transform.position; //HandModelL.transform.position;  //TODO switch from OVR to openXR
-                    Vector3 B = Vector3.zero;// HandModelR.Bones[9].Transform.position; //HandModelR.transform.position; //TODO switch from OVR to openXR 
+                    Vector3 A = HandModelL.position; 
+                    Vector3 B = HandModelR.position;
                     Vector3 AtoB = B - A;
-
-                    Vector3 transformDifference = (A + (AtoB * 0.5f)) - steeringWheelCenter.position;
+                    Vector3 midPoint= (A + (AtoB * 0.5f));
+                    Vector3 transformDifference = midPoint - steeringWheelCenter.position;
+                    Debug.DrawRay(midPoint,transformDifference);
                     if (transformDifference.magnitude > 100) {
                         Debug.Log(transformDifference.magnitude);
                         callibrationState = SearCalibrationState.ERROR;
@@ -154,6 +158,7 @@ public class SeatCalibration : MonoBehaviour {
                     }
                     Debug.LogError("Had 10 retries calibrating the play. Did not work. Quitting.");
                     Application.Quit();
+                   
                 }
                 else {
                     Debug.Log("Encountered a Calibration Error. Resetting Offsets and trying again try: " +

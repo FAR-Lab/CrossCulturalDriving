@@ -40,16 +40,36 @@ public class ParticipantOrderMapping {
         return false;
     }
 
-    public bool RemoveParticipant(ulong id) {
-        var outVal = GetOrder(id, out var or);
-        if (outVal && _orderToClient.ContainsKey(or) && _clientToOrder.ContainsKey(id)) {
-            _orderToClient.Remove(or);
-            _clientToOrder.Remove(id);
-            _orderToSpawnType.Remove(or);
-            _orderToJoinType.Remove(or);
-        }
+    
+    public void RemoveParticipant(ParticipantOrder po) {
+     GetClientID(po, out var id);
+     _RemoveParticipant(id,po);
 
-        return outVal;
+    }
+
+
+    private void _RemoveParticipant(ulong id, ParticipantOrder po)
+    {
+
+        if (_orderToClient[po] == id && _clientToOrder[id] == po)
+        {
+           
+                _orderToClient.Remove(po);
+                _clientToOrder.Remove(id);
+                _orderToSpawnType.Remove(po);
+                _orderToJoinType.Remove(po);
+            
+        }
+        else
+        {
+            Debug.LogError("This should never happend the internal tracking of participants desyrnozied Fix this class. write test cases But this should never happen (PARTICIPANTORDERMAPPING.CS)!!!");
+        }
+        
+    }
+    
+    public void RemoveParticipant(ulong id) {
+        var outVal = GetOrder(id, out var po);
+        _RemoveParticipant(id,po);
     }
 
 
