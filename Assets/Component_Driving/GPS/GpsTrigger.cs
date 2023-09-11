@@ -3,12 +3,12 @@ using Unity.Netcode;
 using UnityEngine;
 
 public class GpsTrigger : MonoBehaviour {
-    public GpsController.Direction setDirectionParticipantA;
-    public GpsController.Direction setDirectionParticipantB;
-    public GpsController.Direction setDirectionParticipantC;
-    public GpsController.Direction setDirectionParticipantD;
-    public GpsController.Direction setDirectionParticipantE;
-    public GpsController.Direction setDirectionParticipantF;
+    public NavigationScreen.Direction setDirectionParticipantA;
+    public NavigationScreen.Direction setDirectionParticipantB;
+    public NavigationScreen.Direction setDirectionParticipantC;
+    public NavigationScreen.Direction setDirectionParticipantD;
+    public NavigationScreen.Direction setDirectionParticipantE;
+    public NavigationScreen.Direction setDirectionParticipantF;
     private bool triggered;
 
     private void Start() {
@@ -22,7 +22,7 @@ public class GpsTrigger : MonoBehaviour {
             Debug.Log("Got A Trigger event starting new GPS direction!");
             triggered = true;
             var temp =
-                new Dictionary<ParticipantOrder, GpsController.Direction> {
+                new Dictionary<ParticipantOrder, NavigationScreen.Direction> {
                     { ParticipantOrder.A, setDirectionParticipantA },
                     { ParticipantOrder.B, setDirectionParticipantB },
                     { ParticipantOrder.C, setDirectionParticipantC },
@@ -30,7 +30,7 @@ public class GpsTrigger : MonoBehaviour {
                     { ParticipantOrder.E, setDirectionParticipantE },
                     { ParticipantOrder.F, setDirectionParticipantF }
                 };
-            ConnectionAndSpawning.Singleton.UpdateAllGPS(temp);
+            ConnectionAndSpawning.Singleton.GetScenarioManager().UpdateAllGPS(temp);
         }
     }
 }

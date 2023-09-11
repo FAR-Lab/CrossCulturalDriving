@@ -14,12 +14,12 @@ public class ScenarioManager : MonoBehaviour {
 
     public SceneField VisualSceneToUse;
 
-    public GpsController.Direction StartingDirectionParticipantA;
-    public GpsController.Direction StartingDirectionParticipantB;
-    public GpsController.Direction StartingDirectionParticipantC;
-    public GpsController.Direction StartingDirectionParticipantD;
-    public GpsController.Direction StartingDirectionParticipantE;
-    public GpsController.Direction StartingDirectionParticipantF;
+    public NavigationScreen.Direction StartingDirectionParticipantA;
+    public NavigationScreen.Direction StartingDirectionParticipantB;
+    public NavigationScreen.Direction StartingDirectionParticipantC;
+    public NavigationScreen.Direction StartingDirectionParticipantD;
+    public NavigationScreen.Direction StartingDirectionParticipantE;
+    public NavigationScreen.Direction StartingDirectionParticipantF;
 
 
     public List<CameraSetupXC> CameraSetups;
@@ -102,8 +102,8 @@ public class ScenarioManager : MonoBehaviour {
     }
 
 
-    public Dictionary<ParticipantOrder, GpsController.Direction> GetStartingPositions() {
-        return new Dictionary<ParticipantOrder, GpsController.Direction> {
+    public Dictionary<ParticipantOrder, NavigationScreen.Direction> GetStartingPositions() {
+        return new Dictionary<ParticipantOrder, NavigationScreen.Direction> {
             { ParticipantOrder.A, StartingDirectionParticipantA },
             { ParticipantOrder.B, StartingDirectionParticipantB },
             { ParticipantOrder.C, StartingDirectionParticipantC },
@@ -142,4 +142,22 @@ public class ScenarioManager : MonoBehaviour {
 
         return outval;
     }
+    
+    
+    #region GPSUpdate
+
+    public void SetStartingGPSDirections() {
+        UpdateAllGPS(FindObjectOfType<ScenarioManager>().GetStartingPositions());
+    }
+
+    public void UpdateAllGPS(Dictionary<ParticipantOrder, NavigationScreen.Direction> dict) {
+        foreach (NetworkVehicleController v in FindObjectsOfType<NetworkVehicleController>() )
+        {
+            v.SetNavigationScreen(dict);
+        }
+    }
+
+    #endregion
+    
+    
 }

@@ -10,6 +10,7 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UltimateReplay;
 using UnityEngine.Serialization;
 
@@ -388,6 +389,25 @@ public class NetworkVehicleController : Interactable_Object
         HonkMyCarClientRpc();
     }
 
+    
+    public void SetNavigationScreen(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions)
+    {
+        if (Directions.ContainsKey(_participantOrder))
+        {
+            GetComponentInChildren<NavigationScreen>().SetDirection(Directions[_participantOrder]);
+            SetNavigationScreenClientRPC(Directions[_participantOrder]);
+        }
+    }
+    
+    [ClientRpc]
+    private void SetNavigationScreenClientRPC( NavigationScreen.Direction Direction)
+    {
+        if(IsClient)
+        GetComponentInChildren<NavigationScreen>().SetDirection(Direction);
+    }
+    
+    
+    
     #region IndicatorLogic
 
     private bool LeftActive;

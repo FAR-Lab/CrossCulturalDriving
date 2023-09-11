@@ -11,7 +11,7 @@ public class VR_Participant : Client_Object
 {
     private const string OffsetFileName = "offset";
 
-    //public NetworkVariable<GpsController.Direction> CurrentDirection = new(); //ToDo shopuld be moved to the Navigation Screen
+    //public NetworkVariable<NavigationScreen.Direction> CurrentDirection = new(); //ToDo shopuld be moved to the Navigation Screen
 
 
     public Transform FollowTransform;
@@ -31,7 +31,7 @@ public class VR_Participant : Client_Object
 
 
     private bool lastValue;
-    private GpsController m_GpsController;
+    private NavigationScreen _mNavigationScreen;
     private ParticipantOrder m_participantOrder = ParticipantOrder.None;
 
     private NetworkVariable<SpawnType> mySpawnType;
@@ -56,9 +56,9 @@ public class VR_Participant : Client_Object
     private void Update()
     {
         if (IsLocalPlayer)
-            //     if (m_GpsController == null && FollowTransform != null) {
-            //      m_GpsController = FollowTransform.parent.GetComponentInChildren<GpsController>();
-            // //      if (m_GpsController != null) m_GpsController.SetDirection(CurrentDirection.Value);
+            //     if (_mNavigationScreen == null && FollowTransform != null) {
+            //      _mNavigationScreen = FollowTransform.parent.GetComponentInChildren<NavigationScreen>();
+            // //      if (_mNavigationScreen != null) _mNavigationScreen.SetDirection(CurrentDirection.Value);
             // //  }
 
             if (IsServer)
@@ -108,9 +108,9 @@ public class VR_Participant : Client_Object
         return null;
     }
 
-    private void NewGpsDirection(GpsController.Direction previousvalue, GpsController.Direction newvalue)
+    private void NewGpsDirection(NavigationScreen.Direction previousvalue, NavigationScreen.Direction newvalue)
     {
-        if (m_GpsController != null) m_GpsController.SetDirection(newvalue);
+        if (_mNavigationScreen != null) _mNavigationScreen.SetDirection(newvalue);
     }
 
 
@@ -199,9 +199,9 @@ public class VR_Participant : Client_Object
 
 
     [ClientRpc]
-    public void SetGPSClientRpc(GpsController.Direction[] dir)
+    public void SetGPSClientRpc(NavigationScreen.Direction[] dir)
     {
-        // GetComponentInChildren<GpsController>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
+        // GetComponentInChildren<NavigationScreen>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
     }
 
 
@@ -393,11 +393,27 @@ public class VR_Participant : Client_Object
     }
 
 
-    [ClientRpc]
-    public void StartQuestionairClientRPC()
+    private QNDataStorageServer m_QNDataStorageServer = null;
+    public override void StartQuestionair(QNDataStorageServer in_QNDataStorageServer)
     {
-        if (!IsLocalPlayer) return;
-        FindObjectOfType<ScenarioManager>().RunQuestionairNow(transform);
+        if (IsServer)
+        {
+            m_QNDataStorageServer = in_QNDataStorageServer;
+            StartQuestionairClientRPC();
+        }
+    }
+    
+    [ClientRpc]
+    private void StartQuestionairClientRPC()
+    {
+        if (IsLocalPlayer)
+        {
+            FindObjectOfType<ScenarioManager>().RunQuestionairNow(transform);
+        }
+        else
+        {
+            //TODO: we could start deleting objects here!
+        }
     }
 
 
@@ -412,15 +428,18 @@ public class VR_Participant : Client_Object
     [ServerRpc]
     public void SendQNAnswerServerRPC(int id, int answerIndex, string lang)
     {
-        if (!IsServer) return;
-        ConnectionAndSpawning.Singleton.QNNewDataPoint(m_participantOrder, id, answerIndex, lang);
+        
+        if (IsServer && m_QNDataStorageServer != null) 
+        {
+            m_QNDataStorageServer.NewDatapointfromClient(m_participantOrder, id, answerIndex, lang);
+        }
     }
 
     [ClientRpc]
     public void RecieveNewQuestionClientRPC(NetworkedQuestionnaireQuestion newq)
     {
         if (!IsLocalPlayer) return;
-        Debug.Log("Got new data and updated varaible" + HasNewData);
+        Debug.Log("Got new data and updated varaible" +   HasNewData);
         if (HasNewData)
             Debug.LogWarning("I still had a question ready to go. Losing data here. this should not happen.");
         else

@@ -112,7 +112,7 @@ public class QNDataStorageServer : MonoBehaviour
             else if (a.GetType() == typeof(Speedometer)){
                 lf = LogFlag.SPEEDOMETER;
             }
-            else if (a.GetType() == typeof(GpsController)){
+            else if (a.GetType() == typeof(NavigationScreen)){
                 lf = LogFlag.GPS;
             }
             else{

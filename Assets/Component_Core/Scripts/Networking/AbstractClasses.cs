@@ -20,6 +20,8 @@ public abstract class Client_Object : NetworkBehaviour {
     public abstract void De_AssignFollowTransform(ulong clientID,NetworkObject netobj);
     public abstract Transform GetMainCamera();
     public abstract void CalibrateClient(ClientRpcParams clientRpcParams);
+    
+    public abstract void  StartQuestionair(QNDataStorageServer m_QNDataStorageServer);
 }
 
 

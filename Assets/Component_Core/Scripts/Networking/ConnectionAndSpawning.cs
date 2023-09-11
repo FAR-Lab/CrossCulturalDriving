@@ -30,14 +30,14 @@ public class ConnectionAndSpawning : MonoBehaviour {
     public SO_SpawnTypeToInteractableObject SpawnTypeConfig;
     public Dictionary<SpawnType, Interactable_Object> SpawnType_To_InteractableObjects;
     
-    private static readonly Dictionary<ParticipantOrder, GpsController.Direction> StopDict =
+    private static readonly Dictionary<ParticipantOrder, NavigationScreen.Direction> StopDict =
         new() {
-            { ParticipantOrder.A, GpsController.Direction.Stop },
-            { ParticipantOrder.B, GpsController.Direction.Stop },
-            { ParticipantOrder.C, GpsController.Direction.Stop },
-            { ParticipantOrder.D, GpsController.Direction.Stop },
-            { ParticipantOrder.E, GpsController.Direction.Stop },
-            { ParticipantOrder.F, GpsController.Direction.Stop }
+            { ParticipantOrder.A, NavigationScreen.Direction.Stop },
+            { ParticipantOrder.B, NavigationScreen.Direction.Stop },
+            { ParticipantOrder.C, NavigationScreen.Direction.Stop },
+            { ParticipantOrder.D, NavigationScreen.Direction.Stop },
+            { ParticipantOrder.E, NavigationScreen.Direction.Stop },
+            { ParticipantOrder.F, NavigationScreen.Direction.Stop }
         };
 
 
@@ -142,7 +142,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                 case ActionState.READY:
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.D)) {
                         SwitchToDriving();
-                        SetStartingGPSDirections();
+                        GetScenarioManager().SetStartingGPSDirections();
                     }
 
                     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W)) {
@@ -464,8 +464,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     public void SendNewQuestionToParticipant(ParticipantOrder participantOrder, NetworkedQuestionnaireQuestion outval) {
-       
-      
+
             Main_ParticipantObjects[participantOrder]
                 .GetComponent<VR_Participant>().RecieveNewQuestionClientRPC(outval);
         
@@ -501,7 +500,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         if (!FinishedRunningAwaitCorutine) return;
 
         FinishedRunningAwaitCorutine = false;
-        UpdateAllGPS(StopDict);
+        GetScenarioManager().UpdateAllGPS(StopDict);
         i_AwaitCarStopped = StartCoroutine(AwaitCarStopped());
     }
 
@@ -901,11 +900,11 @@ public class ConnectionAndSpawning : MonoBehaviour {
             no.Stop_Action();
         }
 
-        foreach (var po in Main_ParticipantObjects.Keys)
-            Main_ParticipantObjects[po].GetComponent<VR_Participant>() //ToDo turn this into an abstracct function
-                .StartQuestionairClientRPC();
-
         m_QNDataStorageServer.StartQn(GetScenarioManager(), m_ReRunManager);
+        foreach (var po in Main_ParticipantObjects.Keys)
+            Main_ParticipantObjects[po].GetComponent<Client_Object>() 
+                .StartQuestionair(m_QNDataStorageServer);
+
         StartCoroutine(farlab_logger.Instance.StopRecording());
     }
 
@@ -927,25 +926,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     
-    #region GPSUpdate
-
-    private void SetStartingGPSDirections() {
-        UpdateAllGPS(FindObjectOfType<ScenarioManager>().GetStartingPositions());
-    }
-
-    public void UpdateAllGPS(Dictionary<ParticipantOrder, GpsController.Direction> dict) {
-        foreach (var po in dict.Keys) {
-            bool success = participants.GetClientID(po, out ulong cid);
-            if (success && Main_ParticipantObjects.ContainsKey(po)) {
-               // Main_ParticipantObjects[po]
-                  //  .GetComponent<VR_Participant>().CurrentDirection.Value = dict[po];
-                Interactable_ParticipantObjects[po]
-                    .ForEach(io => io.GetComponentInChildren<GpsController>().SetDirection(dict[po]));
-            }
-        }
-    }
-
-    #endregion
 
    
 }
