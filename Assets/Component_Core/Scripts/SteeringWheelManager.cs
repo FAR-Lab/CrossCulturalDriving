@@ -395,8 +395,8 @@ public class SteeringWheelManager : MonoBehaviour
             
             LogitechGSDK.DIJOYSTATE2ENGINES state;
             state = LogitechGSDK.LogiGetStateCSharp(swd.wheelIndex);
+            
             swd.steerInput = state.lX / 32768f;
-            // accelInput = (state.lY- 32768f) / -32768f;
             swd.gas = 0.9f * swd.gas + 0.1f * ((state.lY) / (-32768f));
             swd.brake = (state.lRz) / (32768f);
 
@@ -415,19 +415,11 @@ public class SteeringWheelManager : MonoBehaviour
                 state.rgbButtons[11] > 0 ||
                 state.rgbButtons[23] > 0;
 
-            /*
-            int i = 0;
-            string tmp = "";
-            foreach (byte b in state.rgbButtons) {
-                tmp += i.ToString() + ">" + b.ToString() + "  ";
-                i++;
-            }
-            Debug.Log(tmp);
-            */
+            
             if (swd.forceFeedbackPlaying)
             {
-                //  Debug.Log("playing force"+swd.wheelIndex+swd.ToString());
-                LogitechGSDK.LogiPlayConstantForce(swd.wheelIndex, IntRemap(swd.damper * FFBGain));
+               
+                LogitechGSDK.LogiPlayConstantForce(swd.wheelIndex, IntRemap(swd.constant * FFBGain));
                 LogitechGSDK.LogiPlayDamperForce(swd.wheelIndex, IntRemap(swd.damper * FFBGain));
 
                 LogitechGSDK.LogiPlaySpringForce(swd.wheelIndex, 0,

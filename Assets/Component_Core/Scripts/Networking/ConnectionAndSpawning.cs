@@ -234,7 +234,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         NetworkManager.Singleton.StartServer();
         participants.AddParticipant(ParticipantOrder.None, NetworkManager.Singleton.LocalClientId, SpawnType.NONE,
             JoinType.SERVER);
-        NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent;
+        NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
 
         SteeringWheelManager.Singleton.Init();
         m_ReRunManager.SetRecordingFolder(pairName);
@@ -260,12 +260,21 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     private void ClientConnected_client(ulong ClientID) {
-        Debug.Log("Debugg: Client connected");
+        Debug.Log("Debug: Client connected");
         if (ClientID != NetworkManager.Singleton.LocalClient.ClientId) return;
-        Debug.Log("Debugg: Success!");
+        Debug.Log("Debug: Success!");
         SuccessFullyConnected = true;
         ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS);
         Debug.Log(SuccessFullyConnected + " CHECK HERE");
+        NetworkManager.Singleton.SceneManager.OnLoadComplete += OnLoadCompleteCLient;
+    }
+
+    private void OnLoadCompleteCLient(ulong clientid, string scenename, LoadSceneMode loadscenemode)
+    {
+        if (loadscenemode == LoadSceneMode.Additive && NetworkManager.Singleton.LocalClientId == clientid)
+        {
+            ActivateVisualScene();
+        }
     }
 
     private void SetupClientFunctionality() {
@@ -302,7 +311,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
         NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(jsonstring); // assigning ID
 
-        Debug.Log("Starting as Client.");
+        Debug.Log("Attempting to connect as a client.");
         
         NetworkManager.Singleton.StartClient();
     }
@@ -396,7 +405,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
         return null;
     }
-
     public Transform GetMainClientObject(ParticipantOrder po) {
         if (!Main_ParticipantObjects.ContainsKey(po)) return null;
         return Main_ParticipantObjects[po].transform;
@@ -507,6 +515,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private bool AllActionStopped() {
         bool testValue = true;
         foreach (var po in participants.GetAllConnectedParticipants()) {
+            if(po==ParticipantOrder.None) continue;
             foreach (var IO in Interactable_ParticipantObjects[po])
                 testValue &= IO.GetComponent<Interactable_Object>().HasActionStopped();
         }
@@ -560,10 +569,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     private void LoadSceneVisuals() {
-        var tmp = GetScenarioManager();
-        if (tmp != null && tmp.VisualSceneToUse != null && tmp.VisualSceneToUse.SceneName.Length > 0) {
-            LastLoadedVisualScene = tmp.VisualSceneToUse.SceneName;
-            NetworkManager.Singleton.SceneManager.LoadScene(tmp.VisualSceneToUse.SceneName, LoadSceneMode.Additive);
+        if (GetScenarioManager()&& GetScenarioManager().HasVisualScene()) {
+            LastLoadedVisualScene = GetScenarioManager().VisualSceneToUse.SceneName;
+            NetworkManager.Singleton.SceneManager.LoadScene(GetScenarioManager().VisualSceneToUse.SceneName, LoadSceneMode.Additive);
             ServerState = ActionState.LOADINGVISUALS;
             ServerStateChange?.Invoke(ActionState.LOADINGVISUALS);
         }
@@ -572,7 +580,14 @@ public class ConnectionAndSpawning : MonoBehaviour {
         }
     }
 
-    private void SceneEvent(SceneEvent sceneEvent) {
+    private void ActivateVisualScene()
+    {
+        if (GetScenarioManager().HasVisualScene())
+        {
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(GetScenarioManager().VisualSceneToUse));// This is icky needs to be verifyeid that its also the one we loaded!
+        }
+    }
+    private void SceneEvent_Server(SceneEvent sceneEvent) {
         switch (sceneEvent.SceneEventType) {
             case SceneEventType.Load: break;
             case SceneEventType.Unload: break;
@@ -582,19 +597,29 @@ public class ConnectionAndSpawning : MonoBehaviour {
                 Debug.Log("Load event!" + sceneEvent.ClientId + ServerState);
                 if (ServerState == ActionState.LOADINGSCENARIO)
                     LoadSceneVisuals();
-                else if (ServerState == ActionState.LOADINGVISUALS) SwitchToReady();
+                else if (ServerState == ActionState.LOADINGVISUALS)
+                {
+
+                    ActivateVisualScene();
+
+                    SwitchToReady();
+                }
 
                 break;
             case SceneEventType.UnloadEventCompleted:
                 break;
             case SceneEventType.LoadComplete:
-                Debug.Log("Load completed!" + sceneEvent.ClientId + ServerState);
+                Debug.Log($"Load completed! sceneEvent:{sceneEvent.LoadSceneMode}  ServerState:{ServerState}");
                 if (ServerState == ActionState.READY || ServerState == ActionState.LOADINGVISUALS ||
                     ServerState == ActionState.WAITINGROOM)
                 {
-                    bool success = participants.GetOrder(sceneEvent.ClientId, out ParticipantOrder po);
-                    Debug.Log($"About to spawn an interactable for participant :{po}");
-                    StartCoroutine(Spawn_Interactable_Await(sceneEvent.ClientId));
+                    if (sceneEvent.LoadSceneMode == LoadSceneMode.Additive  && GetScenarioManager().HasVisualScene()||
+                        sceneEvent.LoadSceneMode==LoadSceneMode.Single && !GetScenarioManager().HasVisualScene()) //TODO: feels like a bad hack  but makes sure that late joining a scene we dont spawn a car twice (scenario and visual scene callback)
+                    {
+                        bool success = participants.GetOrder(sceneEvent.ClientId, out ParticipantOrder po);
+                        Debug.Log($"About to spawn an interactable for participant :{po}");
+                        StartCoroutine(Spawn_Interactable_Await(sceneEvent.ClientId));
+                    }
                 }
                 else {
                     Debug.Log("A client Finished loading But we are not gonna Spawn cause the visuals are missing!");
@@ -610,12 +635,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private void DestroyALLInteractable_ALLClients() {
         foreach (var po in participants.GetAllConnectedParticipants()) {
             if (po == ParticipantOrder.None)continue;
-            
             Debug.Log($"Destroying Interactable for po:{po}");
-            foreach (var id in Interactable_ParticipantObjects[po]) {
                 DespawnAllInteractableObject(po);
-            }
-        }
+             }
     }
 
     
@@ -624,7 +646,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         Debug.Log($"DespawnAllObjectsforParticipant for po:{po}");
         DespawnAllInteractableObject(po);
         
-        DespawnMainClientObject(po);
+        //DespawnMainClientObject(po);
     }
 
     private void DespawnMainClientObject(ParticipantOrder po) {

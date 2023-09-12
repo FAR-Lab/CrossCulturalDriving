@@ -31,6 +31,17 @@ public class ScenarioManager : MonoBehaviour {
     public bool ready { get; private set; } // property
 
 
+    public bool HasVisualScene()
+    {
+        if (VisualSceneToUse != null && VisualSceneToUse.SceneName.Length > 0)
+        {
+            return true;
+        }
+
+        return false;
+        
+    }
+
     private void Start() {
         qnmanager = Instantiate(
             QuestionairPrefab).GetComponent<QNSelectionManager>();
