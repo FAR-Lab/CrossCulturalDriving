@@ -128,7 +128,7 @@ public class StartServerClientGUI : MonoBehaviour {
             ParticipantOrder.B,
             "127.0.0.1", 
             7777,
-            ResponseDelegate);
+            ResponseDelegate,SpawnType.PEDESTRIAN);
         Destroy(ServerGuiSintance.gameObject);
         enabled = false;
     }

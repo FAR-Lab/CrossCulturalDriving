@@ -144,8 +144,8 @@ public class ZEDSkeletonAnimator : MonoBehaviour {
 
     private void Start() {
         animator = GetComponent<Animator>();
-        HeadContainer container = GetComponentInChildren<HeadContainer>();
-        container.head = animator.GetBoneTransform(HumanBodyBones.Head);
+        HeadPositionUpdate positionUpdate = GetComponentInChildren<HeadPositionUpdate>();
+        positionUpdate.head = animator.GetBoneTransform(HumanBodyBones.Head);
     }
 
     private void Update() {

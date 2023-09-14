@@ -64,31 +64,7 @@ public class VR_Participant : Client_Object
     private void LateUpdate()
     {
         if (NetworkManager.Singleton.IsServer) return;
-/*
-        var myTransform = transform;
-        var followTransform = FollowTransform;
 
-        if (FollowTransform == null) return;
-
-        if (FollowLocation && FollowRotation)
-        {
-            myTransform.rotation = followTransform.rotation * offsetRotation;
-            if (!init && IsLocalPlayer)
-            {
-                LastRot = myTransform.rotation;
-                init = true;
-                ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
-            }
-
-            myTransform.position = followTransform.position +
-                                   myTransform.rotation * Quaternion.Inverse(LastRot) * offsetPositon;
-        }
-
-        if (FollowLocation && !FollowRotation)
-        {
-            myTransform.position = followTransform.position + (myTransform.position - MyCamera.position);
-        }
-        */
     }
 
 
@@ -194,11 +170,6 @@ public class VR_Participant : Client_Object
     }
 
 
-    [ClientRpc]
-    public void SetGPSClientRpc(NavigationScreen.Direction[] dir)
-    {
-        // GetComponentInChildren<NavigationScreen>().SetDirection(dir[SceneStateManager.Instance.getParticipantID()]);
-    }
 
 
     public override ParticipantOrder GetParticipantOrder()
@@ -307,14 +278,15 @@ public class VR_Participant : Client_Object
                 var tmp = GetMainCamera();
                 tmp.GetComponent<TrackedPoseDriver>().trackingType = TrackedPoseDriver.TrackingType.RotationOnly;
 
-                //FollowTransform = NetworkedInteractableObject.GetCameraPositionObject();
-                //if (NetworkedInteractableObject == null || FollowTransform == null) return;
-
-              
-              //  Quaternion quat = Quaternion.FromToRotation(tmp.forward, FollowTransform.forward);
-                //transform.rotation *= quat;
-                SetNewRotationOffset(Quaternion.identity);
-                SetNewPositionOffset(Vector3.zero);
+                if (ConnectionAndSpawning.Singleton.GetScenarioManager()
+                    .GetSpawnPose(m_participantOrder, out Pose pose))
+                {
+                    Quaternion q = Quaternion.FromToRotation(tmp.forward, pose.forward);
+                    SetNewRotationOffset(Quaternion.Euler(0,q.eulerAngles.y,0));
+                }
+                
+                
+                SetNewPositionOffset(transform.parent.position-transform.position);
                 FinishedCalibration();
                 break;
         }
