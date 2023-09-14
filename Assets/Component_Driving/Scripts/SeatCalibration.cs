@@ -116,7 +116,6 @@ public class SeatCalibration : MonoBehaviour {
                 Debug.DrawRay(steeringWheelCenter.position,steeringWheelCenter.parent.forward*10,Color.blue,10);
                 
                 Debug.Log($"rotation.eulerAngles.y { rotation.eulerAngles.y}");
-                myPic.SetFollowMode(true, true);
                 myPic.SetNewRotationOffset(Quaternion.Euler(0, rotation.eulerAngles.y, 0));
                 callibrationState = SearCalibrationState.CALIBRATING;
                 callibrationTimer = 5f;

@@ -14,7 +14,8 @@ public class NavigationScreen : ReplayBehaviour {
         None,
         StartRight,
         StartStraight,
-        ComeToStop
+        ComeToStop,
+        ToHospital
     }
 
     [ReplayVar(false)] public int recordingDirection = (int)Direction.None;
@@ -28,7 +29,8 @@ public class NavigationScreen : ReplayBehaviour {
         LoadingImage,
         StartRightImage,
         StartSraightImage,
-        ComeToStopImage;
+        ComeToStopImage,
+        ToHospital;
 
     public Sprite HurryImageEnglish, StopImageEnglish, LoadingImageEnglish;
     public Image gpsImagePlane;
@@ -81,6 +83,8 @@ public class NavigationScreen : ReplayBehaviour {
                 return StartRightImage;
             case Direction.ComeToStop:
                 return ComeToStopImage;
+            case Direction.ToHospital:
+                return ToHospital;
             default:
                 return null;
         }

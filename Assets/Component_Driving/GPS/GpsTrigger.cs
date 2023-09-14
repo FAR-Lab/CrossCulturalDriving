@@ -2,7 +2,10 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class GpsTrigger : MonoBehaviour {
+public class GpsTrigger : MonoBehaviour
+{
+
+    public List<ParticipantOrder> ParticipantsToReactTo = new List<ParticipantOrder>();
     public NavigationScreen.Direction setDirectionParticipantA;
     public NavigationScreen.Direction setDirectionParticipantB;
     public NavigationScreen.Direction setDirectionParticipantC;
@@ -18,9 +21,13 @@ public class GpsTrigger : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (!triggered) {
+        if (!triggered && 
+            other.GetComponent<Client_Object>()!=null &&
+            ParticipantsToReactTo.Contains(other.GetComponent<Client_Object>().GetParticipantOrder())) {
             Debug.Log("Got A Trigger event starting new GPS direction!");
             triggered = true;
+           
+            
             var temp =
                 new Dictionary<ParticipantOrder, NavigationScreen.Direction> {
                     { ParticipantOrder.A, setDirectionParticipantA },

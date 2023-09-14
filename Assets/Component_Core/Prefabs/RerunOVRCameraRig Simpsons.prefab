@@ -22,7 +22,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4471618474683254236, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
       propertyPath: replayIdentity.id
-      value: 25290
+      value: 11561
       objectReference: {fileID: 0}
     - target: {fileID: 4471618475864336874, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
       propertyPath: m_Name
@@ -78,7 +78,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4471618475864336877, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
       propertyPath: replayIdentity.id
-      value: 18839
+      value: 42080
       objectReference: {fileID: 0}
     - target: {fileID: 4471618475864336877, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
       propertyPath: observedComponents.Array.size
@@ -94,7 +94,7 @@ PrefabInstance:
       objectReference: {fileID: 4178240876274048909}
     - target: {fileID: 4471618475864336879, guid: 6a4c6fd370f1dbd43a0f33679c4b199f, type: 3}
       propertyPath: replayIdentity.id
-      value: 9614
+      value: 45235
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -803,7 +803,7 @@ MonoBehaviour:
   UseQuaternionSynchronization: 0
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
-  InLocalSpace: 0
+  InLocalSpace: 1
   Interpolate: 1
   SlerpPosition: 0
 --- !u!1 &4030441094074460128 stripped
@@ -954,7 +954,7 @@ MonoBehaviour:
   UseQuaternionSynchronization: 0
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
-  InLocalSpace: 0
+  InLocalSpace: 1
   Interpolate: 1
   SlerpPosition: 0
 --- !u!114 &1522805119416891058
@@ -989,13 +989,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69da2be4efdf02441908e882bb9d204b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FollowTransform: {fileID: 0}
   FollowRotation: 0
   FollowLocation: 0
   MyCamera: {fileID: 0}
   ButtonPushed:
     m_InternalValue: 0
   NetworkedInteractableObject: {fileID: 0}
+  m_participantOrder: 45
 --- !u!114 &-838044352158250597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1010,7 +1010,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 25989
+    id: 14866
   replayObject:
     reference: {fileID: 4178240877513323452}
   m_participantOrder: 0
@@ -1212,7 +1212,7 @@ MonoBehaviour:
   UseQuaternionSynchronization: 0
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
-  InLocalSpace: 0
+  InLocalSpace: 1
   Interpolate: 1
   SlerpPosition: 0
 --- !u!137 &6018096575407216184 stripped

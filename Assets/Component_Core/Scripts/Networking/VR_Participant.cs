@@ -14,7 +14,7 @@ public class VR_Participant : Client_Object
     //public NetworkVariable<NavigationScreen.Direction> CurrentDirection = new(); //ToDo shopuld be moved to the Navigation Screen
 
 
-    public Transform FollowTransform;
+    //public Transform FollowTransform;
     public bool FollowRotation;
     public bool FollowLocation;
     public Transform MyCamera;
@@ -31,8 +31,7 @@ public class VR_Participant : Client_Object
 
 
     private bool lastValue;
-    private NavigationScreen _mNavigationScreen;
-    private ParticipantOrder m_participantOrder = ParticipantOrder.None;
+    public ParticipantOrder m_participantOrder = ParticipantOrder.None;
 
     private NetworkVariable<SpawnType> mySpawnType;
     private Vector3 offsetPositon = Vector3.zero;
@@ -51,15 +50,11 @@ public class VR_Participant : Client_Object
         mySpawnType = new NetworkVariable<SpawnType>();
     }
 
-  
 
     private void Update()
     {
         if (IsLocalPlayer)
-            //     if (_mNavigationScreen == null && FollowTransform != null) {
-            //      _mNavigationScreen = FollowTransform.parent.GetComponentInChildren<NavigationScreen>();
-            // //      if (_mNavigationScreen != null) _mNavigationScreen.SetDirection(CurrentDirection.Value);
-            // //  }
+        
 
             if (IsServer)
                 ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
@@ -69,10 +64,10 @@ public class VR_Participant : Client_Object
     private void LateUpdate()
     {
         if (NetworkManager.Singleton.IsServer) return;
-        
+/*
         var myTransform = transform;
         var followTransform = FollowTransform;
-        
+
         if (FollowTransform == null) return;
 
         if (FollowLocation && FollowRotation)
@@ -84,6 +79,7 @@ public class VR_Participant : Client_Object
                 init = true;
                 ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
             }
+
             myTransform.position = followTransform.position +
                                    myTransform.rotation * Quaternion.Inverse(LastRot) * offsetPositon;
         }
@@ -92,13 +88,11 @@ public class VR_Participant : Client_Object
         {
             myTransform.position = followTransform.position + (myTransform.position - MyCamera.position);
         }
+        */
     }
 
 
-    public ParticipantOrder getMyOrder()
-    {
-        return m_participantOrder;
-    }
+ 
 
     public static VR_Participant GetJoinTypeObject()
     {
@@ -108,50 +102,53 @@ public class VR_Participant : Client_Object
         return null;
     }
 
-    private void NewGpsDirection(NavigationScreen.Direction previousvalue, NavigationScreen.Direction newvalue)
-    {
-        if (_mNavigationScreen != null) _mNavigationScreen.SetDirection(newvalue);
-    }
+  
 
 
     public override void OnNetworkSpawn() //ToDo Turning on and off different elements could be done neater...
     {
-        
         if (IsLocalPlayer)
         {
-            // CurrentDirection.OnValueChanged += NewGpsDirection;
-
-            var conf = new ConfigFileLoading();
-            conf.Init(OffsetFileName);
-            if (conf.FileAvalible()) conf.LoadLocalOffset(out offsetPositon, out offsetRotation);
-
             m_participantOrder = ConnectionAndSpawning.Singleton.ParticipantOrder;
         }
-        else{
-            
-            foreach(var a in GetComponentsInChildren<SkinnedMeshRenderer>()){
-                a.enabled = true;// should happen twice to activate the hand
+        else
+        {
+            foreach (var a in GetComponentsInChildren<SkinnedMeshRenderer>())
+            {
+                a.enabled = true; // should happen twice to activate the hand
             }
-            
-            foreach(var a in GetComponentsInChildren<XRHandTrackingEvents>()){
-                a.enabled = false;// should happen twice to activate the hand
+
+            foreach (var a in GetComponentsInChildren<XRHandTrackingEvents>())
+            {
+                a.enabled = false; // should happen twice to activate the hand
             }
-            foreach(var a in GetComponentsInChildren<XRHandSkeletonDriver>()){
-                a.enabled = false;// should happen twice to activate the hand
+
+            foreach (var a in GetComponentsInChildren<XRHandSkeletonDriver>())
+            {
+                a.enabled = false; // should happen twice to activate the hand
             }
-            foreach(var a in GetComponentsInChildren<XRHandMeshController>()){
-                a.enabled = false;// should happen twice to activate the hand
+
+            foreach (var a in GetComponentsInChildren<XRHandMeshController>())
+            {
+                a.enabled = false; // should happen twice to activate the hand
             }
-            foreach(var a in GetComponentsInChildren<Camera>()){
-                a.enabled = false;// should happen twice to activate the hand
+
+            foreach (var a in GetComponentsInChildren<Camera>())
+            {
+                a.enabled = false; // should happen twice to activate the hand
             }
-            foreach(var a in GetComponentsInChildren<AudioListener>()){
-                a.enabled = false;// should happen twice to activate the hand
+
+            foreach (var a in GetComponentsInChildren<AudioListener>())
+            {
+                a.enabled = false; // should happen twice to activate the hand
             }
-            foreach(var a in GetComponentsInChildren<TrackedPoseDriver>()){
-                a.enabled = false;// should happen twice to activate the hand
+
+            foreach (var a in GetComponentsInChildren<TrackedPoseDriver>())
+            {
+                a.enabled = false; // should happen twice to activate the hand
             }
         }
+
         if (IsServer)
         {
             m_participantOrder = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
@@ -160,12 +157,11 @@ public class VR_Participant : Client_Object
         }
         else
         {
-            foreach(var a in GetComponentsInChildren<ReplayTransform>()){
-                a.enabled = false;// should happen twice to activate the hand
+            foreach (var a in GetComponentsInChildren<ReplayTransform>())
+            {
+                a.enabled = false; // should happen twice to activate the hand
             }
         }
-
-       
     }
 
 
@@ -205,6 +201,11 @@ public class VR_Participant : Client_Object
     }
 
 
+    public override ParticipantOrder GetParticipantOrder()
+    {
+        return m_participantOrder;
+    }
+
     public override void SetSpawnType(SpawnType _spawnType)
     {
         mySpawnType.Value = _spawnType;
@@ -215,7 +216,8 @@ public class VR_Participant : Client_Object
         if (IsServer)
         {
             NetworkedInteractableObject = MyInteractableObject;
-            FollowTransform = NetworkedInteractableObject.GetCameraPositionObject();
+            NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
+          
             AssignInteractable_ClientRPC(MyInteractableObject.GetComponent<NetworkObject>(), targetClient);
         }
     }
@@ -235,8 +237,19 @@ public class VR_Participant : Client_Object
         {
             if (targetClient == OwnerClientId)
             {
-                NetworkedInteractableObject = targetObject.transform.GetComponent<Interactable_Object>();
-                ReConnectWithFollowTransform();
+
+                var conf = new ConfigFileLoading();
+                conf.Init(OffsetFileName);
+                if (conf.FileAvalible())
+                {
+                    conf.LoadLocalOffset(out var localPosition, out var localRotation);
+                    transform.localPosition = localPosition;
+                    transform.localRotation = localRotation;
+                }
+            
+
+            NetworkedInteractableObject = targetObject.transform.GetComponent<Interactable_Object>();
+                
             }
         }
         else
@@ -246,26 +259,11 @@ public class VR_Participant : Client_Object
         }
     }
 
-    private void ReConnectWithFollowTransform()
-    {
-        if (!IsLocalPlayer) return;
-        
-        switch (mySpawnType.Value)
-        {
-            case SpawnType.CAR:
-                FollowTransform = NetworkedInteractableObject.transform.Find("CameraPosition");
-                break;
-            case SpawnType.PEDESTRIAN:
-                FollowTransform = NetworkedInteractableObject.GetCameraPositionObject();
-                break;
-        }
-    }
-
-
     public override void De_AssignFollowTransform(ulong targetClient, NetworkObject netobj)
     {
         if (IsServer)
         {
+            NetworkObject.TryRemoveParent(false);
             NetworkedInteractableObject = null;
             De_AssignFollowTransformClientRPC(targetClient);
         }
@@ -276,9 +274,10 @@ public class VR_Participant : Client_Object
     {
         //ToDo: currently we just deassigned everything but NetworkInteractable object and _transform could turn into lists etc...
         NetworkedInteractableObject = null;
-        FollowTransform = null;
+     
         DontDestroyOnLoad(gameObject);
         Debug.Log("De_assign Interactable ClientRPC");
+        
     }
 
     public override void CalibrateClient(ClientRpcParams clientRpcParams)
@@ -307,13 +306,13 @@ public class VR_Participant : Client_Object
             case SpawnType.PEDESTRIAN:
                 var tmp = GetMainCamera();
                 tmp.GetComponent<TrackedPoseDriver>().trackingType = TrackedPoseDriver.TrackingType.RotationOnly;
-                
-                FollowTransform = NetworkedInteractableObject.GetCameraPositionObject();
-                if (NetworkedInteractableObject == null || FollowTransform == null) return;
-                
-                SetFollowMode(false, true);
-                Quaternion quat = Quaternion.FromToRotation(tmp.forward, FollowTransform.forward);
-                transform.rotation *= quat;
+
+                //FollowTransform = NetworkedInteractableObject.GetCameraPositionObject();
+                //if (NetworkedInteractableObject == null || FollowTransform == null) return;
+
+              
+              //  Quaternion quat = Quaternion.FromToRotation(tmp.forward, FollowTransform.forward);
+                //transform.rotation *= quat;
                 SetNewRotationOffset(Quaternion.identity);
                 SetNewPositionOffset(Vector3.zero);
                 FinishedCalibration();
@@ -333,28 +332,27 @@ public class VR_Participant : Client_Object
         return false;
     }
 
-    public void SetFollowMode(bool _followRotation, bool _followLocation)
-    {
-        FollowLocation = _followLocation;
-        FollowRotation = _followRotation;
-    }
+
 
     public void SetNewRotationOffset(Quaternion offset)
     {
-        offsetRotation *= offset;
+       // offsetRotation *= offset;
+       transform.rotation *= offset;
     }
 
     public void SetNewPositionOffset(Vector3 positionOffset)
     {
-        offsetPositon += positionOffset;
+       // offsetPositon += positionOffset;
+        transform.position += positionOffset;
     }
 
     public void FinishedCalibration()
     {
         var conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
-        conf.StoreLocalOffset(offsetPositon, offsetRotation);
-        ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
+        conf.StoreLocalOffset(transform.localPosition, transform.localRotation);
+     
+        //  ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
     }
 
     [ServerRpc]
@@ -394,6 +392,7 @@ public class VR_Participant : Client_Object
 
 
     private QNDataStorageServer m_QNDataStorageServer = null;
+
     public override void StartQuestionair(QNDataStorageServer in_QNDataStorageServer)
     {
         if (IsServer)
@@ -402,7 +401,7 @@ public class VR_Participant : Client_Object
             StartQuestionairClientRPC();
         }
     }
-    
+
     [ClientRpc]
     private void StartQuestionairClientRPC()
     {
@@ -428,8 +427,7 @@ public class VR_Participant : Client_Object
     [ServerRpc]
     public void SendQNAnswerServerRPC(int id, int answerIndex, string lang)
     {
-        
-        if (IsServer && m_QNDataStorageServer != null) 
+        if (IsServer && m_QNDataStorageServer != null)
         {
             m_QNDataStorageServer.NewDatapointfromClient(m_participantOrder, id, answerIndex, lang);
         }
@@ -439,7 +437,7 @@ public class VR_Participant : Client_Object
     public void RecieveNewQuestionClientRPC(NetworkedQuestionnaireQuestion newq)
     {
         if (!IsLocalPlayer) return;
-        Debug.Log("Got new data and updated varaible" +   HasNewData);
+        Debug.Log("Got new data and updated varaible" + HasNewData);
         if (HasNewData)
             Debug.LogWarning("I still had a question ready to go. Losing data here. this should not happen.");
         else
