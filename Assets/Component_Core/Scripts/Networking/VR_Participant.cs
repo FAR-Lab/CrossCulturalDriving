@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UltimateReplay;
 using Unity.Collections;
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
@@ -278,6 +279,9 @@ public class VR_Participant : Client_Object
                 var tmp = GetMainCamera();
                 tmp.GetComponent<TrackedPoseDriver>().trackingType = TrackedPoseDriver.TrackingType.RotationOnly;
 
+
+               
+                
                 if (ConnectionAndSpawning.Singleton.GetScenarioManager()
                     .GetSpawnPose(m_participantOrder, out Pose pose))
                 {
@@ -286,7 +290,7 @@ public class VR_Participant : Client_Object
                 }
                 
                 
-                SetNewPositionOffset(transform.parent.position-transform.position);
+                SetNewPositionOffset(transform.parent.position-tmp.position);
                 FinishedCalibration();
                 break;
         }
