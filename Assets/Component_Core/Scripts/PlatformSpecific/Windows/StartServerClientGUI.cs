@@ -149,12 +149,20 @@ public class StartServerClientGUI : MonoBehaviour {
     public static string LocalIPAddress() {
         IPHostEntry host;
         var localIP = "0.0.0.0";
-        host = Dns.GetHostEntry(Dns.GetHostName());
-        foreach (var ip in host.AddressList)
-            if (ip.AddressFamily == AddressFamily.InterNetwork) {
-                localIP = ip.ToString();
-                break;
-            }
+        try
+        {
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+                if (ip.AddressFamily == AddressFamily.InterNetwork) {
+                    localIP = ip.ToString();
+                    break;
+                }
+        }
+        catch (Exception e)
+        {
+          Debug.Log($"Could not get ip Address have alook at the error here{e}");
+        }
+       
 
         return localIP;
     }
