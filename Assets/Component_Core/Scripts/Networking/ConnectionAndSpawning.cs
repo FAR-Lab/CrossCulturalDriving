@@ -479,7 +479,13 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
 
-    public void SendTotalQNCount(ParticipantOrder participantOrder, int count) {
+    public void SendTotalQNCount(ParticipantOrder participantOrder, int count)
+    {
+        if (participantOrder == ParticipantOrder.None)
+        {
+            return;
+            
+        }
         Main_ParticipantObjects[participantOrder]
         .GetComponent<VR_Participant>().SetTotalQNCountClientRpc(count);
             

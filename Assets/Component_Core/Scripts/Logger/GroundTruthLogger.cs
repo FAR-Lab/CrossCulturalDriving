@@ -104,7 +104,7 @@ public class GroundTruthLogger {
 
             if (_vehicles[po] != null) {
                 _speeds[po].Add(_vehicles[po].CurrentSpeed.Value);
-                if (SteeringWheelManager.Singleton.GetButtonInput(po)) _horn[po] = true;
+                if (SteeringWheelManager.Singleton.GetHornInput(po)) _horn[po] = true;
 
                 _vehicles[po].GetIndicatorState(out var left, out var right);
                 if (left) _leftSignal[po] = true;

@@ -30,12 +30,12 @@ public class QNDataStorageServer : MonoBehaviour
 
     private IEnumerator writtingCorutine;
 
-    private GroundTruthLogger gtLogger;
+ //   private GroundTruthLogger gtLogger;
 
 
     void Start(){
         activeQuestionList = new Dictionary<int, QuestionnaireQuestion>();
-        gtLogger = new GroundTruthLogger();
+       // gtLogger = new GroundTruthLogger();
     }
 
     private void Update(){
@@ -48,15 +48,15 @@ public class QNDataStorageServer : MonoBehaviour
         CurrentScenarioLog = new ScenarioLog(name, sessionName);
         Debug.Log("Started a new questionnaire");
 
-        gtLogger.StartScenario(
-            ConnectionAndSpawning.Singleton.GetCurrentlyConnectedClients().ToArray()
-            );
+        //gtLogger.StartScenario(
+           // ConnectionAndSpawning.Singleton.GetCurrentlyConnectedClients().ToArray()
+           // );
     }
 
 
     public void StartQn(ScenarioManager sManager, RerunManager activeManager){
         if (sManager == null) return;
-        gtLogger.GatherGroundTruth(ref CurrentScenarioLog);
+        //gtLogger.GatherGroundTruth(ref CurrentScenarioLog);
         participantAnswerStatus = new Dictionary<ParticipantOrder, int>();
         LastParticipantStartTimes = new Dictionary<ParticipantOrder, DateTime>();
         ParticipantCountCurrent = new Dictionary<ParticipantOrder, int>();

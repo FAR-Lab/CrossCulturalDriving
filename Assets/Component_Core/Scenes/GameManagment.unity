@@ -276,6 +276,8 @@ MonoBehaviour:
   IncludedScenes:
   - m_SceneAsset: {fileID: 102900000, guid: 1a9bb36c37043114a8786bdb23176158, type: 3}
     m_SceneName: P_CP_1
+  - m_SceneAsset: {fileID: 102900000, guid: fb464ed73d2ee8c42a325bc0d8973faf, type: 3}
+    m_SceneName: MutualCP1
   style:
     m_Name: 
     m_Normal:
@@ -529,9 +531,13 @@ PrefabInstance:
     m_TransformParent: {fileID: 1852203067}
     m_Modifications:
     - target: {fileID: 250151055235014260, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
+      propertyPath: m_RigClone
+      value: 
+      objectReference: {fileID: 4178240877513323452, guid: 580bdbbad0ed7714ea9cb545f404aaa3, type: 3}
+    - target: {fileID: 250151055235014260, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
       propertyPath: m_RigSource
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4178240877513323452, guid: 580bdbbad0ed7714ea9cb545f404aaa3, type: 3}
     - target: {fileID: 1286891131255837244, guid: b620dfded667c5740ad1614ce9b4baab, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

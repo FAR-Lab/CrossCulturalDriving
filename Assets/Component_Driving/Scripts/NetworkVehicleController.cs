@@ -17,12 +17,20 @@ using UnityEngine.Serialization;
 
 public class NetworkVehicleController : Interactable_Object
 {
+
+    public enum VehicleOpperationMode
+    {
+        KEYBOARD,
+        STEERINGWHEEL,
+        AUTONOMOUS
+    }
+
+    [SerializeField] public VehicleOpperationMode VehicleMode;
     public Transform CameraPosition;
 
     private VehicleController controller;
-    public bool useKeyBoard;
-
-
+    private AutonomousVehicleDriver _autonomousVehicleDriver;
+  
     public Transform[] Left;
     public Transform[] Right;
     public Transform[] BrakeLightObjects;
@@ -65,8 +73,6 @@ public class NetworkVehicleController : Interactable_Object
                          4.0f;
         MotorWheelsSlip.Value = controller.MotorWheelsSlip;
         CurrentSpeed.Value = controller.CurrentSpeed;
-
-
         CurrentSurface.Value = controller.CurrentSurface;
     }
 
@@ -83,6 +89,16 @@ public class NetworkVehicleController : Interactable_Object
         {
             GetComponent<ParticipantOrderReplayComponent>().enabled = true;
             controller = GetComponent<VehicleController>();
+        }
+       else {
+            GetComponent<VehicleController>().enabled = false;
+
+            GetComponent<ForceFeedback>().enabled = false;
+            foreach (var wc in GetComponentsInChildren<WheelCollider>()) wc.enabled = false;
+            if (VehicleMode == VehicleOpperationMode.AUTONOMOUS)
+            {
+                GetComponent<AutonomousVehicleDriver>().enabled = false;
+            }
         }
     }
 
@@ -110,6 +126,16 @@ public class NetworkVehicleController : Interactable_Object
         foreach (Transform t in BrakeLightObjects)
         {
             t.GetComponent<MeshRenderer>().material = LightsOff;
+        }
+
+        if (VehicleMode == VehicleOpperationMode.AUTONOMOUS)
+        {
+            _autonomousVehicleDriver = GetComponent<AutonomousVehicleDriver>();
+        }
+
+        if (SteeringWheelManager.Singleton == null)
+        {
+            VehicleMode = VehicleOpperationMode.KEYBOARD;
         }
     }
 
@@ -226,7 +252,7 @@ public class NetworkVehicleController : Interactable_Object
                                              IsClient.ToString());
     }
 
-    float steeringAngle;
+    float _steeringAngle;
     public Transform SteeringWheel;
 
 
@@ -239,27 +265,50 @@ public class NetworkVehicleController : Interactable_Object
 
         if (ConnectionAndSpawning.Singleton.ServerState == ActionState.DRIVE)
         {
-            if (SteeringWheelManager.Singleton == null || useKeyBoard)
+
+            bool TempLeft=false, TempRight=false,TempHonk=false;
+            
+            switch (VehicleMode)
             {
-                SteeringInput = Input.GetAxis("Horizontal");
-                ThrottleInput = Input.GetAxis("Vertical");
+                case VehicleOpperationMode.KEYBOARD:
+                    SteeringInput = Input.GetAxis("Horizontal");
+                    ThrottleInput = Input.GetAxis("Vertical");
+                    break;
+                case VehicleOpperationMode.STEERINGWHEEL:
+                    SteeringInput = SteeringWheelManager.Singleton.GetSteerInput(_participantOrder);
+                    ThrottleInput = SteeringWheelManager.Singleton.GetAccelInput(_participantOrder);
+                     TempLeft =
+                        SteeringWheelManager.Singleton
+                            .GetLeftIndicatorInput(_participantOrder); 
+                     TempRight =
+                        SteeringWheelManager.Singleton
+                            .GetRightIndicatorInput(_participantOrder);
+                    TempHonk = SteeringWheelManager.Singleton.GetButtonInput(_participantOrder);
+                    break;
+                case VehicleOpperationMode.AUTONOMOUS:
+                    
+                    SteeringInput = _autonomousVehicleDriver.GetSteerInput();
+                    ThrottleInput = _autonomousVehicleDriver.GetAccelInput();
+                    TempLeft =_autonomousVehicleDriver
+                            .GetLeftIndicatorInput(); 
+                    TempRight =_autonomousVehicleDriver.
+                            GetRightIndicatorInput();
+                    TempHonk = _autonomousVehicleDriver.GetHornInput();
+                    
+                    break;
+                default:
+                    break;
             }
-            else
-            {
-                SteeringInput = SteeringWheelManager.Singleton.GetSteerInput(_participantOrder);
-                ThrottleInput = SteeringWheelManager.Singleton.GetAccelInput(_participantOrder);
+            
+            
+               
 
                 SteeringWheel.RotateAround(SteeringWheel.position, SteeringWheel.up,
-                    steeringAngle - SteeringInput * -450f);
-                steeringAngle = SteeringInput * -450f;
-            }
+                    _steeringAngle - SteeringInput * -450f);
+                _steeringAngle = SteeringInput * -450f;
+            
 
-            bool TempLeft =
-                SteeringWheelManager.Singleton
-                    .GetLeftIndicatorInput(_participantOrder); //Input.GetButton("indicateLeft");
-            bool TempRight =
-                SteeringWheelManager.Singleton
-                    .GetRightIndicatorInput(_participantOrder); // Input.GetButton("indicateRight");
+           
             if (TempLeft || TempRight)
             {
                 DualButtonDebounceIndicator = true;
@@ -284,7 +333,7 @@ public class NetworkVehicleController : Interactable_Object
             UpdateIndicator();
 
 
-            if (SteeringWheelManager.Singleton.GetButtonInput(_participantOrder))
+            if (TempHonk)
             {
                 HonkMyCar();
             }

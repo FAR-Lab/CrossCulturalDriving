@@ -156,13 +156,13 @@ public class farlab_logger : MonoBehaviour {
             var ButtonA = new LogVariable("ButtonA",
                 delegate {
                     return SteeringWheelManager.Singleton != null
-                        ? SteeringWheelManager.Singleton.GetButtonInput(ParticipantOrder.A).ToString()
+                        ? SteeringWheelManager.Singleton.GetHornInput(ParticipantOrder.A).ToString()
                         : "";
                 });
             var ButtonB = new LogVariable("ButtonB",
                 delegate {
                     return SteeringWheelManager.Singleton != null
-                        ? SteeringWheelManager.Singleton.GetButtonInput(ParticipantOrder.B).ToString()
+                        ? SteeringWheelManager.Singleton.GetHornInput(ParticipantOrder.B).ToString()
                         : "";
                 });
 
