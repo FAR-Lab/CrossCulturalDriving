@@ -6,22 +6,19 @@ using UnityEngine;
 public class TriggerPlayerTracker : MonoBehaviour {
     private bool test;
  
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   
 
  
-    private void OnTriggerStay(Collider other) {
+    private void OnTriggerEnter(Collider other) {
         if (other.gameObject.CompareTag("Player")) {
             test = true;
+           
+        }
+    }
+
+    private void OnTriggerExit(Collider other) {
+        if (other.gameObject.CompareTag("Player")) {
+            test = false;
            
         }
     }
@@ -32,6 +29,6 @@ public class TriggerPlayerTracker : MonoBehaviour {
         return test;
     }
     private void LateUpdate() {
-        test = false;
+     
     }
 }

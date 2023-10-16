@@ -31,10 +31,12 @@ public class StartupManager : MonoBehaviour
         {
             case RuntimePlatform.WindowsEditor:
             case RuntimePlatform.WindowsPlayer:
+            case RuntimePlatform.OSXPlayer:
+            case RuntimePlatform.OSXEditor:
                 // Do stuff for Windows
                 StartServerClientGUI.Singleton.enabled = true;
                 Instantiate(ServerUICanvas);
-                #if USING_ZED
+                #if USING_ZED && (UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN )
                 Debug.Log("ZED is enabled");
                 Instantiate(ZEDInitializationManager);
                 # endif
