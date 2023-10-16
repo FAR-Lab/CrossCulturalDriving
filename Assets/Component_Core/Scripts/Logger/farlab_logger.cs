@@ -1,5 +1,3 @@
-
-
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -11,6 +9,11 @@ using Rerun;
 using UnityEngine;
 using UnityEngine.XR;
 
+
+// ToDo: Remove Frequent nullPointer references
+// ToDo: Find a more performaned(memory efficinet) way to store the data.(preserve the 4byte Float accuracy)
+// ToDo: One such solution would be to dump frames to JSON.
+
 public class farlab_logger : MonoBehaviour {
     public const char sep = ';'; //Separator for data values.
     public const char supSep = '_'; //Separator for values within one cell.
@@ -19,11 +22,24 @@ public class farlab_logger : MonoBehaviour {
     public float UpdatedFreqeuncy = 1f / 25f;
 
 
-    private Transform CarA;
-    private Rigidbody carARigidbody;
-    private Transform CarB;
-    private Rigidbody carBRigidbody;
+ //   private Transform CarA;
+    
 
+        
+    
+
+    /*
+     private Rigidbody carARigidbody;
+     private Transform CarB;
+     private Rigidbody carBRigidbody;
+     private Transform PlayerHeadA;
+     private Transform PlayerHeadB;
+
+     private Transform PlayerVRCenterA;
+     private Transform PlayerVRCenterB;
+     private NetworkVehicleController VehicleA;
+     private NetworkVehicleController VehicleB;
+ */
     private readonly ConcurrentQueue<string> databuffer = new(); //Data buffer queue
     private bool doneSending; //Boolean to check whether data is sent once the application is stopped
     private bool isSending; //Boolean to control the thread send
@@ -31,20 +47,10 @@ public class farlab_logger : MonoBehaviour {
     private float NextUpdate;
     private string path; //Location of the log files
 
-    private Transform PlayerHeadA;
-
-    private Transform PlayerHeadB;
-    //Global variables
-//#if UNITY_EDITOR || UNITY_STANDALONE_WIN
-
-    private Transform PlayerVRCenterA;
-    private Transform PlayerVRCenterB;
+   
     private bool RECORDING;
     private double ScenarioStartTime;
     private Thread send; //Independent thread for writing and sending data from databuffer
-    private NetworkVehicleController VehicleA;
-    private NetworkVehicleController VehicleB;
-
     public static farlab_logger Instance { get; private set; }
 
     // Use this for initialization
@@ -65,6 +71,7 @@ public class farlab_logger : MonoBehaviour {
                         ? HandDataStreamRecorder.Singleton.GetLatestState(ParticipantOrder.A, OVRPlugin.Hand.HandLeft)
                         : " ";
                 });
+               
             var RightHandA = new LogVariable("RightHandA",
                 delegate {
                     return HandDataStreamRecorder.Singleton != null
@@ -107,6 +114,7 @@ public class farlab_logger : MonoBehaviour {
             var RotzA = new LogVariable("Car RotationZA",
                 delegate { return CarA != null ? CarA.rotation.eulerAngles.z.ToString("F4") : " "; });
 
+            
             var spxB = new LogVariable("Car PositionXB",
                 delegate { return CarB != null ? CarB.position.x.ToString("F4") : " "; });
             var spyB = new LogVariable("Car PositionYB",
@@ -124,6 +132,7 @@ public class farlab_logger : MonoBehaviour {
                 delegate { return carBRigidbody != null ? carBRigidbody.velocity.x.ToString("F4") : " "; });
             var velyB = new LogVariable("Car VelocityYB",
                 delegate { return carBRigidbody != null ? carBRigidbody.velocity.y.ToString("F4") : " "; });
+           
             var velzB = new LogVariable("Car VelocityZB",
                 delegate { return carBRigidbody != null ? carBRigidbody.velocity.z.ToString("F4") : " "; });
 
@@ -273,12 +282,12 @@ public class farlab_logger : MonoBehaviour {
         doneSending = true;
     }
 
-    /*
+    
     // Update is called once per frame
     private void Update() {
         
         if (!RECORDING) return;
-
+/*
         if (PlayerVRCenterA == null)
             PlayerVRCenterA = ConnectionAndSpawning.Singleton.GetMainClientObject(ParticipantOrder.A);
 
@@ -292,12 +301,13 @@ public class farlab_logger : MonoBehaviour {
         if (PlayerHeadB == null)
             PlayerHeadB = ConnectionAndSpawning.Singleton.GetClientMainCameraObject(ParticipantOrder.B);
 
-
-        if (CarA == null) {
-            CarA = ConnectionAndSpawning.Singleton.GetInteractableObjects_For_Participants(ParticipantOrder.A).First()
-                .transform;
+*/
+    //    if (CarA == null) {
+     //       CarA = ConnectionAndSpawning.Singleton.GetInteractableObjects_For_Participants(ParticipantOrder.A).First()
+   //             .transform;
         
-    }
+    //}
+    /*
         else {
             if (carARigidbody == null) carARigidbody = CarA.GetComponent<Rigidbody>();
 
@@ -313,8 +323,9 @@ public class farlab_logger : MonoBehaviour {
 
             if (VehicleB == null) VehicleB = CarB.GetComponent<NetworkVehicleController>();
         }
+        */
     }
-    */
+    
 
     private void LateUpdate() {
         if (!RECORDING) return;
@@ -350,9 +361,9 @@ public class farlab_logger : MonoBehaviour {
                + "Session-" + sessionName + '_'
                + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".csv";
         InitLogs();
-
         EnqueueData(LogVariable.GetHeader());
 
+        
         doneSending = false;
         isSending = true;
         send = new Thread(ContinuousDataSend);
@@ -370,14 +381,14 @@ public class farlab_logger : MonoBehaviour {
         yield return new WaitUntil(() => doneSending);
 
 
-        PlayerVRCenterA = null;
-        PlayerVRCenterB = null;
-        CarA = null;
-        CarB = null;
-        carARigidbody = null;
-        carBRigidbody = null;
-        VehicleA = null;
-        VehicleB = null;
+       // PlayerVRCenterA = null;
+      //  PlayerVRCenterB = null;
+       // CarA = null;
+        //CarB = null;
+       // carARigidbody = null;
+       // carBRigidbody = null;
+       // VehicleA = null;
+       // VehicleB = null;
         RECORDING = false;
         CloseLogs();
         Debug.Log("Stopped Recording");
