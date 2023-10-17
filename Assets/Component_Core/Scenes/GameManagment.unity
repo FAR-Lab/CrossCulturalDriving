@@ -185,7 +185,6 @@ GameObject:
   - component: {fileID: 476093108}
   - component: {fileID: 476093110}
   - component: {fileID: 476093111}
-  - component: {fileID: 476093115}
   - component: {fileID: 476093116}
   m_Layer: 0
   m_Name: NetworkManager
@@ -274,10 +273,20 @@ MonoBehaviour:
   SpawnTypeConfig: {fileID: 11400000, guid: 785e27700b417604bbd22c7ed43fea85, type: 2}
   ref_ServerTimingDisplay: {fileID: 4979024292393695789, guid: 8a4223da181b88748a21a53936689ba9, type: 3}
   IncludedScenes:
-  - m_SceneAsset: {fileID: 102900000, guid: 1a9bb36c37043114a8786bdb23176158, type: 3}
-    m_SceneName: P_CP_1
   - m_SceneAsset: {fileID: 102900000, guid: fb464ed73d2ee8c42a325bc0d8973faf, type: 3}
     m_SceneName: MutualCP1
+  - m_SceneAsset: {fileID: 102900000, guid: 577e38555639f48a8a4e1a0b75290e98, type: 3}
+    m_SceneName: MutualCP2
+  - m_SceneAsset: {fileID: 102900000, guid: 9c57eff36222a413db89843016612062, type: 3}
+    m_SceneName: MutualCP3
+  - m_SceneAsset: {fileID: 102900000, guid: c45fdbfec0c034d0fa4543097f77822b, type: 3}
+    m_SceneName: MutualCP5
+  - m_SceneAsset: {fileID: 102900000, guid: 2feb7afda9e6b45e5bcaa24de3703478, type: 3}
+    m_SceneName: MutualCP6
+  - m_SceneAsset: {fileID: 102900000, guid: c29c248e72db74faa911b3ee10f7a493, type: 3}
+    m_SceneName: MutualCP7
+  - m_SceneAsset: {fileID: 102900000, guid: f7cc0e4b9e75942c4ac50a10e8177eff, type: 3}
+    m_SceneName: MutualCP8
   style:
     m_Name: 
     m_Normal:
@@ -358,23 +367,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ServerStartGUI: {fileID: 4979024292393695789, guid: 73b3f33831fb4fa4c8581d2130d9b28a, type: 3}
---- !u!114 &476093115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 476093106}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bb11e6e959c0514cad738cde24bc8c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  noManagingObject: 0
-  replayIdentity:
-    id: 2565
-  replayObject:
-    reference: {fileID: 0}
 --- !u!114 &476093116
 MonoBehaviour:
   m_ObjectHideFlags: 0

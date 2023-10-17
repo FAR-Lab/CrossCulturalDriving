@@ -212,40 +212,56 @@ public class ConnectionAndSpawning : MonoBehaviour {
         }
     }
 
-
-    private void AddComponents()
-    {
+    private void SetUpToServe(string pairName) {
+        Application.targetFrameRate = 72;
         gameObject.AddComponent<SteeringWheelManager>();
         gameObject.AddComponent<farlab_logger>();
         m_QNDataStorageServer = gameObject.AddComponent<QNDataStorageServer>();
-    }
-    
-    public void StartAsServer(string pairName) {
-        Application.targetFrameRate = 72;
         
-        AddComponents();
-
-        GetComponent<TrafficLightSupervisor>().enabled = true;
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
         NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected;
         NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
         NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
-
-        NetworkManager.Singleton.StartServer();
-        participants.AddParticipant(ParticipantOrder.None, NetworkManager.Singleton.LocalClientId, SpawnType.NONE,
-            JoinType.SERVER);
-        NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
-
+        
         SteeringWheelManager.Singleton.Init();
         m_ReRunManager.SetRecordingFolder(pairName);
         Debug.Log("Starting Server for session: " + pairName);
-
-
+        
         if (ref_ServerTimingDisplay != null) {
             var val = Instantiate(ref_ServerTimingDisplay, Vector3.zero, Quaternion.identity, transform)
                 .GetComponent<ServerTimeDisplay>();
             val.StartDisplay();
         }
+    }
+
+  
+    
+    public void StartAsServer(string pairName) {
+
+        SetUpToServe(pairName);
+        NetworkManager.Singleton.StartServer();
+        participants.AddParticipant(ParticipantOrder.None, NetworkManager.Singleton.LocalClientId, SpawnType.NONE,
+            JoinType.SERVER);
+        NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
+
+
+
+     
+    }
+
+    public void StartAsHost(string pairName) {
+        SetUpToServe(pairName);
+        m_ReRunManager.DisableAllReRunCameras();
+        ConnectionDataRequest connectionDataRequest = new ConnectionDataRequest() {
+            po = ParticipantOrder.A,
+            st = SpawnType.CAR,
+            jt = JoinType.SCREEN
+        };
+        string jsonstring = JsonConvert.SerializeObject(connectionDataRequest);
+
+        NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(jsonstring); // assigning ID
+        NetworkManager.Singleton.StartHost();
+        NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
     }
 
     private void ClientDisconnected_client(ulong ClientID) {
@@ -615,16 +631,17 @@ public class ConnectionAndSpawning : MonoBehaviour {
             case SceneEventType.UnloadEventCompleted:
                 break;
             case SceneEventType.LoadComplete:
-                Debug.Log($"Load completed! sceneEvent:{sceneEvent.LoadSceneMode}  ServerState:{ServerState}");
-                if (ServerState == ActionState.READY || ServerState == ActionState.LOADINGVISUALS ||
-                    ServerState == ActionState.WAITINGROOM)
+                Debug.Log($"Load completed! sceneEvent:{sceneEvent.LoadSceneMode} ServerState:{ServerState}");
+                
+                if (ServerState is ActionState.READY or ActionState.LOADINGVISUALS or ActionState.WAITINGROOM)
                 {
+                    Debug.Log("Lets see if we should Spawn an interactable!");
                     if (sceneEvent.LoadSceneMode == LoadSceneMode.Additive  && GetScenarioManager().HasVisualScene()||
                         sceneEvent.LoadSceneMode==LoadSceneMode.Single && !GetScenarioManager().HasVisualScene()) //TODO: feels like a bad hack  but makes sure that late joining a scene we dont spawn a car twice (scenario and visual scene callback)
                     {
                         bool success = participants.GetOrder(sceneEvent.ClientId, out ParticipantOrder po);
                         Debug.Log($"About to spawn an interactable for participant :{po}");
-                        StartCoroutine(Spawn_Interactable_Await(sceneEvent.ClientId));
+                        StartCoroutine(Spawn_Interactable_Await(po));
                     }
                 }
                 else {
@@ -713,7 +730,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private void ClientConnected(ulong ClientID) {
         Debug.Log("On Client Connect CallBack Was called!");
        
-        Spawn_Client(ClientID, true);
+        Spawn_Client(ClientID);
     }
 
 
@@ -736,14 +753,14 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
 
-    private IEnumerator Spawn_Interactable_Await(ulong clientID) {
-        var success = participants.GetOrder(clientID, out var po);
-        if (po != ParticipantOrder.None && success) { 
+    private IEnumerator Spawn_Interactable_Await(ParticipantOrder po) {
+        if (po != ParticipantOrder.None) {
+            Debug.Log("ok getting ready to spawn an object");
             yield return new WaitUntil(() =>
                 Main_ParticipantObjects.ContainsKey(po) &&
                 Main_ParticipantObjects[po] != null
             );
-            Spawn_Interactable_Immediate(clientID);
+            Spawn_Interactable_Immediate(po);
         }
     }
 
@@ -757,20 +774,20 @@ public class ConnectionAndSpawning : MonoBehaviour {
         return (JoinType_To_Client_Object.ContainsKey(jt) && JoinType_To_Client_Object[jt] != null);
     }
 
-    private void Spawn_Interactable_Immediate(ulong clientID) {
-        var success = participants.GetOrder(clientID, out ParticipantOrder po);
-        if (po == ParticipantOrder.None || success == false) return;
-
+    private void Spawn_Interactable_Immediate(ParticipantOrder po) {
         if (_GetCurrentSpawingData(po, out var tempPose)) {
+            Debug.Log("GOt a spawn Point lets get the object.");
             Client_Object mainParticipantObject = Main_ParticipantObjects[po];
-            success = participants.GetSpawnType(po, out SpawnType spawnType);
+            Debug.Log("Got the main Client Object lets gooo.");
+            bool success = participants.GetSpawnType(po, out SpawnType spawnType);
             if (_VerifyPrefabAvalible(spawnType) && success) {
                 var newInteractableObject =
                     Instantiate(SpawnType_To_InteractableObjects[spawnType],
                         tempPose.position, tempPose.rotation);
 
-                
+                participants.GetClientID(po, out ulong clientID);
                 newInteractableObject.GetComponent<NetworkObject>().Spawn(true);
+                
                 newInteractableObject.GetComponent<Interactable_Object>().AssignClient(clientID, po);
                 
                 Interactable_ParticipantObjects[po].Add(newInteractableObject.GetComponent<Interactable_Object>());
@@ -787,7 +804,19 @@ public class ConnectionAndSpawning : MonoBehaviour {
         }
     }
 
-    private void Spawn_Client(ulong clientID, bool persistent) {
+    private void Spawn_Client(ulong clientID) {
+        StartCoroutine( Spawn_Client_Await(clientID));
+    }
+    private IEnumerator Spawn_Client_Await(ulong clientID) {
+       Debug.Log("Awaiting the scenarioManger and for the waiting room scene to be loaded.");
+        yield return new WaitUntil(() =>
+            FindObjectOfType<ScenarioManager>()!=null
+        );
+        Debug.Log("Found the scenarioManger and waiting room, spawning Player");
+        _Spawn_Client_Internal(clientID);
+    }
+    
+    private void _Spawn_Client_Internal(ulong clientID) {
         var success = participants.GetOrder(clientID, out ParticipantOrder po);
         if (po == ParticipantOrder.None || success == false) return;
 
@@ -797,8 +826,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
                 var mainParticipantObject =
                     Instantiate(JoinType_To_Client_Object[joinType],
                         tempPose.position, tempPose.rotation);
-
-                mainParticipantObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, !persistent);
+                DontDestroyOnLoad(mainParticipantObject);
+                mainParticipantObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, false);
                 Main_ParticipantObjects.Add(po, mainParticipantObject.GetComponent<Client_Object>());
                 m_QNDataStorageServer.SetupForNewRemoteImage(po);
                 mainParticipantObject.SetSpawnType(spawnType);

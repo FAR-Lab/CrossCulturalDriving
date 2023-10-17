@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class AutonomousVehicleDriver : MonoBehaviour {
     public enum AVDrivingState {
         DEFAULT,
@@ -38,6 +39,8 @@ public class AutonomousVehicleDriver : MonoBehaviour {
     private TriggerPlayerTracker AvoidBox;
     private TriggerPlayerTracker YieldBox;
     // Start is called before the first frame update
+    private Vector3 Position;
+    private Quaternion Orientation;
     void Start() {
         _vehicleController = GetComponent<VehicleController>();
         _avDrivingState = AVDrivingState.DEFAULT;
@@ -45,6 +48,11 @@ public class AutonomousVehicleDriver : MonoBehaviour {
 
         AvoidBox = transform.Find("AvoidBox").GetComponent<TriggerPlayerTracker>();
         YieldBox = transform.Find("YieldBox").GetComponent<TriggerPlayerTracker>();
+        GetComponent<Rigidbody>().isKinematic = true;
+    }
+
+    private void OnDestroy() {
+        ConnectionAndSpawning.Singleton.ServerStateChange -= InterntalStateUpdate;
     }
 
     private void InterntalStateUpdate(ActionState state) {
@@ -62,6 +70,7 @@ public class AutonomousVehicleDriver : MonoBehaviour {
                 _avDrivingState = AVDrivingState.DEFAULT;
                 break;
             case ActionState.READY:
+                GetComponent<Rigidbody>().isKinematic = false;
                 _avDrivingState = AVDrivingState.STOPPED;
                 break;
             case ActionState.DRIVE:
@@ -162,12 +171,12 @@ public class AutonomousVehicleDriver : MonoBehaviour {
                 if (!AvoidBox.GetPlayerPresent()) {
                     Throttle = speedPID.Update(NextWaypoint.targetSpeed, _vehicleController.CurrentSpeed,
                         Time.fixedDeltaTime);
-                    Debug.Log("No Player in Avoid box");
+                    //Debug.Log("No Player in Avoid box");
                 }
                 else {
                     Throttle = speedPID.Update(-3, _vehicleController.CurrentSpeed,
                         Time.fixedDeltaTime);
-                    Debug.Log("Player  in Avoid box STOPPING");
+                    //Debug.Log("Player  in Avoid box STOPPING");
                 }
 
                 break;
