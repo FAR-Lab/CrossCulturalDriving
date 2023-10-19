@@ -185,9 +185,9 @@ public class VR_Participant : Client_Object
 
     public override void AssignFollowTransform(Interactable_Object MyInteractableObject, ulong targetClient)
     {
-        if (IsServer)
-        {
-            NetworkedInteractableObject = MyInteractableObject;
+        if (IsServer) {
+           NetworkedInteractableObject = MyInteractableObject;
+            
             NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
           
             AssignInteractable_ClientRPC(MyInteractableObject.GetComponent<NetworkObject>(), targetClient);

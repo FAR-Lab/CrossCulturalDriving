@@ -22,6 +22,18 @@ public class ThreeScreen_Participant : Client_Object {
         
     }
 
+    public override void OnNetworkSpawn() {
+        base.OnNetworkSpawn();
+        if (IsServer && !IsHost) {
+            GetComponent<Camera>().enabled = false;
+            foreach (Camera child in GetComponentsInChildren<Camera>()) {
+                child.enabled = false;
+                
+            }
+        }
+        
+    }
+
     public override ParticipantOrder GetParticipantOrder() {
         return _participantOrder;
     }

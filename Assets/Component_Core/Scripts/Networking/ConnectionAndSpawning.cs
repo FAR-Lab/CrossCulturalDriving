@@ -778,7 +778,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         if (_GetCurrentSpawingData(po, out var tempPose)) {
             Debug.Log("GOt a spawn Point lets get the object.");
             Client_Object mainParticipantObject = Main_ParticipantObjects[po];
-            Debug.Log("Got the main Client Object lets gooo.");
+            Debug.Log("Got the main Client Object lets go.");
             bool success = participants.GetSpawnType(po, out SpawnType spawnType);
             if (_VerifyPrefabAvalible(spawnType) && success) {
                 var newInteractableObject =
@@ -787,19 +787,20 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
                 participants.GetClientID(po, out ulong clientID);
                 newInteractableObject.GetComponent<NetworkObject>().Spawn(true);
-                
+
                 newInteractableObject.GetComponent<Interactable_Object>().AssignClient(clientID, po);
-                
+                Debug.Log($"Is the interactable Spawned here already: {newInteractableObject.GetComponent<Interactable_Object>().IsSpawned}");
                 Interactable_ParticipantObjects[po].Add(newInteractableObject.GetComponent<Interactable_Object>());
-                if (Main_ParticipantObjects[po] != null)
+                Debug.Log("B Error");
+                if (Main_ParticipantObjects[po] != null){
                     Main_ParticipantObjects[po]
                         .AssignFollowTransform(newInteractableObject.GetComponent<Interactable_Object>(), clientID);
-                
+                }
                 else {
                     Debug.LogError("Could not find Client as I am spawning the Interactable. Broken please fix.");
                 }
+                Debug.Log("A Error");
             }
-
             
         }
     }
@@ -826,7 +827,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                 var mainParticipantObject =
                     Instantiate(JoinType_To_Client_Object[joinType],
                         tempPose.position, tempPose.rotation);
-                DontDestroyOnLoad(mainParticipantObject);
+             //   DontDestroyOnLoad(mainParticipantObject);
                 mainParticipantObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, false);
                 Main_ParticipantObjects.Add(po, mainParticipantObject.GetComponent<Client_Object>());
                 m_QNDataStorageServer.SetupForNewRemoteImage(po);

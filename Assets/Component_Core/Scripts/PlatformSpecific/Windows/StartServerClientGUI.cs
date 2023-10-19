@@ -81,7 +81,7 @@ public class StartServerClientGUI : MonoBehaviour {
             port: 7777,
             result:ResponseDelegate,
             _spawnTypeIN: SpawnType.CAR,
-            _joinTypeIN: JoinType.VR
+            _joinTypeIN: JoinType.SCREEN
         );
         Destroy(ServerGuiSintance.gameObject);
         enabled = false;
