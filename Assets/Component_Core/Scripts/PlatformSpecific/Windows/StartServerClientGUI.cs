@@ -60,7 +60,7 @@ public class StartServerClientGUI : MonoBehaviour {
 
     public void StartAsReRuInterfaceCallback() {
         Debug.Log("Starting as Rerun Button Call!");
-        ConnectionAndSpawning.Singleton.StartReRun();
+        ConnectionAndSpawning.Singleton.StartAsRerun();
         Destroy(ServerGuiSintance.gameObject);
         enabled = false;
     }

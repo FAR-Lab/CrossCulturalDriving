@@ -105,7 +105,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private void Start() {
         DontDestroyOnLoad(FindObjectOfType<InputSystemUIInputModule>());
-        
+        LastLoadedVisualScene = "";
         if (FindObjectsOfType<RerunManager>().Length > 1) {
             Debug.LogError("We found more than 1 RerunManager. This is not support. Check your Hiracy");
             Application.Quit();
@@ -224,7 +224,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
         
         SteeringWheelManager.Singleton.Init();
-        m_ReRunManager.SetRecordingFolder(pairName);
+        
         Debug.Log("Starting Server for session: " + pairName);
         
         if (ref_ServerTimingDisplay != null) {
@@ -239,19 +239,36 @@ public class ConnectionAndSpawning : MonoBehaviour {
     public void StartAsServer(string pairName) {
 
         SetUpToServe(pairName);
+        if (_VerifyPrefabAvalible(JoinType.SERVER)) { //ToDo: here we would really want to remove the explicit rerun reference, enable callbacks to spawn cameras etc...
+            var ServerCamera =
+                Instantiate(JoinType_To_Client_Object[JoinType.SERVER],
+                   Vector3.zero, Quaternion.identity);
+            
+            Debug.Log(ServerCamera);
+            DontDestroyOnLoad(ServerCamera);
+            m_ReRunManager.RerunInitialization(true, ServerCamera.GetComponent<RerunPlaybackCameraManager>(), RerunManager.StartUpMode.RECORDING);
+            m_ReRunManager.SetRecordingFolder(pairName);
+        }
+        else {
+            Debug.LogError("Could not Start Rerun or spawn the cameras... not good did you import Rerun and ultimate replay?");
+        }
+
+
         NetworkManager.Singleton.StartServer();
         participants.AddParticipant(ParticipantOrder.None, NetworkManager.Singleton.LocalClientId, SpawnType.NONE,
             JoinType.SERVER);
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
-
-
-
+     
+        
+       
+    
      
     }
 
     public void StartAsHost(string pairName) {
         SetUpToServe(pairName);
-        m_ReRunManager.DisableAllReRunCameras();
+        m_ReRunManager.RerunInitialization(true,null,RerunManager.StartUpMode.RECORDING);
+        m_ReRunManager.SetRecordingFolder(pairName);
         ConnectionDataRequest connectionDataRequest = new ConnectionDataRequest() {
             po = ParticipantOrder.A,
             st = SpawnType.CAR,
@@ -262,6 +279,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(jsonstring); // assigning ID
         NetworkManager.Singleton.StartHost();
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
+       
     }
 
     private void ClientDisconnected_client(ulong ClientID) {
@@ -361,22 +379,26 @@ public class ConnectionAndSpawning : MonoBehaviour {
         }
     }
 
-    public void StartReRun() {
+    public void StartAsRerun() {
         ServerState = ActionState.RERUN;
-        ServerStateChange.Invoke(ActionState.RERUN);
         
-        // FindObjectOfType<RerunLayoutManager>().?enabled = true;
-        m_ReRunManager.RegisterPreLoadHandler(LoadSceneReRun);
+        
+        if (_VerifyPrefabAvalible(JoinType.SERVER)) { //ToDo: here we would really want to remove the explicit rerun reference, enable callbacks to spawn cameras etc...
+            var ServerCamera =
+                Instantiate(JoinType_To_Client_Object[JoinType.SERVER],
+                    Vector3.zero, Quaternion.identity);
+            
+            Debug.Log(ServerCamera);
+            DontDestroyOnLoad(ServerCamera);
+            m_ReRunManager.RerunInitialization(true, ServerCamera.GetComponent<RerunPlaybackCameraManager>(), RerunManager.StartUpMode.REPLAY);
+           
+            m_ReRunManager.RegisterPreLoadHandler(LoadSceneReRun);
+        }
+        
         NetworkManager.Singleton.enabled = false;
-            // GetComponent<OVRManager>().enabled = false;  //TODO ONly ""add what we need 
-        
-        
-        FindObjectOfType<RerunGUI>().enabled = true;
-        FindObjectOfType<RerunInputManager>().enabled = true;
-
         SceneManager.sceneLoaded += VisualsceneLoadReRun;
-
-        GetComponent<TrafficLightSupervisor>().enabled = true;
+        
+        ServerStateChange.Invoke(ActionState.RERUN);
     }
 
     private void VisualsceneLoadReRun(Scene arg0, LoadSceneMode arg1) {
@@ -388,7 +410,13 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
                     LastLoadedVisualScene = tmp.VisualSceneToUse.SceneName;
                     SceneManager.LoadScene(tmp.VisualSceneToUse.SceneName, LoadSceneMode.Additive);
-                }
+                     }
+                
+        }else if (arg0.name == LastLoadedVisualScene) {
+            
+            if (SceneManager.GetActiveScene().name != LastLoadedVisualScene) {
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName(LastLoadedVisualScene));
+            }
         }
     }
 
@@ -819,6 +847,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     
     private void _Spawn_Client_Internal(ulong clientID) {
         var success = participants.GetOrder(clientID, out ParticipantOrder po);
+    
         if (po == ParticipantOrder.None || success == false) return;
 
         if (_GetCurrentSpawingData(clientID, out Pose tempPose) && participants.GetJoinType(po, out JoinType joinType) &&  participants.GetSpawnType(po, out SpawnType spawnType)) {
