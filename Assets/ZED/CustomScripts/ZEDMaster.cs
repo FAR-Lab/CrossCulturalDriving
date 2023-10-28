@@ -8,6 +8,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 
 
 public class ZEDMaster : Interactable_Object {
@@ -112,23 +113,26 @@ public class ZEDMaster : Interactable_Object {
     {
         if (NetworkManager.Singleton.IsServer)
         {
-            FindDependencies();
-            CalibratePosition();
-            yield return new WaitForSeconds(0.05f);
-            CalibrateRotation();
-            yield return new WaitForSeconds(0.05f);
-            CalibratePosition();
-            yield return new WaitForSeconds(0.05f);
+           
+            yield return new WaitUntil(()=> FindDependencies());
             
+             
+                
             
            
+            yield return new WaitUntil(()=>CalibratePosition());
+            yield return new WaitForEndOfFrame();
+            yield return new WaitUntil(()=>CalibrateRotation());
+            yield return new WaitForEndOfFrame();
+            yield return new WaitUntil(()=>CalibratePosition());
+           Debug.Log($"Finished Calibrating!");
              
         }
     }
 
    
     
-    private void FindDependencies()
+    private bool FindDependencies()
     {
         // if there is only one avatar, assign it to storedTarget
         if (storedTarget == null)
@@ -140,7 +144,7 @@ public class ZEDMaster : Interactable_Object {
             }
             else
             {
-                return;
+                return false;
             }
         }
 
@@ -151,22 +155,40 @@ public class ZEDMaster : Interactable_Object {
         targetHip = targetAnimator.animator.GetBoneTransform(HumanBodyBones.Hips);
         CameraTrackingTransform = targetAnimator.animator.GetBoneTransform(HumanBodyBones.Head);
 
+        if (targetAnimator != null && targetHip != null && CameraTrackingTransform != null) {
+            return true;
+        }
+
+        return false;
+        
+
     }
-    private void CalibratePosition()
+    private bool CalibratePosition()
     {
         // calculate the difference vector
-        Vector3 positionOffset = destinationPose.position - targetHip.position;
-        // apply difference
-        zedBodyTrackingManager.positionOffset += positionOffset;
+        if (destinationPose != null && targetHip != null) {
+            Vector3 positionOffset = destinationPose.position - targetHip.position;
+            // apply difference
+            zedBodyTrackingManager.positionOffset += positionOffset;
+            return true;
+        }
+        
+            return false;
+        
     }
 
-    private void CalibrateRotation()
+    private bool CalibrateRotation()
     {
-        // calculate the difference vector
-        Vector3 rotationOffset = destinationPose.rotation.eulerAngles - targetHip.rotation.eulerAngles;
-        Debug.Log("rotationOffset: " + rotationOffset);
-        // apply difference
-        zedBodyTrackingManager.rotationOffset += new Vector3(0, rotationOffset.y, 0);
+        if (destinationPose != null && targetHip != null) {
+            // calculate the difference vector
+            Vector3 rotationOffset = destinationPose.rotation.eulerAngles - targetHip.rotation.eulerAngles;
+            Debug.Log("rotationOffset: " + rotationOffset);
+            // apply difference
+            zedBodyTrackingManager.rotationOffset += new Vector3(0, rotationOffset.y, 0);
+            return true;
+        }
+
+        return false;
     }
 
     private void HandleMouseClick()

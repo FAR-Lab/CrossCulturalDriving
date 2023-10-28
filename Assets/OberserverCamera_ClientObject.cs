@@ -20,8 +20,9 @@ public class OberserverCamera_ClientObject : Client_Object {
     // Start is called before the first frame update
     void Start() {
         _RerunCameraManager = GetComponent<RerunPlaybackCameraManager>();
-
         ConnectionAndSpawning.Singleton.ServerStateChange += CameraUpdateStateTracker;
+        
+        
     }
 
     private void CameraUpdateStateTracker(ActionState state) {
