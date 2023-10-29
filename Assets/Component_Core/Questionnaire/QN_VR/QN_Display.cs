@@ -2,12 +2,19 @@
 
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class QNSelectionManager : MonoBehaviour {
+public class QN_Display : NetworkBehaviour {
+    public ParticipantOrder m_participantOrder
+    {
+        get; 
+    private set;
+}
+ 
     public GameObject ButtonPrefab;
 
     public enum QNStates {
@@ -28,7 +35,6 @@ public class QNSelectionManager : MonoBehaviour {
     private selectionBarAnimation sba;
     private readonly List<RectTransform> AnswerFields = new();
 
-    private VR_Participant m_MyLocalClient;
     private LayerMask m_RaycastCollidableLayers;
 
     private string m_LanguageSelect;
@@ -48,13 +54,13 @@ public class QNSelectionManager : MonoBehaviour {
     [FormerlySerializedAs("up")] public float xOffset;
     [FormerlySerializedAs("forward")] public float yOffset;
     [FormerlySerializedAs("left")] public float zOffset;
-
+    private bool KeepUpdating;
 
     public void ChangeLanguage(string lang) {
         m_LanguageSelect = lang;
     }
 
-    public void setRelativePosition(Transform t, float up_, float forward_, float left_) {
+    public void setRelativePosition(Transform t, float up_, float forward_, float left_,bool KeepUpdating) {
         ParentPosition = t;
         xOffset = up_;
         yOffset = forward_;
@@ -62,32 +68,7 @@ public class QNSelectionManager : MonoBehaviour {
     }
 
     private void Start() {
-        /*
-        selectAction = new InputAction("Select");
-        selectAction.AddBinding("<Keyboard>/space");
-        selectAction.AddBinding("<Joystick>/trigger");
-        selectAction.AddBinding("<Joystick>/button2");
-        selectAction.AddBinding("<Joystick>/button3");
-        selectAction.AddBinding("<Joystick>/button4");
-        selectAction.AddBinding("<Joystick>/button5");
-        selectAction.AddBinding("<Joystick>/button6");
-        selectAction.AddBinding("<Joystick>/button7");
-        selectAction.AddBinding("<Joystick>/button8");
-        selectAction.AddBinding("<Joystick>/button9");
-        selectAction.AddBinding("<Joystick>/button10");
-        selectAction.AddBinding("<Joystick>/button11");
-        selectAction.AddBinding("<Joystick>/button12");
-        selectAction.AddBinding("<Joystick>/button20");
-        selectAction.AddBinding("<Joystick>/button21");
-        selectAction.AddBinding("<Joystick>/button22");
-        selectAction.AddBinding("<Joystick>/button23");
-        selectAction.AddBinding("<Joystick>/button24");
-        selectAction.AddBinding("<Joystick>/hat/down");
-        selectAction.AddBinding("<Joystick>/hat/up");
-        selectAction.AddBinding("<Joystick>/hat/left");
-        selectAction.AddBinding("<Joystick>/hat/right");
-        selectAction.Enable();
-        */
+       
         QustionField = transform.Find("QuestionField").GetComponent<Text>();
         sba = GetComponentInChildren<selectionBarAnimation>();
         BackButton = transform.Find("BackButton").GetComponent<RectTransform>();
@@ -98,11 +79,10 @@ public class QNSelectionManager : MonoBehaviour {
         changeLanguage("English");
         setRelativePosition(FindObjectOfType<LocalVRPlayer>().transform, 1, 2);
 #endif
+        gameObject.SetActive(false);
     }
 
     public GameObject ScenarioImageHolder;
-
-
     private Transform newImageHolder;
 
     public void AddImage(Texture2D CaptureScenarioImage) {
@@ -139,17 +119,22 @@ public class QNSelectionManager : MonoBehaviour {
 
     private Transform positioingRef;
 
+    private VR_Participant m_MyLocalClient;
     // Update is called once per frame
-    public void startAskingTheQuestionairs(Transform mylocalclient, string Condition,
-        string lang) {
+    public void startAskingTheQuestionairs(ParticipantOrder po) {
         if (m_interalState == QNStates.IDLE) {
-            ChangeLanguage(lang);
-            m_MyLocalClient = mylocalclient.GetComponent<VR_Participant>();
+            ChangeLanguage(ConnectionAndSpawning.Singleton.lang);
+           
+            m_condition = ConnectionAndSpawning.Singleton.GetScenarioManager().GetComponent<ScenarioManager>().conditionName;
 
-            m_condition = Condition;
-
+            
             m_interalState = QNStates.WAITINGFORQUESTION;
-            m_MyLocalClient.SendQNAnswerServerRPC(-1, 0, m_LanguageSelect);
+            m_participantOrder = po;
+            m_MyLocalClient=VR_Participant.GetJoinTypeObject();//ToDO Need to test!!
+            SendQNAnswerServerRPC(-1, 0, m_LanguageSelect);
+
+            
+            gameObject.SetActive(true);
         }
         else {
             Debug.LogError("I should really only once start the Questionnaire.");
@@ -157,9 +142,11 @@ public class QNSelectionManager : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKeyUp(KeyCode.Q)) m_interalState = QNStates.FINISH;
+        if (IsServer) {
+            if (Input.GetKeyUp(KeyCode.Q)&& !Input.GetKey(KeyCode.LeftShift)) m_interalState = QNStates.FINISH;
+        }
 
-        if (ParentPosition != null) {
+        if (KeepUpdating && ParentPosition != null) {
             transform.rotation = ParentPosition.rotation;
             transform.position = ParentPosition.position +
                                  ParentPosition.rotation * new Vector3(xOffset, yOffset, zOffset);
@@ -172,8 +159,8 @@ public class QNSelectionManager : MonoBehaviour {
 
             case QNStates.WAITINGFORQUESTION:
 
-                if (m_MyLocalClient.HasNewQuestion()) {
-                    currentActiveQustion = m_MyLocalClient.GetNewQuestion();
+                if (HasNewQuestion()) {
+                    currentActiveQustion = GetNewQuestion();
 
                     if (currentActiveQustion.reply == replyType.NEWQUESTION)
                         m_interalState = QNStates.LOADINGQUESTION;
@@ -249,7 +236,7 @@ public class QNSelectionManager : MonoBehaviour {
                             sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
                             if (m_MyLocalClient.ButtonPush()) {
                                 var AnswerIndex = rcb.activateNextQuestions();
-                                m_MyLocalClient.SendQNAnswer(currentActiveQustion.ID, AnswerIndex, m_LanguageSelect);
+                                SendQNAnswer(currentActiveQustion.ID, AnswerIndex, m_LanguageSelect);
                                 _answerCount++;
                                 m_interalState = QNStates.WAITINGFORQUESTION;
                             }
@@ -260,7 +247,7 @@ public class QNSelectionManager : MonoBehaviour {
                                 if (m_MyLocalClient.ButtonPush()) {
                                     _answerCount--;
                                     if (_answerCount < 0) _answerCount = 0;
-                                    m_MyLocalClient.SendQNAnswer(-1, -1, m_LanguageSelect);
+                                    SendQNAnswer(-1, -1, m_LanguageSelect);
                                     m_interalState = QNStates.WAITINGFORQUESTION;
                                 }
                             }
@@ -312,6 +299,110 @@ public class QNSelectionManager : MonoBehaviour {
     private void updateCountDisaply() {
         CountDisplay.text = 1 + _answerCount + " / " + _totalCount;
     }
+    
+    #region NetworkConnectivity;
+    
+    
+    private QNDataStorageServer m_QNDataStorageServer = null;
+
+    public delegate bool QuestionSelected();
+        
+    public void StartQuestionair(QNDataStorageServer in_QNDataStorageServer,
+        ParticipantOrder po, 
+        NetworkObjectReference referenceTransform,
+        Vector3 Offset,
+        bool KeepUpdating)
+    {
+        if (IsServer)
+        {
+            m_QNDataStorageServer = in_QNDataStorageServer;
+            StartQuestionairClientRPC(po,referenceTransform,Offset,KeepUpdating);
+        }
+    }
+
+    [ClientRpc]
+    public void StartQuestionairClientRPC(ParticipantOrder po,
+        NetworkObjectReference referenceTransform,
+        Vector3 Offset,
+        bool KeepUpdating_)
+    {
+        if (ConnectionAndSpawning.Singleton.ParticipantOrder==po) {
+
+            NetworkObject obj = referenceTransform;
+            transform.localScale *= 0.1f;
+            setRelativePosition(obj.transform, Offset.x, Offset.y, Offset.z,KeepUpdating);
+            KeepUpdating = KeepUpdating_;
+            startAskingTheQuestionairs(po);
+            
+        }
+        else {
+            gameObject.SetActive(false);
+            //TODO: we could start deleting objects here!
+        }
+    }
+
+
+    public void SendQNAnswer(int id, int answerIndex, string lang)
+    {
+        if (!IsLocalPlayer) return;
+        HasNewData = false;
+        SendQNAnswerServerRPC(id, answerIndex, lang);
+    }
+
+    public bool HasNewData { get; set; }
+
+
+    [ServerRpc]
+    public void SendQNAnswerServerRPC(int id, int answerIndex, string lang)
+    {
+        if (IsServer && m_QNDataStorageServer != null)
+        {
+            m_QNDataStorageServer.NewDatapointfromClient(m_participantOrder, id, answerIndex, lang);
+        }
+    }
+
+    [ClientRpc]
+    public void RecieveNewQuestionClientRPC(NetworkedQuestionnaireQuestion newq)
+    {
+        if (!IsLocalPlayer) return;
+        Debug.Log("Got new data and updated varaible" + HasNewData);
+        if (HasNewData)
+            Debug.LogWarning("I still had a question ready to go. Losing data here. this should not happen.");
+        else
+            HasNewData = true;
+
+         lastQuestion = newq;
+    }
+
+    NetworkedQuestionnaireQuestion lastQuestion;
+    public bool HasNewQuestion()
+    {
+        return HasNewData;
+    }
+
+    public NetworkedQuestionnaireQuestion GetNewQuestion()
+    {
+        if (HasNewData)
+        {
+            HasNewData = false;
+            return lastQuestion;
+        }
+
+        Debug.LogError("I did have a new question yet I was asked for one quitting the QN early!");
+        return new NetworkedQuestionnaireQuestion { reply = replyType.FINISHED };
+    }
+
+    [ClientRpc]
+    public void SetTotalQNCountClientRpc(int outval)
+    {
+        if (!IsLocalPlayer) return;
+
+        FindObjectOfType<QN_Display>()?.SetTotalQNCount(outval);
+    }
+
+
+    #endregion
+    
 }
 
 

@@ -60,7 +60,7 @@ public class StartServerClientGUI : MonoBehaviour {
 
     public void StartAsReRuInterfaceCallback() {
         Debug.Log("Starting as Rerun Button Call!");
-        ConnectionAndSpawning.Singleton.StartReRun();
+        ConnectionAndSpawning.Singleton.StartAsRerun();
         Destroy(ServerGuiSintance.gameObject);
         enabled = false;
     }
@@ -81,7 +81,7 @@ public class StartServerClientGUI : MonoBehaviour {
             port: 7777,
             result:ResponseDelegate,
             _spawnTypeIN: SpawnType.CAR,
-            _joinTypeIN: JoinType.VR
+            _joinTypeIN: JoinType.SCREEN
         );
         Destroy(ServerGuiSintance.gameObject);
         enabled = false;

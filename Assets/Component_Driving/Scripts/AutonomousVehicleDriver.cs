@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 
@@ -42,17 +43,25 @@ public class AutonomousVehicleDriver : MonoBehaviour {
     private Vector3 Position;
     private Quaternion Orientation;
     void Start() {
-        _vehicleController = GetComponent<VehicleController>();
-        _avDrivingState = AVDrivingState.DEFAULT;
-        ConnectionAndSpawning.Singleton.ServerStateChange += InterntalStateUpdate;
+        if (GetComponent<NetworkVehicleController>().IsServer) {
+            _vehicleController = GetComponent<VehicleController>();
+            _avDrivingState = AVDrivingState.DEFAULT;
+            ConnectionAndSpawning.Singleton.ServerStateChange += InterntalStateUpdate;
 
-        AvoidBox = transform.Find("AvoidBox").GetComponent<TriggerPlayerTracker>();
-        YieldBox = transform.Find("YieldBox").GetComponent<TriggerPlayerTracker>();
-        GetComponent<Rigidbody>().isKinematic = true;
+            AvoidBox = transform.Find("AvoidBox").GetComponent<TriggerPlayerTracker>();
+            YieldBox = transform.Find("YieldBox").GetComponent<TriggerPlayerTracker>();
+            GetComponent<Rigidbody>().isKinematic = true;
+        }
+        else {
+            this.enabled = false;
+        }
     }
 
     private void OnDestroy() {
-        ConnectionAndSpawning.Singleton.ServerStateChange -= InterntalStateUpdate;
+        if (GetComponent<NetworkVehicleController>().IsServer &&
+            ConnectionAndSpawning.Singleton!=null) {
+            ConnectionAndSpawning.Singleton.ServerStateChange -= InterntalStateUpdate;
+        }
     }
 
     private void InterntalStateUpdate(ActionState state) {

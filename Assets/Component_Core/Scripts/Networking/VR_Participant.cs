@@ -4,6 +4,7 @@ using UltimateReplay;
 using Unity.Collections;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR.Hands;
@@ -13,7 +14,7 @@ public class VR_Participant : Client_Object
     private const string OffsetFileName = "offset";
 
     //public NetworkVariable<NavigationScreen.Direction> CurrentDirection = new(); //ToDo shopuld be moved to the Navigation Screen
-
+    public bool FinishedImageSending { get; private set; }
 
     //public Transform FollowTransform;
     public bool FollowRotation;
@@ -23,10 +24,8 @@ public class VR_Participant : Client_Object
     public NetworkVariable<bool> ButtonPushed; // This is only active during QN time
 
     public Interactable_Object NetworkedInteractableObject;
-    private bool HasNewData;
     private bool init;
 
-    private NetworkedQuestionnaireQuestion lastQuestion;
 
     private Quaternion LastRot = Quaternion.identity;
 
@@ -40,12 +39,14 @@ public class VR_Participant : Client_Object
 
     private Quaternion offsetRotation = Quaternion.identity;
 
-    public bool FinishedImageSending { get; private set; }
-
+   
+    public GameObject QuestionairPrefab;
 
     // OK so I know this is not an elegant solution. We are feeding the image data through the playerobject. Really not great.
     // maybe we would want to use reliable message 
 
+    
+    
     private void Awake()
     {
         mySpawnType = new NetworkVariable<SpawnType>();
@@ -64,7 +65,7 @@ public class VR_Participant : Client_Object
 
     private void LateUpdate()
     {
-        if (NetworkManager.Singleton.IsServer) return;
+    //    if (NetworkManager.Singleton.IsServer) return;
 
     }
 
@@ -185,9 +186,9 @@ public class VR_Participant : Client_Object
 
     public override void AssignFollowTransform(Interactable_Object MyInteractableObject, ulong targetClient)
     {
-        if (IsServer)
-        {
-            NetworkedInteractableObject = MyInteractableObject;
+        if (IsServer) {
+           NetworkedInteractableObject = MyInteractableObject;
+            
             NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
           
             AssignInteractable_ClientRPC(MyInteractableObject.GetComponent<NetworkObject>(), targetClient);
@@ -257,6 +258,46 @@ public class VR_Participant : Client_Object
         CalibrateClientRPC(clientRpcParams);
     }
 
+    private QN_Display qnmanager;
+    public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) {
+         qnmanager = Instantiate(QuestionairPrefab).GetComponent<QN_Display>();
+         qnmanager.GetComponent<NetworkObject>();
+         NetworkObject referenceTransform = null;
+         Vector3 Offset = Vector3.zero;
+         bool KeepUpdating = false;
+         switch (mySpawnType.Value) {
+             case SpawnType.CAR:
+                 referenceTransform = GetMyCar().GetComponent<NetworkObject>();
+                 Offset = new Vector3(-0.38f, 1.14f, 0.6f);
+                 KeepUpdating = true;
+                 break;
+             case SpawnType.NONE:
+             case SpawnType.PEDESTRIAN:
+             case SpawnType.PASSENGER:
+                 GetMainCamera().GetComponent<NetworkObject>();
+                 Offset = new Vector3(0f, 0f, 1f);
+                 break;
+             case SpawnType.ROBOT:
+                 break;
+             default:
+                 break;
+         }
+
+
+         
+         qnmanager.StartQuestionair(m_QNDataStorageServer,m_participantOrder,referenceTransform,Offset,KeepUpdating);
+         
+         foreach (var screenShot in FindObjectsOfType<QnCaptureScreenShot>())
+             if (screenShot.ContainsPO(ConnectionAndSpawning.Singleton.ParticipantOrder)) {
+                 if (screenShot.triggered) {
+                     qnmanager.AddImage(screenShot.GetTexture());
+                     InitiateImageTransfere(screenShot.GetTexture().EncodeToJPG(50));
+                     break;
+                 }
+             }
+    }
+
+    
     [ClientRpc]
     public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default)
     {
@@ -366,87 +407,6 @@ public class VR_Participant : Client_Object
         return conf.DeleteFile();
     }
 
-
-    private QNDataStorageServer m_QNDataStorageServer = null;
-
-    public override void StartQuestionair(QNDataStorageServer in_QNDataStorageServer)
-    {
-        if (IsServer)
-        {
-            m_QNDataStorageServer = in_QNDataStorageServer;
-            StartQuestionairClientRPC();
-        }
-    }
-
-    [ClientRpc]
-    private void StartQuestionairClientRPC()
-    {
-        if (IsLocalPlayer)
-        {
-            FindObjectOfType<ScenarioManager>().RunQuestionairNow(transform);
-        }
-        else
-        {
-            //TODO: we could start deleting objects here!
-        }
-    }
-
-
-    public void SendQNAnswer(int id, int answerIndex, string lang)
-    {
-        if (!IsLocalPlayer) return;
-        HasNewData = false;
-        SendQNAnswerServerRPC(id, answerIndex, lang);
-    }
-
-
-    [ServerRpc]
-    public void SendQNAnswerServerRPC(int id, int answerIndex, string lang)
-    {
-        if (IsServer && m_QNDataStorageServer != null)
-        {
-            m_QNDataStorageServer.NewDatapointfromClient(m_participantOrder, id, answerIndex, lang);
-        }
-    }
-
-    [ClientRpc]
-    public void RecieveNewQuestionClientRPC(NetworkedQuestionnaireQuestion newq)
-    {
-        if (!IsLocalPlayer) return;
-        Debug.Log("Got new data and updated varaible" + HasNewData);
-        if (HasNewData)
-            Debug.LogWarning("I still had a question ready to go. Losing data here. this should not happen.");
-        else
-            HasNewData = true;
-
-        lastQuestion = newq;
-    }
-
-    public bool HasNewQuestion()
-    {
-        return HasNewData;
-    }
-
-    public NetworkedQuestionnaireQuestion GetNewQuestion()
-    {
-        if (HasNewData)
-        {
-            HasNewData = false;
-            return lastQuestion;
-        }
-
-        Debug.LogError("I did have a new question yet I was asked for one quitting the QN early!");
-        return new NetworkedQuestionnaireQuestion { reply = replyType.FINISHED };
-    }
-
-    [ClientRpc]
-    public void SetTotalQNCountClientRpc(int outval)
-    {
-        if (!IsLocalPlayer) return;
-
-        FindObjectOfType<QNSelectionManager>()?.SetTotalQNCount(outval);
-    }
-
     public void NewScenario()
     {
         FinishedImageSending = true;
@@ -507,4 +467,5 @@ public class VR_Participant : Client_Object
         ConnectionAndSpawning.Singleton.GetQnStorageServer().NewRemoteImage(po, length);
         Debug.Log("Finished Picture storing");
     }
+
 }

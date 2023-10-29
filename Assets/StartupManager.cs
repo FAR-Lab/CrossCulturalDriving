@@ -11,7 +11,7 @@ public class StartupManager : MonoBehaviour
     
     public GameObject VRUIStartPrefab;
 
-    public Camera RerunCamera;
+  
     public GameObject ServerEventSystem;
     
     private void Awake()
@@ -43,7 +43,7 @@ public class StartupManager : MonoBehaviour
                 break;
             case RuntimePlatform.Android:
                 // Do stuff for Oculus
-                RerunCamera.enabled = false;
+                
                 Destroy(ServerEventSystem);
                 Instantiate(VRUIStartPrefab);
                 break;

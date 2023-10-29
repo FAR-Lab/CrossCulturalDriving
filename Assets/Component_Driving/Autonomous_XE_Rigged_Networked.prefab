@@ -184,12 +184,12 @@ GameObject:
   - component: {fileID: 1995087181796789200}
   - component: {fileID: 2823791921960522932}
   - component: {fileID: -3837203089491521288}
-  - component: {fileID: -2906884681439060436}
   - component: {fileID: -2568685145942801040}
   - component: {fileID: 3083907052721871748}
   - component: {fileID: 2764591016812213807}
+  - component: {fileID: -7767813943838450789}
   m_Layer: 0
-  m_Name: Autonomous_XE_Rigged_Networked 1
+  m_Name: Autonomous_XE_Rigged_Networked
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -659,11 +659,61 @@ MonoBehaviour:
   replayIdentity:
     id: 42804
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   positionFlags: 263
   rotationFlags: 263
   scaleFlags: 0
---- !u!114 &-2906884681439060436
+--- !u!114 &-2568685145942801040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d05991eb58cd02b4db8eb7fb42aa3d2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 28939
+  replayObject:
+    reference: {fileID: -7767813943838450789}
+  m_participantOrder: 0
+--- !u!114 &3083907052721871748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fe93ffa5a8572642b7307b5504a98d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 14564
+  replayObject:
+    reference: {fileID: -7767813943838450789}
+  observedAudio: {fileID: 82318783350293580}
+  recordFlags: 6
+--- !u!114 &2764591016812213807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfca834460a1cc48a8c87a6929d6045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StartingWayPoint: {fileID: 0}
+--- !u!114 &-7767813943838450789
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -677,9 +727,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isObservedComponentsExpanded: 0
   replayIdentity:
-    id: 18975
+    id: 19857
   prefabIdentity:
-    id: 18765
+    id: 61044
   observedComponents:
   - {fileID: -3837203089491521288}
   - {fileID: -2568685145942801040}
@@ -703,60 +753,9 @@ MonoBehaviour:
   - {fileID: 6445960143564790882}
   - {fileID: 7734125323330803607}
   - {fileID: 6719508424005605577}
-  runtimeComponents:
-  - {fileID: -3837203089491521288}
+  runtimeComponents: []
   isPrefab: 1
   prefabType: 1
---- !u!114 &-2568685145942801040
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 102736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d05991eb58cd02b4db8eb7fb42aa3d2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  noManagingObject: 0
-  replayIdentity:
-    id: 28939
-  replayObject:
-    reference: {fileID: -2906884681439060436}
-  m_participantOrder: 0
---- !u!114 &3083907052721871748
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 102736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fe93ffa5a8572642b7307b5504a98d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  noManagingObject: 0
-  replayIdentity:
-    id: 14564
-  replayObject:
-    reference: {fileID: -2906884681439060436}
-  observedAudio: {fileID: 82318783350293580}
-  recordFlags: 6
---- !u!114 &2764591016812213807
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 102736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bfca834460a1cc48a8c87a6929d6045, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  StartingWayPoint: {fileID: 0}
 --- !u!1 &103102
 GameObject:
   m_ObjectHideFlags: 0
@@ -963,7 +962,7 @@ MonoBehaviour:
   replayIdentity:
     id: 21565
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   positionFlags: 263
   rotationFlags: 263
   scaleFlags: 0
@@ -1764,7 +1763,7 @@ MonoBehaviour:
   replayIdentity:
     id: 30719
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedAudio: {fileID: 82179829388801616}
   recordFlags: 134
 --- !u!1 &119388
@@ -2447,7 +2446,7 @@ MonoBehaviour:
   replayIdentity:
     id: 20117
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedAudio: {fileID: 8297354}
   recordFlags: 134
 --- !u!1 &126170
@@ -2530,7 +2529,7 @@ MonoBehaviour:
   replayIdentity:
     id: 41129
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   positionFlags: 263
   rotationFlags: 263
   scaleFlags: 0
@@ -5088,7 +5087,7 @@ MonoBehaviour:
   replayIdentity:
     id: 23381
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedAudio: {fileID: 8253590}
   recordFlags: 134
 --- !u!1 &159242
@@ -6283,7 +6282,7 @@ MonoBehaviour:
   replayIdentity:
     id: 32647
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedAudio: {fileID: 8282142}
   recordFlags: 132
 --- !u!1 &173832
@@ -6366,7 +6365,7 @@ MonoBehaviour:
   replayIdentity:
     id: 31827
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   positionFlags: 263
   rotationFlags: 263
   scaleFlags: 0
@@ -6517,7 +6516,7 @@ MonoBehaviour:
   replayIdentity:
     id: 56305
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedAudio: {fileID: 82914859112444036}
   recordFlags: 134
 --- !u!1 &174376
@@ -7068,7 +7067,7 @@ MonoBehaviour:
   replayIdentity:
     id: 39283
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   positionFlags: 263
   rotationFlags: 263
   scaleFlags: 0
@@ -7907,7 +7906,7 @@ MonoBehaviour:
   replayIdentity:
     id: 36322
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23261190955339692}
   defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   availableMaterials:
@@ -8049,7 +8048,7 @@ MonoBehaviour:
   replayIdentity:
     id: 24314
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   positionFlags: 0
   rotationFlags: 271
   scaleFlags: 0
@@ -8697,7 +8696,7 @@ MonoBehaviour:
   replayIdentity:
     id: 56285
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23366822252624480}
   defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   availableMaterials:
@@ -8840,7 +8839,7 @@ MonoBehaviour:
   replayIdentity:
     id: 17902
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23353113586693306}
   defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   availableMaterials:
@@ -9050,7 +9049,7 @@ MonoBehaviour:
   replayIdentity:
     id: 52907
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23357028160542600}
   defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   availableMaterials:
@@ -9263,7 +9262,7 @@ MonoBehaviour:
   replayIdentity:
     id: 52774
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23107828148067610}
   defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   availableMaterials:
@@ -9507,7 +9506,7 @@ MonoBehaviour:
   replayIdentity:
     id: 44823
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23378663467087764}
   defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   availableMaterials:
@@ -10217,7 +10216,7 @@ MonoBehaviour:
   replayIdentity:
     id: 4842
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23325350253942988}
   defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   availableMaterials:
@@ -10325,7 +10324,7 @@ MonoBehaviour:
   replayIdentity:
     id: 18726
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23276408013039158}
   defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   availableMaterials:
@@ -10733,7 +10732,7 @@ MonoBehaviour:
   replayIdentity:
     id: 1301
   replayObject:
-    reference: {fileID: -2906884681439060436}
+    reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 365435026594160890}
   defaultMaterial: {fileID: 2100000, guid: 79b651e26b6ebe2469e549df902ac00d, type: 2}
   availableMaterials:

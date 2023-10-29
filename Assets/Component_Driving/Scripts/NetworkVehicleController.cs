@@ -89,8 +89,10 @@ public class NetworkVehicleController : Interactable_Object {
         }
         else {
             GetComponent<VehicleController>().enabled = false;
+            if (GetComponent<ForceFeedback>() != null) {
+                GetComponent<ForceFeedback>().enabled = false;
+            }
 
-            GetComponent<ForceFeedback>().enabled = false;
             foreach (var wc in GetComponentsInChildren<WheelCollider>()) wc.enabled = false;
             if (VehicleMode == VehicleOpperationMode.AUTONOMOUS) {
                 GetComponent<AutonomousVehicleDriver>().enabled = false;

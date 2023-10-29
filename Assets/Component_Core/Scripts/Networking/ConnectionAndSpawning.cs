@@ -1,10 +1,8 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-
 using Rerun;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -14,8 +12,6 @@ using Newtonsoft.Json;
 using UnityEngine.InputSystem.UI;
 
 
-
-
 public class ConnectionAndSpawning : MonoBehaviour {
     public struct NetworkConnectionMessage {
         public JoinType _jointype;
@@ -23,13 +19,13 @@ public class ConnectionAndSpawning : MonoBehaviour {
         public ParticipantOrder _participantOrder;
     }
 
-
+    public GameObject LocalServerCameraRig;
     public static string WaitingRoomSceneName = "WaitingRoom";
     public SO_JoinTypeToClientObject JoinTypeConfig;
     public Dictionary<JoinType, Client_Object> JoinType_To_Client_Object;
     public SO_SpawnTypeToInteractableObject SpawnTypeConfig;
     public Dictionary<SpawnType, Interactable_Object> SpawnType_To_InteractableObjects;
-    
+
     private static readonly Dictionary<ParticipantOrder, NavigationScreen.Direction> StopDict =
         new() {
             { ParticipantOrder.A, NavigationScreen.Direction.Stop },
@@ -96,16 +92,15 @@ public class ConnectionAndSpawning : MonoBehaviour {
         participants = new ParticipantOrderMapping();
         Main_ParticipantObjects = new Dictionary<ParticipantOrder, Client_Object>();
         Interactable_ParticipantObjects = new Dictionary<ParticipantOrder, List<Interactable_Object>>();
-        
+
         // populate the dictionaries
         JoinType_To_Client_Object = JoinTypeConfig.EnumToValueDictionary;
         SpawnType_To_InteractableObjects = SpawnTypeConfig.EnumToValueDictionary;
-
     }
 
     private void Start() {
         DontDestroyOnLoad(FindObjectOfType<InputSystemUIInputModule>());
-        
+        LastLoadedVisualScene = "";
         if (FindObjectsOfType<RerunManager>().Length > 1) {
             Debug.LogError("We found more than 1 RerunManager. This is not support. Check your Hiracy");
             Application.Quit();
@@ -188,8 +183,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
             }
         }
     }
-    
-    
+
+
     private void OnGUI() {
         if (NetworkManager.Singleton == null && !ClientListInitDone) return;
         if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer) {
@@ -200,6 +195,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                     y += 27;
                 }
             }
+
             if (ServerState == ActionState.DRIVE || ServerState == ActionState.READY ||
                 ServerState == ActionState.QUESTIONS || ServerState == ActionState.POSTQUESTIONS) {
                 if (ServerState == ActionState.QUESTIONS) {
@@ -217,16 +213,16 @@ public class ConnectionAndSpawning : MonoBehaviour {
         gameObject.AddComponent<SteeringWheelManager>();
         gameObject.AddComponent<farlab_logger>();
         m_QNDataStorageServer = gameObject.AddComponent<QNDataStorageServer>();
-        
+
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
         NetworkManager.Singleton.OnClientConnectedCallback += ClientConnected;
         NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
         NetworkManager.Singleton.OnServerStarted += ServerHasStarted;
-        
+
         SteeringWheelManager.Singleton.Init();
-        m_ReRunManager.SetRecordingFolder(pairName);
+
         Debug.Log("Starting Server for session: " + pairName);
-        
+
         if (ref_ServerTimingDisplay != null) {
             var val = Instantiate(ref_ServerTimingDisplay, Vector3.zero, Quaternion.identity, transform)
                 .GetComponent<ServerTimeDisplay>();
@@ -234,24 +230,39 @@ public class ConnectionAndSpawning : MonoBehaviour {
         }
     }
 
-  
-    
-    public void StartAsServer(string pairName) {
 
+    public void StartAsServer(string pairName) {
         SetUpToServe(pairName);
+
+        if (LocalServerCameraRig == null) {
+            Debug.LogError(
+                "We do not have a LocalServerCameraRig I need this to start the server. Please make a reference in the inspector in ConnectionAndSpawning");
+            Application.Quit();
+        }
+
+        var ServerCamera =
+            Instantiate(LocalServerCameraRig, Vector3.zero, Quaternion.identity);
+
+        Debug.Log(ServerCamera);
+        DontDestroyOnLoad(ServerCamera);
+        m_ReRunManager.RerunInitialization(true, ServerCamera.GetComponent<RerunPlaybackCameraManager>(),
+            RerunManager.StartUpMode.RECORDING);
+        m_ReRunManager.SetRecordingFolder(pairName);
+
+
+
         NetworkManager.Singleton.StartServer();
         participants.AddParticipant(ParticipantOrder.None, NetworkManager.Singleton.LocalClientId, SpawnType.NONE,
             JoinType.SERVER);
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
 
 
-
-     
     }
 
     public void StartAsHost(string pairName) {
         SetUpToServe(pairName);
-        m_ReRunManager.DisableAllReRunCameras();
+        m_ReRunManager.RerunInitialization(true, null, RerunManager.StartUpMode.RECORDING);
+        m_ReRunManager.SetRecordingFolder(pairName);
         ConnectionDataRequest connectionDataRequest = new ConnectionDataRequest() {
             po = ParticipantOrder.A,
             st = SpawnType.CAR,
@@ -285,10 +296,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
         NetworkManager.Singleton.SceneManager.OnLoadComplete += OnLoadCompleteCLient;
     }
 
-    private void OnLoadCompleteCLient(ulong clientid, string scenename, LoadSceneMode loadscenemode)
-    {
-        if (loadscenemode == LoadSceneMode.Additive && NetworkManager.Singleton.LocalClientId == clientid)
-        {
+    private void OnLoadCompleteCLient(ulong clientid, string scenename, LoadSceneMode loadscenemode) {
+        if (loadscenemode == LoadSceneMode.Additive && NetworkManager.Singleton.LocalClientId == clientid) {
             ActivateVisualScene();
         }
     }
@@ -310,9 +319,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     public void StartAsClient(string lang_, ParticipantOrder po, string ip, int port, ReponseDelegate result,
         SpawnType _spawnTypeIN = SpawnType.CAR, JoinType _joinTypeIN = JoinType.VR) {
-        
-        Debug.Log($"Log: Starting as Client. IP: {ip} Port: {port} Language: {lang_} ParticipantOrder: {po} SpawnType: {_spawnTypeIN} JoinType: {_joinTypeIN}");
-        
+        Debug.Log(
+            $"Log: Starting as Client. IP: {ip} Port: {port} Language: {lang_} ParticipantOrder: {po} SpawnType: {_spawnTypeIN} JoinType: {_joinTypeIN}");
+
         SetupClientFunctionality();
         ReponseHandler += result;
         SetupTransport(ip, port);
@@ -328,7 +337,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(jsonstring); // assigning ID
 
         Debug.Log("Attempting to connect as a client.");
-        
+
         NetworkManager.Singleton.StartClient();
     }
 
@@ -361,22 +370,28 @@ public class ConnectionAndSpawning : MonoBehaviour {
         }
     }
 
-    public void StartReRun() {
+    public void StartAsRerun() {
         ServerState = ActionState.RERUN;
-        ServerStateChange.Invoke(ActionState.RERUN);
-        
-        // FindObjectOfType<RerunLayoutManager>().?enabled = true;
-        m_ReRunManager.RegisterPreLoadHandler(LoadSceneReRun);
-        NetworkManager.Singleton.enabled = false;
-            // GetComponent<OVRManager>().enabled = false;  //TODO ONly ""add what we need 
-        
-        
-        FindObjectOfType<RerunGUI>().enabled = true;
-        FindObjectOfType<RerunInputManager>().enabled = true;
 
+
+        if (_VerifyPrefabAvalible(JoinType.SERVER)) {
+            //ToDo: here we would really want to remove the explicit rerun reference, enable callbacks to spawn cameras etc...
+            var ServerCamera =
+                Instantiate(JoinType_To_Client_Object[JoinType.SERVER],
+                    Vector3.zero, Quaternion.identity);
+
+            Debug.Log(ServerCamera);
+            DontDestroyOnLoad(ServerCamera);
+            m_ReRunManager.RerunInitialization(true, ServerCamera.GetComponent<RerunPlaybackCameraManager>(),
+                RerunManager.StartUpMode.REPLAY);
+
+            m_ReRunManager.RegisterPreLoadHandler(LoadSceneReRun);
+        }
+
+        NetworkManager.Singleton.enabled = false;
         SceneManager.sceneLoaded += VisualsceneLoadReRun;
 
-        GetComponent<TrafficLightSupervisor>().enabled = true;
+        ServerStateChange.Invoke(ActionState.RERUN);
     }
 
     private void VisualsceneLoadReRun(Scene arg0, LoadSceneMode arg1) {
@@ -389,6 +404,11 @@ public class ConnectionAndSpawning : MonoBehaviour {
                     LastLoadedVisualScene = tmp.VisualSceneToUse.SceneName;
                     SceneManager.LoadScene(tmp.VisualSceneToUse.SceneName, LoadSceneMode.Additive);
                 }
+        }
+        else if (arg0.name == LastLoadedVisualScene) {
+            if (SceneManager.GetActiveScene().name != LastLoadedVisualScene) {
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName(LastLoadedVisualScene));
+            }
         }
     }
 
@@ -404,8 +424,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         SwitchToWaitingRoom();
     }
 
-    private void ResponseDelegate(ClienConnectionResponse response) {
-    }
+    private void ResponseDelegate(ClienConnectionResponse response) { }
 
     public void FinishedQuestionair(ulong clientID) {
         participants.GetOrder(clientID, out var po);
@@ -421,6 +440,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
         return null;
     }
+
     public Transform GetMainClientObject(ParticipantOrder po) {
         if (!Main_ParticipantObjects.ContainsKey(po)) return null;
         return Main_ParticipantObjects[po].transform;
@@ -488,23 +508,18 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     public void SendNewQuestionToParticipant(ParticipantOrder participantOrder, NetworkedQuestionnaireQuestion outval) {
-
-            Main_ParticipantObjects[participantOrder]
-                .GetComponent<VR_Participant>().RecieveNewQuestionClientRPC(outval);
-        
+        Main_ParticipantObjects[participantOrder]
+            .GetComponent<VR_Participant>().RecieveNewQuestionClientRPC(outval);
     }
 
 
-    public void SendTotalQNCount(ParticipantOrder participantOrder, int count)
-    {
-        if (participantOrder == ParticipantOrder.None)
-        {
+    public void SendTotalQNCount(ParticipantOrder participantOrder, int count) {
+        if (participantOrder == ParticipantOrder.None) {
             return;
-            
         }
+
         Main_ParticipantObjects[participantOrder]
-        .GetComponent<VR_Participant>().SetTotalQNCountClientRpc(count);
-            
+            .GetComponent<VR_Participant>().SetTotalQNCountClientRpc(count);
     }
 
     public RerunManager GetReRunManager() {
@@ -537,7 +552,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private bool AllActionStopped() {
         bool testValue = true;
         foreach (var po in participants.GetAllConnectedParticipants()) {
-            if(po==ParticipantOrder.None) continue;
+            if (po == ParticipantOrder.None) continue;
             foreach (var IO in Interactable_ParticipantObjects[po])
                 testValue &= IO.GetComponent<Interactable_Object>().HasActionStopped();
         }
@@ -591,9 +606,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     private void LoadSceneVisuals() {
-        if (GetScenarioManager()&& GetScenarioManager().HasVisualScene()) {
+        if (GetScenarioManager() && GetScenarioManager().HasVisualScene()) {
             LastLoadedVisualScene = GetScenarioManager().VisualSceneToUse.SceneName;
-            NetworkManager.Singleton.SceneManager.LoadScene(GetScenarioManager().VisualSceneToUse.SceneName, LoadSceneMode.Additive);
+            NetworkManager.Singleton.SceneManager.LoadScene(GetScenarioManager().VisualSceneToUse.SceneName,
+                LoadSceneMode.Additive);
             ServerState = ActionState.LOADINGVISUALS;
             ServerStateChange?.Invoke(ActionState.LOADINGVISUALS);
         }
@@ -602,13 +618,14 @@ public class ConnectionAndSpawning : MonoBehaviour {
         }
     }
 
-    private void ActivateVisualScene()
-    {
-        if (GetScenarioManager().HasVisualScene())
-        {
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(GetScenarioManager().VisualSceneToUse));// This is icky needs to be verifyeid that its also the one we loaded!
+    private void ActivateVisualScene() {
+        if (GetScenarioManager().HasVisualScene()) {
+            SceneManager.SetActiveScene(
+                SceneManager.GetSceneByName(GetScenarioManager()
+                    .VisualSceneToUse)); // This is icky needs to be verifyeid that its also the one we loaded!
         }
     }
+
     private void SceneEvent_Server(SceneEvent sceneEvent) {
         switch (sceneEvent.SceneEventType) {
             case SceneEventType.Load: break;
@@ -619,9 +636,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                 Debug.Log("Load event!" + sceneEvent.ClientId + ServerState);
                 if (ServerState == ActionState.LOADINGSCENARIO)
                     LoadSceneVisuals();
-                else if (ServerState == ActionState.LOADINGVISUALS)
-                {
-
+                else if (ServerState == ActionState.LOADINGVISUALS) {
                     ActivateVisualScene();
 
                     SwitchToReady();
@@ -632,12 +647,13 @@ public class ConnectionAndSpawning : MonoBehaviour {
                 break;
             case SceneEventType.LoadComplete:
                 Debug.Log($"Load completed! sceneEvent:{sceneEvent.LoadSceneMode} ServerState:{ServerState}");
-                
-                if (ServerState is ActionState.READY or ActionState.LOADINGVISUALS or ActionState.WAITINGROOM)
-                {
+
+                if (ServerState is ActionState.READY or ActionState.LOADINGVISUALS or ActionState.WAITINGROOM) {
                     Debug.Log("Lets see if we should Spawn an interactable!");
-                    if (sceneEvent.LoadSceneMode == LoadSceneMode.Additive  && GetScenarioManager().HasVisualScene()||
-                        sceneEvent.LoadSceneMode==LoadSceneMode.Single && !GetScenarioManager().HasVisualScene()) //TODO: feels like a bad hack  but makes sure that late joining a scene we dont spawn a car twice (scenario and visual scene callback)
+                    if (sceneEvent.LoadSceneMode == LoadSceneMode.Additive && GetScenarioManager().HasVisualScene() ||
+                        sceneEvent.LoadSceneMode == LoadSceneMode.Single &&
+                        !GetScenarioManager()
+                            .HasVisualScene()) //TODO: feels like a bad hack  but makes sure that late joining a scene we dont spawn a car twice (scenario and visual scene callback)
                     {
                         bool success = participants.GetOrder(sceneEvent.ClientId, out ParticipantOrder po);
                         Debug.Log($"About to spawn an interactable for participant :{po}");
@@ -654,21 +670,21 @@ public class ConnectionAndSpawning : MonoBehaviour {
             default: throw new ArgumentOutOfRangeException();
         }
     }
-    
+
     private void DestroyALLInteractable_ALLClients() {
         foreach (var po in participants.GetAllConnectedParticipants()) {
-            if (po == ParticipantOrder.None)continue;
+            if (po == ParticipantOrder.None) continue;
             Debug.Log($"Destroying Interactable for po:{po}");
-                DespawnAllInteractableObject(po);
-             }
+            DespawnAllInteractableObject(po);
+        }
     }
 
-    
+
     private void DespawnAllObjectsforParticipant(ParticipantOrder po) {
         if (po == ParticipantOrder.None) return;
         Debug.Log($"DespawnAllObjectsforParticipant for po:{po}");
         DespawnAllInteractableObject(po);
-        
+
         //DespawnMainClientObject(po);
     }
 
@@ -678,14 +694,16 @@ public class ConnectionAndSpawning : MonoBehaviour {
         if (Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null) {
             Main_ParticipantObjects[po].GetComponent<NetworkObject>().Despawn();
         }
+
         Main_ParticipantObjects.Remove(po);
     }
 
     private void DespawnAllInteractableObject(ParticipantOrder po) {
         Debug.Log($"Despawning All interactables for po:{po}");
-        if (Interactable_ParticipantObjects.TryGetValue(po, out var interactableObjects))
-        {
-            HashSet<Interactable_Object> toRemove = new HashSet<Interactable_Object>(); // based on 4. in https://www.techiedelight.com/remove-elements-from-list-while-iterating-csharp/#:~:text=An%20elegant%20solution%20is%20to,()%20method%20for%20removing%20elements.
+        if (Interactable_ParticipantObjects.TryGetValue(po, out var interactableObjects)) {
+            HashSet<Interactable_Object>
+                toRemove =
+                    new HashSet<Interactable_Object>(); // based on 4. in https://www.techiedelight.com/remove-elements-from-list-while-iterating-csharp/#:~:text=An%20elegant%20solution%20is%20to,()%20method%20for%20removing%20elements.
             Debug.Log($"Found{interactableObjects.Count} interactable for po{po}.");
             foreach (var io in interactableObjects) {
                 if (Main_ParticipantObjects[po] != null) {
@@ -695,11 +713,12 @@ public class ConnectionAndSpawning : MonoBehaviour {
                             .De_AssignFollowTransform(clientID, io.GetComponent<NetworkObject>());
                     }
                 }
+
                 Debug.Log($"Despawin interactiobleio{io.name}");
                 io.GetComponent<NetworkObject>().Despawn();
                 toRemove.Add(io);
-
             }
+
             Interactable_ParticipantObjects[po].RemoveAll(toRemove.Contains);
         }
     }
@@ -710,26 +729,21 @@ public class ConnectionAndSpawning : MonoBehaviour {
         FAILED
     }
 
-    
-
 
     private void ClientDisconnected(ulong clientID) {
-        
         bool success = participants.GetOrder(clientID, out ParticipantOrder po);
         Debug.Log($"Got a client Disconnect for client:{po}");
-        if (success && Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null)
-        {
+        if (success && Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null) {
             DespawnAllObjectsforParticipant(po);
             participants.RemoveParticipant(po);
             Main_ParticipantObjects.Remove(po);
             Interactable_ParticipantObjects.Remove(po);
-
         }
     }
 
     private void ClientConnected(ulong ClientID) {
         Debug.Log("On Client Connect CallBack Was called!");
-       
+
         Spawn_Client(ClientID);
     }
 
@@ -778,7 +792,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         if (_GetCurrentSpawingData(po, out var tempPose)) {
             Debug.Log("GOt a spawn Point lets get the object.");
             Client_Object mainParticipantObject = Main_ParticipantObjects[po];
-            Debug.Log("Got the main Client Object lets gooo.");
+            Debug.Log("Got the main Client Object lets go.");
             bool success = participants.GetSpawnType(po, out SpawnType spawnType);
             if (_VerifyPrefabAvalible(spawnType) && success) {
                 var newInteractableObject =
@@ -787,56 +801,59 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
                 participants.GetClientID(po, out ulong clientID);
                 newInteractableObject.GetComponent<NetworkObject>().Spawn(true);
-                
+
                 newInteractableObject.GetComponent<Interactable_Object>().AssignClient(clientID, po);
-                
+                Debug.Log(
+                    $"Is the interactable Spawned here already: {newInteractableObject.GetComponent<Interactable_Object>().IsSpawned}");
                 Interactable_ParticipantObjects[po].Add(newInteractableObject.GetComponent<Interactable_Object>());
-                if (Main_ParticipantObjects[po] != null)
+                Debug.Log("B Error");
+                if (Main_ParticipantObjects[po] != null) {
                     Main_ParticipantObjects[po]
                         .AssignFollowTransform(newInteractableObject.GetComponent<Interactable_Object>(), clientID);
-                
+                }
                 else {
                     Debug.LogError("Could not find Client as I am spawning the Interactable. Broken please fix.");
                 }
-            }
 
-            
+                Debug.Log("A Error");
+            }
         }
     }
 
     private void Spawn_Client(ulong clientID) {
-        StartCoroutine( Spawn_Client_Await(clientID));
+        StartCoroutine(Spawn_Client_Await(clientID));
     }
+
     private IEnumerator Spawn_Client_Await(ulong clientID) {
-       Debug.Log("Awaiting the scenarioManger and for the waiting room scene to be loaded.");
+        Debug.Log("Awaiting the scenarioManger and for the waiting room scene to be loaded.");
         yield return new WaitUntil(() =>
-            FindObjectOfType<ScenarioManager>()!=null
+            FindObjectOfType<ScenarioManager>() != null
         );
         Debug.Log("Found the scenarioManger and waiting room, spawning Player");
         _Spawn_Client_Internal(clientID);
     }
-    
+
     private void _Spawn_Client_Internal(ulong clientID) {
         var success = participants.GetOrder(clientID, out ParticipantOrder po);
+
         if (po == ParticipantOrder.None || success == false) return;
 
-        if (_GetCurrentSpawingData(clientID, out Pose tempPose) && participants.GetJoinType(po, out JoinType joinType) &&  participants.GetSpawnType(po, out SpawnType spawnType)) {
-           
+        if (_GetCurrentSpawingData(clientID, out Pose tempPose) &&
+            participants.GetJoinType(po, out JoinType joinType) &&
+            participants.GetSpawnType(po, out SpawnType spawnType)) {
             if (_VerifyPrefabAvalible(joinType)) {
                 var mainParticipantObject =
                     Instantiate(JoinType_To_Client_Object[joinType],
                         tempPose.position, tempPose.rotation);
-                DontDestroyOnLoad(mainParticipantObject);
+                //   DontDestroyOnLoad(mainParticipantObject);
                 mainParticipantObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, false);
                 Main_ParticipantObjects.Add(po, mainParticipantObject.GetComponent<Client_Object>());
                 m_QNDataStorageServer.SetupForNewRemoteImage(po);
                 mainParticipantObject.SetSpawnType(spawnType);
             }
-            else
-            {
+            else {
                 Debug.LogError($"Could Not spawn a ClientObject for PO:{po} joinType:{joinType} spawnType:{spawnType}");
             }
-            
         }
     }
 
@@ -862,7 +879,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
         ConnectionDataRequest cdr =
             JsonConvert.DeserializeObject<ConnectionDataRequest>(Encoding.ASCII.GetString(request.Payload));
-        
+
 
         approve = participants.AddParticipant(cdr.po, request.ClientNetworkId, cdr.st, cdr.jt);
 
@@ -896,14 +913,14 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
         ServerState = ActionState.WAITINGROOM;
         ServerStateChange.Invoke(ActionState.WAITINGROOM);
-        
+
         ServerLoadScene(WaitingRoomSceneName);
     }
 
     public void SwitchToLoading(string name) {
         ServerState = ActionState.LOADINGSCENARIO;
         ServerStateChange.Invoke(ActionState.LOADINGSCENARIO);
-        
+
         ServerLoadScene(name);
         LastLoadedScene = name;
     }
@@ -919,8 +936,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     public ServerStateChange_delegate ServerStateChange;
 
-    private void SwitchToReady()
-    {
+    private void SwitchToReady() {
         ServerState = ActionState.READY;
         ServerStateChange.Invoke(ActionState.READY);
     }
@@ -948,7 +964,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
         ServerState = ActionState.QUESTIONS;
         ServerStateChange.Invoke(ActionState.QUESTIONS);
-        
+
         QNFinished = new Dictionary<ParticipantOrder, bool>();
         foreach (var po in participants.GetAllConnectedParticipants()) QNFinished.Add(po, false);
 
@@ -959,7 +975,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
         m_QNDataStorageServer.StartQn(GetScenarioManager(), m_ReRunManager);
         foreach (var po in Main_ParticipantObjects.Keys)
-            Main_ParticipantObjects[po].GetComponent<Client_Object>() 
+            Main_ParticipantObjects[po].GetComponent<Client_Object>()
                 .StartQuestionair(m_QNDataStorageServer);
 
         StartCoroutine(farlab_logger.Instance.StopRecording());
@@ -975,14 +991,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
         if (farlab_logger.Instance.isRecording()) StartCoroutine(farlab_logger.Instance.StopRecording());
         ServerState = ActionState.POSTQUESTIONS;
         ServerStateChange.Invoke(ActionState.POSTQUESTIONS);
-        
+
         SwitchToWaitingRoom();
     }
 
     #endregion
-
-
-    
-
-   
 }

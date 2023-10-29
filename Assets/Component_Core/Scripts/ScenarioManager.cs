@@ -4,13 +4,12 @@ using Newtonsoft.Json;
 using UnityEngine;
 
 public class ScenarioManager : MonoBehaviour {
-    public static string OverwriteQNDataFolderName = "QN_Updates";
-    public TextAsset QuestionairToAsk;
-
-    public string conditionName;
+    private TextAsset QuestionairToAsk;
+    
+    public string conditionName;//ToDo: Automate this based on the scene name 
 
     // Use this for initialization
-    public GameObject QuestionairPrefab;
+ 
 
     public SceneField VisualSceneToUse;
 
@@ -27,7 +26,7 @@ public class ScenarioManager : MonoBehaviour {
 
     private Transform MyLocalClient;
     private Dictionary<ParticipantOrder, Pose> MySpawnPositions;
-    private QNSelectionManager qnmanager;
+   
     public bool ready { get; private set; } // property
 
 
@@ -43,9 +42,7 @@ public class ScenarioManager : MonoBehaviour {
     }
 
     private void Start() {
-        qnmanager = Instantiate(
-            QuestionairPrefab).GetComponent<QNSelectionManager>();
-        qnmanager.gameObject.SetActive(false);
+       
         GetSpawnPoints();
         ready = true;
 
@@ -87,32 +84,7 @@ public class ScenarioManager : MonoBehaviour {
         }
     }
 
-
-    public void RunQuestionairNow(Transform MyLocalClient_) {
-        MyLocalClient = MyLocalClient_;
-        var MyCar = MyLocalClient.GetComponent<VR_Participant>().GetMyCar();
-        MyLocalClient.GetComponent<VR_Participant>().NewScenario();
-
-        qnmanager.gameObject.SetActive(true);
-        qnmanager.transform.localScale *= 0.1f;
-        qnmanager.setRelativePosition(MyCar, -0.38f, 1.14f, 0.6f);
-        if (QuestionairToAsk != null) {
-            Debug.Log("about to setup QN");
-            qnmanager.startAskingTheQuestionairs(MyLocalClient, conditionName, ConnectionAndSpawning.Singleton.lang);
-            Debug.Log("Started asking questions!");
-        }
-
-        foreach (var screenShot in FindObjectsOfType<QnCaptureScreenShot>())
-            if (screenShot.ContainsPO(ConnectionAndSpawning.Singleton.ParticipantOrder))
-                if (screenShot.triggered) {
-                    qnmanager.AddImage(screenShot.GetTexture());
-                    MyLocalClient.GetComponent<VR_Participant>()
-                        .InitiateImageTransfere(screenShot.GetTexture().EncodeToJPG(50));
-                    break;
-                }
-    }
-
-
+    
     public Dictionary<ParticipantOrder, NavigationScreen.Direction> GetStartingPositions() {
         return new Dictionary<ParticipantOrder, NavigationScreen.Direction> {
             { ParticipantOrder.A, StartingDirectionParticipantA },
@@ -124,14 +96,13 @@ public class ScenarioManager : MonoBehaviour {
         };
     }
 
-    public TextAsset GetQuestionFile() {
-        return QuestionairToAsk;
-    }
+   
 
     public List<QuestionnaireQuestion> ReadString(string asset) {
         return JsonConvert.DeserializeObject<List<QuestionnaireQuestion>>(asset);
     }
 
+    private string OverwriteQNDataFolderName = "QN_DATA";
     public List<QuestionnaireQuestion> GetQuestionObject() {
         var p = Path.Combine(Application.persistentDataPath, OverwriteQNDataFolderName);
         var file = Path.Combine(Application.persistentDataPath, OverwriteQNDataFolderName,
@@ -149,8 +120,6 @@ public class ScenarioManager : MonoBehaviour {
             q.setInternalID(startCounter);
             startCounter++;
         }
-
-
         return outval;
     }
     
