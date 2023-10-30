@@ -10,8 +10,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 
-public class QNDataStorageServer : MonoBehaviour
-{
+public class QNDataStorageServer : MonoBehaviour {
     public static string LogLanguage = "English";
     public static int StartingID = 1;
 
@@ -26,35 +25,37 @@ public class QNDataStorageServer : MonoBehaviour
     public static string DateTimeFormatInternal = "yyyy-MM-dd-HH:mm:ss.ffffffzzz";
 
     public static JsonSerializerSettings JsonDateSerelizerSettings = new JsonSerializerSettings
-        {DateFormatString = DateTimeFormatInternal};
+        { DateFormatString = DateTimeFormatInternal };
 
     private IEnumerator writtingCorutine;
 
- //   private GroundTruthLogger gtLogger;
+
+    private Dictionary<ParticipantOrder, QN_Display> qnDisplays;
 
 
-    void Start(){
+    void Start() {
         activeQuestionList = new Dictionary<int, QuestionnaireQuestion>();
-       // gtLogger = new GroundTruthLogger();
+        qnDisplays = new Dictionary<ParticipantOrder, QN_Display>();
+        // gtLogger = new GroundTruthLogger();
     }
 
-    private void Update(){
-        if (ConnectionAndSpawning.Singleton.ServerState == ActionState.DRIVE){
+    private void Update() {
+        if (ConnectionAndSpawning.Singleton.ServerState == ActionState.DRIVE) {
             //gtLogger.Update();
         }
     }
 
-    public void StartScenario(string name, string sessionName){
+    public void StartScenario(string name, string sessionName) {
         CurrentScenarioLog = new ScenarioLog(name, sessionName);
         Debug.Log("Started a new questionnaire");
 
         //gtLogger.StartScenario(
-           // ConnectionAndSpawning.Singleton.GetCurrentlyConnectedClients().ToArray()
-           // );
+        // ConnectionAndSpawning.Singleton.GetCurrentlyConnectedClients().ToArray()
+        // );
     }
 
 
-    public void StartQn(ScenarioManager sManager, RerunManager activeManager){
+    public void StartQn(ScenarioManager sManager, RerunManager activeManager) {
         if (sManager == null) return;
         //gtLogger.GatherGroundTruth(ref CurrentScenarioLog);
         participantAnswerStatus = new Dictionary<ParticipantOrder, int>();
@@ -63,8 +64,8 @@ public class QNDataStorageServer : MonoBehaviour
         bool first = true;
 
         if (activeQuestionList != null) activeQuestionList.Clear();
-        foreach (QuestionnaireQuestion q in sManager.GetQuestionObject()){
-            if (first){
+        foreach (QuestionnaireQuestion q in sManager.GetQuestionObject()) {
+            if (first) {
                 first = false;
                 StartID = q.getInteralID() - 1; // Start ID to move forward.
             }
@@ -73,22 +74,23 @@ public class QNDataStorageServer : MonoBehaviour
         }
 
 
-        foreach (ParticipantOrder po in ConnectionAndSpawning.Singleton.GetCurrentlyConnectedClients()){
+        foreach (ParticipantOrder po in ConnectionAndSpawning.Singleton.GetCurrentlyConnectedClients()) {
+            if (po == ParticipantOrder.None) continue;
             participantAnswerStatus.Add(po, StartID);
             LastParticipantStartTimes.Add(po, new DateTime());
             ParticipantCountCurrent.Add(po, 0);
-            ConnectionAndSpawning.Singleton.SendTotalQNCount(po,
+            SendTotalQNCount(po,
                 activeQuestionList.Count(x => x.Value.ContainsOrder(po)));
-            Debug.Log("Just iniiated QN for participant:" + po);
+            Debug.Log("Just initiated QN for participant:" + po);
         }
 
 
         Dictionary<int, LogHeader> ObjectHeader = new Dictionary<int, LogHeader>();
         Dictionary<int, LogHeader> ComponentHeader = new Dictionary<int, LogHeader>();
 
-        foreach (var a in FindObjectsOfType<ParticipantOrderReplayComponent>()){
+        foreach (var a in FindObjectsOfType<ParticipantOrderReplayComponent>()) {
             ObjectHeader.Add(a.ReplayObject.ReplayIdentity.IDValue,
-                new LogHeader{
+                new LogHeader {
                     name = a.ReplayObject.transform.name, logFlag = LogFlag.PARTICIPANTORDER,
                     po = a.GetParticipantOrderAsChar(),
                     m_ReplayObject = a.ReplayObject.ReplayIdentity.IDValue
@@ -97,47 +99,47 @@ public class QNDataStorageServer : MonoBehaviour
         }
 
 
-        foreach (var a in FindObjectsOfType<ReplayBehaviour>()){
+        foreach (var a in FindObjectsOfType<ReplayBehaviour>()) {
             LogFlag lf = LogFlag.POSE;
 
-            if (a.GetType() == typeof(ParticipantOrderReplayComponent)){
+            if (a.GetType() == typeof(ParticipantOrderReplayComponent)) {
                 lf = LogFlag.PARTICIPANTORDER;
             }
-            else if (a.GetType() == typeof(ReplayTransform)){
+            else if (a.GetType() == typeof(ReplayTransform)) {
                 lf = LogFlag.POSE;
             }
-            else if (a.GetType() == typeof(ReplayMaterialChange)){
+            else if (a.GetType() == typeof(ReplayMaterialChange)) {
                 lf = LogFlag.MATERIALCHANGE;
             }
-            else if (a.GetType() == typeof(Speedometer)){
+            else if (a.GetType() == typeof(Speedometer)) {
                 lf = LogFlag.SPEEDOMETER;
             }
-            else if (a.GetType() == typeof(NavigationScreen)){
+            else if (a.GetType() == typeof(NavigationScreen)) {
                 lf = LogFlag.GPS;
             }
-            else{
+            else {
                 Debug.Log("Missing serealization objection for =>" + a.GetType());
             }
 
 
-            if (LogFlag.PARTICIPANTORDER != lf){
-                if (ObjectHeader.ContainsKey(a.ReplayObject.ReplayIdentity.IDValue)){
-                    if (!ComponentHeader.ContainsKey(a.ReplayIdentity.IDValue)){
+            if (LogFlag.PARTICIPANTORDER != lf) {
+                if (ObjectHeader.ContainsKey(a.ReplayObject.ReplayIdentity.IDValue)) {
+                    if (!ComponentHeader.ContainsKey(a.ReplayIdentity.IDValue)) {
                         ComponentHeader.Add(a.ReplayIdentity.IDValue,
-                            new LogHeader{
+                            new LogHeader {
                                 name = a.transform.name,
                                 po = ObjectHeader[a.ReplayObject.ReplayIdentity.IDValue].po,
                                 logFlag = lf
                             });
                     }
-                    else{
+                    else {
                         Debug.Log("Duplicat key:" + a.transform.name + "<  =  >" +
                                   ComponentHeader[a.ReplayIdentity.IDValue].name);
                     }
                 }
-                else{
+                else {
                     ComponentHeader.Add(a.ReplayIdentity.IDValue,
-                        new LogHeader{name = a.transform.name, logFlag = lf});
+                        new LogHeader { name = a.transform.name, logFlag = lf });
                 }
             }
         }
@@ -150,7 +152,7 @@ public class QNDataStorageServer : MonoBehaviour
                           + "Session-" + CurrentScenarioLog.participantComboName + '_'
                           + System.DateTime.Now.ToString(DateTimeFormatFolder) + ".json";
         string s = JsonConvert.SerializeObject(
-            new LogMetaData{ObjectHeader = ObjectHeader, ComponentHeader = ComponentHeader},
+            new LogMetaData { ObjectHeader = ObjectHeader, ComponentHeader = ComponentHeader },
             JsonDateSerelizerSettings
         );
 
@@ -158,41 +160,39 @@ public class QNDataStorageServer : MonoBehaviour
     }
 
 
-    struct LogMetaData
-    {
-        public Dictionary<int, LogHeader> ObjectHeader{ get; set; }
-        public Dictionary<int, LogHeader> ComponentHeader{ get; set; }
+    struct LogMetaData {
+        public Dictionary<int, LogHeader> ObjectHeader { get; set; }
+        public Dictionary<int, LogHeader> ComponentHeader { get; set; }
     }
 
-    public static string GenerateHeader(LogHeader tmp){
-        return tmp.name + "-" + ((ParticipantOrder) tmp.po).ToString();
+    public static string GenerateHeader(LogHeader tmp) {
+        return tmp.name + "-" + ((ParticipantOrder)tmp.po).ToString();
     }
 
 
-    public void NewDatapointfromClient(ParticipantOrder po, int id, int answerIndex, string lang){
-        if (answerIndex == -1 && id == -1){
+    public void NewDatapointfromClient(ParticipantOrder po, int id, int answerIndex, string lang) {
+        Debug.Log($"New Data Point from po{po}");
+        if (answerIndex == -1 && id == -1) {
             SendPreviousQuestion(po, lang);
             ParticipantCountCurrent[po]--;
-            if (ParticipantCountCurrent[po] < 0){
+            if (ParticipantCountCurrent[po] < 0) {
                 ParticipantCountCurrent[po] = 0;
             }
-
-            ;
             UpdateTotalParticipantCounts();
             return;
         }
 
         if (id > -1) //special question ID used to initialze the process
         {
-            if (!CurrentScenarioLog.QuestionResults.ContainsKey(id)){
-                if (!activeQuestionList.ContainsKey(id)){
+            if (!CurrentScenarioLog.QuestionResults.ContainsKey(id)) {
+                if (!activeQuestionList.ContainsKey(id)) {
                     Debug.LogError("Trying to log a question however question is not present");
                 }
 
                 CurrentScenarioLog.QuestionResults.Add(id, new QuestionLog(activeQuestionList[id]));
             }
 
-            QuestionLog.ParticipantsAnswerReponse response = new QuestionLog.ParticipantsAnswerReponse{
+            QuestionLog.ParticipantsAnswerReponse response = new QuestionLog.ParticipantsAnswerReponse {
                 AnswerId = answerIndex,
                 AnswerText = activeQuestionList[id].Answers.First(s => s.index == answerIndex)
                     .AnswerText[LogLanguage],
@@ -200,16 +200,16 @@ public class QNDataStorageServer : MonoBehaviour
                 StopTimeQuestion = DateTime.Now,
                 Attempts = 1
             };
-            if (!CurrentScenarioLog.QuestionResults[id].ParticipantsResponse.ContainsKey((char) po)){
-                CurrentScenarioLog.QuestionResults[id].ParticipantsResponse.Add((char) po, response);
+            if (!CurrentScenarioLog.QuestionResults[id].ParticipantsResponse.ContainsKey((char)po)) {
+                CurrentScenarioLog.QuestionResults[id].ParticipantsResponse.Add((char)po, response);
             }
-            else{
-                response.Attempts += CurrentScenarioLog.QuestionResults[id].ParticipantsResponse[(char) po].Attempts;
-                CurrentScenarioLog.QuestionResults[id].ParticipantsResponse[(char) po] = response;
+            else {
+                response.Attempts += CurrentScenarioLog.QuestionResults[id].ParticipantsResponse[(char)po].Attempts;
+                CurrentScenarioLog.QuestionResults[id].ParticipantsResponse[(char)po] = response;
                 Debug.Log("Overwritting Previously recorded answer");
             }
 
-            if (activeQuestionList[id].Answers.First(s => s.index == answerIndex).FinishQN){
+            if (activeQuestionList[id].Answers.First(s => s.index == answerIndex).FinishQN) {
                 {
                     SendEndQuestionnaire(po, lang);
                     return;
@@ -225,7 +225,7 @@ public class QNDataStorageServer : MonoBehaviour
     }
 
 
-    public void StopScenario(RerunManager activeManager){
+    public void StopScenario(RerunManager activeManager) {
         Debug.Log("Stopping Scenario and QN logger.");
         CurrentScenarioLog.Stop();
         string folderpath = activeManager.GetCurrentFolderPath() + "/QN/";
@@ -240,49 +240,50 @@ public class QNDataStorageServer : MonoBehaviour
         System.IO.File.WriteAllText(fullPath, s);
     }
 
-    private void SendEndQuestionnaire(ParticipantOrder po, string lang){
+    private void SendEndQuestionnaire(ParticipantOrder po, string lang) {
         NetworkedQuestionnaireQuestion outval = NetworkedQuestionnaireQuestion.GetDefaultNQQ();
-        ConnectionAndSpawning.Singleton.SendNewQuestionToParticipant(po, outval);
+        SendNewQuestionToParticipant(po, outval);
         ParticipantCountCurrent[po] = activeQuestionList.Count(x => x.Value.ContainsOrder(po));
         UpdateTotalParticipantCounts();
     }
 
-    private void SendNewQuestion(ParticipantOrder p, string lang){
-        int val = participantAnswerStatus[p];
+    private void SendNewQuestion(ParticipantOrder po, string lang) {
+        Debug.Log($"I got  a po of {po.ToString()} with lang:{lang}. participantAnswerStatus.count{participantAnswerStatus.Keys.Count}");
+        int val = participantAnswerStatus[po];
         val++;
 
-        while (activeQuestionList.ContainsKey(val) && !activeQuestionList[val].ContainsOrder(p)){
+        while (activeQuestionList.ContainsKey(val) && !activeQuestionList[val].ContainsOrder(po)) {
             val++;
-            Debug.Log("Looking for a next relevant question! " + val.ToString());
+            Debug.Log($"Looking for a next relevant question! {val}. {activeQuestionList[val].ContainsOrder(po)}");
         }
 
         NetworkedQuestionnaireQuestion outval;
-        if (!activeQuestionList.ContainsKey(val)){
+        if (!activeQuestionList.ContainsKey(val)) {
             outval = NetworkedQuestionnaireQuestion.GetDefaultNQQ();
             Debug.Log("Finished questionnaire sending a finish message!! " + val.ToString());
         }
-        else{
-            participantAnswerStatus[p] = val;
+        else {
+            participantAnswerStatus[po] = val;
             outval = activeQuestionList[val].GenerateNetworkVersion(lang);
             Debug.Log("Found another question to send: " + val.ToString());
-            LastParticipantStartTimes[p] = DateTime.Now;
+            LastParticipantStartTimes[po] = DateTime.Now;
         }
 
-        ConnectionAndSpawning.Singleton.SendNewQuestionToParticipant(p, outval);
+        SendNewQuestionToParticipant(po, outval);
     }
 
-    private void SendPreviousQuestion(ParticipantOrder p, string lang){
+    private void SendPreviousQuestion(ParticipantOrder p, string lang) {
         int val = participantAnswerStatus[p];
         val--;
 
 
-        while (activeQuestionList.ContainsKey(val) && !activeQuestionList[val].ContainsOrder(p)){
+        while (activeQuestionList.ContainsKey(val) && !activeQuestionList[val].ContainsOrder(p)) {
             val--;
             Debug.Log("Looking for a next relevant question; " + val.ToString());
         }
 
         NetworkedQuestionnaireQuestion outval;
-        if (!activeQuestionList.ContainsKey(val)){
+        if (!activeQuestionList.ContainsKey(val)) {
             participantAnswerStatus[p] = StartID;
             SendNewQuestion(p, lang);
             Debug.LogWarning(
@@ -291,22 +292,22 @@ public class QNDataStorageServer : MonoBehaviour
                 val.ToString());
             return;
         }
-        else{
+        else {
             participantAnswerStatus[p] = val;
             outval = activeQuestionList[val].GenerateNetworkVersion(lang);
             Debug.Log("Found Another question to send " + val.ToString());
             LastParticipantStartTimes[p] = DateTime.Now;
         }
 
-        ConnectionAndSpawning.Singleton.SendNewQuestionToParticipant(p, outval);
+        SendNewQuestionToParticipant(p, outval);
     }
 
-    public string GetCurrentQuestionForParticipant(ParticipantOrder po){
+    public string GetCurrentQuestionForParticipant(ParticipantOrder po) {
         if (participantAnswerStatus == null || activeQuestionList == null) return " - ";
 
         if (participantAnswerStatus.ContainsKey(po)
             && activeQuestionList.ContainsKey(participantAnswerStatus[po])
-            && activeQuestionList[participantAnswerStatus[po]].QuestionText != null){
+            && activeQuestionList[participantAnswerStatus[po]].QuestionText != null) {
             return activeQuestionList[participantAnswerStatus[po]].QuestionText[LogLanguage] + " at Scenario_ID: " +
                    activeQuestionList[participantAnswerStatus[po]].Scenario_ID + "  =>  " +
                    GetTotalParticiapnAnswerCountString(po);
@@ -319,17 +320,17 @@ public class QNDataStorageServer : MonoBehaviour
     private Dictionary<ParticipantOrder, string> ParticipantCountStrings = new Dictionary<ParticipantOrder, string>();
     private Dictionary<ParticipantOrder, int> ParticipantCountCurrent = new Dictionary<ParticipantOrder, int>();
 
-    private string GetTotalParticiapnAnswerCountString(ParticipantOrder po){
-        if (ParticipantCountStrings.ContainsKey(po)){
+    private string GetTotalParticiapnAnswerCountString(ParticipantOrder po) {
+        if (ParticipantCountStrings.ContainsKey(po)) {
             return ParticipantCountStrings[po];
         }
 
         return "";
     }
 
-    private void UpdateTotalParticipantCounts(){
-        foreach (ParticipantOrder po in participantAnswerStatus.Keys){
-            if (!ParticipantCountStrings.ContainsKey(po)){
+    private void UpdateTotalParticipantCounts() {
+        foreach (ParticipantOrder po in participantAnswerStatus.Keys) {
+            if (!ParticipantCountStrings.ContainsKey(po)) {
                 ParticipantCountStrings.Add(po, "");
             }
 
@@ -347,8 +348,8 @@ public class QNDataStorageServer : MonoBehaviour
     private Dictionary<ParticipantOrder, List<byte>> ImageRecievers =
         new Dictionary<ParticipantOrder, List<byte>>();
 
-    public void SetupForNewRemoteImage(ParticipantOrder po){
-        if (!ImageRecievers.ContainsKey(po)){
+    public void SetupForNewRemoteImage(ParticipantOrder po) {
+        if (!ImageRecievers.ContainsKey(po)) {
             ImageRecievers.Add(po, null);
         }
 
@@ -358,27 +359,27 @@ public class QNDataStorageServer : MonoBehaviour
                 reader.ReadNetworkSerializable<BasicByteArraySender>(out BasicByteArraySender data);
 
                 var participantOrder = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(senderClientId);
-                if (ImageRecievers.ContainsKey(participantOrder)){
-                    foreach (byte b in data.DataSendArray){
+                if (ImageRecievers.ContainsKey(participantOrder)) {
+                    foreach (byte b in data.DataSendArray) {
                         ImageRecievers[po].Add(b);
                     }
                 }
             });
     }
 
-    public void DeRegisterHandler(ParticipantOrder po){
+    public void DeRegisterHandler(ParticipantOrder po) {
         NetworkManager.Singleton.CustomMessagingManager.UnregisterNamedMessageHandler(imageDataPrefix + po.ToString());
     }
 
-    public void NewRemoteImage(ParticipantOrder po, int totalSize){
-        if (ImageRecievers.ContainsKey(po)){
+    public void NewRemoteImage(ParticipantOrder po, int totalSize) {
+        if (ImageRecievers.ContainsKey(po)) {
             Debug.Log("WillTry To store picture!");
 
 
             string folderpath = ConnectionAndSpawning.Singleton.GetReRunManager().GetCurrentFolderPath() +
                                 "/QN_Pictures/";
 
-            if (!System.IO.Directory.Exists(folderpath)){
+            if (!System.IO.Directory.Exists(folderpath)) {
                 System.IO.Directory.CreateDirectory(folderpath);
             }
 
@@ -394,11 +395,29 @@ public class QNDataStorageServer : MonoBehaviour
             ImageRecievers[po].Clear();
         }
     }
+
+
+    public void SendNewQuestionToParticipant(ParticipantOrder participantOrder, NetworkedQuestionnaireQuestion outval) {
+        qnDisplays[participantOrder].SendNewQuestionClientRPC(outval);
+    }
+
+
+    public void SendTotalQNCount(ParticipantOrder participantOrder, int count) {
+        if (participantOrder == ParticipantOrder.None) {
+            return;
+        }
+
+        qnDisplays[participantOrder]
+            .SetTotalQNCountClientRpc(count);
+    }
+
+    public void RegisterQNSCreen(ParticipantOrder mParticipantOrder, QN_Display qnmanager) {
+        qnDisplays.Add(mParticipantOrder, qnmanager);
+    }
 }
 
 
-public enum LogFlag
-{
+public enum LogFlag {
     POSE,
     PARTICIPANTORDER,
     MATERIALCHANGE,
@@ -406,49 +425,46 @@ public enum LogFlag
     GPS
 }
 
-public struct LogHeader
-{
-    public string name{ get; set; }
-    public char po{ get; set; }
+public struct LogHeader {
+    public string name { get; set; }
+    public char po { get; set; }
 
-    public int m_ReplayObject{ get; set; }
-    public LogFlag logFlag{ get; set; }
+    public int m_ReplayObject { get; set; }
+    public LogFlag logFlag { get; set; }
 }
 
-public struct QuestionLog
-{
-    public int ID{ get; set; }
+public struct QuestionLog {
+    public int ID { get; set; }
 
-    public string Scenario_ID{ get; set; }
+    public string Scenario_ID { get; set; }
 
-    public string QuestionText{ get; set; }
+    public string QuestionText { get; set; }
 
-    public string SA_atoms{ get; set; } //This property can be used to filter a group of questions
-    public string SA_Level{ get; set; } //The level of the question based on SAGAT model
-    public string Awareness_to{ get; set; }
+    public string SA_atoms { get; set; } //This property can be used to filter a group of questions
+    public string SA_Level { get; set; } //The level of the question based on SAGAT model
+    public string Awareness_to { get; set; }
 
-    public Dictionary<char, ParticipantsAnswerReponse> ParticipantsResponse{ get; set; }
+    public Dictionary<char, ParticipantsAnswerReponse> ParticipantsResponse { get; set; }
 
-    public struct ParticipantsAnswerReponse
-    {
+    public struct ParticipantsAnswerReponse {
         public int AnswerId;
         public string AnswerText;
         public DateTime StartTimeQuestion;
         public DateTime StopTimeQuestion;
         public ushort Attempts;
 
-        public void FinalUpdate(int answerId, string answerText){
+        public void FinalUpdate(int answerId, string answerText) {
             StopTimeQuestion = DateTime.Now;
             AnswerId = answerId;
             AnswerText = answerText;
         }
 
-        public void SetStartTimeQuestion(DateTime now){
+        public void SetStartTimeQuestion(DateTime now) {
             StartTimeQuestion = now;
         }
     }
 
-    public QuestionLog(QuestionnaireQuestion qIn){
+    public QuestionLog(QuestionnaireQuestion qIn) {
         ID = qIn.ID;
         QuestionText = qIn.QuestionText[QNDataStorageServer.LogLanguage];
         Scenario_ID = qIn.Scenario_ID;
@@ -459,34 +475,33 @@ public struct QuestionLog
     }
 }
 
-public struct ScenarioLog
-{
-    public DateTime startTime{ get; set; } //Timestamp when the scenario started
-    public DateTime endTime{ get; set; } //Timestamp when the scenario finished and the questionnaire started
+public struct ScenarioLog {
+    public DateTime startTime { get; set; } //Timestamp when the scenario started
+    public DateTime endTime { get; set; } //Timestamp when the scenario finished and the questionnaire started
 
     public char
-        participantTriggeredQuestionnaire{
+        participantTriggeredQuestionnaire {
         get;
         set;
     } //The participant that walked into the invisible box that initiated the questionnaire. Could be more than 1
 
-    public string ScenarioName{ get; set; }
+    public string ScenarioName { get; set; }
 
     public string
-        participantComboName{
+        participantComboName {
         get;
         set;
     } //I didn't use the term pair to have the flexability for more than 2 participant
 
     public Dictionary<string, string>
-        facts{
+        facts {
         get;
         set;
     } //Dictionary collection of all objective facts we would like to record next to the question for further examination. 
 
-    public Dictionary<int, QuestionLog> QuestionResults{ get; set; }
+    public Dictionary<int, QuestionLog> QuestionResults { get; set; }
 
-    public ScenarioLog(string name, string participantComboName_){
+    public ScenarioLog(string name, string participantComboName_) {
         startTime = DateTime.Now;
         endTime = DateTime.MaxValue;
         participantTriggeredQuestionnaire = '-';
@@ -496,7 +511,7 @@ public struct ScenarioLog
         QuestionResults = new Dictionary<int, QuestionLog>();
     }
 
-    public void Stop(){
+    public void Stop() {
         endTime = DateTime.Now;
     }
 }
@@ -595,9 +610,9 @@ NetworkManager.Singleton.CustomMessagingManager.SendNamedMessageToAll(QNDataStor
 
 
 /*
-             
-                
-                
+
+
+
                 if (!ReplayToParticipantAssociation.ContainsKey(id.IDString))
                 {
                     IList<ReplayComponentData> data =

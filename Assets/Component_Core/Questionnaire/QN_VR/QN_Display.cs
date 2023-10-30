@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,11 +10,17 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class QN_Display : NetworkBehaviour {
-    public ParticipantOrder m_participantOrder
-    {
-        get; 
-    private set;
-}
+
+
+    public enum FollowType {
+        NetworkObject,
+        MainCamera,
+        Interactable
+    }
+
+    public ParticipantOrder m_participantOrder;
+
+
  
     public GameObject ButtonPrefab;
 
@@ -50,21 +57,24 @@ public class QN_Display : NetworkBehaviour {
     public List<TextAsset> QNFiles;
 #endif
 
-    private Transform ParentPosition;
+    public  Transform ParentPosition;
     [FormerlySerializedAs("up")] public float xOffset;
     [FormerlySerializedAs("forward")] public float yOffset;
     [FormerlySerializedAs("left")] public float zOffset;
-    private bool KeepUpdating;
+    public bool KeepUpdating;
 
     public void ChangeLanguage(string lang) {
         m_LanguageSelect = lang;
     }
 
-    public void setRelativePosition(Transform t, float up_, float forward_, float left_,bool KeepUpdating) {
+    public void setRelativePosition(Transform t, float up_, float forward_, float left_,bool KeepUpdating_) {
+     
         ParentPosition = t;
         xOffset = up_;
         yOffset = forward_;
         zOffset = left_;
+        KeepUpdating = KeepUpdating_;
+        UpdatePosition();
     }
 
     private void Start() {
@@ -79,7 +89,7 @@ public class QN_Display : NetworkBehaviour {
         changeLanguage("English");
         setRelativePosition(FindObjectOfType<LocalVRPlayer>().transform, 1, 2);
 #endif
-        gameObject.SetActive(false);
+        
     }
 
     public GameObject ScenarioImageHolder;
@@ -123,17 +133,18 @@ public class QN_Display : NetworkBehaviour {
     // Update is called once per frame
     public void startAskingTheQuestionairs(ParticipantOrder po) {
         if (m_interalState == QNStates.IDLE) {
+            
+            Debug.Log("Starting To Ask Questions");
             ChangeLanguage(ConnectionAndSpawning.Singleton.lang);
-           
             m_condition = ConnectionAndSpawning.Singleton.GetScenarioManager().GetComponent<ScenarioManager>().conditionName;
 
             
             m_interalState = QNStates.WAITINGFORQUESTION;
             m_participantOrder = po;
             m_MyLocalClient=VR_Participant.GetJoinTypeObject();//ToDO Need to test!!
+            Debug.Log("REquesting new questions from the server!");
             SendQNAnswerServerRPC(-1, 0, m_LanguageSelect);
 
-            
             gameObject.SetActive(true);
         }
         else {
@@ -141,15 +152,21 @@ public class QN_Display : NetworkBehaviour {
         }
     }
 
+    private void UpdatePosition() {
+        if (ParentPosition == null) return;
+        transform.rotation = ParentPosition.rotation;
+        transform.position = ParentPosition.position +
+                             ParentPosition.rotation * new Vector3(xOffset, yOffset, zOffset);
+    }
     private void Update() {
         if (IsServer) {
             if (Input.GetKeyUp(KeyCode.Q)&& !Input.GetKey(KeyCode.LeftShift)) m_interalState = QNStates.FINISH;
         }
 
-        if (KeepUpdating && ParentPosition != null) {
-            transform.rotation = ParentPosition.rotation;
-            transform.position = ParentPosition.position +
-                                 ParentPosition.rotation * new Vector3(xOffset, yOffset, zOffset);
+        if (IsServer && !IsHost) return;
+        
+        if (KeepUpdating) {
+            UpdatePosition();
         }
 
         switch (m_interalState) {
@@ -309,29 +326,50 @@ public class QN_Display : NetworkBehaviour {
         
     public void StartQuestionair(QNDataStorageServer in_QNDataStorageServer,
         ParticipantOrder po, 
-        NetworkObjectReference referenceTransform,
+        FollowType followType,
         Vector3 Offset,
-        bool KeepUpdating)
-    {
+        bool KeepUpdating,
+        string referenceTransformPath){
         if (IsServer)
         {
             m_QNDataStorageServer = in_QNDataStorageServer;
-            StartQuestionairClientRPC(po,referenceTransform,Offset,KeepUpdating);
+            Debug.Log($"Questionnaire Activation for Participant{po} (serverside)");
+            m_participantOrder = po;
+            StartQuestionairClientRPC(po,followType,Offset,KeepUpdating,referenceTransformPath);
         }
     }
 
     [ClientRpc]
-    public void StartQuestionairClientRPC(ParticipantOrder po,
-        NetworkObjectReference referenceTransform,
+    public void StartQuestionairClientRPC(
+        ParticipantOrder po,
+        FollowType followType,
         Vector3 Offset,
-        bool KeepUpdating_)
+        bool KeepUpdating_,
+        string referenceTransformPath)
     {
         if (ConnectionAndSpawning.Singleton.ParticipantOrder==po) {
+            Transform followObj = null;
+            
+          
+            switch (followType) {
+                case FollowType.NetworkObject:
+                    followObj = null;
+                    Debug.LogWarning("This is not implemented yet.");
+                    break;
+                case FollowType.MainCamera:
+                    followObj = FindObjectsOfType<Client_Object>().Where(x => x.IsLocalPlayer).First().GetMainCamera();
+                    break;
+                case FollowType.Interactable:
+                    followObj = FindObjectsOfType<Client_Object>().Where(x => x.IsLocalPlayer).First().GetFollowTransform().transform;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(followType), followType, null);
+            }
 
-            NetworkObject obj = referenceTransform;
             transform.localScale *= 0.1f;
-            setRelativePosition(obj.transform, Offset.x, Offset.y, Offset.z,KeepUpdating);
+            setRelativePosition(followObj.transform, Offset.x, Offset.y, Offset.z,KeepUpdating);
             KeepUpdating = KeepUpdating_;
+            Debug.Log($"Questionnaire Activation for Participant{po} (ClientSide)");
             startAskingTheQuestionairs(po);
             
         }
@@ -349,7 +387,7 @@ public class QN_Display : NetworkBehaviour {
         SendQNAnswerServerRPC(id, answerIndex, lang);
     }
 
-    public bool HasNewData { get; set; }
+    public bool HasNewData;
 
 
     [ServerRpc]
@@ -357,14 +395,16 @@ public class QN_Display : NetworkBehaviour {
     {
         if (IsServer && m_QNDataStorageServer != null)
         {
+            Debug.Log($"Asking for new Data with id:{id}, answerIndex:{answerIndex} and lang:{lang} for participant{m_participantOrder} ");
+            
             m_QNDataStorageServer.NewDatapointfromClient(m_participantOrder, id, answerIndex, lang);
         }
     }
 
     [ClientRpc]
-    public void RecieveNewQuestionClientRPC(NetworkedQuestionnaireQuestion newq)
+    public void SendNewQuestionClientRPC(NetworkedQuestionnaireQuestion newq)
     {
-        if (!IsLocalPlayer) return;
+        if (!IsOwner) return;
         Debug.Log("Got new data and updated varaible" + HasNewData);
         if (HasNewData)
             Debug.LogWarning("I still had a question ready to go. Losing data here. this should not happen.");

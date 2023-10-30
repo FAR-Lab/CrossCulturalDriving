@@ -51,6 +51,11 @@ public class ThreeScreen_Participant : Client_Object {
             AssignInteractable_ClientRPC(_interactableObject.GetComponent<NetworkObject>(), targetClient);
         }
     }
+
+    public override Interactable_Object GetFollowTransform() {
+        return _interactableObject;
+    }
+
     [ClientRpc]
     private void AssignInteractable_ClientRPC(NetworkObjectReference MyInteractable, ulong targetClient)
     {

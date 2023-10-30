@@ -16,7 +16,8 @@ public class ScenarioManagerEditor : Editor {
                         Debug.LogWarning("Duplicat ID for " + q.getInteralID());
                     else
                         numbers.Add(q.getInteralID());
-                    Debug.Log(q.QuestionText["English"]);
+                   
+                    Debug.Log($"{q.QuestionText["English"]}, po:{q.ContainsOrder(ParticipantOrder.B)}");
                     var numbersA = new List<int>();
                     foreach (var a in q.Answers)
                         if (numbersA.Contains(a.index))

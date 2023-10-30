@@ -118,6 +118,13 @@ public class QuestionnaireQuestion {
         return AllParticipents.Contains(po);
     }
 
+    public string ReportAllParticipants() {
+        if (!initComplete) init();
+        string outval="";
+        AllParticipents.ForEach(x=> outval+=x.ToString());
+        return outval;
+    }
+
     public void init() {
         AllParticipents = new List<ParticipantOrder>();
         foreach (var c in Participant)

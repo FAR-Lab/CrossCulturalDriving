@@ -110,6 +110,10 @@ public class OberserverCamera_ClientObject : Client_Object {
         targetClient = _targetClient;
     }
 
+    public override Interactable_Object GetFollowTransform() {
+        return MyInteractableObject;
+    }
+
     public override void De_AssignFollowTransform(ulong clientID, NetworkObject netobj) {
         MyInteractableObject = null;
     }
