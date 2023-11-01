@@ -280,7 +280,7 @@ public class VR_Participant : Client_Object
              case SpawnType.PASSENGER:
                  tmp = QN_Display.FollowType.MainCamera;
                 
-                 Offset = new Vector3(0f, 0f, 0.16f);
+                 Offset = new Vector3(0f, 0f, 0.5f);
                  break;
              case SpawnType.ROBOT:
                  break;

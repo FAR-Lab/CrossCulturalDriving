@@ -288,8 +288,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private void ClientConnected_client(ulong ClientID) {
         Debug.Log("Debug: Client connected");
-        if (ClientID != NetworkManager.Singleton.LocalClient.ClientId) return;
-        Debug.Log("Debug: Success!");
+        if (ClientID != NetworkManager.Singleton.LocalClient.ClientId) return; Debug.Log("Debug: Success!");
         SuccessFullyConnected = true;
         ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS);
 

@@ -59,9 +59,8 @@ public class ZEDMaster : Interactable_Object {
         }
     }
 
-    private void LateUpdate()
-    {
-        if (IsServer)
+    private void LateUpdate() {
+        if (IsServer && CameraTrackingTransform != null)
         {
             transform.position = CameraTrackingTransform.position;
         }

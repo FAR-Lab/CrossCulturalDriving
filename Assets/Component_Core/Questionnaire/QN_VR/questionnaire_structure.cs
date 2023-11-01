@@ -120,8 +120,8 @@ public class QuestionnaireQuestion {
 
     public string ReportAllParticipants() {
         if (!initComplete) init();
-        string outval="";
-        AllParticipents.ForEach(x=> outval+=x.ToString());
+        string outval = "";
+        AllParticipents.ForEach(x => outval += x.ToString());
         return outval;
     }
 
@@ -159,21 +159,30 @@ public class QuestionnaireQuestion {
     }
 
     public NetworkedQuestionnaireQuestion GenerateNetworkVersion(string lang) {
+        Debug.Log($"Generating NetworkVersion! First Answers:{Answers.Count} for langauge{lang}");
         var outVal = NetworkedQuestionnaireQuestion.GetDefaultNQQ();
-        foreach (var a in Answers)
-            if (a.AnswerText.Keys.Contains(lang))
+        
+        foreach (var a in Answers) {
+            
+            if (a.AnswerText.Keys.Contains(lang)) {
                 outVal.Answers.Add(a.index, a.AnswerText[lang]);
-            else
+            }
+
+            else {
                 Debug.Log(
                     "Did not find Answer for requested language. please fix Data and results will be incomplete!: " +
                     lang + " id:" + a.index);
+            }
+        }
 
-        if (QuestionText.Keys.Contains(lang))
+        if (QuestionText.Keys.Contains(lang)) {
             outVal.QuestionText = QuestionText[lang];
-        else
+        }
+        else {
             Debug.Log(
                 "Did not find QuestionText for requested language. please fix Data and results will be incomplete!: " +
                 lang + " id:" + ID);
+        }
 
         outVal.ID = getInteralID();
         outVal.reply = replyType.NEWQUESTION;

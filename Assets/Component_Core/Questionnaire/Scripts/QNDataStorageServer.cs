@@ -406,7 +406,7 @@ public class QNDataStorageServer : MonoBehaviour {
         if (participantOrder == ParticipantOrder.None) {
             return;
         }
-
+Debug.Log($"Total Questions countto sent to the participant: {count} for ParticipantOrder{participantOrder}");
         qnDisplays[participantOrder]
             .SetTotalQNCountClientRpc(count);
     }

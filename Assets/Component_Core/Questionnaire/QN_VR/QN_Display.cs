@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit.Samples.Hands;
 
 public class QN_Display : NetworkBehaviour {
 
@@ -82,7 +82,9 @@ public class QN_Display : NetworkBehaviour {
         QustionField = transform.Find("QuestionField").GetComponent<Text>();
         sba = GetComponentInChildren<selectionBarAnimation>();
         BackButton = transform.Find("BackButton").GetComponent<RectTransform>();
+        BackButton.GetComponent<Button>().onClick.AddListener(delegate { OnBackClickedHandler(); });
         CountDisplay = transform.Find("CountDisplay").GetComponent<Text>();
+        
 
 #if DEBUGQN
         startAskingTheQuestionairs(FindObjectOfType<LocalVRPlayer>().transform, QNFiles.ToArray(), "Test");
@@ -130,6 +132,8 @@ public class QN_Display : NetworkBehaviour {
     private Transform positioingRef;
 
     private VR_Participant m_MyLocalClient;
+    
+    private PokeGestureDetector pokeRight;
     // Update is called once per frame
     public void startAskingTheQuestionairs(ParticipantOrder po) {
         if (m_interalState == QNStates.IDLE) {
@@ -142,7 +146,20 @@ public class QN_Display : NetworkBehaviour {
             m_interalState = QNStates.WAITINGFORQUESTION;
             m_participantOrder = po;
             m_MyLocalClient=VR_Participant.GetJoinTypeObject();//ToDO Need to test!!
-            Debug.Log("REquesting new questions from the server!");
+
+         
+            
+            Transform RightHand = m_MyLocalClient.transform.Find("Camera Offset/Right Hand Tracking");
+            pokeRight = RightHand.GetComponent<PokeGestureDetector>(); // ideally this would be done somehwere else...
+            if (pokeRight == null) {
+                pokeRight = RightHand.gameObject.AddComponent<PokeGestureDetector>(); // ideally this would be done somehwere else...
+            }
+           
+            
+           
+            pokeRight.enabled = true;
+            
+            Debug.Log("Requesting new questions from the server!");
             SendQNAnswerServerRPC(-1, 0, m_LanguageSelect);
 
             gameObject.SetActive(true);
@@ -221,6 +238,7 @@ public class QN_Display : NetworkBehaviour {
                         -i * (165 / currentActiveQustion.Answers.Count) + 55);
                     rtrans.anchoredPosition = tempVector;
                     i++;
+                    rcb.GetComponentInChildren<Button>().onClick.AddListener(delegate { OnAnswerClickedHandler(rcb); });
                 }
 
                 m_interalState = QNStates.RESPONSEWAIT;
@@ -228,49 +246,11 @@ public class QN_Display : NetworkBehaviour {
 
 
             case QNStates.RESPONSEWAIT:
-                var results = new List<RaycastResult>();
-                RaycastHit hit;
-                if (Camera.main == null) {
-                    Debug.Log("This is interesting unloading");
-                    return;
-                }
-
-                var ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2f,
-                    Camera.main.pixelHeight / 2f));
-                LayerMask layerMask = 1 << 5;
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.UseGlobal)) {
-                    rayCastButton rcb = null;
-                    var objectHit = hit.transform;
-                    var onTarget = false;
-
-                    if (hit.transform == transform) {
-                        sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
-                    }
-                    else {
-                        rcb = hit.transform.GetComponent<rayCastButton>();
-                        if (rcb != null) {
-                            onTarget = true;
-                            sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
-                            if (m_MyLocalClient.ButtonPush()) {
-                                var AnswerIndex = rcb.activateNextQuestions();
-                                SendQNAnswer(currentActiveQustion.ID, AnswerIndex, m_LanguageSelect);
-                                _answerCount++;
-                                m_interalState = QNStates.WAITINGFORQUESTION;
-                            }
-                        }
-                        else {
-                            if (hit.transform.GetComponent<RectTransform>() == BackButton) {
-                                sba.updatePosition(transform.worldToLocalMatrix * (hit.point - transform.position));
-                                if (m_MyLocalClient.ButtonPush()) {
-                                    _answerCount--;
-                                    if (_answerCount < 0) _answerCount = 0;
-                                    SendQNAnswer(-1, -1, m_LanguageSelect);
-                                    m_interalState = QNStates.WAITINGFORQUESTION;
-                                }
-                            }
-                        }
-                    }
-                }
+                
+               
+                
+                
+              
 
                 break;
             case QNStates.FINISH:
@@ -292,7 +272,10 @@ public class QN_Display : NetworkBehaviour {
                             break;
                     }
 
-                    m_interalState = QNStates.IDLE;
+                   
+                  
+                        pokeRight.enabled = false;
+                        m_interalState = QNStates.IDLE;
                 }
                 else {
                     Debug.LogError("Did not get my local player dont know who to report back to.");
@@ -304,6 +287,29 @@ public class QN_Display : NetworkBehaviour {
                 throw new ArgumentOutOfRangeException();
         }
     }
+
+    private void OnAnswerClickedHandler(rayCastButton rcb) {
+        if (m_interalState == QNStates.RESPONSEWAIT) {
+                var AnswerIndex = rcb.activateNextQuestions();
+                SendQNAnswer(currentActiveQustion.ID, AnswerIndex, m_LanguageSelect);
+                _answerCount++;
+                m_interalState = QNStates.WAITINGFORQUESTION;
+        }
+
+      
+    }
+
+    private void OnBackClickedHandler() {
+        
+        if (m_interalState == QNStates.RESPONSEWAIT) {
+                _answerCount--;
+                if (_answerCount < 0) _answerCount = 0;
+                SendQNAnswer(-1, -1, m_LanguageSelect);
+                m_interalState = QNStates.WAITINGFORQUESTION;
+            
+        }
+    }
+    
 
     private string SetText(string text) {
         return m_LanguageSelect.Contains("Hebrew") ? StringExtension.RTLText(text) : text;
@@ -382,7 +388,7 @@ public class QN_Display : NetworkBehaviour {
 
     public void SendQNAnswer(int id, int answerIndex, string lang)
     {
-        if (!IsLocalPlayer) return;
+        if (!IsOwner) return;
         HasNewData = false;
         SendQNAnswerServerRPC(id, answerIndex, lang);
     }
@@ -435,8 +441,7 @@ public class QN_Display : NetworkBehaviour {
     [ClientRpc]
     public void SetTotalQNCountClientRpc(int outval)
     {
-        if (!IsLocalPlayer) return;
-
+        if (!IsOwner) return;
         FindObjectOfType<QN_Display>()?.SetTotalQNCount(outval);
     }
 
