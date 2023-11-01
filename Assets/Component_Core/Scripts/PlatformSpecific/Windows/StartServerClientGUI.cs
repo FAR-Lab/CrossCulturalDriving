@@ -92,7 +92,9 @@ public class StartServerClientGUI : MonoBehaviour {
             ParticipantOrder.B,
             "127.0.0.1", 
             7777,
-            ResponseDelegate,SpawnType.PEDESTRIAN);
+            ResponseDelegate,
+            SpawnType.PEDESTRIAN,
+            JoinType.VR);
         Destroy(ServerGuiSintance.gameObject);
         enabled = false;
     }

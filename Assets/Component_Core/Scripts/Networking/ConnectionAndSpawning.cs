@@ -288,11 +288,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private void ClientConnected_client(ulong ClientID) {
         Debug.Log("Debug: Client connected");
-        if (ClientID != NetworkManager.Singleton.LocalClient.ClientId) return;
-        Debug.Log("Debug: Success!");
+        if (ClientID != NetworkManager.Singleton.LocalClient.ClientId) return; Debug.Log("Debug: Success!");
         SuccessFullyConnected = true;
         ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS);
-        Debug.Log(SuccessFullyConnected + " CHECK HERE");
+
         NetworkManager.Singleton.SceneManager.OnLoadComplete += OnLoadCompleteCLient;
     }
 
@@ -503,24 +502,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
         return new List<ParticipantOrder>(participants.GetAllConnectedParticipants());
     }
 
-    public void QNNewDataPoint(ParticipantOrder po, int id, int answerIndex, string lang) {
-        if (m_QNDataStorageServer != null) m_QNDataStorageServer.NewDatapointfromClient(po, id, answerIndex, lang);
-    }
+//    public void QNNewDataPoint(ParticipantOrder po, int id, int answerIndex, string lang) {
+ //       if (m_QNDataStorageServer != null) m_QNDataStorageServer.NewDatapointfromClient(po, id, answerIndex, lang);
+  //  }
 
-    public void SendNewQuestionToParticipant(ParticipantOrder participantOrder, NetworkedQuestionnaireQuestion outval) {
-        Main_ParticipantObjects[participantOrder]
-            .GetComponent<VR_Participant>().RecieveNewQuestionClientRPC(outval);
-    }
-
-
-    public void SendTotalQNCount(ParticipantOrder participantOrder, int count) {
-        if (participantOrder == ParticipantOrder.None) {
-            return;
-        }
-
-        Main_ParticipantObjects[participantOrder]
-            .GetComponent<VR_Participant>().SetTotalQNCountClientRpc(count);
-    }
 
     public RerunManager GetReRunManager() {
         return m_ReRunManager;
@@ -806,7 +791,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                 Debug.Log(
                     $"Is the interactable Spawned here already: {newInteractableObject.GetComponent<Interactable_Object>().IsSpawned}");
                 Interactable_ParticipantObjects[po].Add(newInteractableObject.GetComponent<Interactable_Object>());
-                Debug.Log("B Error");
+                
                 if (Main_ParticipantObjects[po] != null) {
                     Main_ParticipantObjects[po]
                         .AssignFollowTransform(newInteractableObject.GetComponent<Interactable_Object>(), clientID);
@@ -815,7 +800,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                     Debug.LogError("Could not find Client as I am spawning the Interactable. Broken please fix.");
                 }
 
-                Debug.Log("A Error");
+                
             }
         }
     }
@@ -973,11 +958,12 @@ public class ConnectionAndSpawning : MonoBehaviour {
             no.Stop_Action();
         }
 
-        m_QNDataStorageServer.StartQn(GetScenarioManager(), m_ReRunManager);
+       
         foreach (var po in Main_ParticipantObjects.Keys)
             Main_ParticipantObjects[po].GetComponent<Client_Object>()
                 .StartQuestionair(m_QNDataStorageServer);
-
+       
+        m_QNDataStorageServer.StartQn(GetScenarioManager(), m_ReRunManager);
         StartCoroutine(farlab_logger.Instance.StopRecording());
     }
 

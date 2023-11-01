@@ -657,7 +657,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 42804
+    id: 24917
   replayObject:
     reference: {fileID: -7767813943838450789}
   positionFlags: 263
@@ -677,7 +677,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 28939
+    id: 51216
   replayObject:
     reference: {fileID: -7767813943838450789}
   m_participantOrder: 0
@@ -695,7 +695,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 14564
+    id: 55073
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedAudio: {fileID: 82318783350293580}
@@ -727,7 +727,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isObservedComponentsExpanded: 0
   replayIdentity:
-    id: 19857
+    id: 2931
   prefabIdentity:
     id: 61044
   observedComponents:
@@ -753,7 +753,29 @@ MonoBehaviour:
   - {fileID: 6445960143564790882}
   - {fileID: 7734125323330803607}
   - {fileID: 6719508424005605577}
-  runtimeComponents: []
+  runtimeComponents:
+  - {fileID: -3837203089491521288}
+  - {fileID: -2568685145942801040}
+  - {fileID: 3083907052721871748}
+  - {fileID: 970540891917129789}
+  - {fileID: 8936397578460589732}
+  - {fileID: 7968716553797442403}
+  - {fileID: 1096293693385778882}
+  - {fileID: 1803061317899769591}
+  - {fileID: 625100045180378700}
+  - {fileID: 7613879703585723116}
+  - {fileID: 2658499546327427399}
+  - {fileID: 8711070800191810835}
+  - {fileID: 8376937105620564092}
+  - {fileID: 8151776957269052476}
+  - {fileID: 9165113050213923891}
+  - {fileID: 7034013229508450395}
+  - {fileID: 8578051342343282397}
+  - {fileID: 2012320662353130537}
+  - {fileID: 323096601415132135}
+  - {fileID: 6445960143564790882}
+  - {fileID: 7734125323330803607}
+  - {fileID: 6719508424005605577}
   isPrefab: 1
   prefabType: 1
 --- !u!1 &103102
@@ -960,7 +982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 21565
+    id: 38357
   replayObject:
     reference: {fileID: -7767813943838450789}
   positionFlags: 263
@@ -1707,7 +1729,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1761,7 +1783,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 30719
+    id: 32854
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedAudio: {fileID: 82179829388801616}
@@ -2280,7 +2302,7 @@ Transform:
   m_GameObject: {fileID: 125134}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.57, z: -0.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2354,8 +2376,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
+  MinDistance: 0.2
+  MaxDistance: 2
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -2390,7 +2412,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -2444,7 +2466,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 20117
+    id: 17543
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedAudio: {fileID: 8297354}
@@ -2527,7 +2549,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 41129
+    id: 19633
   replayObject:
     reference: {fileID: -7767813943838450789}
   positionFlags: 263
@@ -3927,7 +3949,7 @@ Transform:
   m_GameObject: {fileID: 158208}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.133, z: 1.707}
+  m_LocalPosition: {x: 0, y: 0, z: 0.03}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4398,7 +4420,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 0
+    m_RotationOrder: 4
 --- !u!82 &8253590
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4419,8 +4441,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
+  MinDistance: 0.2
+  MaxDistance: 2
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -5085,7 +5107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 23381
+    id: 57461
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedAudio: {fileID: 8253590}
@@ -6280,7 +6302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 32647
+    id: 25668
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedAudio: {fileID: 8282142}
@@ -6363,7 +6385,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 31827
+    id: 18346
   replayObject:
     reference: {fileID: -7767813943838450789}
   positionFlags: 263
@@ -6460,7 +6482,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -6514,7 +6536,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 56305
+    id: 50831
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedAudio: {fileID: 82914859112444036}
@@ -7065,7 +7087,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 39283
+    id: 17175
   replayObject:
     reference: {fileID: -7767813943838450789}
   positionFlags: 263
@@ -7904,7 +7926,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 36322
+    id: 42991
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23261190955339692}
@@ -8046,7 +8068,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 24314
+    id: 41785
   replayObject:
     reference: {fileID: -7767813943838450789}
   positionFlags: 0
@@ -8694,7 +8716,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 56285
+    id: 51356
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23366822252624480}
@@ -8837,7 +8859,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 17902
+    id: 45428
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23353113586693306}
@@ -9047,7 +9069,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 52907
+    id: 5963
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23357028160542600}
@@ -9260,7 +9282,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 52774
+    id: 57224
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23107828148067610}
@@ -9504,7 +9526,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 44823
+    id: 31280
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23378663467087764}
@@ -10214,7 +10236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 4842
+    id: 65038
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23325350253942988}
@@ -10322,7 +10344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 18726
+    id: 26267
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 23276408013039158}
@@ -10730,7 +10752,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 1301
+    id: 14005
   replayObject:
     reference: {fileID: -7767813943838450789}
   observedRenderer: {fileID: 365435026594160890}

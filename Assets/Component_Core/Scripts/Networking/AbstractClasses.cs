@@ -16,9 +16,12 @@ public abstract class Interactable_Object : NetworkBehaviour {
 
 public abstract class Client_Object : NetworkBehaviour
 {
+    
     public abstract ParticipantOrder GetParticipantOrder();
     public abstract void SetSpawnType(SpawnType _spawnType);
     public abstract void AssignFollowTransform(Interactable_Object MyInteractableObject, ulong targetClient);
+    public abstract Interactable_Object GetFollowTransform();
+
     public abstract void De_AssignFollowTransform(ulong clientID,NetworkObject netobj);
     public abstract Transform GetMainCamera();
     public abstract void CalibrateClient(ClientRpcParams clientRpcParams);

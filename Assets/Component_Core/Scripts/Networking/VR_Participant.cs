@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using UltimateReplay;
 using Unity.Collections;
-using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using Unity.Netcode;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR.Hands;
@@ -195,10 +193,14 @@ public class VR_Participant : Client_Object
         }
     }
 
+    public override Interactable_Object GetFollowTransform() {
+        return NetworkedInteractableObject;
+    }
+
     public override Transform GetMainCamera()
     {
         if (MyCamera == null) MyCamera = transform.GetChild(0).Find("CenterEyeAnchor");
-        return MyCamera;
+          return MyCamera;
     }
 
     [ClientRpc]
@@ -261,21 +263,24 @@ public class VR_Participant : Client_Object
     private QN_Display qnmanager;
     public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) {
          qnmanager = Instantiate(QuestionairPrefab).GetComponent<QN_Display>();
-         qnmanager.GetComponent<NetworkObject>();
-         NetworkObject referenceTransform = null;
+         qnmanager.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId,true);
+         string referenceTransformPath="";//TODO this is not Implemented
+         QN_Display.FollowType tmp = QN_Display.FollowType.MainCamera;
          Vector3 Offset = Vector3.zero;
          bool KeepUpdating = false;
          switch (mySpawnType.Value) {
              case SpawnType.CAR:
-                 referenceTransform = GetMyCar().GetComponent<NetworkObject>();
+                 tmp = QN_Display.FollowType.Interactable;
                  Offset = new Vector3(-0.38f, 1.14f, 0.6f);
                  KeepUpdating = true;
                  break;
              case SpawnType.NONE:
+                 break;
              case SpawnType.PEDESTRIAN:
              case SpawnType.PASSENGER:
-                 GetMainCamera().GetComponent<NetworkObject>();
-                 Offset = new Vector3(0f, 0f, 1f);
+                 tmp = QN_Display.FollowType.MainCamera;
+                
+                 Offset = new Vector3(0f, 0f, 0.5f);
                  break;
              case SpawnType.ROBOT:
                  break;
@@ -284,10 +289,10 @@ public class VR_Participant : Client_Object
          }
 
 
-         
-         qnmanager.StartQuestionair(m_QNDataStorageServer,m_participantOrder,referenceTransform,Offset,KeepUpdating);
-         
-         foreach (var screenShot in FindObjectsOfType<QnCaptureScreenShot>())
+         Debug.Log($"Spawning a questionnaire for Participant{m_participantOrder}");
+         qnmanager.StartQuestionair(m_QNDataStorageServer,m_participantOrder,tmp,Offset,KeepUpdating,referenceTransformPath);
+
+         foreach (var screenShot in FindObjectsOfType<QnCaptureScreenShot>()) {
              if (screenShot.ContainsPO(ConnectionAndSpawning.Singleton.ParticipantOrder)) {
                  if (screenShot.triggered) {
                      qnmanager.AddImage(screenShot.GetTexture());
@@ -295,6 +300,9 @@ public class VR_Participant : Client_Object
                      break;
                  }
              }
+         }
+
+         m_QNDataStorageServer.RegisterQNSCreen(m_participantOrder, qnmanager);
     }
 
     

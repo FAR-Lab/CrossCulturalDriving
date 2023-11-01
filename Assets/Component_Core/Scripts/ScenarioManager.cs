@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 
 public class ScenarioManager : MonoBehaviour {
-    private TextAsset QuestionairToAsk;
+    public TextAsset QuestionairToAsk;
     
     public string conditionName;//ToDo: Automate this based on the scene name 
 
