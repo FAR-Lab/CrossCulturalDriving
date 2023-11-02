@@ -42,8 +42,7 @@ public class QN_Display : NetworkBehaviour {
     private selectionBarAnimation sba;
     private readonly List<RectTransform> AnswerFields = new();
 
-    private LayerMask m_RaycastCollidableLayers;
-
+  
     private string m_LanguageSelect;
 
     private RectTransform BackButton;
@@ -230,15 +229,16 @@ public class QN_Display : NetworkBehaviour {
 
                 foreach (var a in currentActiveQustion.Answers.Keys) {
                     var rcb = Instantiate(ButtonPrefab, transform).transform
-                        .GetComponentInChildren<rayCastButton>();
-                    rcb.initButton(SetText(currentActiveQustion.Answers[a]), a);
-                    var rtrans = rcb.transform.parent.GetComponentInParent<RectTransform>();
+                        .GetComponentInChildren<PushableQNButton>();
+                    
+                    rcb.initButton(SetText(currentActiveQustion.Answers[a]), a, this.OnAnswerClickedHandler);
+                    var rtrans = rcb.transform.GetComponentInParent<RectTransform>();
                     AnswerFields.Add(rtrans);
                     var tempVector = new Vector2(rtrans.anchoredPosition.x,
                         -i * (165 / currentActiveQustion.Answers.Count) + 55);
-                    rtrans.anchoredPosition = tempVector;
+                    rtrans.anchoredPosition= tempVector;
                     i++;
-                    rcb.GetComponentInChildren<Button>().onClick.AddListener(delegate { OnAnswerClickedHandler(rcb); });
+                   
                 }
 
                 m_interalState = QNStates.RESPONSEWAIT;
@@ -288,9 +288,8 @@ public class QN_Display : NetworkBehaviour {
         }
     }
 
-    private void OnAnswerClickedHandler(rayCastButton rcb) {
+    private void OnAnswerClickedHandler(int AnswerIndex) {
         if (m_interalState == QNStates.RESPONSEWAIT) {
-                var AnswerIndex = rcb.activateNextQuestions();
                 SendQNAnswer(currentActiveQustion.ID, AnswerIndex, m_LanguageSelect);
                 _answerCount++;
                 m_interalState = QNStates.WAITINGFORQUESTION;

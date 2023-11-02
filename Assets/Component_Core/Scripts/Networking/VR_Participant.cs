@@ -247,7 +247,7 @@ public class VR_Participant : Client_Object
     [ClientRpc]
     private void De_AssignFollowTransformClientRPC(ulong targetClient)
     {
-        //ToDo: currently we just deassigned everything but NetworkInteractable object and _transform could turn into lists etc...
+        //ToDo: currently we just deassigned everything but NetworkInteractableObject and _transform could turn into lists etc...
         NetworkedInteractableObject = null;
      
         DontDestroyOnLoad(gameObject);
@@ -305,6 +305,9 @@ public class VR_Participant : Client_Object
          m_QNDataStorageServer.RegisterQNSCreen(m_participantOrder, qnmanager);
     }
 
+    private Transform LeftHand;
+    private Transform RightHand;
+
     
     [ClientRpc]
     public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default)
@@ -328,19 +331,51 @@ public class VR_Participant : Client_Object
                 var tmp = GetMainCamera();
                 tmp.GetComponent<TrackedPoseDriver>().trackingType = TrackedPoseDriver.TrackingType.RotationOnly;
 
-
-               
                 
+               
+                /*
                 if (ConnectionAndSpawning.Singleton.GetScenarioManager()
                     .GetSpawnPose(m_participantOrder, out Pose pose))
                 {
                     Quaternion q = Quaternion.FromToRotation(tmp.forward, pose.forward);
                     SetNewRotationOffset(Quaternion.Euler(0,q.eulerAngles.y,0));
+                    
                 }
                 
-                
-                SetNewPositionOffset(transform.parent.position-tmp.position);
+                 SetNewPositionOffset(transform.parent.position-tmp.position);
                 FinishedCalibration();
+                */
+                var t = NetworkedInteractableObject.GetCameraPositionObject();
+                Debug.Log($"trying to Get Callibratredpo:{m_participantOrder}");
+                if (t != null) {
+                   
+                    Quaternion q = Quaternion.FromToRotation(tmp.forward, t.forward);
+                    SetNewRotationOffset(Quaternion.Euler(0, q.eulerAngles.y, 0));
+                    SetNewPositionOffset(t.position - tmp.position);
+                    FinishedCalibration();
+                }
+                else {
+                    Debug.Log("Could not find GetCameraPositionObject :-(");
+                    if (ConnectionAndSpawning.Singleton.GetScenarioManager()
+                        .GetSpawnPose(m_participantOrder, out Pose pose))
+                    {
+                        Quaternion q = Quaternion.FromToRotation(tmp.forward, pose.forward);
+                        SetNewRotationOffset(Quaternion.Euler(0,q.eulerAngles.y,0));
+                    
+                    }
+                    SetNewPositionOffset(transform.parent.position-tmp.position);
+                    FinishedCalibration();
+                }
+
+                if (NetworkedInteractableObject.GetType() == typeof(ZEDMaster)) {
+                    var zedMaster = NetworkedInteractableObject.GetComponent<ZEDMaster>();
+                    LeftHand = transform.Find("Camera Offset/Left Hand Tracking/L_Wrist");
+                    RightHand = transform.Find("Camera Offset/Right Hand Tracking/R_Wrist");
+                    LeftHand.gameObject.GetOrAddComponent<ZombieHands>().Init(zedMaster.GetLeftHandRoot());
+                    RightHand.gameObject.GetOrAddComponent<ZombieHands>().Init(zedMaster.GetRightHandRoot());
+                    
+                }
+
                 break;
         }
     }

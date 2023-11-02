@@ -57,6 +57,12 @@ public class ZEDMaster : Interactable_Object {
             //HandleMouseClick();
             CycleThroughAvatars();
         }
+      
+            HeadClientRef = GetCameraPositionObject();
+            LeftClientRef = GetLeftHandRoot();
+            RightClientRef = GetRightHandRoot();
+            
+        
     }
 
     private void LateUpdate() {
@@ -124,7 +130,14 @@ public class ZEDMaster : Interactable_Object {
             yield return new WaitUntil(()=>CalibrateRotation());
             yield return new WaitForEndOfFrame();
             yield return new WaitUntil(()=>CalibratePosition());
-           Debug.Log($"Finished Calibrating!");
+            yield return new WaitForEndOfFrame();
+            if (targetAnimator != null) {
+                Debug.Log("Found a target, syncoironizing references");
+                NetworkObject someNetworkObject = targetAnimator.GetComponent<NetworkObject>();
+                AnimatorObjectNOID.Value = someNetworkObject.NetworkObjectId;
+            }
+
+            Debug.Log($"Finished Calibrating!");
              
         }
     }
@@ -239,11 +252,81 @@ public class ZEDMaster : Interactable_Object {
         CLID_= _CLID_;
     }
 
+    
+    public NetworkVariable<ulong> AnimatorObjectNOID = new NetworkVariable<ulong>();
+    public Transform HeadClientRef;
+    public Transform LeftClientRef;
+    public Transform RightClientRef;
     public override Transform GetCameraPositionObject()
     {
-        return transform;
+        if (IsServer) {
+            return CameraTrackingTransform;
+        }
+
+        if (IsClient) {
+            if (NetworkManager.SpawnManager.SpawnedObjects.ContainsKey(AnimatorObjectNOID.Value)) {
+                return NetworkManager.SpawnManager.SpawnedObjects[AnimatorObjectNOID.Value].transform
+                    .Find("mixamorig:Hips/" +
+                          "mixamorig:Spine/" +
+                          "mixamorig:Spine1/" +
+                          "mixamorig:Spine2/" +
+                          "mixamorig:Neck/" +
+                          "mixamorig:Head/" +
+                          "AvatarAnchor");
+                
+                
+                // .GetComponent<ZEDSkeletonAnimator>().animator.GetBoneTransform(HumanBodyBones.Head);
+                
+            }
+        }
+
+        return null;
+         
+     
     }
 
+    public Transform GetLeftHandRoot() {
+        if (IsClient) {
+            if (NetworkManager.SpawnManager.SpawnedObjects.ContainsKey(AnimatorObjectNOID.Value)) {
+                return NetworkManager.SpawnManager.SpawnedObjects[AnimatorObjectNOID.Value].transform
+                    .Find("mixamorig:Hips/" +
+                          "mixamorig:Spine/" +
+                          "mixamorig:Spine1/" +
+                          "mixamorig:Spine2/" +
+                          "mixamorig:LeftShoulder/" +
+                          "mixamorig:LeftArm/" +
+                          "mixamorig:LeftForeArm/"+
+                          "mixamorig:LeftHand");
+                   
+              //  "Camera Offset/Right Hand Tracking/R_Wrist/R_Palm"
+                
+                // .GetComponent<ZEDSkeletonAnimator>().animator.GetBoneTransform(HumanBodyBones.LeftHand);
+                
+            }
+        }
+
+        return null;
+    }
+    public Transform GetRightHandRoot() {
+        if (IsClient) {
+            if (NetworkManager.SpawnManager.SpawnedObjects.ContainsKey(AnimatorObjectNOID.Value)) {
+                return NetworkManager.SpawnManager.SpawnedObjects[AnimatorObjectNOID.Value].transform
+                    .Find("mixamorig:Hips/" +
+                          "mixamorig:Spine/" +
+                          "mixamorig:Spine1/" +
+                          "mixamorig:Spine2/" +
+                          "mixamorig:RightShoulder/" +
+                          "mixamorig:RightArm/" +
+                          "mixamorig:RightForeArm/"+
+                          "mixamorig:RightHand");
+                    
+                    //.GetComponent<ZEDSkeletonAnimator>().animator.GetBoneTransform(HumanBodyBones.RightHand);
+                
+            }
+        }
+
+        return null;
+    }
     public override void SetStartingPose(Pose _pose)
     {
        

@@ -181,8 +181,8 @@ GameObject:
   - component: {fileID: 114371233493075446}
   - component: {fileID: 222212222742178676}
   - component: {fileID: 114263982427416608}
-  - component: {fileID: 65812281438128604}
   - component: {fileID: -7936253877744390030}
+  - component: {fileID: 7695388097319344959}
   m_Layer: 5
   m_Name: QN_Screen
   m_TagString: Untagged
@@ -260,7 +260,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 5
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &114567478546710778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,7 +291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_participantOrder: 0
-  ButtonPrefab: {fileID: 1760336582165158, guid: 36e99e288be1353488b2cf7c2926563e, type: 3}
+  ButtonPrefab: {fileID: 5341688425068600842, guid: ae5de946023a0e8498493df678ada608, type: 3}
   m_interalState: 0
   ParentPosition: {fileID: 0}
   xOffset: 0
@@ -338,27 +338,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!65 &65812281438128604
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1853806982428388}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 300, y: 250, z: 0.01}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-7936253877744390030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,6 +358,25 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &7695388097319344959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853806982428388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &1927525004318210
 GameObject:
   m_ObjectHideFlags: 0
