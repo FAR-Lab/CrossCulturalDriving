@@ -60,7 +60,8 @@ public enum JoinType {
     SERVER,
     SCREEN,
     VR,
-    ROBOT
+    ROBOT,
+    INTERACTIONTESTING
 }
 
 

@@ -44,6 +44,10 @@ public class StartServerClientGUI : MonoBehaviour {
         
         ServerGuiSintance.Find("StartAsHost")?.GetComponent<Button>().onClick
             .AddListener(StartAsHostCallback);
+        ServerGuiSintance.Find("StartAsHostVR")?.GetComponent<Button>().onClick
+            .AddListener(StartAsHostVRCallback);
+        
+        
 #endif
     }
 
@@ -51,7 +55,16 @@ public class StartServerClientGUI : MonoBehaviour {
         var tmp = SessionName.text;
         if (tmp.Length <= 1) tmp = "Host_Unnamed_" + DateTime.Now.ToString("yyyyMMddTHHmmss");
 
-        ConnectionAndSpawning.Singleton.StartAsHost(tmp);
+        ConnectionAndSpawning.Singleton.StartAsHost(tmp,JoinType.SCREEN);
+        Destroy(ServerGuiSintance.gameObject);
+        enabled = false;
+    }
+
+    private void StartAsHostVRCallback() {
+        var tmp = SessionName.text;
+        if (tmp.Length <= 1) tmp = "HostVR_Unnamed_" + DateTime.Now.ToString("yyyyMMddTHHmmss");
+
+        ConnectionAndSpawning.Singleton.StartAsHost(tmp,JoinType.VR);
         Destroy(ServerGuiSintance.gameObject);
         enabled = false;
     }
