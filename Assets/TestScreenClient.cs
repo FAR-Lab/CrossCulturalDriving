@@ -11,13 +11,17 @@ public class TestScreenClient : Client_Object {
     private QN_Display qnmanager;
     
     private const string OffsetFileName = "TestScreenClientOffset";
-    private NetworkVariable<SpawnType> m_spawnType;
-    private NetworkVariable<ParticipantOrder> m_participantOrder;
+    private NetworkVariable<SpawnType> m_spawnType=new NetworkVariable<SpawnType>();
+    private NetworkVariable<ParticipantOrder> m_participantOrder=new NetworkVariable<ParticipantOrder>();
+    private NetworkVariable<ActionState> m_ActionState=new NetworkVariable<ActionState>();
     private Interactable_Object m_InteractableObject;
+    private NetworkVehicleController m_VehicleController;
 
     private float m_MaxFlySpeed=1.4f;
     private Vector3 m_Motion;
     [FormerlySerializedAs("MyCamera")] public Transform m_Camera;
+    private Vector2 m_CamRotation = Vector2.zero;
+    private const float k_LookMultiplier = 600;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,21 +29,50 @@ public class TestScreenClient : Client_Object {
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
+        if (IsServer) {
+            m_ActionState.Value = ConnectionAndSpawning.Singleton.ServerState;
+        }
+        if (!IsLocalPlayer) return;
         
         Vector3 Motion = Vector3.zero;
         switch (m_spawnType.Value) {
             case SpawnType.NONE:
                 break;
             case SpawnType.CAR:
+                if (m_ActionState.Value == ActionState.DRIVE) {
+                    float Throttle = Input.GetKey(KeyCode.UpArrow) == true ? 1 :
+                        Input.GetKey(KeyCode.DownArrow) ? -1 : 0;
+                    float steering = Input.GetKey(KeyCode.LeftArrow) == true ? -1 :
+                        Input.GetKey(KeyCode.RightArrow) ? 1 : 0;
+                    NewDataForTheCarServerRPC(steering, Throttle,
+                        Input.GetKey(KeyCode.J),
+                        Input.GetKey(KeyCode.L),
+                        Input.GetKey(KeyCode.K)
+                    );
+                }
+
                 break;
             case SpawnType.PEDESTRIAN:
-                 Motion.z = Input.GetKey(KeyCode.W) == true ? 1 : Input.GetKey(KeyCode.S) ? -1 : 0;
-                 Motion.x = Input.GetKey(KeyCode.A) == true ? -1 : Input.GetKey(KeyCode.D) ? 1 : 0;
+                if (m_ActionState.Value == ActionState.DRIVE) {
+                    Motion.z = Input.GetKey(KeyCode.W) == true ? 1 : Input.GetKey(KeyCode.S) ? -1 : 0;
+                    Motion.x = Input.GetKey(KeyCode.A) == true ? -1 : Input.GetKey(KeyCode.D) ? 1 : 0;
 
-                 Vector3.Lerp(m_Motion, Motion, 0.5f);
-                 transform.Translate(m_Motion*Time.deltaTime);
+                    m_Motion = Vector3.Lerp(m_Motion, Motion, 0.05f);
+                    transform.Translate(m_Motion * Time.deltaTime);
+                    
+                    float mouseX = Input.GetAxis("Mouse X");
+                    float mouseY = -Input.GetAxis("Mouse Y");
+
+                
+
+                    // Apply the rotation
+                    transform.rotation *= Quaternion.Euler(0,   mouseX* k_LookMultiplier * Time.deltaTime, 0);
+                    
+                    m_Camera.localRotation *= Quaternion.Euler(  mouseY* k_LookMultiplier * Time.deltaTime, 0, 0);
+
+                }
+
                 break;
             case SpawnType.PASSENGER:
                 break;
@@ -51,9 +84,56 @@ public class TestScreenClient : Client_Object {
         
     }
 
+    [ServerRpc]
+    public void NewDataForTheCarServerRPC(float i_steering, 
+        float i_throttle,
+        bool i_left,
+        bool i_right,
+        bool i_honk) {
+        if (IsServer && m_spawnType.Value == SpawnType.CAR) {
+//            Debug.Log($"Sending New Data To the Car" +
+      //                $"i_steering{i_steering}," +
+      ///                $"i_throttle{i_throttle}," +
+          //            $"i_left{i_left}." +
+        ///              $"i_right{i_right}," +
+             //         $"i_honk{i_honk}" );
+            m_VehicleController.NewDataToCome(
+                i_steering,
+                i_throttle,
+                i_left,
+                i_right,
+                i_honk
+            );
+        }
+        
+        
+    }
+
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
+        if (!IsLocalPlayer) {
+            DisableNonLocalobjects();
+        }
+        else {
+            m_ActionState.OnValueChanged += ActionStateUpdate;
+            GetMainCamera();
+        }
         
+    }
+
+    private void ActionStateUpdate(ActionState previousvalue, ActionState newvalue) {
+        if (newvalue == ActionState.DRIVE && m_spawnType.Value==SpawnType.PEDESTRIAN) {
+            Cursor.lockState = CursorLockMode.Locked; 
+        }
+        else {
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
+
+    private void DisableNonLocalobjects() {
+        GetComponentInChildren<Camera>().enabled = false;
+        GetComponentInChildren<AudioListener>().enabled = false;
+
     }
 
     public override ParticipantOrder GetParticipantOrder() {
@@ -93,8 +173,10 @@ public class TestScreenClient : Client_Object {
             NetworkObject.TrySetParent(m_InteractableObject.NetworkObject, false);
             AssignInteractable_ClientRPC(m_InteractableObject.GetComponent<NetworkObject>(), targetClient);
             if (m_spawnType.Value == SpawnType.CAR) {
-                m_InteractableObject.GetComponent<NetworkVehicleController>().VehicleMode =
-                    NetworkVehicleController.VehicleOpperationMode.KEYBOARD;
+                m_VehicleController=m_InteractableObject.GetComponent<NetworkVehicleController>();
+                m_VehicleController.VehicleMode =
+                    NetworkVehicleController.VehicleOpperationMode.REMOTEKEYBOARD;
+                
             }
         }
     }
@@ -119,6 +201,9 @@ public class TestScreenClient : Client_Object {
                 }
             }
             m_InteractableObject = targetObject.transform.GetComponent<Interactable_Object>();
+            if (m_spawnType.Value == SpawnType.CAR) {
+                m_VehicleController = m_InteractableObject.GetComponent<NetworkVehicleController>();
+            }
         }
         else
         {

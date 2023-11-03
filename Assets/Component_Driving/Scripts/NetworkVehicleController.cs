@@ -21,7 +21,8 @@ public class NetworkVehicleController : Interactable_Object {
     public enum VehicleOpperationMode {
         KEYBOARD,
         STEERINGWHEEL,
-        AUTONOMOUS
+        AUTONOMOUS,
+        REMOTEKEYBOARD
     }
 
     [SerializeField] public VehicleOpperationMode VehicleMode;
@@ -61,7 +62,7 @@ public class NetworkVehicleController : Interactable_Object {
     public NetworkVariable<float> CurrentSpeed;
     public NetworkVariable<RoadSurface> CurrentSurface;
 
-
+    private bool REMOTEKEYBOARD_NewData = false;
     void UpdateSounds() {
         if (controller == null) return;
         IsShifting.Value = controller.IsShifting;
@@ -266,6 +267,18 @@ public class NetworkVehicleController : Interactable_Object {
 
 
                     break;
+                case VehicleOpperationMode.REMOTEKEYBOARD:
+                    if (REMOTEKEYBOARD_NewData) {
+                        REMOTEKEYBOARD_NewData = false;
+
+                        TempLeft = leftInput;
+                        TempRight = rightInput;
+                        TempHonk = honkInput;
+                        
+                    };
+                    
+                    
+                    break;
                 default:
                     break;
             }
@@ -317,6 +330,19 @@ public class NetworkVehicleController : Interactable_Object {
         UpdateSounds();
     }
 
+    
+    bool  leftInput, rightInput, honkInput;
+    
+    
+    public void NewDataToCome(float i_steering, float i_throttle, bool i_left, bool i_right, bool i_honk) {
+        REMOTEKEYBOARD_NewData = true;
+        SteeringInput = i_steering;
+        ThrottleInput = i_throttle;
+        leftInput = i_left;
+        rightInput = i_right;
+        honkInput = i_honk;
+
+    }
     public override void AssignClient(ulong CLID_, ParticipantOrder _participantOrder_) {
         if (IsServer) {
             NetworkManager.SceneManager.OnSceneEvent += SceneManager_OnSceneEvent;
@@ -493,6 +519,7 @@ public class NetworkVehicleController : Interactable_Object {
 
             if (indicaterStage == 2) {
                 switch (VehicleMode) {
+                    
                     case VehicleOpperationMode.KEYBOARD:
                         break;
                     case VehicleOpperationMode.STEERINGWHEEL:
@@ -503,6 +530,8 @@ public class NetworkVehicleController : Interactable_Object {
 
                         break;
                     case VehicleOpperationMode.AUTONOMOUS:
+                        break;
+                    case VehicleOpperationMode.REMOTEKEYBOARD:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

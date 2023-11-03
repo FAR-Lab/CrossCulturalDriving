@@ -21,7 +21,7 @@ public class StartServerClientGUI : MonoBehaviour {
     private Transform ServerGuiSintance;
     
     private Text SessionName;
-
+    private Text TargetIP;
     private void Start() {
 #if UNITY_EDITOR || UNITY_STANDALONE
 
@@ -29,47 +29,60 @@ public class StartServerClientGUI : MonoBehaviour {
         if (ServerStartGUI == null) return;
         ServerGuiSintance = Instantiate(ServerStartGUI).transform;
 
-        SessionName = ServerGuiSintance.Find("PairName")?.GetComponent<InputField>()?.textComponent;
-        ServerGuiSintance.Find("IpAddress").GetComponent<Text>().text = LocalIPAddress();
-
-        ServerGuiSintance.Find("StartAsServer")?.GetComponent<Button>().onClick
-            .AddListener(StartAsServerInterfaceCallback);
-        ServerGuiSintance.Find("StartClientA")?.GetComponent<Button>().onClick
-            .AddListener(StartAsClientAInterfaceCallback);
-        ServerGuiSintance.Find("StartClientB")?.GetComponent<Button>().onClick
-            .AddListener(StartAsClientBInterfaceCallback);
-
-        ServerGuiSintance.Find("StartAsReRun")?.GetComponent<Button>().onClick
-            .AddListener(StartAsReRuInterfaceCallback);
+        SessionName = ServerGuiSintance.Find("HostPanel/PairName")?.GetComponent<InputField>().textComponent;
+        ServerGuiSintance.Find("HostPanel/IpAddress").GetComponent<Text>().text = LocalIPAddress();
         
-        ServerGuiSintance.Find("StartAsHost")?.GetComponent<Button>().onClick
-            .AddListener(StartAsHostCallback);
-        ServerGuiSintance.Find("StartAsHostVR")?.GetComponent<Button>().onClick
-            .AddListener(StartAsHostVRCallback);
+        TargetIP = ServerGuiSintance.Find("ClientPanel/ClientOptions/TargetIPAddress").GetComponent<InputField>()?.textComponent;
+        ServerGuiSintance.Find("StartAsReRun").GetComponent<Button>().onClick.AddListener(()=>StartAsReRuInterfaceCallback());
         
+        
+        foreach (var t in ServerGuiSintance.GetComponentsInChildren<ComputerStartButtonConfiguration>()) {
+            t.GetComponent<Button>().onClick.AddListener(
+                ()=>StartUsingParameters(t.ThisStartType,
+                    t.ThisParticipantOrder,
+                    TargetIP.text,
+                    t.ThisSpawnType,
+                    t.ThisJoinType));
+                    
+        }
         
 #endif
     }
 
-    private void StartAsHostCallback() {
-        var tmp = SessionName.text;
-        if (tmp.Length <= 1) tmp = "Host_Unnamed_" + DateTime.Now.ToString("yyyyMMddTHHmmss");
+    public void StartUsingParameters(ComputerStartButtonConfiguration.StartType starttype, ParticipantOrder _po,
+        string _ip,
+        SpawnType _spawnTypeIN, 
+        JoinType _joinTypeIN) {
+        switch (starttype) {
+            case ComputerStartButtonConfiguration.StartType.Server:
+                ConnectionAndSpawning.Singleton.StartAsServer(SessionName.text);
+                break;
+            case ComputerStartButtonConfiguration.StartType.Host:
+                ConnectionAndSpawning.Singleton.StartAsHost(SessionName.text, _joinTypeIN);
+                break;
+            case ComputerStartButtonConfiguration.StartType.Client:
+                if (_ip.Length == 0) {
+                    _ip = "127.0.0.1";
+                }
+                ConnectionAndSpawning.Singleton.StartAsClient("English", 
+                    po:_po,
+                    ip: _ip,
+                    port: 7777,
+                    result:ResponseDelegate,
+                    _spawnTypeIN: _spawnTypeIN,
+                    _joinTypeIN: _joinTypeIN
+                );
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(starttype), starttype, null);
+        }
 
-        ConnectionAndSpawning.Singleton.StartAsHost(tmp,JoinType.SCREEN);
+        
         Destroy(ServerGuiSintance.gameObject);
         enabled = false;
     }
-
-    private void StartAsHostVRCallback() {
-        var tmp = SessionName.text;
-        if (tmp.Length <= 1) tmp = "HostVR_Unnamed_" + DateTime.Now.ToString("yyyyMMddTHHmmss");
-
-        ConnectionAndSpawning.Singleton.StartAsHost(tmp,JoinType.VR);
-        Destroy(ServerGuiSintance.gameObject);
-        enabled = false;
-    }
-
-
+    
+   
 
     public void StartAsReRuInterfaceCallback() {
         Debug.Log("Starting as Rerun Button Call!");
@@ -87,30 +100,6 @@ public class StartServerClientGUI : MonoBehaviour {
         enabled = false;
     }
 
-    public void StartAsClientAInterfaceCallback() {
-        ConnectionAndSpawning.Singleton.StartAsClient("English", 
-            po: ParticipantOrder.A,
-            ip: "127.0.0.1",
-            port: 7777,
-            result:ResponseDelegate,
-            _spawnTypeIN: SpawnType.CAR,
-            _joinTypeIN: JoinType.SCREEN
-        );
-        Destroy(ServerGuiSintance.gameObject);
-        enabled = false;
-    }
-
-    public void StartAsClientBInterfaceCallback() {
-        ConnectionAndSpawning.Singleton.StartAsClient("English", 
-            ParticipantOrder.B,
-            "127.0.0.1", 
-            7777,
-            ResponseDelegate,
-            SpawnType.PEDESTRIAN,
-            JoinType.VR);
-        Destroy(ServerGuiSintance.gameObject);
-        enabled = false;
-    }
 
     private void ResponseDelegate(ConnectionAndSpawning.ClienConnectionResponse response) {
         switch (response) {
