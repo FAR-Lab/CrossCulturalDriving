@@ -113,6 +113,10 @@ public class ZEDMaster : Interactable_Object {
             }
         }
     }
+
+    public void e_StartCallibrationSequence() {
+        StartCoroutine(CalibrateSequence());
+    }
     
     private IEnumerator CalibrateSequence()
     {
@@ -121,10 +125,7 @@ public class ZEDMaster : Interactable_Object {
            
             yield return new WaitUntil(()=> FindDependencies());
             
-             
-                
             
-           
             yield return new WaitUntil(()=>CalibratePosition());
             yield return new WaitForEndOfFrame();
             yield return new WaitUntil(()=>CalibrateRotation());

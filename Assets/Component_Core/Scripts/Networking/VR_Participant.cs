@@ -256,9 +256,16 @@ public class VR_Participant : Client_Object
     }
 
     public override void CalibrateClient(ClientRpcParams clientRpcParams)
-    {
+    { 
+
+        if (mySpawnType.Value == SpawnType.PEDESTRIAN &&  NetworkedInteractableObject.GetComponent<ZEDMaster>() != null ) {
+            NetworkedInteractableObject.GetComponent<ZEDMaster>().e_StartCallibrationSequence();
+        }
+        
         CalibrateClientRPC(clientRpcParams);
     }
+    
+    
 
     private QN_Display qnmanager;
     public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) {
@@ -331,27 +338,14 @@ public class VR_Participant : Client_Object
                 var tmp = GetMainCamera();
                 tmp.GetComponent<TrackedPoseDriver>().trackingType = TrackedPoseDriver.TrackingType.RotationOnly;
 
-                
-               
-                /*
-                if (ConnectionAndSpawning.Singleton.GetScenarioManager()
-                    .GetSpawnPose(m_participantOrder, out Pose pose))
-                {
-                    Quaternion q = Quaternion.FromToRotation(tmp.forward, pose.forward);
-                    SetNewRotationOffset(Quaternion.Euler(0,q.eulerAngles.y,0));
-                    
-                }
-                
-                 SetNewPositionOffset(transform.parent.position-tmp.position);
-                FinishedCalibration();
-                */
                 var t = NetworkedInteractableObject.GetCameraPositionObject();
-                Debug.Log($"trying to Get Callibratredpo:{m_participantOrder}");
+                Debug.Log($"trying to Get Callibratre :{m_participantOrder}");
                 if (t != null) {
                    
                     Quaternion q = Quaternion.FromToRotation(tmp.forward, t.forward);
                     SetNewRotationOffset(Quaternion.Euler(0, q.eulerAngles.y, 0));
                     SetNewPositionOffset(t.position - tmp.position);
+                    
                     FinishedCalibration();
                 }
                 else {
