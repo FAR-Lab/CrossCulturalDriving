@@ -699,7 +699,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                     }
                 }
 
-                Debug.Log($"Despawin interactiobleio{io.name}");
+                Debug.Log($"Despawin interact able {io.name}");
                 io.GetComponent<NetworkObject>().Despawn();
                 toRemove.Add(io);
             }

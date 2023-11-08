@@ -59,6 +59,10 @@ public class ZEDBodyTrackingManager : MonoBehaviour {
         if (zedStreamingClient) zedStreamingClient.OnNewDetection -= UpdateSkeletonData;
     }
 
+    public delegate void d_OnSkeletonChange(ZEDMaster.UpdateType state,int id);
+
+    public d_OnSkeletonChange OnSkeletonChange;
+    
     /// <summary>
     ///     Updates the skeleton data from ZEDCamera call and send it to Skeleton Handler script.
     /// </summary>
@@ -80,18 +84,21 @@ public class ZEDBodyTrackingManager : MonoBehaviour {
                 }
                 else {
                     if (avatarControlList.Count < maximumNumberOfDetections) {
+                        
                         var handler = ScriptableObject.CreateInstance<SkeletonHandler>();
                         var spawnPosition = bodyData.position;
                         handler.Create(avatars[Random.Range(0, avatars.Length)], bodies.body_format);
                         handler.InitSkeleton(person_id, new Material(skeletonBaseMaterial));
                         avatarControlList.Add(person_id, handler);
                         UpdateAvatarControl(handler, bodyData);
+                        OnSkeletonChange.Invoke(ZEDMaster.UpdateType.NEWSKELETON, person_id);
                     }
                 }
             }
         }
 
         foreach (var index in remainingKeyList) {
+            OnSkeletonChange.Invoke(ZEDMaster.UpdateType.DELETESKELETON, index);
             var handler = avatarControlList[index];
             handler.Destroy();
             avatarControlList.Remove(index);

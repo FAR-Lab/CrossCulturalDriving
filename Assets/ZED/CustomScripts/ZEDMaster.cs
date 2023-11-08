@@ -1,167 +1,176 @@
 #if USING_ZED
+
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Collections.LowLevel.Unsafe;
+using sl;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine.InputSystem;
-using UnityEngine.PlayerLoop;
 
 
-public class ZEDMaster : Interactable_Object {
-   
-    
-    
+public class ZEDMaster : MonoBehaviour {
     private List<ZEDSkeletonAnimator> zedAvatars;
     private int currentAvatarIndex = 0;
 
-    
+
     [SerializeField] private GameObject storedTarget;
     private ZEDSkeletonAnimator targetAnimator;
     private ZEDBodyTrackingManager zedBodyTrackingManager;
     private Transform targetHip;
-    
+
     private Pose destinationPose;
 
     private Transform CameraTrackingTransform;
- 
-    
-    public override void OnNetworkSpawn()
-    {
-        
-        base.OnNetworkSpawn();
-        if (IsServer)
-        {
-            zedBodyTrackingManager =GetComponent<ZEDBodyTrackingManager>();
-            destinationPose = new Pose(transform.position, transform.rotation);
-            CameraTrackingTransform = transform;
-        }
-        else
-        {
-            GetComponent<ZEDBodyTrackingManager>().enabled = false;
-            GetComponent<ZEDStreamingClient>().enabled = false;
-            
-        }
-        Debug.Log($"Setting up syc reference");
-           
 
+    #region SingeltonManagment
+
+    public static ZEDMaster Singleton { get; private set; }
+
+    private void SetSingleton() {
+        Singleton = this;
     }
 
-    private void Update()
-    {
-        if (IsServer)
-        {
-            //HandleMouseClick();
-            CycleThroughAvatars();
+    private void OnEnable() {
+        if (Singleton != null && Singleton != this) {
+            Destroy(gameObject);
+            return;
         }
-      
-            HeadClientRef = GetCameraPositionObject();
-            LeftClientRef = GetLeftHandRoot();
-            RightClientRef = GetRightHandRoot();
-            
-        
+
+        SetSingleton();
+        DontDestroyOnLoad(gameObject);
     }
 
-    private void LateUpdate() {
-        if (IsServer && CameraTrackingTransform != null)
-        {
-            transform.position = CameraTrackingTransform.position;
-        }
+    private void OnDestroy() {
+        if (Singleton != null && Singleton == this) Singleton = null;
     }
 
-    private void OnDisable()
-    {  if (IsServer)
-        {
-            // destroy all avatars
-            ZEDSkeletonAnimator[] avatars = GameObject.FindObjectsOfType<ZEDSkeletonAnimator>();
-            foreach (var avatar in avatars)
-            {
-                Destroy(avatar.gameObject);
-            }
-        }
+    #endregion
+
+    private void Start() {
+        zedBodyTrackingManager = GetComponent<ZEDBodyTrackingManager>();
+        zedBodyTrackingManager.OnSkeletonChange += OnDetectionChange;
+        ConnectionAndSpawning.Singleton.ServerStateChange += ServerStateChange;
     }
 
-    private void CycleThroughAvatars()
-    {
-        if (IsServer)
-        {
-            // if press right arrow, go to next avatar
-            if (Keyboard.current.rightArrowKey.wasPressedThisFrame)
-            {
-                zedAvatars = new List<ZEDSkeletonAnimator>(FindObjectsOfType<ZEDSkeletonAnimator>());
-                if (currentAvatarIndex >= zedAvatars.Count) return;
-                   storedTarget = zedAvatars[currentAvatarIndex].gameObject;
-                foreach (ZEDSkeletonAnimator zed in zedAvatars)
-                {
-                    SetMaterialsColor(zed.gameObject, Color.white);
+    private void ServerStateChange(ActionState state) {
+        switch (state) {
+            case ActionState.DEFAULT:
+                break;
+            case ActionState.WAITINGROOM:
+                break;
+            case ActionState.LOADINGSCENARIO:
+                break;
+            case ActionState.LOADINGVISUALS:
+                break;
+            case ActionState.READY:
+                var  re= FindObjectOfType<ZedSpaceReference>();
+                if (re != null) {
+                    zedBodyTrackingManager.positionOffset = re.transform.position;
+                    zedBodyTrackingManager.rotationOffset = re.transform.rotation.eulerAngles;
                 }
+                break;
+            case ActionState.DRIVE:
+                break;
+            case ActionState.QUESTIONS:
+                break;
+            case ActionState.POSTQUESTIONS:
+                break;
+            case ActionState.RERUN:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(state), state, null);
+        }
+    }
 
-                SetMaterialsColor(storedTarget, Color.red);
-                currentAvatarIndex++;
-                if (currentAvatarIndex == zedAvatars.Count)
-                {
-                    currentAvatarIndex = 0;
+    public Vector3 GetHipPosition() {
+      return  targetAnimator.animator.GetBoneTransform(HumanBodyBones.Hips).position;
+    }
+    private void OnDetectionChange(UpdateType state, int id) {
+        switch (state) {
+            case UpdateType.NEWSKELETON:
+              
+                break;
+            case UpdateType.DELETESKELETON:
+                if (targetAnimator != null &&  id == targetAnimator.Skhandler.m_person_id) {
+                    OnChangedTrackingReferrence.Invoke(UpdateType.DELETESKELETON);
+                    targetAnimator = null;
                 }
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(state), state, null);
+        }
+    }
+
+    private void Update() {
+        //HandleMouseClick();
+        CycleThroughAvatars();
+        
+    }
+
+
+    private void OnDisable() {
+        // destroy all avatars
+        ZEDSkeletonAnimator[] avatars = FindObjectsOfType<ZEDSkeletonAnimator>();
+        foreach (var avatar in avatars) {
+            Destroy(avatar.gameObject);
+        }
+    }
+
+    private void CycleThroughAvatars() {
+        // if press right arrow, go to next avatar
+        if (Keyboard.current.rightArrowKey.wasPressedThisFrame) {
+            zedAvatars = new List<ZEDSkeletonAnimator>(FindObjectsOfType<ZEDSkeletonAnimator>());
+            if (currentAvatarIndex >= zedAvatars.Count) return;
+            storedTarget = zedAvatars[currentAvatarIndex].gameObject;
+            foreach (ZEDSkeletonAnimator zed in zedAvatars) {
+                SetMaterialsColor(zed.gameObject, Color.white);
             }
 
-            if (Keyboard.current.upArrowKey.wasPressedThisFrame)
-            {
-                StartCoroutine(CalibrateSequence());
+            SetMaterialsColor(storedTarget, Color.red);
+            currentAvatarIndex++;
+            if (currentAvatarIndex == zedAvatars.Count) {
+                currentAvatarIndex = 0;
             }
+        }
+
+        if (Keyboard.current.upArrowKey.wasPressedThisFrame) {
+            StartCoroutine(CalibrateSequence());
         }
     }
 
     public void e_StartCallibrationSequence() {
         StartCoroutine(CalibrateSequence());
     }
-    
-    private IEnumerator CalibrateSequence()
-    {
-        if (NetworkManager.Singleton.IsServer)
-        {
-           
-            yield return new WaitUntil(()=> FindDependencies());
-            
-            
-            yield return new WaitUntil(()=>CalibratePosition());
+
+    private IEnumerator CalibrateSequence() {
+        if (NetworkManager.Singleton.IsServer) {
+            yield return new WaitUntil(() => FindDependencies());
+            yield return new WaitUntil(() => CalibratePosition());
             yield return new WaitForEndOfFrame();
-            yield return new WaitUntil(()=>CalibrateRotation());
+            yield return new WaitUntil(() => CalibrateRotation());
             yield return new WaitForEndOfFrame();
-            yield return new WaitUntil(()=>CalibratePosition());
+            yield return new WaitUntil(() => CalibratePosition());
             yield return new WaitForEndOfFrame();
-            if (targetAnimator != null) {
-                Debug.Log("Found a target, syncoironizing references");
-                NetworkObject someNetworkObject = targetAnimator.GetComponent<NetworkObject>();
-                AnimatorObjectNOID.Value = someNetworkObject.NetworkObjectId;
-            }
+            OnChangedTrackingReferrence.Invoke(UpdateType.NEWSKELETON);
 
             Debug.Log($"Finished Calibrating!");
-             
         }
     }
 
-   
-    
-    private bool FindDependencies()
-    {
+
+    private bool FindDependencies() {
         // if there is only one avatar, assign it to storedTarget
-        if (storedTarget == null)
-        {
+        if (storedTarget == null) {
             ZEDSkeletonAnimator[] allAvatars = FindObjectsOfType<ZEDSkeletonAnimator>();
-            if (allAvatars.Length == 1)
-            {
+            if (allAvatars.Length == 1) {
                 storedTarget = allAvatars[0].gameObject;
             }
-            else
-            {
+            else {
                 return false;
             }
         }
 
-        zedBodyTrackingManager = GetComponent<ZEDBodyTrackingManager>();
         
         // get the current hip position of target
         targetAnimator = storedTarget.GetComponent<ZEDSkeletonAnimator>();
@@ -173,11 +182,9 @@ public class ZEDMaster : Interactable_Object {
         }
 
         return false;
-        
-
     }
-    private bool CalibratePosition()
-    {
+
+    private bool CalibratePosition() {
         // calculate the difference vector
         if (destinationPose != null && targetHip != null) {
             Vector3 positionOffset = destinationPose.position - targetHip.position;
@@ -185,13 +192,11 @@ public class ZEDMaster : Interactable_Object {
             zedBodyTrackingManager.positionOffset += positionOffset;
             return true;
         }
-        
-            return false;
-        
+
+        return false;
     }
 
-    private bool CalibrateRotation()
-    {
+    private bool CalibrateRotation() {
         if (destinationPose != null && targetHip != null) {
             // calculate the difference vector
             Vector3 rotationOffset = destinationPose.rotation.eulerAngles - targetHip.rotation.eulerAngles;
@@ -204,24 +209,20 @@ public class ZEDMaster : Interactable_Object {
         return false;
     }
 
-    private void HandleMouseClick()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
+    private void HandleMouseClick() {
+        if (Input.GetMouseButtonDown(0)) {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
             bool hasHit = Physics.Raycast(ray, out hit);
             GameObject hitObject = hasHit ? hit.collider.gameObject : null;
 
-            if (storedTarget != null && (hitObject == null || hitObject != storedTarget))
-            {
+            if (storedTarget != null && (hitObject == null || hitObject != storedTarget)) {
                 SetMaterialsColor(storedTarget, Color.white);
-                storedTarget = null; 
+                storedTarget = null;
             }
 
-            if (hitObject && hitObject.GetComponentInParent<ZEDSkeletonAnimator>())
-            {
+            if (hitObject && hitObject.GetComponentInParent<ZEDSkeletonAnimator>()) {
                 GameObject currentTarget = hitObject.GetComponentInParent<ZEDSkeletonAnimator>().gameObject;
                 SetMaterialsColor(currentTarget, Color.red);
                 storedTarget = currentTarget;
@@ -229,113 +230,44 @@ public class ZEDMaster : Interactable_Object {
             }
         }
     }
-    
-    public void SetMaterialsColor(GameObject target, Color color)
-    {
+
+    public void SetMaterialsColor(GameObject target, Color color) {
         SkinnedMeshRenderer skinnedMeshRenderer = target.GetComponentInChildren<SkinnedMeshRenderer>();
         Material[] mats = skinnedMeshRenderer.materials;
-        foreach (Material mat in mats)
-        {
+        foreach (Material mat in mats) {
             mat.color = color;
         }
+
         skinnedMeshRenderer.materials = mats;
     }
 
-    public override void Stop_Action()
-    {
+
+    public enum UpdateType {
+        NEWSKELETON,
+        DELETESKELETON
     }
+    public delegate void d_OnNewTrackingReferenceAcquired(UpdateType ud);
 
-    private ParticipantOrder _participantOrder;
-    private ulong CLID_;
-    public override void AssignClient(ulong _CLID_, ParticipantOrder _participantOrder_)
-    {
-        _participantOrder = _participantOrder_;
-        CLID_= _CLID_;
-    }
 
-    
-    public NetworkVariable<ulong> AnimatorObjectNOID = new NetworkVariable<ulong>();
-    public Transform HeadClientRef;
-    public Transform LeftClientRef;
-    public Transform RightClientRef;
-    public override Transform GetCameraPositionObject()
-    {
-        if (IsServer) {
-            return CameraTrackingTransform;
-        }
+    public d_OnNewTrackingReferenceAcquired OnChangedTrackingReferrence;
 
-        if (IsClient) {
-            if (NetworkManager.SpawnManager.SpawnedObjects.ContainsKey(AnimatorObjectNOID.Value)) {
-                return NetworkManager.SpawnManager.SpawnedObjects[AnimatorObjectNOID.Value].transform
-                    .Find("mixamorig:Hips/" +
-                          "mixamorig:Spine/" +
-                          "mixamorig:Spine1/" +
-                          "mixamorig:Spine2/" +
-                          "mixamorig:Neck/" +
-                          "mixamorig:Head/" +
-                          "AvatarAnchor");
-                
-                
-                // .GetComponent<ZEDSkeletonAnimator>().animator.GetBoneTransform(HumanBodyBones.Head);
-                
-            }
-        }
 
-        return null;
-         
-     
+
+    public Transform GetCameraPositionObject() {
+        return CameraTrackingTransform;
     }
 
     public Transform GetLeftHandRoot() {
-        if (IsClient) {
-            if (NetworkManager.SpawnManager.SpawnedObjects.ContainsKey(AnimatorObjectNOID.Value)) {
-                return NetworkManager.SpawnManager.SpawnedObjects[AnimatorObjectNOID.Value].transform
-                    .Find("mixamorig:Hips/" +
-                          "mixamorig:Spine/" +
-                          "mixamorig:Spine1/" +
-                          "mixamorig:Spine2/" +
-                          "mixamorig:LeftShoulder/" +
-                          "mixamorig:LeftArm/" +
-                          "mixamorig:LeftForeArm/"+
-                          "mixamorig:LeftHand");
-                   
-              //  "Camera Offset/Right Hand Tracking/R_Wrist/R_Palm"
-                
-                // .GetComponent<ZEDSkeletonAnimator>().animator.GetBoneTransform(HumanBodyBones.LeftHand);
-                
-            }
-        }
-
-        return null;
+      if(targetAnimator!=null)
+        return targetAnimator.animator.GetBoneTransform(HumanBodyBones.LeftHand);
+      return null;
     }
+
     public Transform GetRightHandRoot() {
-        if (IsClient) {
-            if (NetworkManager.SpawnManager.SpawnedObjects.ContainsKey(AnimatorObjectNOID.Value)) {
-                return NetworkManager.SpawnManager.SpawnedObjects[AnimatorObjectNOID.Value].transform
-                    .Find("mixamorig:Hips/" +
-                          "mixamorig:Spine/" +
-                          "mixamorig:Spine1/" +
-                          "mixamorig:Spine2/" +
-                          "mixamorig:RightShoulder/" +
-                          "mixamorig:RightArm/" +
-                          "mixamorig:RightForeArm/"+
-                          "mixamorig:RightHand");
-                    
-                    //.GetComponent<ZEDSkeletonAnimator>().animator.GetBoneTransform(HumanBodyBones.RightHand);
-                
-            }
-        }
-
+        if(targetAnimator!=null)
+            return targetAnimator.animator.GetBoneTransform(HumanBodyBones.RightHand);
         return null;
-    }
-    public override void SetStartingPose(Pose _pose)
-    {
-       
-    }
-
-    public override bool HasActionStopped()
-    {
-        return true;
+        
     }
 }
 

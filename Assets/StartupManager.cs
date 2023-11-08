@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 public class StartupManager : MonoBehaviour
 {
-    public GameObject ZEDInitializationManager;
+  
     public GameObject ServerUICanvas;
     
     public GameObject VRUIStartPrefab;
@@ -38,7 +38,7 @@ public class StartupManager : MonoBehaviour
                 Instantiate(ServerUICanvas);
                 #if USING_ZED && (UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN )
                 Debug.Log("ZED is enabled");
-                Instantiate(ZEDInitializationManager);
+               
                 # endif
                 break;
             case RuntimePlatform.Android:

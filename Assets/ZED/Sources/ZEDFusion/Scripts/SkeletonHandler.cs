@@ -216,10 +216,12 @@ public class SkeletonHandler : ScriptableObject {
     /// </summary>
     /// <param name="person_id">Skeleton ID</param>
     /// <param name="skBaseMat">Material for the skeleton.</param>
+    ///
+    public int m_person_id;
     public void InitSkeleton(int person_id, Material skBaseMat) {
         bones = new GameObject[currentBonesList.Length / 2];
         spheres = new GameObject[currentSpheresList.Length];
-
+        m_person_id = person_id;
         skeleton = new GameObject { name = "Skeleton_ID_" + person_id };
         var width = 0.025f;
 

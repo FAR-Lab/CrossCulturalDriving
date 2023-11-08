@@ -186,8 +186,27 @@ public class VR_Participant : Client_Object
     {
         if (IsServer) {
            NetworkedInteractableObject = MyInteractableObject;
-            
-            NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
+           switch (mySpawnType.Value) {
+               case SpawnType.NONE:
+                   break;
+               case SpawnType.CAR:
+                   NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
+                   break;
+               case SpawnType.PEDESTRIAN:
+                   var t = MyInteractableObject.GetCameraPositionObject().GetComponent<NetworkObject>();
+                   Debug.Log(t.name);
+                   Debug.Log($"Parenting success{NetworkObject.TrySetParent(t, false)}");
+           
+                   break;
+               case SpawnType.PASSENGER:
+                   break;
+               case SpawnType.ROBOT:
+                   break;
+               default:
+                   throw new ArgumentOutOfRangeException();
+           }
+
+        
           
             AssignInteractable_ClientRPC(MyInteractableObject.GetComponent<NetworkObject>(), targetClient);
         }
