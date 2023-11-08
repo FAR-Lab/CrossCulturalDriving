@@ -7,6 +7,8 @@ public class CrowdAgent : MonoBehaviour
     public float radius = 10f;
     private Vector3 targetPosition;
 
+    public bool showGizmos = false;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -60,6 +62,7 @@ public class CrowdAgent : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (!showGizmos) return;
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, radius);
 

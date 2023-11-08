@@ -3,7 +3,8 @@ using UnityEngine.AI;
 
 public class CrowdAgentManager : MonoBehaviour
 {
-    public GameObject agentPrefab;
+    public GameObject[] agentPrefabs;
+    public int initialSpawnCount = 10;
     public float spawnRate = 1f;
 
     private BoxCollider spawnArea;
@@ -19,6 +20,11 @@ public class CrowdAgentManager : MonoBehaviour
         // just to make sure spawn is trigger so it doesn't bounce stuff around
         spawnArea.isTrigger = true;
 
+        for (int i = 0; i < initialSpawnCount; i++)
+        {
+            SpawnAgent();
+        }
+
         InvokeRepeating(nameof(SpawnAgent), spawnRate, spawnRate);
     }
 
@@ -33,7 +39,8 @@ public class CrowdAgentManager : MonoBehaviour
         // try to see if the random point is on the navmesh
         if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, spawnArea.size.magnitude, NavMesh.AllAreas))
         {
-            GameObject agentInstance = Instantiate(agentPrefab, hit.position, Quaternion.identity);
+            GameObject randomPrefab = agentPrefabs[Random.Range(0, agentPrefabs.Length)];
+            GameObject agentInstance = Instantiate(randomPrefab, hit.position, Quaternion.identity);
             agentInstance.transform.parent = transform;
         }
         else
