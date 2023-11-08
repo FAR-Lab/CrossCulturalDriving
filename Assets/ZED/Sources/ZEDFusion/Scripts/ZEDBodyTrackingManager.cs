@@ -32,7 +32,7 @@ public class ZEDBodyTrackingManager : MonoBehaviour {
         //{
         //    useAvatar = !useAvatar;
         //}
-
+/*
         if (Input.GetKeyDown(KeyCode.Keypad0)) displaySDKSkeleton = !displaySDKSkeleton;
 
         if (Input.GetKeyDown(toggleFootIK)) enableFootIK = !enableFootIK;
@@ -49,7 +49,7 @@ public class ZEDBodyTrackingManager : MonoBehaviour {
             offsetSDKSkeleton.x += offsetStep;
         else if (Input.GetKeyDown(decreaseSkeOffsetXKey)) offsetSDKSkeleton.x -= offsetStep;
         if (Input.GetKeyDown(toggleAutomaticHeightOffset)) automaticOffset = !automaticOffset;
-
+*/
 
         // Display avatars or not depending on useAvatar setting.
         foreach (var skelet in avatarControlList) skelet.Value.GetAnimator().gameObject.SetActive(enableAvatar);
