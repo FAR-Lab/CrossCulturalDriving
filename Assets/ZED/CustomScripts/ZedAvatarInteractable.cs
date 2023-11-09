@@ -11,7 +11,7 @@ public class ZedAvatarInteractable : Interactable_Object {
     private bool initDone = false;
     private Transform ReferenceTransformHead;
 
-    private NetworkVariable<Quaternion> rotatation = new NetworkVariable<Quaternion>();
+    public NetworkVariable<Vector3> fwd = new NetworkVariable<Vector3>();
 
     public int PreviousID = 0;
     public override void OnNetworkSpawn()
@@ -29,10 +29,10 @@ public class ZedAvatarInteractable : Interactable_Object {
         }
     }
    
-    public void LateUpdate() {
-        if (initDone) {
+    public void Update() {
+        if (initDone && IsServer) {
             transform.position = ReferenceTransformHead.position;
-            rotatation.Value = ReferenceTransformHead.rotation;
+            fwd.Value = ReferenceTransformHead.forward;
             // transform.rotation = Quaternion.Euler(0,ReferenceTransformHead.rotation.eulerAngles.y,0);
         }
     }

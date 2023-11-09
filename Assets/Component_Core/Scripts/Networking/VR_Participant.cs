@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UltimateReplay;
 using Unity.Collections;
 using Unity.Netcode;
@@ -272,8 +273,8 @@ public class VR_Participant : Client_Object
     public override void CalibrateClient(ClientRpcParams clientRpcParams)
     { 
 
-        if (mySpawnType.Value == SpawnType.PEDESTRIAN &&  NetworkedInteractableObject.GetComponent<ZEDMaster>() != null ) {
-            NetworkedInteractableObject.GetComponent<ZEDMaster>().e_StartCallibrationSequence();
+        if (mySpawnType.Value == SpawnType.PEDESTRIAN &&  ZEDMaster.Singleton != null ) {
+            ZEDMaster.Singleton.e_StartCallibrationSequence();
         }
         
         CalibrateClientRPC(clientRpcParams);
@@ -329,7 +330,30 @@ public class VR_Participant : Client_Object
     private Transform LeftHand;
     private Transform RightHand;
 
-    
+    private IEnumerator OverTimeCallibration(Transform Parent, Transform Camera, float maxtime = 10) {
+        float timer = Time.time;
+        int runs = 0;
+        const int MaxRuns = 500;
+        var interact = transform.parent.GetComponent<ZedAvatarInteractable>();
+        isCalibrationRunning = true;
+        float[] rotations = new float[MaxRuns];
+
+        while (runs < MaxRuns) {
+            rotations[runs] = Quaternion.FromToRotation(Camera.forward, interact.fwd.Value).eulerAngles.y;
+            timer -= Time.deltaTime;
+            runs++;
+            yield return new WaitForEndOfFrame();
+        }
+
+        Debug.Log($"Finished Collecting data: rotAvg:{rotations.Average()} and std: {rotations.StandardDeviation()}");
+
+    SetNewRotationOffset(Quaternion.Euler(0, rotations.Average(), 0));
+    SetNewPositionOffset(transform.parent.position - Camera.position);
+    FinishedCalibration();
+    isCalibrationRunning = false;
+    }
+    private bool isCalibrationRunning = false;
+    private Coroutine CallibrationHandler;
     [ClientRpc]
     public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default)
     {
@@ -354,11 +378,19 @@ public class VR_Participant : Client_Object
 
                 var t = NetworkedInteractableObject.GetCameraPositionObject();
                 Debug.Log($"trying to Get Callibratre :{m_participantOrder}");
-                if (t != null) {
+                if (transform.parent != null &&
+                    transform.parent==NetworkedInteractableObject.transform &&
+                    transform.parent.GetComponent<ZedAvatarInteractable>()!=null ) {
+                    if (isCalibrationRunning == false) {
+
+                        CallibrationHandler = StartCoroutine(OverTimeCallibration(transform.parent, tmp, 10));
+                    }
+                }
+                else if (t != null) {
                    
                     Quaternion q = Quaternion.FromToRotation(tmp.forward, t.forward);
                     SetNewRotationOffset(Quaternion.Euler(0, q.eulerAngles.y, 0));
-                    SetNewPositionOffset(t.position - tmp.position);
+                    
                     
                     FinishedCalibration();
                 }
