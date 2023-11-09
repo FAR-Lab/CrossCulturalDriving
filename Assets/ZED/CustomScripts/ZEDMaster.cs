@@ -4,6 +4,8 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json.Serialization;
 using sl;
 using Unity.Netcode;
 using UnityEngine.InputSystem;
@@ -38,11 +40,19 @@ public class ZEDMaster : MonoBehaviour {
         }
 
         SetSingleton();
-        DontDestroyOnLoad(gameObject);
+        
     }
 
     private void OnDestroy() {
         if (Singleton != null && Singleton == this) Singleton = null;
+            Debug.Log("About to destroy abunch of Skeletons");
+        zedBodyTrackingManager.setDestroyed = true;
+        ZEDSkeletonAnimator[] avatars = FindObjectsOfType<ZEDSkeletonAnimator>();
+        foreach (var avatar in avatars) {
+            avatar.GetComponent<NetworkObject>().Despawn();
+            Destroy(avatar.gameObject);
+        }
+        
     }
 
     #endregion
@@ -50,39 +60,20 @@ public class ZEDMaster : MonoBehaviour {
     private void Start() {
         zedBodyTrackingManager = GetComponent<ZEDBodyTrackingManager>();
         zedBodyTrackingManager.OnSkeletonChange += OnDetectionChange;
-        ConnectionAndSpawning.Singleton.ServerStateChange += ServerStateChange;
+       
+        TryToFindGlobalReference();
     }
 
-    private void ServerStateChange(ActionState state) {
-        switch (state) {
-            case ActionState.DEFAULT:
-                break;
-            case ActionState.WAITINGROOM:
-                break;
-            case ActionState.LOADINGSCENARIO:
-                break;
-            case ActionState.LOADINGVISUALS:
-                break;
-            case ActionState.READY:
-                var  re= FindObjectOfType<ZedSpaceReference>();
-                if (re != null) {
-                    zedBodyTrackingManager.positionOffset = re.transform.position;
-                    zedBodyTrackingManager.rotationOffset = re.transform.rotation.eulerAngles;
-                }
-                break;
-            case ActionState.DRIVE:
-                break;
-            case ActionState.QUESTIONS:
-                break;
-            case ActionState.POSTQUESTIONS:
-                break;
-            case ActionState.RERUN:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(state), state, null);
+ 
+   
+
+    public void  TryToFindGlobalReference() {
+        var  re= FindObjectOfType<ZedSpaceReference>();
+        if (re != null) {
+            zedBodyTrackingManager.positionOffset = re.transform.position;
+            zedBodyTrackingManager.rotationOffset = re.transform.rotation.eulerAngles;
         }
     }
-
     public Vector3 GetHipPosition() {
       return  targetAnimator.animator.GetBoneTransform(HumanBodyBones.Hips).position;
     }
@@ -93,7 +84,7 @@ public class ZEDMaster : MonoBehaviour {
                 break;
             case UpdateType.DELETESKELETON:
                 if (targetAnimator != null &&  id == targetAnimator.Skhandler.m_person_id) {
-                    OnChangedTrackingReferrence.Invoke(UpdateType.DELETESKELETON);
+                    OnChangedTrackingReferrence.Invoke(UpdateType.DELETESKELETON,targetAnimator.Skhandler.m_person_id);
                     targetAnimator = null;
                 }
                 break;
@@ -109,20 +100,15 @@ public class ZEDMaster : MonoBehaviour {
     }
 
 
-    private void OnDisable() {
-        // destroy all avatars
-        ZEDSkeletonAnimator[] avatars = FindObjectsOfType<ZEDSkeletonAnimator>();
-        foreach (var avatar in avatars) {
-            Destroy(avatar.gameObject);
-        }
-    }
-
+ 
+  bool  ReconnectAvatar=false;
     private void CycleThroughAvatars() {
         // if press right arrow, go to next avatar
         if (Keyboard.current.rightArrowKey.wasPressedThisFrame) {
             zedAvatars = new List<ZEDSkeletonAnimator>(FindObjectsOfType<ZEDSkeletonAnimator>());
             if (currentAvatarIndex >= zedAvatars.Count) return;
             storedTarget = zedAvatars[currentAvatarIndex].gameObject;
+            
             foreach (ZEDSkeletonAnimator zed in zedAvatars) {
                 SetMaterialsColor(zed.gameObject, Color.white);
             }
@@ -133,6 +119,8 @@ public class ZEDMaster : MonoBehaviour {
                 currentAvatarIndex = 0;
             }
         }
+
+       
 
         if (Keyboard.current.upArrowKey.wasPressedThisFrame) {
             StartCoroutine(CalibrateSequence());
@@ -146,13 +134,17 @@ public class ZEDMaster : MonoBehaviour {
     private IEnumerator CalibrateSequence() {
         if (NetworkManager.Singleton.IsServer) {
             yield return new WaitUntil(() => FindDependencies());
+            /*
             yield return new WaitUntil(() => CalibratePosition());
             yield return new WaitForEndOfFrame();
             yield return new WaitUntil(() => CalibrateRotation());
             yield return new WaitForEndOfFrame();
             yield return new WaitUntil(() => CalibratePosition());
             yield return new WaitForEndOfFrame();
-            OnChangedTrackingReferrence.Invoke(UpdateType.NEWSKELETON);
+            */
+
+
+            OnChangedTrackingReferrence.Invoke(UpdateType.NEWSKELETON,targetAnimator.Skhandler.m_person_id);
 
             Debug.Log($"Finished Calibrating!");
         }
@@ -176,7 +168,7 @@ public class ZEDMaster : MonoBehaviour {
         targetAnimator = storedTarget.GetComponent<ZEDSkeletonAnimator>();
         targetHip = targetAnimator.animator.GetBoneTransform(HumanBodyBones.Hips);
         CameraTrackingTransform = targetAnimator.animator.GetBoneTransform(HumanBodyBones.Head);
-
+       
         if (targetAnimator != null && targetHip != null && CameraTrackingTransform != null) {
             return true;
         }
@@ -246,7 +238,7 @@ public class ZEDMaster : MonoBehaviour {
         NEWSKELETON,
         DELETESKELETON
     }
-    public delegate void d_OnNewTrackingReferenceAcquired(UpdateType ud);
+    public delegate void d_OnNewTrackingReferenceAcquired(UpdateType ud,int SkeletonID);
 
 
     public d_OnNewTrackingReferenceAcquired OnChangedTrackingReferrence;

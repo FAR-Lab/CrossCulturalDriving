@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class ZedAvatarInteractable : Interactable_Object {
@@ -9,7 +10,10 @@ public class ZedAvatarInteractable : Interactable_Object {
     private ulong m_ClientID;
     private bool initDone = false;
     private Transform ReferenceTransformHead;
-    
+
+    private NetworkVariable<Quaternion> rotatation = new NetworkVariable<Quaternion>();
+
+    public int PreviousID = 0;
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -17,23 +21,28 @@ public class ZedAvatarInteractable : Interactable_Object {
         {
             if (ZEDMaster.Singleton == null) {
                 Instantiate(ZEDMasterPrefab);
+                
             }
 
             ZEDMaster.Singleton.OnChangedTrackingReferrence += TriggerCalibration;
+           
         }
     }
-
+   
     public void LateUpdate() {
         if (initDone) {
             transform.position = ReferenceTransformHead.position;
-            transform.rotation = ReferenceTransformHead.rotation;
+            rotatation.Value = ReferenceTransformHead.rotation;
+            // transform.rotation = Quaternion.Euler(0,ReferenceTransformHead.rotation.eulerAngles.y,0);
         }
     }
 
-    private void TriggerCalibration(ZEDMaster.UpdateType ud) {
+    private void TriggerCalibration(ZEDMaster.UpdateType ud, int skeletonID) {
+        
         if (ud == ZEDMaster.UpdateType.NEWSKELETON) {
             ReferenceTransformHead = ZEDMaster.Singleton.GetCameraPositionObject();
             initDone = true;
+            PreviousID = skeletonID;
         }
         else if (ud == ZEDMaster.UpdateType.DELETESKELETON) {
             initDone = false;
@@ -48,6 +57,8 @@ public class ZedAvatarInteractable : Interactable_Object {
     }
 
     public override Transform GetCameraPositionObject() {
+      
+        
         return transform;
     }
 

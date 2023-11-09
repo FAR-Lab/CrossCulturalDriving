@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class TrafficLightController : MonoBehaviour {
+public class TrafficLightController : NetworkBehaviour {
     public Material off;
     public Material red;
     public Material green;
@@ -12,8 +14,8 @@ public class TrafficLightController : MonoBehaviour {
     public Transform LightSurfaces;
 
 
-    public TrafficLightSupervisor.trafficLightStatus StartinTrafficlightStatus;
-    public ParticipantOrder participantAssociation;
+    public TrafficLightTrigger.TLState StartinTrafficlightStatus;
+    public ParticipantOrder m_participantOrder;
     private bool IdleState;
 
 
@@ -30,28 +32,37 @@ public class TrafficLightController : MonoBehaviour {
     }
 
 
-    private void InteralGraphicsUpdate(TrafficLightSupervisor.trafficLightStatus inval) {
+    private void InteralGraphicsUpdate(TrafficLightTrigger.TLState inval) {
         switch (inval) {
-            case TrafficLightSupervisor.trafficLightStatus.IDLE:
+            case TrafficLightTrigger.TLState.IDLE:
                 IdleState = true;
                 StartCoroutine(GoIdle());
                 break;
-            case TrafficLightSupervisor.trafficLightStatus.RED:
+            case TrafficLightTrigger.TLState.RED:
                 IdleState = false;
                 StartCoroutine(GoRed());
                 break;
-            case TrafficLightSupervisor.trafficLightStatus.GREEN:
+            case TrafficLightTrigger.TLState.GREEN:
                 StartCoroutine(GoGreen());
                 IdleState = false;
                 break;
-            default: throw new ArgumentOutOfRangeException();
+            case TrafficLightTrigger.TLState.NONE:
+            default: break; 
         }
     }
 
-    public void UpdatedTrafficlight(TrafficLightSupervisor.trafficLightStatus newval) {
-        InteralGraphicsUpdate(newval);
+    public void UpdatedTrafficlight(Dictionary<ParticipantOrder, TrafficLightTrigger.TLState> newval) {
+        if (newval.ContainsKey(m_participantOrder)) {
+            InteralGraphicsUpdate(newval[m_participantOrder]);
+            UpdatedTrafficlightClientRPC(newval[m_participantOrder]);
+        }
+        
     }
 
+    [ClientRpc]
+    public void UpdatedTrafficlightClientRPC(TrafficLightTrigger.TLState newval) {
+        InteralGraphicsUpdate(newval);
+    }
 
     private IEnumerator GoRed() {
         var mat = LightRenderer.materials;

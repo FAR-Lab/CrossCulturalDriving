@@ -21,4 +21,10 @@ public class SkeletonNetworkScript : NetworkBehaviour
             GetComponent<HeightOffsetter>().enabled = false;
         }
     }
+
+    public override void OnNetworkDespawn() {
+        base.OnNetworkDespawn();
+       
+        
+    }
 }

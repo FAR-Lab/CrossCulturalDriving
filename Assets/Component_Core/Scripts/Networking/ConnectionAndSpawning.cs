@@ -259,13 +259,13 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     }
 
-    public void StartAsHost(string pairName, JoinType _jt) {
+    public void StartAsHost(string pairName, JoinType _jt,SpawnType _st) {
         SetUpToServe(pairName);
         m_ReRunManager.RerunInitialization(true, null, RerunManager.StartUpMode.RECORDING);
         m_ReRunManager.SetRecordingFolder(pairName);
         ConnectionDataRequest connectionDataRequest = new ConnectionDataRequest() {
             po = ParticipantOrder.A,
-            st = SpawnType.CAR,
+            st =_st,
             jt = _jt
         };
         string jsonstring = JsonConvert.SerializeObject(connectionDataRequest);

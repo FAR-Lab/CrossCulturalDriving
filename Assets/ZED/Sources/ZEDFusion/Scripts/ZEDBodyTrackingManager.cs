@@ -1,9 +1,11 @@
 ﻿//======= Copyright (c) Stereolabs Corporation, All rights reserved. ===============
 
+using System;
 using System.Collections.Generic;
 using sl;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// </summary>
@@ -14,6 +16,7 @@ public class ZEDBodyTrackingManager : MonoBehaviour {
         UPPER_BODY = 1
     }
 
+    public bool setDestroyed = false;
     /// <summary>
     ///     Start this instance.
     /// </summary>
@@ -24,7 +27,12 @@ public class ZEDBodyTrackingManager : MonoBehaviour {
         zedStreamingClient.OnNewDetection += UpdateSkeletonData;
     }
 
+    private void OnDisable() {
+        setDestroyed = true;
+    }
+
     public void Update() {
+        if (setDestroyed) return;
         DisplaySDKSkeleton = displaySDKSkeleton;
         OffsetSDKSkeleton = offsetSDKSkeleton;
 
@@ -67,6 +75,7 @@ public class ZEDBodyTrackingManager : MonoBehaviour {
     ///     Updates the skeleton data from ZEDCamera call and send it to Skeleton Handler script.
     /// </summary>
     private void UpdateSkeletonData(Bodies bodies) {
+        if(setDestroyed)return;
         var remainingKeyList = new List<int>(avatarControlList.Keys);
         var newBodies = new List<BodyData>(bodies.body_list);
 

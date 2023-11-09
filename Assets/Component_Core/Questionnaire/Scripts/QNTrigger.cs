@@ -32,7 +32,8 @@ public class QNTrigger : MonoBehaviour
  
 
     private void OnTriggerEnter(Collider other){
-        if (NetworkManager.Singleton.IsServer){
+        if (NetworkManager.Singleton.IsServer) {
+            return; //TODO: THIS IS BAD DAVID!!
             if (StartingId == ParticipantOrder.None){
                 if (other.transform.GetComponentInParent<NetworkVehicleController>() != null){
                     Debug.Log("Found a car so I am telling the server to switch to QNs");

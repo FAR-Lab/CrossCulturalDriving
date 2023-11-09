@@ -75,7 +75,7 @@ public enum SpawnType {
 
 public struct FElem
 {
-    public static readonly ParticipantOrder[] AllPossPart =
+    public static readonly ParticipantOrder[] AllPossibleParticipant =
     {
         ParticipantOrder.A, ParticipantOrder.B, ParticipantOrder.C, ParticipantOrder.D, ParticipantOrder.E,
         ParticipantOrder.F

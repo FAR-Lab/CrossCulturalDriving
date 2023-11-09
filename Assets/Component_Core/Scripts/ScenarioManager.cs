@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using Unity.Netcode;
 using UnityEngine;
 
 public class ScenarioManager : MonoBehaviour {
     public TextAsset QuestionairToAsk;
-    
+
+
+   
     public string conditionName;//ToDo: Automate this based on the scene name 
 
-    // Use this for initialization
- 
 
     public SceneField VisualSceneToUse;
 
@@ -29,6 +31,14 @@ public class ScenarioManager : MonoBehaviour {
    
     public bool ready { get; private set; } // property
 
+    public enum FloorType {
+        CROSSWALK,
+        EMPTY,
+        LIGHTS
+    }
+
+    [SerializeField] public FloorType m_FloorType;
+  
 
     public bool HasVisualScene()
     {
@@ -45,8 +55,11 @@ public class ScenarioManager : MonoBehaviour {
        
         GetSpawnPoints();
         ready = true;
+       
+    }
 
-    
+    public FloorType GetFloorTypeForThisScenarion() {
+        return m_FloorType;
     }
 
 

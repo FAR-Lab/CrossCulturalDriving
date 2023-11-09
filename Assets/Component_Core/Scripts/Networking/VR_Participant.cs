@@ -141,12 +141,7 @@ public class VR_Participant : Client_Object
     }
 
 
-    [ClientRpc]
-    public void UpdateTrafficLightsClientRPC(TrafficLightSupervisor.trafficLightStatus msg)
-    {
-        if (!IsLocalPlayer || IsServer) return;
-        foreach (var tmp in FindObjectsOfType<TrafficLightController>()) tmp.UpdatedTrafficlight(msg);
-    }
+   
 
     public void GoForPostQuestion()
     {

@@ -74,7 +74,8 @@ public class SkeletonHandler : ScriptableObject {
     public void Create(GameObject h, BODY_FORMAT body_format) {
         // modification: spawn humanoid after instantiating
         humanoid = Instantiate(h, Vector3.zero, Quaternion.identity);
-        humanoid.GetComponent<NetworkObject>().Spawn();
+        humanoid.GetComponent<NetworkObject>().Spawn(true);
+       
         Debug.Log("Humanoid created");
         animator = humanoid.GetComponent<Animator>();
 
