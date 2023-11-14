@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(RerunPlaybackCameraManager))]
 public class OberserverCamera_ClientObject : Client_Object {
-    private ParticipantOrder po;
+    private ParticipantOrder m_ParticipantOrder;
     private SpawnType spawnType;
     private Interactable_Object MyInteractableObject;
     private ulong targetClient;
@@ -99,8 +99,12 @@ public class OberserverCamera_ClientObject : Client_Object {
         }
     }
 
+    public override void SetParticipantOrder(ParticipantOrder _ParticipantOrder) {
+        m_ParticipantOrder = _ParticipantOrder;
+    }
+
     public override ParticipantOrder GetParticipantOrder() {
-        return po;
+        return m_ParticipantOrder;
     }
 
     public override void SetSpawnType(SpawnType _spawnType) {
@@ -129,4 +133,14 @@ public class OberserverCamera_ClientObject : Client_Object {
     }
 
     public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) { }
+    public override void GoForPostQuestion() {
+        if (!IsLocalPlayer) return;
+        PostQuestionServerRPC(OwnerClientId);
+    }
+    
+    [ServerRpc]
+    public void PostQuestionServerRPC(ulong clientID)
+    {
+        ConnectionAndSpawning.Singleton.FinishedQuestionair(clientID);
+    }
 }

@@ -17,15 +17,15 @@ public class TestScreenClient : Client_Object {
     private Interactable_Object m_InteractableObject;
     private NetworkVehicleController m_VehicleController;
 
-    private float m_MaxFlySpeed=1.4f;
-    private Vector3 m_Motion;
-    [FormerlySerializedAs("MyCamera")] public Transform m_Camera;
-    private Vector2 m_CamRotation = Vector2.zero;
-    private const float k_LookMultiplier = 600;
+    private CharacterController m_characterController;
+
+    public float walkingSpeed=1.5f;
+    public Transform m_Camera;
+    private const float k_LookMultiplier = 500;
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Start() {
+
+        m_characterController = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -35,7 +35,7 @@ public class TestScreenClient : Client_Object {
         }
         if (!IsLocalPlayer) return;
         
-        Vector3 Motion = Vector3.zero;
+       
         switch (m_spawnType.Value) {
             case SpawnType.NONE:
                 break;
@@ -55,20 +55,22 @@ public class TestScreenClient : Client_Object {
                 break;
             case SpawnType.PEDESTRIAN:
                 if (m_ActionState.Value == ActionState.DRIVE) {
+                    Vector3 Motion = Vector3.zero;
                     Motion.z = Input.GetKey(KeyCode.W) == true ? 1 : Input.GetKey(KeyCode.S) ? -1 : 0;
                     Motion.x = Input.GetKey(KeyCode.A) == true ? -1 : Input.GetKey(KeyCode.D) ? 1 : 0;
 
-                    m_Motion = Vector3.Lerp(m_Motion, Motion, 0.05f);
-                    transform.Translate(m_Motion * Time.deltaTime);
+                   
                     
                     float mouseX = Input.GetAxis("Mouse X");
                     float mouseY = -Input.GetAxis("Mouse Y");
 
-                
+                    if (!m_characterController.isGrounded) {
+                        Motion.y = -m_characterController.stepOffset*2f;
+                    }
 
                     // Apply the rotation
                     transform.rotation *= Quaternion.Euler(0,   mouseX* k_LookMultiplier * Time.deltaTime, 0);
-                    
+                    m_characterController.Move(transform.rotation*(Motion*Time.deltaTime*walkingSpeed));
                     m_Camera.localRotation *= Quaternion.Euler(  mouseY* k_LookMultiplier * Time.deltaTime, 0, 0);
 
                 }
@@ -140,8 +142,8 @@ public class TestScreenClient : Client_Object {
         return m_participantOrder.Value;
     }
 
-    public void SetParticipantOrder(ParticipantOrder po) {
-        m_participantOrder.Value = po;
+    public override void SetParticipantOrder(ParticipantOrder _ParticipantOrder) {
+        m_participantOrder.Value = _ParticipantOrder;
     }
     public override void SetSpawnType(SpawnType _spawnType) {
         m_spawnType.Value = _spawnType;
@@ -150,11 +152,11 @@ public class TestScreenClient : Client_Object {
                 case SpawnType.NONE:
                     break;
                 case SpawnType.CAR:
-                    GetComponent<CapsuleCollider>().enabled = false;
+                    GetComponent<CharacterController>().enabled = false;
                     
                     break;
                 case SpawnType.PEDESTRIAN:
-                    GetComponent<CapsuleCollider>().enabled = true;
+                    GetComponent<CharacterController>().enabled = true;
                     break;
                 case SpawnType.PASSENGER:
                     break;
@@ -286,10 +288,23 @@ public class TestScreenClient : Client_Object {
                 break;
         }
 
-
-       
-        qnmanager.StartQuestionair(m_QNDataStorageServer,m_participantOrder.Value,tmp,Offset,KeepUpdating,referenceTransformPath);
+Debug.Log($"SpawnType {m_spawnType.Value}  FollowType:{tmp} KeepUpdating:{KeepUpdating}");
+        
+        qnmanager.StartQuestionair(m_QNDataStorageServer,m_participantOrder.Value,tmp,Offset,KeepUpdating,referenceTransformPath ,this);
         
         m_QNDataStorageServer.RegisterQNSCreen(m_participantOrder.Value, qnmanager);
+        
+        Debug.Log("Setup Questionnaire serverside, ready for Questions");
+    }
+
+    public override void GoForPostQuestion() {
+        if (!IsLocalPlayer) return;
+        PostQuestionServerRPC(OwnerClientId);
+    }
+    
+    [ServerRpc]
+    public void PostQuestionServerRPC(ulong clientID)
+    {
+        ConnectionAndSpawning.Singleton.FinishedQuestionair(clientID);
     }
 }

@@ -34,13 +34,11 @@ public class QN_Display : NetworkBehaviour {
 
     public QNStates m_interalState = QNStates.IDLE;
 
-    private string m_condition;
-    // private InputAction selectAction;
+
 
 
     private Text QustionField;
-    private selectionBarAnimation sba;
-    private readonly List<RectTransform> AnswerFields = new();
+    private readonly List<Transform> AnswerFields = new List<Transform>();
 
   
     private string m_LanguageSelect;
@@ -49,6 +47,8 @@ public class QN_Display : NetworkBehaviour {
     private Text CountDisplay;
     private NetworkedQuestionnaireQuestion currentActiveQustion;
 
+
+    public VerticalLayoutGroup m_VerticalLayoutGroup;
     private int _answerCount;
     private int _totalCount;
 
@@ -79,18 +79,19 @@ public class QN_Display : NetworkBehaviour {
     private void Start() {
        
         QustionField = transform.Find("QuestionField").GetComponent<Text>();
-        sba = GetComponentInChildren<selectionBarAnimation>();
+        
         BackButton = transform.Find("BackButton").GetComponent<RectTransform>();
         BackButton.GetComponent<Button>().onClick.AddListener(delegate { OnBackClickedHandler(); });
         CountDisplay = transform.Find("CountDisplay").GetComponent<Text>();
-        
 
+    
+        
 #if DEBUGQN
-        startAskingTheQuestionairs(FindObjectOfType<LocalVRPlayer>().transform, QNFiles.ToArray(), "Test");
+        RequestFirstQuestion(FindObjectOfType<LocalVRPlayer>().transform, QNFiles.ToArray(), "Test");
         changeLanguage("English");
         setRelativePosition(FindObjectOfType<LocalVRPlayer>().transform, 1, 2);
 #endif
-        
+
     }
 
     public GameObject ScenarioImageHolder;
@@ -128,36 +129,43 @@ public class QN_Display : NetworkBehaviour {
     }
 
 
+    
     private Transform positioingRef;
 
     private VR_Participant m_MyLocalClient;
-    
     private PokeGestureDetector pokeRight;
     // Update is called once per frame
-    public void startAskingTheQuestionairs(ParticipantOrder po) {
+    public void RequestFirstQuestion(ParticipantOrder po) {
         if (m_interalState == QNStates.IDLE) {
-            
-            Debug.Log("Starting To Ask Questions");
-            ChangeLanguage(ConnectionAndSpawning.Singleton.lang);
-            m_condition = ConnectionAndSpawning.Singleton.GetScenarioManager().GetComponent<ScenarioManager>().conditionName;
 
-            
+            Debug.Log(
+                $"Starting To Ask Questions ConnectionAndSpawning.Singleton.lang{ConnectionAndSpawning.Singleton.ThisClient._Language}");
+            ChangeLanguage(ConnectionAndSpawning.Singleton.ThisClient._Language);
+
+
             m_interalState = QNStates.WAITINGFORQUESTION;
             m_participantOrder = po;
-            m_MyLocalClient=VR_Participant.GetJoinTypeObject();//ToDO Need to test!!
 
-         
-            
-            Transform RightHand = m_MyLocalClient.transform.Find("Camera Offset/Right Hand Tracking");
-            pokeRight = RightHand.GetComponent<PokeGestureDetector>(); // ideally this would be done somehwere else...
-            if (pokeRight == null) {
-                pokeRight = RightHand.gameObject.AddComponent<PokeGestureDetector>(); // ideally this would be done somehwere else...
+            if (ConnectionAndSpawning.Singleton.ThisClient._jointype == JoinType.VR) {
+                m_MyLocalClient = VR_Participant.GetJoinTypeObject(); //ToDO Need to test!!
+                if (m_MyLocalClient != null) {
+                    Transform RightHand = m_MyLocalClient.transform.Find("Camera Offset/Right Hand Tracking");
+                    pokeRight = RightHand
+                        .GetComponent<PokeGestureDetector>(); // ideally this would be done somehwere else...
+                    if (pokeRight == null) {
+                        pokeRight = RightHand.gameObject
+                            .AddComponent<PokeGestureDetector>(); // ideally this would be done somehwere else...
+                    }
+
+                    pokeRight.enabled = true;
+                }
             }
-           
-            
-           
-            pokeRight.enabled = true;
-            
+            else if (ConnectionAndSpawning.Singleton.ThisClient._jointype == JoinType.INTERACTIONTESTING) {
+                GetComponent<Canvas>().worldCamera = Camera.main;
+                GetComponent<Canvas>().sortingOrder = 5;
+
+            }
+
             Debug.Log("Requesting new questions from the server!");
             SendQNAnswerServerRPC(-1, 0, m_LanguageSelect);
 
@@ -228,16 +236,23 @@ public class QN_Display : NetworkBehaviour {
                 var i = 0;
 
                 foreach (var a in currentActiveQustion.Answers.Keys) {
-                    var rcb = Instantiate(ButtonPrefab, transform).transform
+                    var rcb = Instantiate(ButtonPrefab, m_VerticalLayoutGroup.transform).transform
                         .GetComponentInChildren<PushableQNButton>();
                     
                     rcb.initButton(SetText(currentActiveQustion.Answers[a]), a, this.OnAnswerClickedHandler);
-                    var rtrans = rcb.transform.GetComponentInParent<RectTransform>();
-                    AnswerFields.Add(rtrans);
+                    AnswerFields.Add(rcb.transform);
+                    
+                   // rcb.transform.transform
+                    /*
+                    var rtrans = rcb.transform.GetComponent<RectTransform>();
+                   
+
                     var tempVector = new Vector2(rtrans.anchoredPosition.x,
                         -i * (165 / currentActiveQustion.Answers.Count) + 55);
                     rtrans.anchoredPosition= tempVector;
+
                     i++;
+                    */
                    
                 }
 
@@ -246,40 +261,24 @@ public class QN_Display : NetworkBehaviour {
 
 
             case QNStates.RESPONSEWAIT:
-                
-               
-                
-                
-              
 
                 break;
             case QNStates.FINISH:
 
-                if (m_MyLocalClient != null && m_MyLocalClient.IsLocalPlayer) {
-                    m_MyLocalClient.GoForPostQuestion();
 
+                foreach (var r in AnswerFields) Destroy(r.gameObject);
+                switch (m_LanguageSelect) {
+                    case "Hebrew":
+                        QustionField.text = StringExtension.RTLText("המתן בבקשה");
+                        break;
 
-                    foreach (var r in AnswerFields) Destroy(r.gameObject);
-
-                    switch (m_LanguageSelect) {
-                        case "Hebrew":
-                            QustionField.text = StringExtension.RTLText("המתן בבקשה");
-                            break;
-
-                        case "English":
-                        default:
-                            QustionField.text = "Please Wait!";
-                            break;
-                    }
-
-                   
-                  
-                        pokeRight.enabled = false;
-                        m_interalState = QNStates.IDLE;
+                    case "English":
+                    default:
+                        QustionField.text = "Please Wait!";
+                        break;
                 }
-                else {
-                    Debug.LogError("Did not get my local player dont know who to report back to.");
-                }
+                m_interalState = QNStates.IDLE;
+                GoForPostQuestionServerRPC();
 
                 break;
 
@@ -287,7 +286,10 @@ public class QN_Display : NetworkBehaviour {
                 throw new ArgumentOutOfRangeException();
         }
     }
-
+    [ServerRpc]
+    private void GoForPostQuestionServerRPC() {
+        m_Client_Object.GoForPostQuestion();
+    }
     private void OnAnswerClickedHandler(int AnswerIndex) {
         if (m_interalState == QNStates.RESPONSEWAIT) {
                 SendQNAnswer(currentActiveQustion.ID, AnswerIndex, m_LanguageSelect);
@@ -328,33 +330,37 @@ public class QN_Display : NetworkBehaviour {
     private QNDataStorageServer m_QNDataStorageServer = null;
 
     public delegate bool QuestionSelected();
-        
+
+    private Client_Object m_Client_Object;
     public void StartQuestionair(QNDataStorageServer in_QNDataStorageServer,
         ParticipantOrder po, 
         FollowType followType,
         Vector3 Offset,
         bool KeepUpdating,
-        string referenceTransformPath){
-        if (IsServer)
-        {
+        string referenceTransformPath,
+        Client_Object Origin){
+        if (IsServer) {
+            m_Client_Object = Origin;
             m_QNDataStorageServer = in_QNDataStorageServer;
             Debug.Log($"Questionnaire Activation for Participant{po} (serverside)");
             m_participantOrder = po;
-            StartQuestionairClientRPC(po,followType,Offset,KeepUpdating,referenceTransformPath);
+            InitQuestionairClientRPC(po,followType,Offset,KeepUpdating,referenceTransformPath);
         }
     }
 
     [ClientRpc]
-    public void StartQuestionairClientRPC(
+    public void InitQuestionairClientRPC(
         ParticipantOrder po,
         FollowType followType,
         Vector3 Offset,
         bool KeepUpdating_,
         string referenceTransformPath)
     {
-        if (ConnectionAndSpawning.Singleton.ParticipantOrder==po) {
+        Debug.Log($" (ClientSide) FollowType:{followType} KeepUpdating:{KeepUpdating}  ConnectionAndSpawning:{ConnectionAndSpawning.Singleton.ParticipantOrder} po:{po}");
+      
             Transform followObj = null;
-            
+
+            m_participantOrder = po;
           
             switch (followType) {
                 case FollowType.NetworkObject:
@@ -371,20 +377,24 @@ public class QN_Display : NetworkBehaviour {
                     throw new ArgumentOutOfRangeException(nameof(followType), followType, null);
             }
 
-            transform.localScale *= 0.1f;
+            
             setRelativePosition(followObj.transform, Offset.x, Offset.y, Offset.z,KeepUpdating);
             KeepUpdating = KeepUpdating_;
             Debug.Log($"Questionnaire Activation for Participant{po} (ClientSide)");
-            startAskingTheQuestionairs(po);
+            gameObject.SetActive(true);
             
-        }
-        else {
-            gameObject.SetActive(false);
-            //TODO: we could start deleting objects here!
-        }
+            
+          
     }
 
-
+    public void StartQuestionair() {
+        startAskingTheQuestionairsClientRPC();
+    }
+[ClientRpc]
+    private  void startAskingTheQuestionairsClientRPC() {
+        RequestFirstQuestion(m_participantOrder);
+    }
+    
     public void SendQNAnswer(int id, int answerIndex, string lang)
     {
         if (!IsOwner) return;

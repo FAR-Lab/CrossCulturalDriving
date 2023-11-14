@@ -16,10 +16,13 @@ public abstract class Interactable_Object : NetworkBehaviour {
 }
 
 
-public abstract class Client_Object : NetworkBehaviour
-{
+public abstract class Client_Object : NetworkBehaviour {
+
+
     
+    public abstract void SetParticipantOrder(ParticipantOrder _ParticipantOrder);
     public abstract ParticipantOrder GetParticipantOrder();
+    
     public abstract void SetSpawnType(SpawnType _spawnType);
     public abstract void AssignFollowTransform(Interactable_Object MyInteractableObject, ulong targetClient);
     public abstract Interactable_Object GetFollowTransform();
@@ -29,6 +32,17 @@ public abstract class Client_Object : NetworkBehaviour
     public abstract void CalibrateClient(ClientRpcParams clientRpcParams);
     
     public abstract void  StartQuestionair(QNDataStorageServer m_QNDataStorageServer);
+    
+    public abstract void  GoForPostQuestion(); 
+    
+    public static Client_Object GetJoinTypeObject()
+    {
+        foreach (var pic in FindObjectsOfType<Client_Object>())
+            if (pic.IsLocalPlayer)
+                return pic;
+        return null;
+    }
+    
 }
 
 

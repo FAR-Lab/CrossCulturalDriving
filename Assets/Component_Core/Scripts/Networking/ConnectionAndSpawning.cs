@@ -13,10 +13,11 @@ using UnityEngine.InputSystem.UI;
 
 
 public class ConnectionAndSpawning : MonoBehaviour {
-    public struct NetworkConnectionMessage {
+    public struct JoinParameters {
         public JoinType _jointype;
         public SpawnType _spawnType;
         public ParticipantOrder _participantOrder;
+        public string _Language;
     }
 
     public GameObject LocalServerCameraRig;
@@ -86,7 +87,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     public ActionState ServerState { get; private set; }
-    public string lang { private set; get; }
+    public JoinParameters ThisClient { private set; get; } = new JoinParameters();
 
     private void Awake() {
         participants = new ParticipantOrderMapping();
@@ -259,15 +260,18 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     }
 
-    public void StartAsHost(string pairName, JoinType _jt,SpawnType _st) {
+    public void StartAsHost(string pairName,ParticipantOrder po, JoinType _jt,SpawnType _st) {
         SetUpToServe(pairName);
         m_ReRunManager.RerunInitialization(true, null, RerunManager.StartUpMode.RECORDING);
         m_ReRunManager.SetRecordingFolder(pairName);
-        ConnectionDataRequest connectionDataRequest = new ConnectionDataRequest() {
-            po = ParticipantOrder.A,
-            st =_st,
-            jt = _jt
+        JoinParameters connectionDataRequest = new JoinParameters() {
+            _participantOrder = po,
+            _spawnType = _st,
+            _jointype = _jt,
+            _Language = "English"
         };
+        ThisClient = connectionDataRequest;
+        
         string jsonstring = JsonConvert.SerializeObject(connectionDataRequest);
 
         NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(jsonstring); // assigning ID
@@ -312,25 +316,25 @@ public class ConnectionAndSpawning : MonoBehaviour {
         ParticipantOrder_Set = true;
     }
 
-    private void Setlanguage(string lang_) {
-        lang = lang_;
-    }
+    
 
-    public void StartAsClient(string lang_, ParticipantOrder po, string ip, int port, ReponseDelegate result,
+    public void StartAsClient(string _langIN, ParticipantOrder po, string ip, int port, ReponseDelegate result,
         SpawnType _spawnTypeIN = SpawnType.CAR, JoinType _joinTypeIN = JoinType.VR) {
         Debug.Log(
-            $"Log: Starting as Client. IP: {ip} Port: {port} Language: {lang_} ParticipantOrder: {po} SpawnType: {_spawnTypeIN} JoinType: {_joinTypeIN}");
+            $"Log: Starting as Client. IP: {ip} Port: {port} Language: {_langIN} ParticipantOrder: {po} SpawnType: {_spawnTypeIN} JoinType: {_joinTypeIN}");
 
         SetupClientFunctionality();
         ReponseHandler += result;
         SetupTransport(ip, port);
-        Setlanguage(lang_);
         SetParticipantOrder(po);
-        ConnectionDataRequest connectionDataRequest = new ConnectionDataRequest() {
-            po = po,
-            st = _spawnTypeIN,
-            jt = _joinTypeIN
+        JoinParameters connectionDataRequest = new JoinParameters() {
+            _participantOrder = po,
+            _spawnType = _spawnTypeIN,
+            _jointype = _joinTypeIN,
+            _Language = _langIN
         };
+
+        ThisClient = connectionDataRequest;
         string jsonstring = JsonConvert.SerializeObject(connectionDataRequest);
 
         NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(jsonstring); // assigning ID
@@ -833,6 +837,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                 //   DontDestroyOnLoad(mainParticipantObject);
                 mainParticipantObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, false);
                 Main_ParticipantObjects.Add(po, mainParticipantObject.GetComponent<Client_Object>());
+                Main_ParticipantObjects[po].SetParticipantOrder(po);
                 m_QNDataStorageServer.SetupForNewRemoteImage(po);
                 mainParticipantObject.SetSpawnType(spawnType);
             }
@@ -851,22 +856,17 @@ public class ConnectionAndSpawning : MonoBehaviour {
         return CurrentScenarioManager;
     }
 
-    public struct ConnectionDataRequest {
-        public ParticipantOrder po;
-        public SpawnType st;
-        public JoinType jt;
-    }
-
+  
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request,
         NetworkManager.ConnectionApprovalResponse response) {
         var approve = false;
 
 
-        ConnectionDataRequest cdr =
-            JsonConvert.DeserializeObject<ConnectionDataRequest>(Encoding.ASCII.GetString(request.Payload));
+        JoinParameters cdr =
+            JsonConvert.DeserializeObject<JoinParameters>(Encoding.ASCII.GetString(request.Payload));
 
 
-        approve = participants.AddParticipant(cdr.po, request.ClientNetworkId, cdr.st, cdr.jt);
+        approve = participants.AddParticipant(cdr._participantOrder, request.ClientNetworkId, cdr._spawnType, cdr._jointype);
 
         if (!approve) {
             Debug.Log("Participant Order " + request.Payload[0] +
@@ -875,7 +875,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         else {
             // ParticipantObjects.Add(request.ClientNetworkId, new Dictionary<SpawnType, NetworkObject>());
             // populate Interactable_ParticipantObjects with the current participant
-            Interactable_ParticipantObjects.Add(cdr.po, new List<Interactable_Object>());
+            Interactable_ParticipantObjects.Add(cdr._participantOrder, new List<Interactable_Object>());
             Debug.Log("Client will connect now!");
         }
 

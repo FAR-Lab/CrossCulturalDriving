@@ -58,7 +58,7 @@ public class StartServerClientGUI : MonoBehaviour {
                 ConnectionAndSpawning.Singleton.StartAsServer(SessionName.text);
                 break;
             case ComputerStartButtonConfiguration.StartType.Host:
-                ConnectionAndSpawning.Singleton.StartAsHost(SessionName.text, _joinTypeIN,_spawnTypeIN);
+                ConnectionAndSpawning.Singleton.StartAsHost(SessionName.text,_po, _joinTypeIN,_spawnTypeIN);
                 break;
             case ComputerStartButtonConfiguration.StartType.Client:
                 if (_ip.Length == 0) {

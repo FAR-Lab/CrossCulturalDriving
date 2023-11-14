@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ThreeScreen_Participant : Client_Object {
     private const string OffsetFileName = "threeScreenOffset";
-    private ParticipantOrder _participantOrder;
+    private ParticipantOrder m_participantOrder;
     private SpawnType _spawnType;
     private Interactable_Object _interactableObject;
     
@@ -34,8 +34,12 @@ public class ThreeScreen_Participant : Client_Object {
         
     }
 
+    public override void SetParticipantOrder(ParticipantOrder _ParticipantOrder) {
+        m_participantOrder=_ParticipantOrder;
+    }
+
     public override ParticipantOrder GetParticipantOrder() {
-        return _participantOrder;
+        return m_participantOrder;
     }
 
     public override void SetSpawnType(SpawnType _spawnTypeIn) {
@@ -124,5 +128,16 @@ public class ThreeScreen_Participant : Client_Object {
 
     public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) {
         Debug.Log("Not Sure yet how to StartQuestionair for the threeScreen");
+    }
+
+    public override void GoForPostQuestion() {
+        if (!IsLocalPlayer) return;
+        PostQuestionServerRPC(OwnerClientId);
+    }
+    
+    [ServerRpc]
+    public void PostQuestionServerRPC(ulong clientID)
+    {
+        ConnectionAndSpawning.Singleton.FinishedQuestionair(clientID);
     }
 }

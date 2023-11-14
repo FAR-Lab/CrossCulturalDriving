@@ -246,7 +246,7 @@ public class VRUIManager : MonoBehaviour
     private void AutoStartStudy(){
         ServerConnectionStatusText.text = "Trying to establish a connection";
         Debug.Log($"Log: AutoStart {currentConfig.LanguageString}, {currentConfig.ParticipantIDString}, {currentConfig.ServerIPString}, {currentConfig.SpawnTypeString}");
-        ConnectionAndSpawning.Singleton.StartAsClient(lang_: currentConfig.LanguageString, 
+        ConnectionAndSpawning.Singleton.StartAsClient(_langIN: currentConfig.LanguageString, 
                                                       po: StringToEnum<ParticipantOrder>(currentConfig.ParticipantIDString),
                                                       ip: currentConfig.ServerIPString,
                                                       port: 7777,

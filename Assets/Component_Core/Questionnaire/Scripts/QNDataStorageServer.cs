@@ -1,3 +1,4 @@
+// #define LOGREPLAYIDS
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -84,7 +85,7 @@ public class QNDataStorageServer : MonoBehaviour {
             Debug.Log("Just initiated QN for participant:" + po);
         }
 
-
+#if LOGREPLAYIDS
         Dictionary<int, LogHeader> ObjectHeader = new Dictionary<int, LogHeader>();
         Dictionary<int, LogHeader> ComponentHeader = new Dictionary<int, LogHeader>();
 
@@ -157,6 +158,12 @@ public class QNDataStorageServer : MonoBehaviour {
         );
 
         System.IO.File.WriteAllText(fullPath, s);
+        
+        #endif
+        
+        foreach (var qnDisplays in qnDisplays.Values) {
+            qnDisplays.StartQuestionair();
+        }
     }
 
 
@@ -171,7 +178,7 @@ public class QNDataStorageServer : MonoBehaviour {
 
 
     public void NewDatapointfromClient(ParticipantOrder po, int id, int answerIndex, string lang) {
-        Debug.Log($"New Data Point from po{po}");
+         Debug.Log($"New Data Point from po{po}");
         if (answerIndex == -1 && id == -1) {
             SendPreviousQuestion(po, lang);
             ParticipantCountCurrent[po]--;
@@ -238,6 +245,7 @@ public class QNDataStorageServer : MonoBehaviour {
 
         string s = JsonConvert.SerializeObject(CurrentScenarioLog, JsonDateSerelizerSettings);
         System.IO.File.WriteAllText(fullPath, s);
+        qnDisplays.Clear();
     }
 
     private void SendEndQuestionnaire(ParticipantOrder po, string lang) {
@@ -248,7 +256,6 @@ public class QNDataStorageServer : MonoBehaviour {
     }
 
     private void SendNewQuestion(ParticipantOrder po, string lang) {
-        Debug.Log($"I got  a po of {po.ToString()} with lang:{lang}. participantAnswerStatus.count{participantAnswerStatus.Keys.Count}");
         int val = participantAnswerStatus[po];
         val++;
 
@@ -406,13 +413,14 @@ public class QNDataStorageServer : MonoBehaviour {
         if (participantOrder == ParticipantOrder.None) {
             return;
         }
-Debug.Log($"Total Questions countto sent to the participant: {count} for ParticipantOrder{participantOrder}");
+Debug.Log($"Total Questions count sent to the participant: {count} for ParticipantOrder{participantOrder}");
         qnDisplays[participantOrder]
             .SetTotalQNCountClientRpc(count);
     }
 
-    public void RegisterQNSCreen(ParticipantOrder mParticipantOrder, QN_Display qnmanager) {
-        qnDisplays.Add(mParticipantOrder, qnmanager);
+    public void RegisterQNSCreen(ParticipantOrder po, QN_Display qnmanager) {
+        Debug.Log($"Got a QN_Display for po{po}");
+        qnDisplays.Add(po, qnmanager);
     }
 }
 

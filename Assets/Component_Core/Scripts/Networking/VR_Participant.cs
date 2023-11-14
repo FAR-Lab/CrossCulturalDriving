@@ -144,7 +144,7 @@ public class VR_Participant : Client_Object
 
    
 
-    public void GoForPostQuestion()
+    public override void GoForPostQuestion()
     {
         if (!IsLocalPlayer) return;
         Debug.Log("Waiting for picture upload to finish!");
@@ -166,7 +166,9 @@ public class VR_Participant : Client_Object
     }
 
 
-
+    public override void SetParticipantOrder(ParticipantOrder _ParticipantOrder) {
+        m_participantOrder = _ParticipantOrder;
+    }
 
     public override ParticipantOrder GetParticipantOrder()
     {
@@ -284,6 +286,7 @@ public class VR_Participant : Client_Object
 
     private QN_Display qnmanager;
     public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) {
+        if (!IsLocalPlayer) return;
          qnmanager = Instantiate(QuestionairPrefab).GetComponent<QN_Display>();
          qnmanager.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId,true);
          string referenceTransformPath="";//TODO this is not Implemented
@@ -312,7 +315,7 @@ public class VR_Participant : Client_Object
 
 
          Debug.Log($"Spawning a questionnaire for Participant{m_participantOrder}");
-         qnmanager.StartQuestionair(m_QNDataStorageServer,m_participantOrder,tmp,Offset,KeepUpdating,referenceTransformPath);
+         qnmanager.StartQuestionair(m_QNDataStorageServer,m_participantOrder,tmp,Offset,KeepUpdating,referenceTransformPath,this);
 
          foreach (var screenShot in FindObjectsOfType<QnCaptureScreenShot>()) {
              if (screenShot.ContainsPO(ConnectionAndSpawning.Singleton.ParticipantOrder)) {
@@ -478,7 +481,7 @@ public class VR_Participant : Client_Object
         Debug.Log("Updated Callibrated offsets based on remote poisiton");
     }
 
-    public Transform GetMyCar()
+    public Transform GetMyInteractable()
     {
         return NetworkedInteractableObject.transform;
     }
