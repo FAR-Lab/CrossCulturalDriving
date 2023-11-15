@@ -292,8 +292,36 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6568031579991734297, guid: e68883a1093f5274dbd0764224e53a0e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 359408673}
   m_SourcePrefab: {fileID: 100100000, guid: e68883a1093f5274dbd0764224e53a0e, type: 3}
+--- !u!1 &359408672 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6568031579991734297, guid: e68883a1093f5274dbd0764224e53a0e, type: 3}
+  m_PrefabInstance: {fileID: 359408671}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &359408673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359408672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2496152999
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &457650053
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -459,8 +487,36 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6568031579991734297, guid: e68883a1093f5274dbd0764224e53a0e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1343407254}
   m_SourcePrefab: {fileID: 100100000, guid: e68883a1093f5274dbd0764224e53a0e, type: 3}
+--- !u!1 &1343407253 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6568031579991734297, guid: e68883a1093f5274dbd0764224e53a0e, type: 3}
+  m_PrefabInstance: {fileID: 1343407252}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1343407254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1343407253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1004084509
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1529171060
 GameObject:
   m_ObjectHideFlags: 0
@@ -826,7 +882,7 @@ PrefabInstance:
     - target: {fileID: 669520980629869749, guid: 88c5fe53b51f714429b6710d7a9defa0, type: 3}
       propertyPath: VisualSceneToUse.m_SceneAsset
       value: 
-      objectReference: {fileID: 102900000, guid: 6a5dfaaa551684366933cc17e2df5b68, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 669520980629869749, guid: 88c5fe53b51f714429b6710d7a9defa0, type: 3}
       propertyPath: QuestionairsToAsk.Array.data[0]
       value: 
