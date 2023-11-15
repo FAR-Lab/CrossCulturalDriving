@@ -1,49 +1,77 @@
+using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class CrowdAgent : MonoBehaviour
+public class CrowdAgent : NetworkBehaviour
 {
     private NavMeshAgent agent;
     public float radius = 10f;
     private Vector3 targetPosition;
-
+    private int maxAttempts = 10;
     public bool showGizmos = false;
+    private bool isWaiting = false;
+    public float waitTime = 1f;
+
+    private Animator animator;
+
 
     void Start()
     {
+
+        animator = transform.GetChild(0).GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+
+        if (!IsServer)
+        {
+            Destroy(agent);
+            this.enabled = false;
+            return;
+        }
+
         SetRandomDestination();
     }
 
     private void Update()
     {
-        // for debugging
         if (Input.GetKeyDown(KeyCode.Space))
         {
             SetRandomDestination();
         }
 
-        if (!agent.pathPending && agent.remainingDistance <= 0.3f)
+        if (!agent.pathPending && agent.remainingDistance <= 0.3f && !isWaiting)
         {
-            SetRandomDestination();
+            StartCoroutine(WaitAndSetRandomDestination());
         }
     }
 
-    void SetRandomDestination()
+    IEnumerator WaitAndSetRandomDestination()
     {
+        isWaiting = true;
+        animator.SetBool("isIdling", true);
+        yield return new WaitForSeconds(waitTime);
+        SetRandomDestination();
+        isWaiting = false;
+        animator.SetBool("isIdling", false);
+    }
+
+    void SetRandomDestination(int attempts = 0)
+    {
+        if (attempts >= maxAttempts) return;
+
         Vector3 randomDirection = Random.insideUnitSphere * radius;
         randomDirection += transform.position;
         NavMeshHit hit;
 
-        // check if is a valid position (if it's on the navmesh)
+        //if (!NavMesh.SamplePosition(transform.position, out hit, 1.0f, NavMesh.AllAreas))
+        //{
+        //    Destroy(gameObject, 0.1f);
+        //    return;
+        //}
+
         if (NavMesh.SamplePosition(randomDirection, out hit, radius, NavMesh.AllAreas))
         {
             NavMeshPath path = new NavMeshPath();
-
-            // attempt to calculate a path to the target position
-            // if it's possible, set the destination
-            // if it's not possible, set a new random destination
-            // probably don't need both conditions, but safest this way
             if (agent.CalculatePath(hit.position, path) && path.status == NavMeshPathStatus.PathComplete)
             {
                 agent.SetDestination(hit.position);
@@ -51,12 +79,12 @@ public class CrowdAgent : MonoBehaviour
             }
             else
             {
-                SetRandomDestination();
+                SetRandomDestination(attempts + 1);
             }
         }
         else
         {
-            SetRandomDestination();
+            SetRandomDestination(attempts + 1);
         }
     }
 
