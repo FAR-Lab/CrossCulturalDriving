@@ -110,15 +110,18 @@ public class SteeringWheelManager : MonoBehaviour
     {
         FFBGain = 1.0f;
     }
-
+    
     public void Init()
     {
         ready = true;
-        LogitechGSDK.LogiSteeringInitialize(false);
+        #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+            LogitechGSDK.LogiSteeringInitialize(false);
+        #endif 
         AssignSteeringWheels();
         var initForceFeedback = InitForceFeedback();
         StartCoroutine(initForceFeedback);
     }
+  
     
     public static int IntRemap(float value, float from1 = -10000, float to1 = 10000, float from2 = -100, float to2 = 100)
     {
@@ -127,6 +130,8 @@ public class SteeringWheelManager : MonoBehaviour
     }
     
     // when this gets destroyed or the application quits, we need to clean up the steering wheel
+    
+    #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
     void OnApplicationQuit()
     {
         CleanUp();
@@ -144,6 +149,7 @@ public class SteeringWheelManager : MonoBehaviour
         CleanUp();
         LogitechGSDK.LogiSteeringShutdown();
     }
+    #endif
 
 
     IEnumerator SpringforceFix()
@@ -157,6 +163,7 @@ public class SteeringWheelManager : MonoBehaviour
     void AssignSteeringWheels()
     {
         ParticipantOrder po = ParticipantOrder.A;
+        #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
         for (int i = 0; i < GetNumberOfConnectedDevices(); i++)
         {
             Debug.Log("We got the input controller called" + GetProductName(i) +
@@ -164,6 +171,7 @@ public class SteeringWheelManager : MonoBehaviour
             ActiveWheels.Add(po, new SteeringWheelData(i));
             po++;
         }
+        #endif
     }
     
     public string GetProductName(int index)
@@ -386,8 +394,11 @@ public class SteeringWheelManager : MonoBehaviour
     {
         if (!ready || ActiveWheels == null) return;
         if (Application.platform == RuntimePlatform.OSXEditor) return;
+        
+        #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
         LogitechGSDK.LogiUpdate();
         ready = GetNumberOfConnectedDevices() > 0;
+        #endif
 
         FoundSteeringWheels = ActiveWheels.Count();
         foreach (SteeringWheelData swd in ActiveWheels.Values)
