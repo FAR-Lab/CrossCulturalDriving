@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Newtonsoft.Json;
+using System.IO;
 
 [CustomEditor(typeof(ScenarioManager))]
 public class ScenarioManagerEditor : Editor {
-<<<<<<< HEAD
+
     
     private Transform tempTransform;
     public Dictionary<string,Dictionary<ParticipantOrder, SimplePose>> SpawnPositionsDictionary;
@@ -26,9 +28,7 @@ public class ScenarioManagerEditor : Editor {
         }
     }
     private SimplePose temPose;
-
-=======
->>>>>>> parent of f342d865 (Nov 15th.)
+    
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
         if (GUILayout.Button("Attemp QN Deserialization")) {
@@ -52,7 +52,7 @@ public class ScenarioManagerEditor : Editor {
                 }
             }
         }
-<<<<<<< HEAD
+
         // Upload the spawn points into a json file
         if (GUILayout.Button("Upload spawn points"))
         {
@@ -120,7 +120,6 @@ public class ScenarioManagerEditor : Editor {
                 
             }
         }
-=======
->>>>>>> parent of f342d865 (Nov 15th.)
+
     }
 }

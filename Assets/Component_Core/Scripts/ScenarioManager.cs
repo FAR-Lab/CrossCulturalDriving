@@ -7,14 +7,9 @@ using UnityEngine;
 
 public class ScenarioManager : MonoBehaviour {
     public TextAsset QuestionairToAsk;
-<<<<<<< HEAD
     public static string SpawnPositonData = Application.dataPath + "/SpawnPosition/spawnposition.json";
     
-=======
 
-
-   
->>>>>>> parent of f342d865 (Nov 15th.)
     public string conditionName;//ToDo: Automate this based on the scene name 
 
 
@@ -118,12 +113,10 @@ public class ScenarioManager : MonoBehaviour {
     public List<QuestionnaireQuestion> ReadString(string asset) {
         return JsonConvert.DeserializeObject<List<QuestionnaireQuestion>>(asset);
     }
-
-<<<<<<< HEAD
+    
    //  [Tooltip("# of spawnpoints")] public int spawnPointNum;
 
-=======
->>>>>>> parent of f342d865 (Nov 15th.)
+
     private string OverwriteQNDataFolderName = "QN_DATA";
     public List<QuestionnaireQuestion> GetQuestionObject() {
         var p = Path.Combine(Application.persistentDataPath, OverwriteQNDataFolderName);
