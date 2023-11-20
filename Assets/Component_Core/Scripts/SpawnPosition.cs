@@ -1,6 +1,11 @@
 using UnityEngine;
 
 public class SpawnPosition : MonoBehaviour {
+
+    public static string SpawnPointsJSONLocation = Application.dataPath + "/SpawnPointsJSON.json";
+    
+    
+    
     public ParticipantOrder StartingId;
 
  

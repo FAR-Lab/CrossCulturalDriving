@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class ZedAvatarInteractable : Interactable_Object {
     public GameObject ZEDMasterPrefab;
-    private ParticipantOrder m_participantOrder;
     private ulong m_ClientID;
     private bool initDone = false;
     private Transform ReferenceTransformHead;

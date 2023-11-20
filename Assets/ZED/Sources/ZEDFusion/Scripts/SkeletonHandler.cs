@@ -305,7 +305,7 @@ public class SkeletonHandler : ScriptableObject {
     public void SetControlWithJointPosition(Vector3[] jointsPosition, Quaternion[] jointsRotation,
         Quaternion rootRotation, bool useAvatar, bool _mirrorOnYAxis) {
         currentJoints = jointsPosition;
-
+        
         humanoid.SetActive(useAvatar);
         skeleton.SetActive(!useAvatar || ZEDBodyTrackingManager.DisplaySDKSkeleton);
         usingAvatar = useAvatar;

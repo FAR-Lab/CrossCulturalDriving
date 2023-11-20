@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Newtonsoft.Json;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.Rendering;
 
 
 public class ConnectionAndSpawning : MonoBehaviour {
@@ -37,6 +38,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
             { ParticipantOrder.F, NavigationScreen.Direction.Stop }
         };
 
+    
+    public SerializedDictionary<string, SerializedDictionary<ParticipantOrder, Pose>> WaitingRoomSpawnPositonData =
+        new SerializedDictionary<string, SerializedDictionary<ParticipantOrder, Pose>>();
 
     public GameObject ref_ServerTimingDisplay;
 

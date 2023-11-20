@@ -351,12 +351,12 @@ public class VR_Participant : Client_Object
         Debug.Log($"Finished Collecting data: rotAvg:{rotations.Average()} and std: {rotations.StandardDeviation()}");
 
     SetNewRotationOffset(Quaternion.Euler(0, rotations.Average(), 0));
+    transform.parent.localPosition=Vector3.zero;
     SetNewPositionOffset(transform.parent.position - Camera.position);
     FinishedCalibration();
     isCalibrationRunning = false;
     }
     private bool isCalibrationRunning = false;
-    private Coroutine CallibrationHandler;
     [ClientRpc]
     public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default)
     {
@@ -386,8 +386,8 @@ public class VR_Participant : Client_Object
                     transform.parent.GetComponent<ZedAvatarInteractable>()!=null ) {
                     if (isCalibrationRunning == false) {
 
-                        CallibrationHandler = StartCoroutine(OverTimeCallibration(transform.parent, tmp, 10));
-                    }
+                        StartCoroutine(OverTimeCallibration(transform.parent, tmp, 10));
+                    } 
                 }
                 else if (t != null) {
                    

@@ -27,5 +27,15 @@ public class ScenarioManagerEditor : Editor {
                 }
             }
         }
+        if (GUILayout.Button("StoreSpawnPositons")) {
+            var sm = (ScenarioManager)target;
+            
+            if (sm != null) {
+
+                sm.transform.GetComponentsInChildren<SpawnPosition>();
+                
+                
+            }
+        }
     }
 }

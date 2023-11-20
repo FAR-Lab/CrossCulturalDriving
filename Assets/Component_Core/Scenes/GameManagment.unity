@@ -9,7 +9,7 @@ OcclusionCullingSettings:
     smallestHole: 0.25
     backfaceThreshold: 100
   m_SceneGUID: 2144d398f0c2543b8879dcc1edac1526
-  m_OcclusionCullingData: {fileID: 36300000, guid: bfff7b6e43abe4343900239c64d02bfb, type: 2}
+  m_OcclusionCullingData: {fileID: 36300000, guid: c82977b4a888e6646a9752ab444d5d2c, type: 2}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 9d4b442953e13784b8c0f325216dda8e, type: 2}
+  m_LightingDataAsset: {fileID: 0}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -273,6 +273,9 @@ MonoBehaviour:
   LocalServerCameraRig: {fileID: 4745764989242507463, guid: 88d526d91c71f5449adf54b23d90c58f, type: 3}
   JoinTypeConfig: {fileID: 11400000, guid: 57f0df8fd15be0a40b14ca928b11e5a8, type: 2}
   SpawnTypeConfig: {fileID: 11400000, guid: 785e27700b417604bbd22c7ed43fea85, type: 2}
+  WaitingRoomSpawnPositonData:
+    m_Keys: []
+    m_Values: []
   ref_ServerTimingDisplay: {fileID: 4979024292393695789, guid: 8a4223da181b88748a21a53936689ba9, type: 3}
   IncludedScenes:
   - m_SceneAsset: {fileID: 102900000, guid: 2e75f360d6f4f614fb835fd317e3433b, type: 3}

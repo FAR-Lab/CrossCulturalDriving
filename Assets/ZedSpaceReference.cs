@@ -37,8 +37,10 @@ public class ZedSpaceReference : MonoBehaviour {
 
     public TextAsset ZedCallibrationFile;
 
+    
     public Dictionary<string, DeviceConfig> m_devices;
 
+    [SerializeField]
     public List<DeviceConfigMono> m_ZedCameras;
 
     public Transform ZedRootObject;
@@ -104,6 +106,9 @@ public class ZedSpaceReference : MonoBehaviour {
             m_ZedCameras = new List<DeviceConfigMono>();
         }
 
+        for (int i = 0; i < ZedRootObject.childCount; i++) {
+            DestroyImmediate(ZedRootObject.GetChild(i).gameObject);
+        }
         m_devices = new Dictionary<string, DeviceConfig>();
         m_devices =  JsonConvert.DeserializeObject<Dictionary<string, DeviceConfig>>(ZedCallibrationFile.text);
         Debug.Log(JsonConvert.DeserializeObject<Dictionary<string, DeviceConfig>>(ZedCallibrationFile.text).Values.Count() );
