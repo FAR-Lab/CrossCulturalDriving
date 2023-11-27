@@ -128,7 +128,7 @@ public class OberserverCamera_ClientObject : Client_Object {
         return _RerunCameraManager.GetFollowCamera();
     }
 
-    public override void CalibrateClient(ClientRpcParams clientRpcParams) {
+    public override void CalibrateClient() {
         Debug.Log($"Here we could try to find all relevant cameras again..");
     }
 

@@ -34,7 +34,7 @@ public class CrowdNavSurfaceManager : MonoBehaviour
             obstacle.carving = true;
         }
         surface = gameObject.GetComponent<NavMeshSurface>();
-        surface.BuildNavMesh();
+        //surface.BuildNavMesh();
     }
 
     [ContextMenu("Remove All Navmesh Obstacles")]

@@ -12,40 +12,35 @@ public class ZedAvatarInteractable : Interactable_Object {
 
     public NetworkVariable<Vector3> fwd = new NetworkVariable<Vector3>();
 
-    public int PreviousID = 0;
+  
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         if (IsServer)
         {
-            if (ZEDMaster.Singleton == null) {
+            //if (ZEDMaster.Singleton == null)
+            {
                 Instantiate(ZEDMasterPrefab);
-                
             }
-
-            ZEDMaster.Singleton.OnChangedTrackingReferrence += TriggerCalibration;
-           
         }
     }
    
     public void Update() {
+      
         if (initDone && IsServer) {
+            if (ReferenceTransformHead == null) {
+                initDone = false;
+                return;
+            }
             transform.position = ReferenceTransformHead.position;
             fwd.Value = ReferenceTransformHead.forward;
-            // transform.rotation = Quaternion.Euler(0,ReferenceTransformHead.rotation.eulerAngles.y,0);
+           
         }
     }
 
-    private void TriggerCalibration(ZEDMaster.UpdateType ud, int skeletonID) {
-        
-        if (ud == ZEDMaster.UpdateType.NEWSKELETON) {
-            ReferenceTransformHead = ZEDMaster.Singleton.GetCameraPositionObject();
+    private void TriggerCalibration(Transform head) {
+        ReferenceTransformHead = head;
             initDone = true;
-            PreviousID = skeletonID;
-        }
-        else if (ud == ZEDMaster.UpdateType.DELETESKELETON) {
-            initDone = false;
-        }
     }
 
 
@@ -71,5 +66,14 @@ public class ZedAvatarInteractable : Interactable_Object {
     
     public override void Stop_Action() {
        
+    }
+
+    public void ReConnectToAvatar(int skeletonID) {
+        //ZEDMaster.Singleton.e_ReconnectionStart(skeletonID,TriggerCalibration);
+
+    }
+
+    public void InitialCalibration(Action<int> setSkeletonID) {
+        //ZEDMaster.Singleton.e_StartCalibrationSequence(setSkeletonID,TriggerCalibration);
     }
 }

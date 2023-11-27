@@ -73,7 +73,7 @@ public class ZedSpaceReference : MonoBehaviour {
             } 
             
         }
-
+        Gizmos.color=Color.red;
         if (WorkingArea != null && WorkingArea.Count > 1) {
             for (int i = 0; i < WorkingArea.Count-1; i++) {
                 Gizmos.DrawLine(WorkingArea[i].position, WorkingArea[i + 1].position);

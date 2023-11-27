@@ -249,7 +249,8 @@ public class TestScreenClient : Client_Object {
        return m_Camera;
     }
 
-    public override void CalibrateClient(ClientRpcParams clientRpcParams) {
+    public override void CalibrateClient() {
+        if (!IsLocalPlayer) return;
         if (m_InteractableObject != null) {
             transform.position += m_InteractableObject.GetCameraPositionObject().position-GetMainCamera().position;
             transform.rotation = m_InteractableObject.GetCameraPositionObject().rotation;
@@ -279,7 +280,6 @@ public class TestScreenClient : Client_Object {
             case SpawnType.PEDESTRIAN:
             case SpawnType.PASSENGER:
                 tmp = QN_Display.FollowType.MainCamera;
-                
                 Offset = new Vector3(0f, 0f, 0.5f);
                 break;
             case SpawnType.ROBOT:

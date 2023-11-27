@@ -115,7 +115,8 @@ public class ThreeScreen_Participant : Client_Object {
         
     }
 
-    public override void CalibrateClient(ClientRpcParams clientRpcParams) {
+    public override void CalibrateClient() {
+        if (!IsLocalPlayer) return;
         if (_interactableObject != null) {
             transform.position = _interactableObject.GetCameraPositionObject().position;
             transform.rotation = _interactableObject.GetCameraPositionObject().rotation;

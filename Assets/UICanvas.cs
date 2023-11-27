@@ -154,7 +154,9 @@ public class UICanvas : MonoBehaviour
 
     private void OnCalibrationButtonPressed(ParticipantOrder participant)
     {
-        var success = ConnectionAndSpawning.Singleton.participants.GetClientID(participant, out var clientID);
+       /*
+        * var success = ConnectionAndSpawning.Singleton.participants.GetClientID(participant, out var clientID);
+        
         if (!success) return;
 
         var clientRpcParams = new ClientRpcParams {
@@ -162,7 +164,8 @@ public class UICanvas : MonoBehaviour
                 TargetClientIds = new[] { clientID }
             }
         };
-        ConnectionAndSpawning.Singleton.Main_ParticipantObjects[participant].CalibrateClient(clientRpcParams);
+        */
+        ConnectionAndSpawning.Singleton.Main_ParticipantObjects[participant].CalibrateClient();
     }
     
     # endregion

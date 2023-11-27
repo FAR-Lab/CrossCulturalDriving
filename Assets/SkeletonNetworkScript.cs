@@ -18,7 +18,7 @@ public class SkeletonNetworkScript : NetworkBehaviour
             }
 
             GetComponentInChildren<BoxCollider>().enabled = false;
-            GetComponent<HeightOffsetter>().enabled = false;
+            //GetComponent<HeightOffsetter>().enabled = false;
         }
     }
 

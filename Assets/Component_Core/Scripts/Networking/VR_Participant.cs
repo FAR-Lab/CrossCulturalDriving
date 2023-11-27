@@ -8,151 +8,101 @@ using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR.Hands;
 
-public class VR_Participant : Client_Object
-{
+public class VR_Participant : Client_Object {
     private const string OffsetFileName = "offset";
 
     //public NetworkVariable<NavigationScreen.Direction> CurrentDirection = new(); //ToDo shopuld be moved to the Navigation Screen
     public bool FinishedImageSending { get; private set; }
 
     //public Transform FollowTransform;
-    public bool FollowRotation;
-    public bool FollowLocation;
     public Transform MyCamera;
 
     public NetworkVariable<bool> ButtonPushed; // This is only active during QN time
 
     public Interactable_Object NetworkedInteractableObject;
     private bool init;
-
-
     private Quaternion LastRot = Quaternion.identity;
-
-
     private bool lastValue;
     public ParticipantOrder m_participantOrder = ParticipantOrder.None;
 
-    private NetworkVariable<SpawnType> mySpawnType;
+    private NetworkVariable<SpawnType> mySpawnType= new NetworkVariable<SpawnType>();
+   
     private Vector3 offsetPositon = Vector3.zero;
-
-
     private Quaternion offsetRotation = Quaternion.identity;
 
-   
+
     public GameObject QuestionairPrefab;
 
-    // OK so I know this is not an elegant solution. We are feeding the image data through the playerobject. Really not great.
-    // maybe we would want to use reliable message 
-
-    
-    
-    private void Awake()
-    {
-        mySpawnType = new NetworkVariable<SpawnType>();
-    }
-
-
-    private void Update()
-    {
-        if (IsLocalPlayer)
-        
-
-            if (IsServer)
-                ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
-    }
-
-
-    private void LateUpdate()
-    {
-    //    if (NetworkManager.Singleton.IsServer) return;
-
-    }
-
-
  
+    private void Update() {
+        if (IsServer) {
+            ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
+        }
+    }
 
-    public static VR_Participant GetJoinTypeObject()
-    {
+    public static VR_Participant GetJoinTypeObject() {
         foreach (var pic in FindObjectsOfType<VR_Participant>())
             if (pic.IsLocalPlayer)
                 return pic;
         return null;
     }
 
-  
-
 
     public override void OnNetworkSpawn() //ToDo Turning on and off different elements could be done neater...
     {
-        if (IsLocalPlayer)
-        {
+        if (IsLocalPlayer) {
             m_participantOrder = ConnectionAndSpawning.Singleton.ParticipantOrder;
         }
-        else
-        {
-            foreach (var a in GetComponentsInChildren<SkinnedMeshRenderer>())
-            {
+        else {
+            foreach (var a in GetComponentsInChildren<SkinnedMeshRenderer>()) {
                 a.enabled = true; // should happen twice to activate the hand
             }
 
-            foreach (var a in GetComponentsInChildren<XRHandTrackingEvents>())
-            {
+            foreach (var a in GetComponentsInChildren<XRHandTrackingEvents>()) {
                 a.enabled = false; // should happen twice to activate the hand
             }
 
-            foreach (var a in GetComponentsInChildren<XRHandSkeletonDriver>())
-            {
+            foreach (var a in GetComponentsInChildren<XRHandSkeletonDriver>()) {
                 a.enabled = false; // should happen twice to activate the hand
             }
 
-            foreach (var a in GetComponentsInChildren<XRHandMeshController>())
-            {
+            foreach (var a in GetComponentsInChildren<XRHandMeshController>()) {
                 a.enabled = false; // should happen twice to activate the hand
             }
 
-            foreach (var a in GetComponentsInChildren<Camera>())
-            {
+            foreach (var a in GetComponentsInChildren<Camera>()) {
                 a.enabled = false; // should happen twice to activate the hand
             }
 
-            foreach (var a in GetComponentsInChildren<AudioListener>())
-            {
+            foreach (var a in GetComponentsInChildren<AudioListener>()) {
                 a.enabled = false; // should happen twice to activate the hand
             }
 
-            foreach (var a in GetComponentsInChildren<TrackedPoseDriver>())
-            {
+            foreach (var a in GetComponentsInChildren<TrackedPoseDriver>()) {
                 a.enabled = false; // should happen twice to activate the hand
             }
         }
 
-        if (IsServer)
-        {
+        if (IsServer) {
             m_participantOrder = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
             GetComponent<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder);
         }
-        else
-        {
-            foreach (var a in GetComponentsInChildren<ReplayTransform>())
-            {
+        else {
+            foreach (var a in GetComponentsInChildren<ReplayTransform>()) {
                 a.enabled = false; // should happen twice to activate the hand
             }
         }
     }
 
 
-   
-
-    public override void GoForPostQuestion()
-    {
+    public override void GoForPostQuestion() {
         if (!IsLocalPlayer) return;
         Debug.Log("Waiting for picture upload to finish!");
         StartCoroutine(AwaitFinishingPictureUpload());
     }
 
-    private IEnumerator AwaitFinishingPictureUpload()
-    {
+    private IEnumerator AwaitFinishingPictureUpload() {
         yield return new WaitUntil(() =>
             FinishedImageSending
         );
@@ -160,8 +110,7 @@ public class VR_Participant : Client_Object
     }
 
     [ServerRpc]
-    public void PostQuestionServerRPC(ulong clientID)
-    {
+    public void PostQuestionServerRPC(ulong clientID) {
         ConnectionAndSpawning.Singleton.FinishedQuestionair(clientID);
     }
 
@@ -170,42 +119,36 @@ public class VR_Participant : Client_Object
         m_participantOrder = _ParticipantOrder;
     }
 
-    public override ParticipantOrder GetParticipantOrder()
-    {
+    public override ParticipantOrder GetParticipantOrder() {
         return m_participantOrder;
     }
 
-    public override void SetSpawnType(SpawnType _spawnType)
-    {
+    public override void SetSpawnType(SpawnType _spawnType) {
         mySpawnType.Value = _spawnType;
     }
 
-    public override void AssignFollowTransform(Interactable_Object MyInteractableObject, ulong targetClient)
-    {
+    public override void AssignFollowTransform(Interactable_Object MyInteractableObject, ulong targetClient) {
         if (IsServer) {
-           NetworkedInteractableObject = MyInteractableObject;
-           switch (mySpawnType.Value) {
-               case SpawnType.NONE:
-                   break;
-               case SpawnType.CAR:
-                   NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
-                   break;
-               case SpawnType.PEDESTRIAN:
-                   var t = MyInteractableObject.GetCameraPositionObject().GetComponent<NetworkObject>();
-                   Debug.Log(t.name);
-                   Debug.Log($"Parenting success{NetworkObject.TrySetParent(t, false)}");
-           
-                   break;
-               case SpawnType.PASSENGER:
-                   break;
-               case SpawnType.ROBOT:
-                   break;
-               default:
-                   throw new ArgumentOutOfRangeException();
-           }
+            NetworkedInteractableObject = MyInteractableObject;
+            switch (mySpawnType.Value) {
+                case SpawnType.NONE:
+                    break;
+                case SpawnType.CAR:
+                    NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
+                    break;
+                case SpawnType.PEDESTRIAN:
+                    NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
+                    MyInteractableObject.GetComponent<ZedAvatarInteractable>().ReConnectToAvatar(skeletonID);
+                    break;
+                case SpawnType.PASSENGER:
+                    break;
+                case SpawnType.ROBOT:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
-        
-          
+
             AssignInteractable_ClientRPC(MyInteractableObject.GetComponent<NetworkObject>(), targetClient);
         }
     }
@@ -214,47 +157,37 @@ public class VR_Participant : Client_Object
         return NetworkedInteractableObject;
     }
 
-    public override Transform GetMainCamera()
-    {
+    public override Transform GetMainCamera() {
         if (MyCamera == null) MyCamera = transform.GetChild(0).Find("CenterEyeAnchor");
-          return MyCamera;
+        return MyCamera;
     }
 
     [ClientRpc]
-    private void AssignInteractable_ClientRPC(NetworkObjectReference MyInteractable, ulong targetClient)
-    {
+    private void AssignInteractable_ClientRPC(NetworkObjectReference MyInteractable, ulong targetClient) {
         Debug.Log(
             $"MyInteractable{MyInteractable.NetworkObjectId} targetClient:{targetClient}, OwnerClientId:{OwnerClientId}");
-        if (MyInteractable.TryGet(out var targetObject))
-        {
-            if (targetClient == OwnerClientId)
-            {
-
+        if (MyInteractable.TryGet(out var targetObject)) {
+            if (targetClient == OwnerClientId) {
                 var conf = new ConfigFileLoading();
                 conf.Init(OffsetFileName);
-                if (conf.FileAvalible())
-                {
+                if (conf.FileAvalible()) {
                     conf.LoadLocalOffset(out var localPosition, out var localRotation);
                     transform.localPosition = localPosition;
                     transform.localRotation = localRotation;
                 }
-            
 
-            NetworkedInteractableObject = targetObject.transform.GetComponent<Interactable_Object>();
-                
+
+                NetworkedInteractableObject = targetObject.transform.GetComponent<Interactable_Object>();
             }
         }
-        else
-        {
+        else {
             Debug.LogError(
                 "Did not manage to get my Car assigned interactions will not work. Maybe try calling this RPC later.");
         }
     }
 
-    public override void De_AssignFollowTransform(ulong targetClient, NetworkObject netobj)
-    {
-        if (IsServer)
-        {
+    public override void De_AssignFollowTransform(ulong targetClient, NetworkObject netobj) {
+        if (IsServer) {
             NetworkObject.TryRemoveParent(false);
             NetworkedInteractableObject = null;
             De_AssignFollowTransformClientRPC(targetClient);
@@ -262,108 +195,122 @@ public class VR_Participant : Client_Object
     }
 
     [ClientRpc]
-    private void De_AssignFollowTransformClientRPC(ulong targetClient)
-    {
-        //ToDo: currently we just deassigned everything but NetworkInteractableObject and _transform could turn into lists etc...
+    private void De_AssignFollowTransformClientRPC(ulong targetClient) {
         NetworkedInteractableObject = null;
-     
         DontDestroyOnLoad(gameObject);
         Debug.Log("De_assign Interactable ClientRPC");
-        
     }
 
-    public override void CalibrateClient(ClientRpcParams clientRpcParams)
-    { 
+    public void SetSkeletonID(int i_skeletonID) {
+        skeletonID = i_skeletonID;
+        SkeletonSet = true;
+        CalibrateClientRPC();
+    }
+    public override void CalibrateClient() {
+        if (mySpawnType.Value == SpawnType.PEDESTRIAN && NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null) {
+            
+            NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>().InitialCalibration(SetSkeletonID);
+            
+            
+        }else if (mySpawnType.Value == SpawnType.CAR) {
 
-        if (mySpawnType.Value == SpawnType.PEDESTRIAN &&  ZEDMaster.Singleton != null ) {
-            ZEDMaster.Singleton.e_StartCallibrationSequence();
+            CalibrateClientRPC();
         }
-        
-        CalibrateClientRPC(clientRpcParams);
     }
-    
-    
+
 
     private QN_Display qnmanager;
+
     public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) {
         if (!IsLocalPlayer) return;
-         qnmanager = Instantiate(QuestionairPrefab).GetComponent<QN_Display>();
-         qnmanager.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId,true);
-         string referenceTransformPath="";//TODO this is not Implemented
-         QN_Display.FollowType tmp = QN_Display.FollowType.MainCamera;
-         Vector3 Offset = Vector3.zero;
-         bool KeepUpdating = false;
-         switch (mySpawnType.Value) {
-             case SpawnType.CAR:
-                 tmp = QN_Display.FollowType.Interactable;
-                 Offset = new Vector3(-0.38f, 1.14f, 0.6f);
-                 KeepUpdating = true;
-                 break;
-             case SpawnType.NONE:
-                 break;
-             case SpawnType.PEDESTRIAN:
-             case SpawnType.PASSENGER:
-                 tmp = QN_Display.FollowType.MainCamera;
-                
-                 Offset = new Vector3(0f, 0f, 0.5f);
-                 break;
-             case SpawnType.ROBOT:
-                 break;
-             default:
-                 break;
-         }
+        qnmanager = Instantiate(QuestionairPrefab).GetComponent<QN_Display>();
+        qnmanager.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId, true);
+        string referenceTransformPath = ""; //TODO this is not Implemented
+        QN_Display.FollowType tmp = QN_Display.FollowType.MainCamera;
+        Vector3 Offset = Vector3.zero;
+        bool KeepUpdating = false;
+        switch (mySpawnType.Value) {
+            case SpawnType.CAR:
+                tmp = QN_Display.FollowType.Interactable;
+                Offset = new Vector3(-0.38f, 1.14f, 0.6f);
+                KeepUpdating = true;
+                break;
+            case SpawnType.NONE:
+                break;
+            case SpawnType.PEDESTRIAN:
+            case SpawnType.PASSENGER:
+                tmp = QN_Display.FollowType.MainCamera;
+                Offset = new Vector3(0f, 0f, 0.5f);
+                break;
+            case SpawnType.ROBOT:
+                break;
+            default:
+                break;
+        }
 
 
-         Debug.Log($"Spawning a questionnaire for Participant{m_participantOrder}");
-         qnmanager.StartQuestionair(m_QNDataStorageServer,m_participantOrder,tmp,Offset,KeepUpdating,referenceTransformPath,this);
+        Debug.Log($"Spawning a questionnaire for Participant{m_participantOrder}");
+        qnmanager.StartQuestionair(m_QNDataStorageServer, m_participantOrder, tmp, Offset, KeepUpdating,
+            referenceTransformPath, this);
 
-         foreach (var screenShot in FindObjectsOfType<QnCaptureScreenShot>()) {
-             if (screenShot.ContainsPO(ConnectionAndSpawning.Singleton.ParticipantOrder)) {
-                 if (screenShot.triggered) {
-                     qnmanager.AddImage(screenShot.GetTexture());
-                     InitiateImageTransfere(screenShot.GetTexture().EncodeToJPG(50));
-                     break;
-                 }
-             }
-         }
+        foreach (var screenShot in FindObjectsOfType<QnCaptureScreenShot>()) {
+            if (screenShot.ContainsPO(ConnectionAndSpawning.Singleton.ParticipantOrder)) {
+                if (screenShot.triggered) {
+                    qnmanager.AddImage(screenShot.GetTexture());
+                    InitiateImageTransfere(screenShot.GetTexture().EncodeToJPG(50));
+                    break;
+                }
+            }
+        }
 
-         m_QNDataStorageServer.RegisterQNSCreen(m_participantOrder, qnmanager);
+        m_QNDataStorageServer.RegisterQNSCreen(m_participantOrder, qnmanager);
     }
 
     private Transform LeftHand;
     private Transform RightHand;
 
     private IEnumerator OverTimeCallibration(Transform Parent, Transform Camera, float maxtime = 10) {
-        float timer = Time.time;
         int runs = 0;
-        const int MaxRuns = 500;
+        const int MaxRuns = 250;
         var interact = transform.parent.GetComponent<ZedAvatarInteractable>();
         isCalibrationRunning = true;
         float[] rotations = new float[MaxRuns];
-
+        transform.parent.localPosition = Vector3.zero;
+        transform.localPosition=Vector3.zero;
+        SetNewPositionOffset(transform.parent.position - Camera.position);
+        
         while (runs < MaxRuns) {
-            rotations[runs] = Quaternion.FromToRotation(Camera.forward, interact.fwd.Value).eulerAngles.y;
-            timer -= Time.deltaTime;
+            float  angle  = Quaternion.FromToRotation(Camera.forward, interact.fwd.Value).eulerAngles.y;
+            angle %=360; //https://stackoverflow.com/questions/47680017/how-to-limit-angles-in-180-180-range-just-like-unity3d-inspector
+            rotations[runs]= angle>180 ? angle-360 : angle;
+            maxtime -= Time.deltaTime;
             runs++;
+           
+            if (maxtime < 0) {
+                break;
+            }
             yield return new WaitForEndOfFrame();
         }
 
         Debug.Log($"Finished Collecting data: rotAvg:{rotations.Average()} and std: {rotations.StandardDeviation()}");
 
-    SetNewRotationOffset(Quaternion.Euler(0, rotations.Average(), 0));
-    transform.parent.localPosition=Vector3.zero;
-    SetNewPositionOffset(transform.parent.position - Camera.position);
-    FinishedCalibration();
-    isCalibrationRunning = false;
+        SetNewRotationOffset(Quaternion.Euler(0, rotations.Average(), 0));
+        transform.parent.localPosition = Vector3.zero;
+        transform.localPosition=Vector3.zero;
+        SetNewPositionOffset(transform.parent.position - Camera.position);
+        FinishedCalibration();
+        isCalibrationRunning = false;
     }
+
+    private bool SkeletonSet = false;
+    private int skeletonID;
     private bool isCalibrationRunning = false;
+
     [ClientRpc]
-    public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default)
-    {
+    public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default) {
         if (!IsLocalPlayer) return;
 
-        switch (mySpawnType.Value)
-        {
+        switch (mySpawnType.Value) {
             case SpawnType.CAR:
                 var steering = NetworkedInteractableObject.transform.Find("SteeringCenter");
                 var cam = GetMainCamera();
@@ -376,57 +323,56 @@ public class VR_Participant : Client_Object
                 Debug.Log("Calibrated ClientRPC");
                 break;
             case SpawnType.PEDESTRIAN:
-                var tmp = GetMainCamera();
-                tmp.GetComponent<TrackedPoseDriver>().trackingType = TrackedPoseDriver.TrackingType.RotationOnly;
-
+                var mainCamera = GetMainCamera();
+                mainCamera.GetComponent<TrackedPoseDriver>().trackingType = TrackedPoseDriver.TrackingType.RotationOnly;
+                Debug.Log($"Camera Local Position {mainCamera.localPosition}");
+                mainCamera.localPosition=Vector3.zero;
                 var t = NetworkedInteractableObject.GetCameraPositionObject();
-                Debug.Log($"trying to Get Callibratre :{m_participantOrder}");
+                Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
                 if (transform.parent != null &&
-                    transform.parent==NetworkedInteractableObject.transform &&
-                    transform.parent.GetComponent<ZedAvatarInteractable>()!=null ) {
+                    transform.parent == NetworkedInteractableObject.transform &&
+                    NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null) {
                     if (isCalibrationRunning == false) {
-
-                        StartCoroutine(OverTimeCallibration(transform.parent, tmp, 10));
-                    } 
+                        StartCoroutine(OverTimeCallibration(NetworkedInteractableObject.transform, mainCamera, 10));
+                    }
                 }
+                else {
+                    Debug.LogError("Pedestrian calibration failed!!");
+                }
+                /*
                 else if (t != null) {
-                   
                     Quaternion q = Quaternion.FromToRotation(tmp.forward, t.forward);
                     SetNewRotationOffset(Quaternion.Euler(0, q.eulerAngles.y, 0));
-                    
-                    
+
+
                     FinishedCalibration();
                 }
                 else {
                     Debug.Log("Could not find GetCameraPositionObject :-(");
                     if (ConnectionAndSpawning.Singleton.GetScenarioManager()
-                        .GetSpawnPose(m_participantOrder, out Pose pose))
-                    {
+                        .GetSpawnPose(m_participantOrder, out Pose pose)) {
                         Quaternion q = Quaternion.FromToRotation(tmp.forward, pose.forward);
-                        SetNewRotationOffset(Quaternion.Euler(0,q.eulerAngles.y,0));
-                    
+                        SetNewRotationOffset(Quaternion.Euler(0, q.eulerAngles.y, 0));
                     }
-                    SetNewPositionOffset(transform.parent.position-tmp.position);
-                    FinishedCalibration();
-                }
 
+                    SetNewPositionOffset(transform.parent.position - tmp.position);
+                    FinishedCalibration();
+                }*/
+/*
                 if (NetworkedInteractableObject.GetType() == typeof(ZEDMaster)) {
                     var zedMaster = NetworkedInteractableObject.GetComponent<ZEDMaster>();
                     LeftHand = transform.Find("Camera Offset/Left Hand Tracking/L_Wrist");
                     RightHand = transform.Find("Camera Offset/Right Hand Tracking/R_Wrist");
                     LeftHand.gameObject.GetOrAddComponent<ZombieHands>().Init(zedMaster.GetLeftHandRoot());
                     RightHand.gameObject.GetOrAddComponent<ZombieHands>().Init(zedMaster.GetRightHandRoot());
-                    
-                }
+                }*/
 
                 break;
         }
     }
 
-    public bool ButtonPush()
-    {
-        if (lastValue && ButtonPushed.Value == false)
-        {
+    public bool ButtonPush() {
+        if (lastValue && ButtonPushed.Value == false) {
             lastValue = ButtonPushed.Value;
             return true;
         }
@@ -436,31 +382,26 @@ public class VR_Participant : Client_Object
     }
 
 
-
-    public void SetNewRotationOffset(Quaternion offset)
-    {
-       // offsetRotation *= offset;
-       transform.rotation *= offset;
+    public void SetNewRotationOffset(Quaternion offset) {
+        // offsetRotation *= offset;
+        transform.rotation *= offset;
     }
 
-    public void SetNewPositionOffset(Vector3 positionOffset)
-    {
-       // offsetPositon += positionOffset;
+    public void SetNewPositionOffset(Vector3 positionOffset) {
+        // offsetPositon += positionOffset;
         transform.position += positionOffset;
     }
 
-    public void FinishedCalibration()
-    {
+    public void FinishedCalibration() {
         var conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
         conf.StoreLocalOffset(transform.localPosition, transform.localRotation);
-     
+
         //  ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
     }
 
     [ServerRpc]
-    public void ShareOffsetServerRPC(Vector3 offsetPositon, Quaternion offsetRotation, Quaternion InitRotation)
-    {
+    public void ShareOffsetServerRPC(Vector3 offsetPositon, Quaternion offsetRotation, Quaternion InitRotation) {
         UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, InitRotation);
         this.offsetPositon = offsetPositon;
         this.offsetRotation = offsetRotation;
@@ -470,8 +411,7 @@ public class VR_Participant : Client_Object
 
     [ClientRpc]
     public void UpdateOffsetRemoteClientRPC(Vector3 _offsetPositon, Quaternion _offsetRotation,
-        Quaternion InitRotation)
-    {
+        Quaternion InitRotation) {
         if (IsLocalPlayer) return;
 
         offsetPositon = _offsetPositon;
@@ -481,25 +421,21 @@ public class VR_Participant : Client_Object
         Debug.Log("Updated Callibrated offsets based on remote poisiton");
     }
 
-    public Transform GetMyInteractable()
-    {
+    public Transform GetMyInteractable() {
         return NetworkedInteractableObject.transform;
     }
 
-    public bool DeleteCallibrationFile()
-    {
+    public bool DeleteCallibrationFile() {
         var conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
         return conf.DeleteFile();
     }
 
-    public void NewScenario()
-    {
+    public void NewScenario() {
         FinishedImageSending = true;
     }
 
-    public void InitiateImageTransfere(byte[] Image)
-    {
+    public void InitiateImageTransfere(byte[] Image) {
         if (!IsLocalPlayer) return;
         if (IsServer) return;
         FinishedImageSending = false;
@@ -508,13 +444,11 @@ public class VR_Participant : Client_Object
 
 
 //https://answers.unity.com/questions/1113376/unet-send-big-amount-of-data-over-network-how-to-s.html
-    private IEnumerator SendImageData(ParticipantOrder po, byte[] ImageArray)
-    {
+    private IEnumerator SendImageData(ParticipantOrder po, byte[] ImageArray) {
         var CurrentDataIndex = 0;
         var TotalBufferSize = ImageArray.Length;
         var DebugCounter = 0;
-        while (CurrentDataIndex < TotalBufferSize - 1)
-        {
+        while (CurrentDataIndex < TotalBufferSize - 1) {
             //determine the remaining amount of bytes, still need to be sent.
             var bufferSize = QNDataStorageServer.ByteArraySize;
             var remaining = TotalBufferSize - CurrentDataIndex;
@@ -546,12 +480,10 @@ public class VR_Participant : Client_Object
 
 
     [ServerRpc]
-    public void FinishPictureSendingServerRPC(ParticipantOrder po, int length)
-    {
+    public void FinishPictureSendingServerRPC(ParticipantOrder po, int length) {
         if (!IsServer) return;
 
         ConnectionAndSpawning.Singleton.GetQnStorageServer().NewRemoteImage(po, length);
         Debug.Log("Finished Picture storing");
     }
-
 }

@@ -10,39 +10,308 @@
   <component name="ChangeListManager">
     <list default="true" id="1f6d41df-4024-490f-b01c-048cd6957123" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrossCulturalDriving/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrossCulturalDriving/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/CrowdAgent_Female.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/CrowdAgent_Female.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/CrowdAgent_Male.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/CrowdAgent_Male.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/Navmesh.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/Navmesh.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/ZedRoomCallibration.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/ZedRoomCallibration.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scenes/GameManagment.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scenes/GameManagment.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scenes/GameManagment/LightingData.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scenes/GameManagment/LightingData.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Editor/ScenarioManagerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Editor/ScenarioManagerEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/GlobalStateVariableDefinition.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/GlobalStateVariableDefinition.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/ConnectionAndSpawning.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/ConnectionAndSpawning.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/AbstractClasses.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/AbstractClasses.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/VR_Participant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/VR_Participant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/SpawnPosition.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/SpawnPosition.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/util/SceneField.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/util/SceneField.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Component_Driving/ThreeScreen_Participant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Driving/ThreeScreen_Participant.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Materials/Materials/RoadTexture.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Materials/Materials/RoadTexture.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Materials/4m8mRoadTexture-112023.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Materials/4m8mRoadTexture-112023.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Materials/Material_meshs/Glass.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Materials/Material_meshs/Glass.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Meshes,textures/Buildings_FBX/Materials/Blue.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Meshes,textures/Buildings_FBX/Materials/Blue.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Meshes,textures/Buildings_FBX/Materials/Facade_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Meshes,textures/Buildings_FBX/Materials/Facade_01.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Meshes,textures/Buildings_FBX/Materials/facade 1.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Meshes,textures/Buildings_FBX/Materials/facade 1.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Meshes,textures/Buildings_FBX/Materials/facade.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Meshes,textures/Buildings_FBX/Materials/facade.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Meshes,textures/Shops_FBX/Materials/Facade_01.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Meshes,textures/Shops_FBX/Materials/Facade_01.mat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/StrangeTown.lighting" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/StrangeTown.lighting" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/SimpleFileBrowser/SimpleFileBrowser.Runtime.asmdef" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/SimpleFileBrowser/SimpleFileBrowser.Runtime.asmdef" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/PerformanceTestRunInfo.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/PerformanceTestRunInfo.json.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/PerformanceTestRunSettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/PerformanceTestRunSettings.json.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/RoomCalibration20231109_1.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/RoomCalibration20231109_1.json.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/XR/XRGeneralSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/XR/XRGeneralSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/LightingData.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/LightingData.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-0_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-0_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-0_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-0_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-0_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-0_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-10_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-10_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-10_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-10_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-10_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-10_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-11_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-11_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-11_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-11_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-11_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-11_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-12_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-12_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-12_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-12_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-12_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-12_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-13_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-13_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-13_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-13_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-13_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-13_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-14_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-14_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-14_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-14_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-14_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-14_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-15_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-15_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-15_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-15_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-15_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-15_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-16_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-16_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-16_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-16_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-16_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-16_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-17_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-17_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-17_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-17_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-17_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-17_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-18_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-18_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-18_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-18_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-18_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-18_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-19_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-19_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-19_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-19_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-19_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-19_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-1_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-1_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-1_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-1_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-1_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-1_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-20_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-20_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-20_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-20_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-20_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-20_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-21_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-21_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-21_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-21_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-21_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-21_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-22_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-22_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-22_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-22_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-22_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-22_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-23_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-23_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-23_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-23_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-23_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-23_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-24_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-24_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-24_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-24_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-24_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-24_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-25_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-25_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-25_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-25_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-25_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-25_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-26_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-26_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-26_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-26_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-26_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-26_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-27_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-27_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-27_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-27_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-27_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-27_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-28_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-28_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-28_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-28_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-28_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-28_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-29_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-29_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-29_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-29_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-29_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-29_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-2_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-2_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-2_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-2_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-2_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-2_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-30_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-30_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-30_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-30_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-30_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-30_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-31_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-31_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-31_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-31_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-31_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-31_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-32_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-32_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-32_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-32_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-32_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-32_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-33_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-33_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-33_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-33_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-33_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-33_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-34_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-34_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-34_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-34_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-34_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-34_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-35_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-35_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-35_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-35_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-35_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-35_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-36_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-36_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-36_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-36_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-36_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-36_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-37_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-37_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-37_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-37_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-37_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-37_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-38_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-38_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-38_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-38_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-38_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-38_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-39_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-39_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-39_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-39_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-39_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-39_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-3_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-3_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-3_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-3_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-3_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-3_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-40_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-40_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-40_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-40_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-40_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-40_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-41_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-41_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-41_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-41_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-41_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-41_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-42_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-42_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-42_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-42_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-42_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-42_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-43_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-43_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-43_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-43_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-43_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-43_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-44_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-44_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-44_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-44_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-44_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-44_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-45_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-45_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-45_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-45_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-45_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-45_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-46_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-46_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-46_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-46_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-46_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-46_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-47_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-47_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-47_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-47_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-47_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-47_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-48_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-48_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-48_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-48_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-48_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-48_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-49_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-49_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-49_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-49_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-49_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-49_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-4_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-4_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-4_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-4_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-4_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-4_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-50_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-50_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-50_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-50_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-50_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-50_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-51_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-51_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-51_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-51_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-51_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-51_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-52_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-52_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-52_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-52_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-52_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-52_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-53_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-53_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-53_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-53_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-53_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-53_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-54_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-54_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-54_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-54_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-54_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-54_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-55_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-55_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-55_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-55_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-55_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-55_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-56_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-56_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-56_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-56_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-56_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-56_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-57_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-57_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-57_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-57_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-57_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-57_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-58_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-58_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-58_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-58_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-58_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-58_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-59_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-59_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-59_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-59_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-59_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-59_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-5_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-5_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-5_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-5_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-5_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-5_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-60_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-60_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-60_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-60_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-60_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-60_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-61_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-61_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-61_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-61_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-61_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-61_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-62_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-62_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-62_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-62_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-62_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-62_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-63_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-63_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-63_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-63_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-63_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-63_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-64_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-64_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-64_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-64_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-64_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-64_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-65_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-65_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-65_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-65_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-65_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-65_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-66_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-66_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-66_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-66_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-66_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-66_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-67_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-67_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-67_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-67_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-67_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-67_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-68_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-68_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-68_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-68_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-68_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-68_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-69_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-69_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-69_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-69_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-69_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-69_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-6_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-6_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-6_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-6_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-6_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-6_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-70_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-70_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-70_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-70_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-70_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-70_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-7_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-7_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-7_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-7_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-7_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-7_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-8_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-8_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-8_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-8_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-8_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-8_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-9_comp_dir.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-9_comp_dir.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-9_comp_light.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-9_comp_light.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-9_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-9_comp_shadowmask.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/OcclusionCullingData.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/OcclusionCullingData.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/ReflectionProbe-0.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/ReflectionProbe-0.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/CrowdNavSurfaceManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/CrowdNavSurfaceManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/OberserverCamera_ClientObject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/OberserverCamera_ClientObject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Android/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Android/AndroidManifest.xml.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Rerun" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Rerun" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/SkeletonNetworkScript.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/SkeletonNetworkScript.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TestScreenClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TestScreenClient.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/UICanvas.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/UICanvas.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/CustomScripts/ZEDMaster.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ZED/CustomScripts/ZEDMaster.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/ZED/CustomScripts/ZedAvatarInteractable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ZED/CustomScripts/ZedAvatarInteractable.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/SkeletonHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/SkeletonHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Animator.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Animator/BodyTrackingAnimationController.controller" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Animator/BodyTrackingAnimationController.controller.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Models.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Models/Unity_Avatar.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Models/Unity_Avatar.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Prefabs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Prefabs/Avatar.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Prefabs/Avatar/Unity_Avatar.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Prefabs/Avatar/Unity_Avatar.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Prefabs/ZEDManager.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Prefabs/ZEDManager.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Prefabs/ZedInteractable.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Prefabs/ZedInteractable.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Materials.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Materials/SkeletonMaterial.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Materials/SkeletonMaterial.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures/Armature_Arms_AlbedoTransparency.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures/Armature_Arms_AlbedoTransparency.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures/Armature_Arms_Normal.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures/Armature_Arms_Normal.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures/Armature_Body_AlbedoTransparency.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures/Armature_Body_AlbedoTransparency.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures/Armature_Body_Normal.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures/Armature_Body_Normal.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures/Armature_Legs_AlbedoTransparency.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures/Armature_Legs_AlbedoTransparency.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures/Armature_Legs_Normal.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Resources/Textures/Armature_Legs_Normal.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/CameraMover.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/CameraMover.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/HeightOffsetter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/HeightOffsetter.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/RigBone.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/RigBone.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/SkeletonHandler.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/SkeletonHandler.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/ZEDBodyTrackingManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/ZEDBodyTrackingManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/ZEDCommon.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/ZEDCommon.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/ZEDSkeletonAnimator.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/ZEDSkeletonAnimator.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/ZEDStreamingClient.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Sources/ZEDFusion/Scripts/ZEDStreamingClient.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/ZedSpaceReference.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ZedSpaceReference.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/PedScen11.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/PedScen11.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/PedScen1Cross.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/PedScen1Cross.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/PedScen1Empty.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/PedScen1Empty.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/PedScen1Empty.unity.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/PedScen1Empty.unity.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/PedScen1Light.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/PedScen1Light.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/Practice.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/Practice.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/PedScen9.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/PedScen9.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +324,8 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/10871f9e312b442cb78b9b97db88fdcb172a00/95/fa0f1997/Transform.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8a0f19b0e419485eafaaec7c95c00afb27800/44/cd3c2a7e/Animator.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8a0f19b0e419485eafaaec7c95c00afb27800/7f/0c53c53f/HumanBodyBones.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/ConnectionAndSpawning.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Component_Core/Scripts/ZombieHands.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Component_Core/Scripts/util/ParticipantOrderMapping.cs" root0="FORCE_HIGHLIGHTING" />
@@ -69,6 +340,8 @@
     <setting file="file://$PROJECT_DIR$/Assets/Utilities/SODictionary/Base/Editor_EnumToValue.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Utilities/SODictionary/Implementations/SO_JoinTypeToClientObject.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Utilities/SODictionary/Implementations/SO_SpawnTypeToInteractableObject.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/VRCameraOffset.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/ZEDBodyTrackingManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.burst@1.8.8/Tests/Runtime/Shared/031-Pointers.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.inputsystem@1.7.0/Samples~/UIvsGameInput/UIvsGameInputHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.mathematics@1.3.1/Tests/Tests/Shared/TestMinMaxAABB.cs" root0="SKIP_HIGHLIGHTING" />
@@ -79,6 +352,7 @@
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.netcode.gameobjects@1.5.2/Runtime/Messaging/NetworkMessageManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.netcode.gameobjects@1.5.2/Runtime/Serialization/NetworkObjectReference.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.shadergraph@14.0.8/ShaderGraphLibrary/LODDitheringTransition.hlsl" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.shadergraph@14.0.8/ShaderGraphLibrary/ShaderVariables.hlsl" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMP_Dropdown.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.textmeshpro@3.0.6/Tests/Editor/TMP_EditorTests.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/EventSystem/Raycasters/BaseRaycaster.cs" root0="SKIP_HIGHLIGHTING" />
@@ -86,12 +360,13 @@
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Runtime/UI/Core/GraphicRaycaster.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.ugui@1.0.0/Tests/Editor/CanvasRenderer/ChangingHierarchyOfCanvasRenderer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.xr.core-utils@2.2.3/Tests/Editor/PackageVersionTests.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.xr.core-utils@2.2.3/Tests/Editor/Vector3ExtensionsTests.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -103,31 +378,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Discover.Launch.Via.Unity&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;NewMultiZEDPed&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Discover.Launch.Via.Unity": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "NewMultiZEDPed",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\farla\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache",
+      "C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache",
+      "C:\\Users\\farla\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/../../Summer2023/UnityBuilds/2023_11_15\com.farlab.StrangeLand.exe" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/../../Summer2023/UnityBuilds/2023_11_21\com.farlab.StrangeLand.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="D:\Summer2023\UnityBuilds\2023_8_21\win" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -242,7 +517,10 @@
       <workItem from="1700080784004" duration="7307000" />
       <workItem from="1700148261436" duration="587000" />
       <workItem from="1700166434760" duration="5079000" />
-      <workItem from="1700503232649" duration="682000" />
+      <workItem from="1700503232649" duration="8461000" />
+      <workItem from="1700515708788" duration="2212000" />
+      <workItem from="1700590117954" duration="8608000" />
+      <workItem from="1701111896937" duration="6956000" />
     </task>
     <servers />
   </component>
