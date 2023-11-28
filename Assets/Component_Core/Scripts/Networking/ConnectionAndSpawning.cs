@@ -43,6 +43,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         new SerializedDictionary<string, SerializedDictionary<ParticipantOrder, Pose>>();
 
     public GameObject ref_ServerTimingDisplay;
+    public GameObject ZedManagerPrefab;
 
     public List<SceneField> IncludedScenes = new();
     private string LastLoadedVisualScene;
@@ -215,6 +216,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private void SetUpToServe(string pairName) {
         Application.targetFrameRate = 72;
+        
         gameObject.AddComponent<SteeringWheelManager>();
         gameObject.AddComponent<farlab_logger>();
         m_QNDataStorageServer = gameObject.AddComponent<QNDataStorageServer>();
@@ -262,6 +264,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
 
 
+       var t=  Instantiate(ZedManagerPrefab);
+       DontDestroyOnLoad(t);
+
     }
 
     public void StartAsHost(string pairName,ParticipantOrder po, JoinType _jt,SpawnType _st) {
@@ -281,6 +286,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
         NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(jsonstring); // assigning ID
         NetworkManager.Singleton.StartHost();
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
+        
+        var t=  Instantiate(ZedManagerPrefab);
+        DontDestroyOnLoad(t);
+        
     }
 
     private void ClientDisconnected_client(ulong ClientID) {

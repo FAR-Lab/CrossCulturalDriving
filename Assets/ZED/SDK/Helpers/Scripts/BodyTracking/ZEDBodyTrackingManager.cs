@@ -14,6 +14,8 @@ using UnityEngine.Rendering.Universal;
 public class ZEDBodyTrackingManager : MonoBehaviour
 {
     #region vars
+    
+    
 
     /// <summary>
     /// The scene's ZEDManager.
@@ -122,21 +124,12 @@ public class ZEDBodyTrackingManager : MonoBehaviour
     [Tooltip("Foot locking smoothing setting. 0 = No latency, no smoothing. 1 = \"Full latency\" so no movement.\n Tweak this value depending on your framerate, and the fps of the camera.\nValues closer to 1 induce more latency, but improve fluidity."), Range(0f, 1f)]
     public float footLockingSmoothingValue = .8f;
 
-    [Space(5)]
-    [Header("------ Keyboard mapping ------")]
-    public KeyCode toggleFootIK = KeyCode.I;
-    public KeyCode toggleFootLock = KeyCode.F;
-    public KeyCode toggleMirrorMode = KeyCode.M;
-    public KeyCode toggleAutomaticHeightOffset = KeyCode.O;
-    public KeyCode increaseOffsetKey = KeyCode.UpArrow;
-    public KeyCode decreaseOffsetKey = KeyCode.DownArrow;
-
     //private float alpha = 0.1f;
 
     #endregion
 
- 
 
+   
     /// <summary>
     /// Start this instance.
     /// </summary>
@@ -168,7 +161,11 @@ public class ZEDBodyTrackingManager : MonoBehaviour
             zedManager.OnBodyTracking += UpdateSkeletonData;
 		}
         bodyFormat = zedManager.bodyFormat;
+
+        
     }
+
+  
 
     private void OnZEDReady()
     {
@@ -185,6 +182,7 @@ public class ZEDBodyTrackingManager : MonoBehaviour
             zedManager.OnBodyTracking -= UpdateSkeletonData;
             zedManager.OnZEDReady -= OnZEDReady;
         }
+     
     }
 
     
@@ -195,6 +193,7 @@ public class ZEDBodyTrackingManager : MonoBehaviour
     IEnumerator InstanciateAvatarWithDelay(float delay, DetectedBody dbody)
     {
         SkeletonHandler handler = ScriptableObject.CreateInstance<SkeletonHandler>();
+        DontDestroyOnLoad(handler);
         handler.Create(avatar, bodyFormat, this);
         handler.InitSkeleton(dbody.rawBodyData.id, new Material(skeletonBaseMaterial));
 
@@ -204,6 +203,7 @@ public class ZEDBodyTrackingManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         if (avatarControlList.ContainsKey(dbody.rawBodyData.id)) handler.zedSkeletonAnimator.canSpawn=true;
+        StartCoroutine(DisableTrackingAfterDelay(2));
     }
 
     /// <summary>
@@ -242,6 +242,14 @@ public class ZEDBodyTrackingManager : MonoBehaviour
 			handler.Destroy();
 			avatarControlList.Remove(index);
 		}
+    }
+
+    IEnumerator DisableTrackingAfterDelay(float delay) {
+        zedManager.enableTracking = false;
+        yield return new WaitForSeconds(delay);
+        zedManager.enableTracking = true;
+        yield return new WaitForSeconds(delay);
+        zedManager.enableTracking = false;
     }
 
 	public void Update()

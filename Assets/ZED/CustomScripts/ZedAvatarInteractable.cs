@@ -5,42 +5,30 @@ using Unity.Netcode;
 using UnityEngine;
 
 public class ZedAvatarInteractable : Interactable_Object {
-    public GameObject ZEDMasterPrefab;
+    
     private ulong m_ClientID;
-    private bool initDone = false;
+ 
     private Transform ReferenceTransformHead;
-
-    public NetworkVariable<Vector3> fwd = new NetworkVariable<Vector3>();
 
   
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (IsServer)
-        {
-            //if (ZEDMaster.Singleton == null)
-            {
-                Instantiate(ZEDMasterPrefab);
-            }
+        if (IsServer) {
+            var z = FindObjectOfType<ZedSpaceReference>();
+            if (z != null) {
+              transform.position= z.transform.position;
+              transform.rotation= z.transform.rotation;
+            }else
+            {Debug.LogWarning("Could not find ZedSpaceReference, not sure where to go?!");}
         }
     }
    
-    public void Update() {
-      
-        if (initDone && IsServer) {
-            if (ReferenceTransformHead == null) {
-                initDone = false;
-                return;
-            }
-            transform.position = ReferenceTransformHead.position;
-            fwd.Value = ReferenceTransformHead.forward;
-           
-        }
-    }
+ 
 
     private void TriggerCalibration(Transform head) {
         ReferenceTransformHead = head;
-            initDone = true;
+          
     }
 
 
@@ -51,8 +39,6 @@ public class ZedAvatarInteractable : Interactable_Object {
     }
 
     public override Transform GetCameraPositionObject() {
-      
-        
         return transform;
     }
 
@@ -69,11 +55,11 @@ public class ZedAvatarInteractable : Interactable_Object {
     }
 
     public void ReConnectToAvatar(int skeletonID) {
-        //ZEDMaster.Singleton.e_ReconnectionStart(skeletonID,TriggerCalibration);
+       
 
     }
 
-    public void InitialCalibration(Action<int> setSkeletonID) {
-        //ZEDMaster.Singleton.e_StartCalibrationSequence(setSkeletonID,TriggerCalibration);
+    public void WorldCalibration() {
+      
     }
 }

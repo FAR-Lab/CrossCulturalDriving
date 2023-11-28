@@ -69,11 +69,11 @@ MonoBehaviour:
   streamInputIP: "192.168.4.40\t "
   streamInputPort: 30000
   enableTracking: 1
-  enableSpatialMemory: 1
+  enableSpatialMemory: 0
   pathSpatialMemory: 
   positionalTrackingMode: 0
   setFloorAsOrigin: 1
-  trackingIsStatic: 0
+  trackingIsStatic: 1
   planeDetectionMaxDistanceThreshold: 0.15
   planeDetectioNormalSimilarityThreshold: 15
   mappingResolutionPreset: 2
@@ -85,7 +85,7 @@ MonoBehaviour:
   meshFilterParameters: 0
   objectDetectionInstanceID: 0
   objectDetectionImageSyncMode: 1
-  objectDetectionTracking: 1
+  objectDetectionTracking: 0
   objectDetection2DMask: 0
   objectDetectionModel: 2
   objectDetectionMaxRange: 10
@@ -215,7 +215,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zedManager: {fileID: 114491592745282986}
-  cameraFrame: {fileID: 0}
   startBodyTrackingAutomatically: 1
   useAvatar: 1
   maximumNumberOfDetections: 1
@@ -237,12 +236,6 @@ MonoBehaviour:
   enableFootIK: 0
   enableFootLocking: 0
   footLockingSmoothingValue: 0.8
-  toggleFootIK: 105
-  toggleFootLock: 102
-  toggleMirrorMode: 109
-  toggleAutomaticHeightOffset: 111
-  increaseOffsetKey: 273
-  decreaseOffsetKey: 274
 --- !u!1 &3202038751649066462
 GameObject:
   m_ObjectHideFlags: 0

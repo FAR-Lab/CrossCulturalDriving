@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(HeightOffsetter))]
@@ -280,6 +281,13 @@ public class ZEDSkeletonAnimator : MonoBehaviour
 
     private void Awake()
     {
+        // MyMod
+        if (!NetworkManager.Singleton.IsServer) {
+            Destroy(GetComponent<HeightOffsetter>());
+            Destroy(GetComponent<Animator>());
+            Destroy(this);
+        }
+        
         heightOffsetter = GetComponent<HeightOffsetter>();
     }
 

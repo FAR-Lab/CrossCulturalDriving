@@ -2815,6 +2815,7 @@ public class ZEDManager : MonoBehaviour
             ZEDDisconnected(); //Tries to reset the camera.
             return;
         }
+       
         // Then update all modules
         UpdateImages(); //Image is updated first so we have its timestamp for latency compensation.
 
@@ -3371,7 +3372,7 @@ public class ZEDManager : MonoBehaviour
     public void UpdateBodiesTracking()
     {
         if (!bodyTrackingRunning) return;
-
+       
         //Update the runtime parameters in case the user made changes.
         bodyTrackingRuntimeParams.detectionConfidenceThreshold = bodyTrackingConfidenceThreshold;
         bodyTrackingRuntimeParams.minimumKeypointsThreshold = bodyTrackingMinimumKPThreshold;

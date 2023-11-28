@@ -15,6 +15,7 @@ public class DeviceConfigMono : MonoBehaviour {
     
     # if UNITY_EDITOR
     private void OnDrawGizmos() {
+        return;
         Gizmos.matrix = Matrix4x4.TRS(transform.position,transform.rotation,Vector3.one);
         Gizmos.DrawCube(Vector3.zero, Vector3.one);
         Gizmos.DrawFrustum(Vector3.one*0.21f, 158/4, 0.25f, 4, 1.77777f);

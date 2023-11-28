@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Numerics;
 using UltimateReplay;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR.Hands;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 public class VR_Participant : Client_Object {
     private const string OffsetFileName = "offset";
@@ -138,7 +141,6 @@ public class VR_Participant : Client_Object {
                     break;
                 case SpawnType.PEDESTRIAN:
                     NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
-                    MyInteractableObject.GetComponent<ZedAvatarInteractable>().ReConnectToAvatar(skeletonID);
                     break;
                 case SpawnType.PASSENGER:
                     break;
@@ -175,8 +177,6 @@ public class VR_Participant : Client_Object {
                     transform.localPosition = localPosition;
                     transform.localRotation = localRotation;
                 }
-
-
                 NetworkedInteractableObject = targetObject.transform.GetComponent<Interactable_Object>();
             }
         }
@@ -201,16 +201,17 @@ public class VR_Participant : Client_Object {
         Debug.Log("De_assign Interactable ClientRPC");
     }
 
-    public void SetSkeletonID(int i_skeletonID) {
-        skeletonID = i_skeletonID;
-        SkeletonSet = true;
-        CalibrateClientRPC();
-    }
+  
     public override void CalibrateClient() {
         if (mySpawnType.Value == SpawnType.PEDESTRIAN && NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null) {
             
-            NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>().InitialCalibration(SetSkeletonID);
             
+            // MakeSure the ZEDBodyTrackinManager is where its supposed to be
+            //Wait a second for the network to update 
+            // Send a callibration re quest to the Client  (ClientRPC) TO move the origin such that skeleton and VR align!
+            
+            NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>().WorldCalibration();
+            CalibrateClientRPC();
             
         }else if (mySpawnType.Value == SpawnType.CAR) {
 
@@ -269,20 +270,25 @@ public class VR_Participant : Client_Object {
     private Transform LeftHand;
     private Transform RightHand;
 
-    private IEnumerator OverTimeCallibration(Transform Parent, Transform Camera, float maxtime = 10) {
+    private IEnumerator OverTimeCallibration(Transform Camera, float maxtime = 10) {
+        isCalibrationRunning = true;
         int runs = 0;
         const int MaxRuns = 250;
-        var interact = transform.parent.GetComponent<ZedAvatarInteractable>();
-        isCalibrationRunning = true;
-        float[] rotations = new float[MaxRuns];
-        transform.parent.localPosition = Vector3.zero;
-        transform.localPosition=Vector3.zero;
-        SetNewPositionOffset(transform.parent.position - Camera.position);
         
+        var interact = FindObjectOfType<ZEDSkeletonAnimator>(); // We makeing a bunch of assumptions here, kinda ugly! 
+        float[] rotOffset = new float[MaxRuns];
+        Vector3[] posOffset = new Vector3[MaxRuns];
+
+
+        Transform Head = interact.animator.GetBoneTransform(HumanBodyBones.Head);
+        Transform Hips = interact.animator.GetBoneTransform(HumanBodyBones.Hips);
+
         while (runs < MaxRuns) {
-            float  angle  = Quaternion.FromToRotation(Camera.forward, interact.fwd.Value).eulerAngles.y;
-            angle %=360; //https://stackoverflow.com/questions/47680017/how-to-limit-angles-in-180-180-range-just-like-unity3d-inspector
-            rotations[runs]= angle>180 ? angle-360 : angle;
+            float  angle  = Quaternion.FromToRotation(Camera.forward, Hips.forward).eulerAngles.y;
+            angle %= 360; //https://stackoverflow.com/questions/47680017/how-to-limit-angles-in-180-180-range-just-like-unity3d-inspector
+            rotOffset[runs]= angle>180 ? angle-360 : angle;
+
+            posOffset[runs] = Head.position - Camera.position;
             maxtime -= Time.deltaTime;
             runs++;
            
@@ -292,12 +298,15 @@ public class VR_Participant : Client_Object {
             yield return new WaitForEndOfFrame();
         }
 
-        Debug.Log($"Finished Collecting data: rotAvg:{rotations.Average()} and std: {rotations.StandardDeviation()}");
-
-        SetNewRotationOffset(Quaternion.Euler(0, rotations.Average(), 0));
-        transform.parent.localPosition = Vector3.zero;
-        transform.localPosition=Vector3.zero;
-        SetNewPositionOffset(transform.parent.position - Camera.position);
+        Debug.Log($"Finished Collecting data: rotAvg:{rotOffset.Average()} and std: {rotOffset.StandardDeviation()}");
+        Vector3 Output=Vector3.zero;
+        foreach (var tmp in posOffset) {
+            Output += tmp;
+        }
+        
+        Output /= runs;
+        SetNewPositionOffset(Output);
+        SetNewRotationOffset(Quaternion.Euler(0, rotOffset.Average(), 0));
         FinishedCalibration();
         isCalibrationRunning = false;
     }
@@ -324,16 +333,14 @@ public class VR_Participant : Client_Object {
                 break;
             case SpawnType.PEDESTRIAN:
                 var mainCamera = GetMainCamera();
-                mainCamera.GetComponent<TrackedPoseDriver>().trackingType = TrackedPoseDriver.TrackingType.RotationOnly;
                 Debug.Log($"Camera Local Position {mainCamera.localPosition}");
-                mainCamera.localPosition=Vector3.zero;
                 var t = NetworkedInteractableObject.GetCameraPositionObject();
                 Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
                 if (transform.parent != null &&
                     transform.parent == NetworkedInteractableObject.transform &&
                     NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null) {
                     if (isCalibrationRunning == false) {
-                        StartCoroutine(OverTimeCallibration(NetworkedInteractableObject.transform, mainCamera, 10));
+                        StartCoroutine(OverTimeCallibration(mainCamera, 10));
                     }
                 }
                 else {

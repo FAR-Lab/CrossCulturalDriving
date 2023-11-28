@@ -18,7 +18,7 @@ public class DeviceConfigManagerEditor : Editor {
         // Button to deserialize JSON data
         if (GUILayout.Button("Deserialize Object Data"))
         {
-            script.DeserializeObjectData();
+         //   script.DeserializeObjectData();
         }
         /*
         if (GUILayout.Button("SotreSelectedAgentLocation")) {
@@ -35,6 +35,8 @@ public class DeviceConfigManagerEditor : Editor {
 #endif
 public class ZedSpaceReference : MonoBehaviour {
 
+    
+    /*
     public TextAsset ZedCallibrationFile;
 
     
@@ -131,7 +133,7 @@ public class ZedSpaceReference : MonoBehaviour {
         
     }
     
-    
+    */
     
     
     public class DeviceConfig

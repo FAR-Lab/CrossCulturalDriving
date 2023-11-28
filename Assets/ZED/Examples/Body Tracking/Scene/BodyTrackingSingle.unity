@@ -1155,6 +1155,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1031291593}
   - component: {fileID: 1031291594}
+  - component: {fileID: 1031291595}
   m_Layer: 0
   m_Name: Camera Offset
   m_TagString: Untagged
@@ -1194,6 +1195,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AvatarHead: {fileID: 0}
   VRCamera: {fileID: 1506040165}
+--- !u!114 &1031291595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031291592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68ac3bea797e424a8876ad4af0291b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1394870589
 PrefabInstance:
   m_ObjectHideFlags: 0

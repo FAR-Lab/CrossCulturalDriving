@@ -1,6 +1,5 @@
 /*
 
-
 #if USING_ZED
 
 using System;
@@ -44,7 +43,6 @@ public class ZEDMaster : MonoBehaviour {
     private void OnDestroy() {
         if (Singleton != null && Singleton == this) Singleton = null;
             Debug.Log("About to destroy abunch of Skeletons");
-        zedBodyTrackingManager.setDestroyed = true;
         ZEDSkeletonAnimator[] avatars = FindObjectsOfType<ZEDSkeletonAnimator>();
         foreach (var avatar in avatars) {
             avatar.GetComponent<NetworkObject>().Despawn();
@@ -68,8 +66,8 @@ public class ZEDMaster : MonoBehaviour {
     public void TryToFindGlobalReference() {
         var  re= FindObjectOfType<ZedSpaceReference>();
         if (re != null) {
-            zedBodyTrackingManager.positionOffset = re.transform.position;
-            zedBodyTrackingManager.rotationOffset = re.transform.rotation.eulerAngles;
+            //zedBodyTrackingManager.positionOffset = re.transform.position;
+            //zedBodyTrackingManager.rotationOffset = re.transform.rotation.eulerAngles;
         }
     }
     public Vector3 GetHipPosition() {

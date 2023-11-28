@@ -551,7 +551,7 @@ public class SkeletonHandler : ScriptableObject
 
         foreach (HumanBodyBones bone in currentHumanBodyBones)
         {
-            if (bone != HumanBodyBones.LastBone && bone != HumanBodyBones.UpperChest)
+            if (bone != HumanBodyBones.LastBone)
             {
                 rigBone[bone] = new RigBone(humanoid, bone);
 
@@ -661,7 +661,7 @@ public class SkeletonHandler : ScriptableObject
         foreach(var rb in currentHumanBodyBones)
         {
             // Store any joint local rotation (if the bone exists)
-            if (rb != HumanBodyBones.LastBone &&  rb!=HumanBodyBones.UpperChest && rigBone[rb].transform )
+            if (rb != HumanBodyBones.LastBone && rigBone[rb].transform)
             {
                 rigBoneTarget[rb] = mirror 
                     ? jointsRotation[Array.IndexOf(currentHumanBodyBones, MirrorBone(rb))].mirror_x()
@@ -803,7 +803,7 @@ public class SkeletonHandler : ScriptableObject
     {
         for (int i = 0; i < currentHumanBodyBones.Length; i++)
         {
-            if (currentHumanBodyBones[i] != HumanBodyBones.LastBone && currentHumanBodyBones[i] != HumanBodyBones.UpperChest && outPose[currentHumanBodyBones[i]].transform)
+            if (currentHumanBodyBones[i] != HumanBodyBones.LastBone && outPose[currentHumanBodyBones[i]].transform)
             {
                 Transform outPoseTransform = outPose[currentHumanBodyBones[i]].transform;
 
@@ -913,7 +913,7 @@ public class SkeletonHandler : ScriptableObject
         // Put in Ref Pose
         foreach (HumanBodyBones bone in currentHumanBodyBones)
         {
-            if (bone != HumanBodyBones.LastBone  && bone != HumanBodyBones.UpperChest)
+            if (bone != HumanBodyBones.LastBone)
             {
                 if (rigBone[bone].transform)
                 {
@@ -926,7 +926,7 @@ public class SkeletonHandler : ScriptableObject
 
         for (int i = 0; i < currentHumanBodyBones.Length; i++)
         {
-            if (currentHumanBodyBones[i] != HumanBodyBones.LastBone && currentHumanBodyBones[i] != HumanBodyBones.UpperChest && rigBone[currentHumanBodyBones[i]].transform)
+            if (currentHumanBodyBones[i] != HumanBodyBones.LastBone && rigBone[currentHumanBodyBones[i]].transform)
             {
                 if (currentParentIds[i] != -1)
                 {

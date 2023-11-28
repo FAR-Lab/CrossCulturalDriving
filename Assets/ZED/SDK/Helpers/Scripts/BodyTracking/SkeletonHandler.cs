@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEditor;
+using Unity.Netcode;
 
 public class SkeletonHandler : ScriptableObject
 {
@@ -533,6 +534,8 @@ public class SkeletonHandler : ScriptableObject
     public void Create(GameObject h, sl.BODY_FORMAT body_format, ZEDBodyTrackingManager btmanager)
     {
         humanoid = (GameObject)Instantiate(h, Vector3.zero, Quaternion.identity);
+        humanoid.GetComponent<NetworkObject>().Spawn(false);
+        DontDestroyOnLoad(humanoid); 
         animator = humanoid.GetComponent<Animator>();
 
         BodyFormat = body_format;
@@ -691,6 +694,7 @@ public class SkeletonHandler : ScriptableObject
         spheres = new GameObject[currentSpheresList.Length];
 
         skeleton = new GameObject { name = "Skeleton_ID_" + person_id };
+        DontDestroyOnLoad(skeleton);
         float width = 0.0125f;
 
         Color color = colors[person_id % colors.Length];
@@ -984,7 +988,7 @@ public class SkeletonHandler : ScriptableObject
             targetBodyPositionLastFrame = targetBodyPositionWithHipOffset;
             foreach (HumanBodyBones bone in currentHumanBodyBones)
             {
-                if (bone != HumanBodyBones.LastBone && bone != HumanBodyBones.UpperChest && bone != HumanBodyBones.Hips)
+                if (bone != HumanBodyBones.LastBone && bone != HumanBodyBones.Hips)
                 {
                     if (rigBone[bone].transform)
                     {
