@@ -18,16 +18,22 @@ public class ZedAvatarInteractable : Interactable_Object {
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        Calibrate();
+    }
+
+
+    private void Calibrate() {
         if (IsServer) {
-            var z = FindObjectOfType<ZedSpaceReference>();
-            if (z != null) {
-              transform.position= z.transform.position;
-              transform.rotation= z.transform.rotation;
+            var z = FindObjectOfType<ZedReferenceFinder>();
+            if (z != null) { Debug.Log($"Remote position {z.transform.position}");
+                transform.position= z.transform.GetChild(0).position;
+                var rot = z.transform.GetChild(0).rotation.eulerAngles.y;
+                
+                transform.rotation = Quaternion.Euler(0,rot,0);
             }else
             {Debug.LogWarning("Could not find ZedSpaceReference, not sure where to go?!");}
         }
     }
-   
  
 
     private void TriggerCalibration(Transform head) {
@@ -64,6 +70,7 @@ public class ZedAvatarInteractable : Interactable_Object {
     }
 
     public void WorldCalibration() {
-        FindObjectOfType<ZedReferenceFinder>()?.RunCallibration();
+        FindObjectOfType<ZedReferenceFinder>()?.RunCalibration();
+        Calibrate();
     }
 }

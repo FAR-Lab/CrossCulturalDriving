@@ -270,58 +270,61 @@ public class VR_Participant : Client_Object {
     private Transform LeftHand;
     private Transform RightHand;
 
-    private IEnumerator OverTimeCallibration(Transform Camera, float maxtime = 10) {
+    private IEnumerator OverTimeCalibration(Transform VrCamera,Transform ZedOrignReference, float maxtime = 10) {
         isCalibrationRunning = true;
+
+        yield return new WaitForSeconds(1);
+        
         int runs = 0;
         const int MaxRuns = 250;
         
-        var interact = FindObjectOfType<SkeletonNetworkScript>(); // We making a bunch of assumptions here, kinda ugly! 
-        float[] rotOffset = new float[MaxRuns];
-        Vector3[] posOffset = new Vector3[MaxRuns];
-
-        Transform Head = interact.transform.Find(
-            "mixamorig:Hips/" +
-            "mixamorig:Spine/" +
-            "mixamorig:Spine1/" +
-            "mixamorig:Spine2/" +
-            "mixamorig:Neck/" +
-            "mixamorig:Head/" +
-            "AvatarAnchor");
-
-        Transform Hips = interact.transform.Find(
-            "mixamorig:Hips");
+        Transform HandModelL= transform.Find("Camera Offset/Left Hand Tracking/L_Wrist/L_Palm");
+        Transform HandModelR = transform.Find("Camera Offset/Right Hand Tracking/R_Wrist/R_Palm");
+     // var interact = FindObjectOfType<SkeletonNetworkScript>();    // We making a bunch of assumptions here, kinda ugly! 
         
-     //   Debug.Log($"Found the Head{Head}, and thge Hips{Hips} ");
-        while (runs < MaxRuns) {
-            float  angle  = Quaternion.FromToRotation(Camera.forward, Hips.forward).eulerAngles.y;
-            angle %= 360; //https://stackoverflow.com/questions/47680017/how-to-limit-angles-in-180-180-range-just-like-unity3d-inspector
-            rotOffset[runs]= angle>180 ? angle-360 : angle;
+        Debug.Log(ZedOrignReference.position);
+        Debug.DrawRay(ZedOrignReference.position,-Vector3.up*ZedOrignReference.position.y,Color.magenta,60);
+        Debug.DrawRay(HandModelL.position,Vector3.up,Color.cyan,60);
+        Debug.DrawRay(HandModelR.position,Vector3.up,Color.cyan,60);
 
-            posOffset[runs] = Head.position - Camera.position;
+   
+        while (runs < MaxRuns) {
+            
+            Vector3 A = HandModelL.position; 
+            Vector3 B = HandModelR.position;
+            Vector3 AtoB = B - A;
+            Vector3 midPoint= (A + (AtoB * 0.5f));
+            Vector3 transformDifference =  ZedOrignReference.position-midPoint;
+            Vector3 artificalForward =   VrCamera.position - midPoint;
+
+            float angle = Vector3.SignedAngle(new Vector3(artificalForward.x,0,artificalForward.z), 
+                new Vector3(ZedOrignReference.forward.x,0,ZedOrignReference.forward.z),
+                Vector3.up);
+            
+            
+            Debug.Log($"Angle:{angle}");
+            Debug.DrawLine(A,B,Color.green,10);
+            Debug.DrawRay(VrCamera.position,transformDifference,Color.blue,10);
+            Debug.DrawRay(midPoint,artificalForward,Color.red,10);
+            
+            SetNewRotationOffset(Quaternion.Euler(0, angle*0.9f, 0));
+            SetNewPositionOffset(transformDifference*0.9f);
+            
             maxtime -= Time.deltaTime;
             runs++;
-           // Debug.Log($"Gathering Data {runs}");
             if (maxtime < 0) {
                 break;
             }
             yield return new WaitForEndOfFrame();
         }
-
-        Debug.Log($"Finished Collecting data: rotAvg:{rotOffset.Average()} and std: {rotOffset.StandardDeviation()}");
-        Vector3 Output=Vector3.zero;
-        foreach (var tmp in posOffset) {
-            Output += tmp;
-        }
-        
-        Output /= runs;
-        
-        Debug.Log($"Finished Collecting data: PosAvg:{Output}!");
-        
-        SetNewRotationOffset(Quaternion.Euler(0, rotOffset.Average(), 0));
-        SetNewPositionOffset(Output);
-        isCalibrationRunning = false;
         FinishedCalibration();
-        
+        PedestrianCallibrationFinishedServerRPC();
+        isCalibrationRunning = false;
+    }
+
+    [ServerRpc]
+    private void PedestrianCallibrationFinishedServerRPC() {
+        FindObjectOfType<ZedReferenceFinder>().InitiateInverseContinuesCalibration(GetMainCamera());
     }
 
     private bool SkeletonSet = false;
@@ -337,7 +340,7 @@ public class VR_Participant : Client_Object {
                 var steering = NetworkedInteractableObject.transform.Find("SteeringCenter");
                 var cam = GetMainCamera();
                 var calib = GetComponent<SeatCalibration>();
-                Debug.Log($"Calib{calib}, SteeringCenterObject:{steering.name}, and Camera{cam}");
+                Debug.Log($"Calib{calib}, SteeringCenterObject:{steering.name}, and VrCamera{cam}");
                 calib.StartCalibration(
                     steering,
                     cam,
@@ -346,13 +349,13 @@ public class VR_Participant : Client_Object {
                 break;
             case SpawnType.PEDESTRIAN:
                 var mainCamera = GetMainCamera();
-                Debug.Log($"Camera Local Position {mainCamera.localPosition}");
+                Debug.Log($"VrCamera Local Position {mainCamera.localPosition}");
                 Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
                 if (transform.parent != null &&
                     transform.parent == NetworkedInteractableObject.transform &&
                     NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null) {
                     if (isCalibrationRunning == false) {
-                        StartCoroutine(OverTimeCallibration(mainCamera, 10));
+                        StartCoroutine(OverTimeCalibration(mainCamera, NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>().GetCameraPositionObject(),10));
                     }
                     else {
                         Debug.Log("Callibration already running!");
@@ -383,8 +386,8 @@ public class VR_Participant : Client_Object {
 /*
                 if (NetworkedInteractableObject.GetType() == typeof(ZEDMaster)) {
                     var zedMaster = NetworkedInteractableObject.GetComponent<ZEDMaster>();
-                    LeftHand = transform.Find("Camera Offset/Left Hand Tracking/L_Wrist");
-                    RightHand = transform.Find("Camera Offset/Right Hand Tracking/R_Wrist");
+                    LeftHand = transform.Find("VrCamera Offset/Left Hand Tracking/L_Wrist");
+                    RightHand = transform.Find("VrCamera Offset/Right Hand Tracking/R_Wrist");
                     LeftHand.gameObject.GetOrAddComponent<ZombieHands>().Init(zedMaster.GetLeftHandRoot());
                     RightHand.gameObject.GetOrAddComponent<ZombieHands>().Init(zedMaster.GetRightHandRoot());
                 }*/
