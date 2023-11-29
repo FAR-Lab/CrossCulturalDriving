@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class VRCameraOffset : MonoBehaviour {
+   /*
     public Transform AvatarHead;
     public Transform VRCamera;
     
@@ -39,4 +41,6 @@ public class VRCameraOffset : MonoBehaviour {
         transform.eulerAngles = currentRotation;
 
     }
+    
+    */
 }

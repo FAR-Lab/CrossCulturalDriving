@@ -35,7 +35,7 @@ public class DeviceConfigManagerEditor : Editor {
 #endif
 public class ZedSpaceReference : MonoBehaviour {
 
-    
+   public List<Transform> WorkingArea = new List<Transform>();
     /*
     public TextAsset ZedCallibrationFile;
 
@@ -48,13 +48,13 @@ public class ZedSpaceReference : MonoBehaviour {
     public Transform ZedRootObject;
     public const string ZedRootName = "ZedRootObject";
 
-    public List<Transform> WorkingArea = new List<Transform>();
+    
     // Start is called before the first frame update
     void Start() {
       
-    }
+    }*/
     private void OnDrawGizmos() {
-        
+        /*
         if (m_ZedCameras != null && m_ZedCameras.Count() > 0) {
 
             float hightoffset = m_ZedCameras[0].transform.position.y;
@@ -74,7 +74,8 @@ public class ZedSpaceReference : MonoBehaviour {
                 }
             } 
             
-        }
+        }*/
+        
         Gizmos.color=Color.red;
         if (WorkingArea != null && WorkingArea.Count > 1) {
             for (int i = 0; i < WorkingArea.Count-1; i++) {
@@ -83,8 +84,10 @@ public class ZedSpaceReference : MonoBehaviour {
             Gizmos.DrawLine(WorkingArea[0].position, WorkingArea[WorkingArea.Count-1].position);
         }
         
+        Gizmos.matrix = Matrix4x4.TRS(transform.position,transform.rotation,Vector3.one);
+        Gizmos.DrawFrustum(Vector3.zero, 158/4, 10f, 0.25f, 1.77777f);
     }
-
+/*
     public void DeserializeObjectData() {
         ZedRootObject = transform.Find(ZedRootName);
         if (ZedRootObject == null) {

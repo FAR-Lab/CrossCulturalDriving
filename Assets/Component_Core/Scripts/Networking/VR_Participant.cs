@@ -275,14 +275,23 @@ public class VR_Participant : Client_Object {
         int runs = 0;
         const int MaxRuns = 250;
         
-        var interact = FindObjectOfType<ZEDSkeletonAnimator>(); // We makeing a bunch of assumptions here, kinda ugly! 
+        var interact = FindObjectOfType<SkeletonNetworkScript>(); // We making a bunch of assumptions here, kinda ugly! 
         float[] rotOffset = new float[MaxRuns];
         Vector3[] posOffset = new Vector3[MaxRuns];
 
+        Transform Head = interact.transform.Find(
+            "mixamorig:Hips/" +
+            "mixamorig:Spine/" +
+            "mixamorig:Spine1/" +
+            "mixamorig:Spine2/" +
+            "mixamorig:Neck/" +
+            "mixamorig:Head/" +
+            "AvatarAnchor");
 
-        Transform Head = interact.animator.GetBoneTransform(HumanBodyBones.Head);
-        Transform Hips = interact.animator.GetBoneTransform(HumanBodyBones.Hips);
-
+        Transform Hips = interact.transform.Find(
+            "mixamorig:Hips");
+        
+     //   Debug.Log($"Found the Head{Head}, and thge Hips{Hips} ");
         while (runs < MaxRuns) {
             float  angle  = Quaternion.FromToRotation(Camera.forward, Hips.forward).eulerAngles.y;
             angle %= 360; //https://stackoverflow.com/questions/47680017/how-to-limit-angles-in-180-180-range-just-like-unity3d-inspector
@@ -291,7 +300,7 @@ public class VR_Participant : Client_Object {
             posOffset[runs] = Head.position - Camera.position;
             maxtime -= Time.deltaTime;
             runs++;
-           
+           // Debug.Log($"Gathering Data {runs}");
             if (maxtime < 0) {
                 break;
             }
@@ -305,10 +314,14 @@ public class VR_Participant : Client_Object {
         }
         
         Output /= runs;
-        SetNewPositionOffset(Output);
+        
+        Debug.Log($"Finished Collecting data: PosAvg:{Output}!");
+        
         SetNewRotationOffset(Quaternion.Euler(0, rotOffset.Average(), 0));
-        FinishedCalibration();
+        SetNewPositionOffset(Output);
         isCalibrationRunning = false;
+        FinishedCalibration();
+        
     }
 
     private bool SkeletonSet = false;
@@ -334,13 +347,15 @@ public class VR_Participant : Client_Object {
             case SpawnType.PEDESTRIAN:
                 var mainCamera = GetMainCamera();
                 Debug.Log($"Camera Local Position {mainCamera.localPosition}");
-                var t = NetworkedInteractableObject.GetCameraPositionObject();
                 Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
                 if (transform.parent != null &&
                     transform.parent == NetworkedInteractableObject.transform &&
                     NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null) {
                     if (isCalibrationRunning == false) {
                         StartCoroutine(OverTimeCallibration(mainCamera, 10));
+                    }
+                    else {
+                        Debug.Log("Callibration already running!");
                     }
                 }
                 else {

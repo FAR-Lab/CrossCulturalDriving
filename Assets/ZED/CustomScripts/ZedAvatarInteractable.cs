@@ -10,6 +10,10 @@ public class ZedAvatarInteractable : Interactable_Object {
  
     private Transform ReferenceTransformHead;
 
+
+    public NetworkVariable<Vector3> HeadPositon = new NetworkVariable<Vector3>();
+    public NetworkVariable<Quaternion> HipOrientation = new NetworkVariable<Quaternion>();
+
   
     public override void OnNetworkSpawn()
     {
@@ -60,6 +64,6 @@ public class ZedAvatarInteractable : Interactable_Object {
     }
 
     public void WorldCalibration() {
-      
+        FindObjectOfType<ZedReferenceFinder>()?.RunCallibration();
     }
 }

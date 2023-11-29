@@ -29,6 +29,12 @@ public class ZedReferenceFinder : MonoBehaviour
     
     void OnDestroy()
     {
-        ConnectionAndSpawning.Singleton.ServerStateChange -= UpdateOnReady;
+        if (ConnectionAndSpawning.Singleton != null) {
+            ConnectionAndSpawning.Singleton.ServerStateChange -= UpdateOnReady;
+        }
+    }
+
+    public void RunCallibration() {
+        UpdateOnReady(ActionState.READY);//dirty TODO encapsulate in another function!
     }
 }

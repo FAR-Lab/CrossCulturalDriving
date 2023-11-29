@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UltimateReplay;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 
 public class SkeletonNetworkScript : NetworkBehaviour
 {
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
 
+        Debug.Log("About to destroy clinet irelevant objects!");
         if (IsServer) { }
         else {
             GetComponent<ReplayObject>().enabled = false;
@@ -17,7 +19,12 @@ public class SkeletonNetworkScript : NetworkBehaviour
                 
             }
 
+            Destroy(GetComponent<ZEDSkeletonAnimator>());
+            Destroy(GetComponent<HeightOffsetter>());
+            Destroy(GetComponent<Animator>());
+
             GetComponentInChildren<BoxCollider>().enabled = false;
+            Debug.Log("OkDoneWithThat!");
             //GetComponent<HeightOffsetter>().enabled = false;
         }
     }

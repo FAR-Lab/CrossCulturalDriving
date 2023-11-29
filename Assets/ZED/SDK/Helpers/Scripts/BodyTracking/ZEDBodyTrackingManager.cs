@@ -203,7 +203,7 @@ public class ZEDBodyTrackingManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         if (avatarControlList.ContainsKey(dbody.rawBodyData.id)) handler.zedSkeletonAnimator.canSpawn=true;
-        StartCoroutine(DisableTrackingAfterDelay(2));
+      //  StartCoroutine(DisableTrackingAfterDelay(2));
     }
 
     /// <summary>

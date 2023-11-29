@@ -1,5 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class HeightOffsetter : MonoBehaviour
@@ -30,14 +30,14 @@ public class HeightOffsetter : MonoBehaviour
 
     #endregion
 
-    private void Awake()
-    {
-        bodyTrackingManager = FindObjectOfType<ZEDBodyTrackingManager>();
-        if (bodyTrackingManager == null)
-        {
-            Debug.LogError("ZEDManagerIK: No body tracking manager loaded!");
-        }
-        lastCallTime = Time.time;
+    public void Awake(){
+     
+            bodyTrackingManager = FindObjectOfType<ZEDBodyTrackingManager>();
+            if (bodyTrackingManager == null) {
+                Debug.LogWarning("ZEDManagerIK: No body tracking manager loaded!");
+            }
+
+            lastCallTime = Time.time;
     }
 
     /// <summary>
