@@ -1,0 +1,167 @@
+\doxysection{VR\+\_\+\+Participant Class Reference}
+\hypertarget{class_v_r___participant}{}\label{class_v_r___participant}\index{VR\_Participant@{VR\_Participant}}
+
+
+Inheritance diagram for VR\+\_\+\+Participant\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_v_r___participant__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for VR\+\_\+\+Participant\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{class_v_r___participant__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_v_r___participant_aa8a2881df88c81289288f0d89ed33f6e}\label{class_v_r___participant_aa8a2881df88c81289288f0d89ed33f6e} 
+override void {\bfseries On\+Network\+Spawn} ()
+\item 
+\Hypertarget{class_v_r___participant_aff27dfb9ea7c0dd890c2fdb5cefe4a30}\label{class_v_r___participant_aff27dfb9ea7c0dd890c2fdb5cefe4a30} 
+void {\bfseries Update\+Traffic\+Lights\+Client\+RPC} (Traffic\+Light\+Supervisor.\+traffic\+Light\+Status msg)
+\item 
+\Hypertarget{class_v_r___participant_ac086164418d28eb11ed102e2f093b2a8}\label{class_v_r___participant_ac086164418d28eb11ed102e2f093b2a8} 
+void {\bfseries Go\+For\+Post\+Question} ()
+\item 
+\Hypertarget{class_v_r___participant_a218704c9e234cbd36400c785a9dfbaf4}\label{class_v_r___participant_a218704c9e234cbd36400c785a9dfbaf4} 
+void {\bfseries Post\+Question\+Server\+RPC} (ulong client\+ID)
+\item 
+\Hypertarget{class_v_r___participant_a1fbb4fc522349df613d236177ed8924c}\label{class_v_r___participant_a1fbb4fc522349df613d236177ed8924c} 
+override Participant\+Order {\bfseries Get\+Participant\+Order} ()
+\item 
+\Hypertarget{class_v_r___participant_ab5e6de10050539f1658873cd655b96d5}\label{class_v_r___participant_ab5e6de10050539f1658873cd655b96d5} 
+override void {\bfseries Set\+Spawn\+Type} (Spawn\+Type \+\_\+spawn\+Type)
+\item 
+\Hypertarget{class_v_r___participant_ad4b833ae31432e87c4cd82390bb5804e}\label{class_v_r___participant_ad4b833ae31432e87c4cd82390bb5804e} 
+override void {\bfseries Assign\+Follow\+Transform} (\mbox{\hyperlink{class_interactable___object}{Interactable\+\_\+\+Object}} My\+Interactable\+Object, ulong target\+Client)
+\item 
+\Hypertarget{class_v_r___participant_ae063da15ccdb702fb8f8a72e207ce9fb}\label{class_v_r___participant_ae063da15ccdb702fb8f8a72e207ce9fb} 
+override Transform {\bfseries Get\+Main\+Camera} ()
+\item 
+\Hypertarget{class_v_r___participant_a6b06125eded2337551c7134652f40754}\label{class_v_r___participant_a6b06125eded2337551c7134652f40754} 
+override void {\bfseries De\+\_\+\+Assign\+Follow\+Transform} (ulong target\+Client, Network\+Object netobj)
+\item 
+\Hypertarget{class_v_r___participant_abc9745f18cf2f6eec32d8ea2777f9f46}\label{class_v_r___participant_abc9745f18cf2f6eec32d8ea2777f9f46} 
+override void {\bfseries Calibrate\+Client} (Client\+Rpc\+Params client\+Rpc\+Params)
+\item 
+\Hypertarget{class_v_r___participant_a99e5dee7dd8802285b8a7c478cd2a34b}\label{class_v_r___participant_a99e5dee7dd8802285b8a7c478cd2a34b} 
+void {\bfseries Calibrate\+Client\+RPC} (Client\+Rpc\+Params client\+Rpc\+Params=default)
+\item 
+\Hypertarget{class_v_r___participant_a1076f22ad2cf7594a238b77024b0cd20}\label{class_v_r___participant_a1076f22ad2cf7594a238b77024b0cd20} 
+bool {\bfseries Button\+Push} ()
+\item 
+\Hypertarget{class_v_r___participant_a86dd70ab65d968479f6c0c95a5b3558e}\label{class_v_r___participant_a86dd70ab65d968479f6c0c95a5b3558e} 
+void {\bfseries Set\+New\+Rotation\+Offset} (Quaternion offset)
+\item 
+\Hypertarget{class_v_r___participant_af2fdf89dc969a9a6ff6b88d53652ce6b}\label{class_v_r___participant_af2fdf89dc969a9a6ff6b88d53652ce6b} 
+void {\bfseries Set\+New\+Position\+Offset} (Vector3 position\+Offset)
+\item 
+\Hypertarget{class_v_r___participant_aba53dbb80b08e5e1a48f9795f7a2e5d5}\label{class_v_r___participant_aba53dbb80b08e5e1a48f9795f7a2e5d5} 
+void {\bfseries Finished\+Calibration} ()
+\item 
+\Hypertarget{class_v_r___participant_a1687646b4c30ac15a4644f3bfaba8ec5}\label{class_v_r___participant_a1687646b4c30ac15a4644f3bfaba8ec5} 
+void {\bfseries Share\+Offset\+Server\+RPC} (Vector3 offset\+Positon, Quaternion offset\+Rotation, Quaternion Init\+Rotation)
+\item 
+\Hypertarget{class_v_r___participant_aa34f30978a63b0ab70a6ebb1d66b2214}\label{class_v_r___participant_aa34f30978a63b0ab70a6ebb1d66b2214} 
+void {\bfseries Update\+Offset\+Remote\+Client\+RPC} (Vector3 \+\_\+offset\+Positon, Quaternion \+\_\+offset\+Rotation, Quaternion Init\+Rotation)
+\item 
+\Hypertarget{class_v_r___participant_a26f8774914fbd4748569e40608a8d699}\label{class_v_r___participant_a26f8774914fbd4748569e40608a8d699} 
+Transform {\bfseries Get\+My\+Car} ()
+\item 
+\Hypertarget{class_v_r___participant_ab1b12051d904799ed3db6805cd8ca41a}\label{class_v_r___participant_ab1b12051d904799ed3db6805cd8ca41a} 
+bool {\bfseries Delete\+Callibration\+File} ()
+\item 
+\Hypertarget{class_v_r___participant_ad88fd8ad1c8354bd0d79799ad6802051}\label{class_v_r___participant_ad88fd8ad1c8354bd0d79799ad6802051} 
+override void {\bfseries Start\+Questionair} (QNData\+Storage\+Server in\+\_\+\+QNData\+Storage\+Server)
+\item 
+\Hypertarget{class_v_r___participant_afda5ef400ce3d2930881c4a29e019126}\label{class_v_r___participant_afda5ef400ce3d2930881c4a29e019126} 
+void {\bfseries Send\+QNAnswer} (int id, int answer\+Index, string lang)
+\item 
+\Hypertarget{class_v_r___participant_a436539fb66686f4c17be28add9bd8b73}\label{class_v_r___participant_a436539fb66686f4c17be28add9bd8b73} 
+void {\bfseries Send\+QNAnswer\+Server\+RPC} (int id, int answer\+Index, string lang)
+\item 
+\Hypertarget{class_v_r___participant_a2966cc5becbbc7c2d9b0b44b3483164f}\label{class_v_r___participant_a2966cc5becbbc7c2d9b0b44b3483164f} 
+void {\bfseries Recieve\+New\+Question\+Client\+RPC} (Networked\+Questionnaire\+Question newq)
+\item 
+\Hypertarget{class_v_r___participant_a6598a10796e0f9b918edf903dfe66851}\label{class_v_r___participant_a6598a10796e0f9b918edf903dfe66851} 
+bool {\bfseries Has\+New\+Question} ()
+\item 
+\Hypertarget{class_v_r___participant_aab80a5b5f8e47528e76963e8dc3cda33}\label{class_v_r___participant_aab80a5b5f8e47528e76963e8dc3cda33} 
+Networked\+Questionnaire\+Question {\bfseries Get\+New\+Question} ()
+\item 
+\Hypertarget{class_v_r___participant_ad1b71694ff0914486853686feb6f1cf1}\label{class_v_r___participant_ad1b71694ff0914486853686feb6f1cf1} 
+void {\bfseries Set\+Total\+QNCount\+Client\+Rpc} (int outval)
+\item 
+\Hypertarget{class_v_r___participant_a0c0c8edfb81e3f8ada78498fac87d607}\label{class_v_r___participant_a0c0c8edfb81e3f8ada78498fac87d607} 
+void {\bfseries New\+Scenario} ()
+\item 
+\Hypertarget{class_v_r___participant_a458a562f68b2b04f19b36f3dbcc6f2af}\label{class_v_r___participant_a458a562f68b2b04f19b36f3dbcc6f2af} 
+void {\bfseries Initiate\+Image\+Transfere} (byte\mbox{[}$\,$\mbox{]} Image)
+\item 
+\Hypertarget{class_v_r___participant_a56607db6c34026df8affcb7852f5ae9a}\label{class_v_r___participant_a56607db6c34026df8affcb7852f5ae9a} 
+void {\bfseries Finish\+Picture\+Sending\+Server\+RPC} (Participant\+Order po, int length)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_client___object}{Client\+\_\+\+Object}}}
+\begin{DoxyCompactItemize}
+\item 
+Participant\+Order {\bfseries Get\+Participant\+Order} ()
+\item 
+void {\bfseries Set\+Spawn\+Type} (Spawn\+Type \+\_\+spawn\+Type)
+\item 
+void {\bfseries Assign\+Follow\+Transform} (\mbox{\hyperlink{class_interactable___object}{Interactable\+\_\+\+Object}} My\+Interactable\+Object, ulong target\+Client)
+\item 
+void {\bfseries De\+\_\+\+Assign\+Follow\+Transform} (ulong client\+ID, Network\+Object netobj)
+\item 
+Transform {\bfseries Get\+Main\+Camera} ()
+\item 
+void {\bfseries Calibrate\+Client} (Client\+Rpc\+Params client\+Rpc\+Params)
+\item 
+void {\bfseries Start\+Questionair} (QNData\+Storage\+Server m\+\_\+\+QNData\+Storage\+Server)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_v_r___participant_adb661f18694cedc190f09d8cd7d8b50a}\label{class_v_r___participant_adb661f18694cedc190f09d8cd7d8b50a} 
+static \mbox{\hyperlink{class_v_r___participant}{VR\+\_\+\+Participant}} {\bfseries Get\+Join\+Type\+Object} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_v_r___participant_ac7fbd5a2ee8c508309dccee696e716c6}\label{class_v_r___participant_ac7fbd5a2ee8c508309dccee696e716c6} 
+bool {\bfseries Follow\+Rotation}
+\item 
+\Hypertarget{class_v_r___participant_ab4bbceb8bd5d8f468b8b5ffe8602777b}\label{class_v_r___participant_ab4bbceb8bd5d8f468b8b5ffe8602777b} 
+bool {\bfseries Follow\+Location}
+\item 
+\Hypertarget{class_v_r___participant_a2b17e47391cc2ffb8540ac5f60fbb73e}\label{class_v_r___participant_a2b17e47391cc2ffb8540ac5f60fbb73e} 
+Transform {\bfseries My\+Camera}
+\item 
+\Hypertarget{class_v_r___participant_aed99ab16dcc0e480009d4148a4f76f6e}\label{class_v_r___participant_aed99ab16dcc0e480009d4148a4f76f6e} 
+Network\+Variable$<$ bool $>$ {\bfseries Button\+Pushed}
+\item 
+\Hypertarget{class_v_r___participant_abf691393bf044fd1ac3c879d5f1b986e}\label{class_v_r___participant_abf691393bf044fd1ac3c879d5f1b986e} 
+\mbox{\hyperlink{class_interactable___object}{Interactable\+\_\+\+Object}} {\bfseries Networked\+Interactable\+Object}
+\item 
+\Hypertarget{class_v_r___participant_a2890fbcb06acb1c77c8a153f29818bb4}\label{class_v_r___participant_a2890fbcb06acb1c77c8a153f29818bb4} 
+Participant\+Order {\bfseries m\+\_\+participant\+Order} = Participant\+Order.\+None
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_v_r___participant_a73eeb61e859b0944c79ecf22dbfc2474}\label{class_v_r___participant_a73eeb61e859b0944c79ecf22dbfc2474} 
+bool {\bfseries Finished\+Image\+Sending}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Assets/\+Component\+\_\+\+Core/\+Scripts/\+Networking/VR\+\_\+\+Participant.\+cs\end{DoxyCompactItemize}

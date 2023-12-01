@@ -1,0 +1,180 @@
+\doxysection{Connection\+And\+Spawning Class Reference}
+\hypertarget{class_connection_and_spawning}{}\label{class_connection_and_spawning}\index{ConnectionAndSpawning@{ConnectionAndSpawning}}
+
+
+Inheritance diagram for Connection\+And\+Spawning\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_connection_and_spawning__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Connection\+And\+Spawning\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{class_connection_and_spawning__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_connection_and_spawning_1_1_connection_data_request}{Connection\+Data\+Request}}
+\item 
+struct \mbox{\hyperlink{struct_connection_and_spawning_1_1_network_connection_message}{Network\+Connection\+Message}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_connection_and_spawning_a6f95f30dbfbac57604f98ee64e096f48}\label{class_connection_and_spawning_a6f95f30dbfbac57604f98ee64e096f48} 
+enum {\bfseries Clien\+Connection\+Response} \{ {\bfseries SUCCESS}
+, {\bfseries FAILED}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_connection_and_spawning_abca453a9423174b7c6f974d76ae3d8af}\label{class_connection_and_spawning_abca453a9423174b7c6f974d76ae3d8af} 
+delegate void {\bfseries Reponse\+Delegate} (Clien\+Connection\+Response response)
+\item 
+\Hypertarget{class_connection_and_spawning_a01ead315c7abfcbb50e6f94496a87fa0}\label{class_connection_and_spawning_a01ead315c7abfcbb50e6f94496a87fa0} 
+void {\bfseries Start\+As\+Server} (string pair\+Name)
+\item 
+\Hypertarget{class_connection_and_spawning_a59c35ac4c73658e528bb5b1fba76a749}\label{class_connection_and_spawning_a59c35ac4c73658e528bb5b1fba76a749} 
+void {\bfseries Start\+As\+Client} (string lang\+\_\+, Participant\+Order po, string ip, int port, Reponse\+Delegate result, Spawn\+Type \+\_\+spawn\+Type\+IN=Spawn\+Type.\+CAR, Join\+Type \+\_\+join\+Type\+IN=Join\+Type.\+VR)
+\item 
+\Hypertarget{class_connection_and_spawning_a35578c2f56600357bf3c649f94293e48}\label{class_connection_and_spawning_a35578c2f56600357bf3c649f94293e48} 
+void {\bfseries Load\+Scene\+Re\+Run} (string total\+Path)
+\item 
+\Hypertarget{class_connection_and_spawning_a8833f7d7c5f6ede375dc2b252b3c51c2}\label{class_connection_and_spawning_a8833f7d7c5f6ede375dc2b252b3c51c2} 
+void {\bfseries Start\+Re\+Run} ()
+\item 
+\Hypertarget{class_connection_and_spawning_af6e4854aedd450fd9d87de34b25ed86b}\label{class_connection_and_spawning_af6e4854aedd450fd9d87de34b25ed86b} 
+void {\bfseries Finished\+Questionair} (ulong client\+ID)
+\item 
+\Hypertarget{class_connection_and_spawning_aadb9b66e0e5e8c18c163950db6c15c1b}\label{class_connection_and_spawning_aadb9b66e0e5e8c18c163950db6c15c1b} 
+Transform {\bfseries Get\+Main\+Client\+Object} (ulong sender\+Client\+Id)
+\item 
+\Hypertarget{class_connection_and_spawning_aa4911f685af6f321eb0f9795fdd9cf3c}\label{class_connection_and_spawning_aa4911f685af6f321eb0f9795fdd9cf3c} 
+Transform {\bfseries Get\+Main\+Client\+Object} (Participant\+Order po)
+\item 
+\Hypertarget{class_connection_and_spawning_a2719bbc032d9ed131174491a507209ae}\label{class_connection_and_spawning_a2719bbc032d9ed131174491a507209ae} 
+List$<$ \mbox{\hyperlink{class_interactable___object}{Interactable\+\_\+\+Object}} $>$ {\bfseries Get\+Interactable\+Objects\+\_\+\+For\+\_\+\+Participants} (ulong sender\+Client\+Id)
+\item 
+\Hypertarget{class_connection_and_spawning_aa913d4c5001ffbb504a22c37c3e5be2a}\label{class_connection_and_spawning_aa913d4c5001ffbb504a22c37c3e5be2a} 
+List$<$ \mbox{\hyperlink{class_interactable___object}{Interactable\+\_\+\+Object}} $>$ {\bfseries Get\+Interactable\+Objects\+\_\+\+For\+\_\+\+Participants} (Participant\+Order po)
+\item 
+\Hypertarget{class_connection_and_spawning_a3a7159a96ae072926accd7ccf8d03152}\label{class_connection_and_spawning_a3a7159a96ae072926accd7ccf8d03152} 
+Transform {\bfseries Get\+Client\+Main\+Camera\+Object} (ulong sender\+Client\+Id)
+\item 
+\Hypertarget{class_connection_and_spawning_ae86315d005ca2bc9c84bee709e9391ca}\label{class_connection_and_spawning_ae86315d005ca2bc9c84bee709e9391ca} 
+Transform {\bfseries Get\+Client\+Main\+Camera\+Object} (Participant\+Order po)
+\item 
+\Hypertarget{class_connection_and_spawning_a79eddb160d1bd4d99ef151fc75c207f9}\label{class_connection_and_spawning_a79eddb160d1bd4d99ef151fc75c207f9} 
+Participant\+Order {\bfseries Get\+Participant\+Order\+Client\+Id} (ulong clientid)
+\item 
+\Hypertarget{class_connection_and_spawning_a7a1f973201c42a44e8ce7bd4c38be62e}\label{class_connection_and_spawning_a7a1f973201c42a44e8ce7bd4c38be62e} 
+bool {\bfseries Get\+Client\+Id\+Participant\+Order} (Participant\+Order po, out ulong out\+Value)
+\item 
+\Hypertarget{class_connection_and_spawning_abd0493b3d15bfe0d6d56553f745743f0}\label{class_connection_and_spawning_abd0493b3d15bfe0d6d56553f745743f0} 
+List$<$ Participant\+Order $>$ {\bfseries Get\+Currently\+Connected\+Clients} ()
+\item 
+\Hypertarget{class_connection_and_spawning_a155937823878c72e6acb3b0ed91ae62d}\label{class_connection_and_spawning_a155937823878c72e6acb3b0ed91ae62d} 
+void {\bfseries QNNew\+Data\+Point} (Participant\+Order po, int id, int answer\+Index, string lang)
+\item 
+\Hypertarget{class_connection_and_spawning_a685bfda441ad6cf9a29ad4999b8764d5}\label{class_connection_and_spawning_a685bfda441ad6cf9a29ad4999b8764d5} 
+void {\bfseries Send\+New\+Question\+To\+Participant} (Participant\+Order participant\+Order, Networked\+Questionnaire\+Question outval)
+\item 
+\Hypertarget{class_connection_and_spawning_ad220ff551d8720a9532ec747466eaeef}\label{class_connection_and_spawning_ad220ff551d8720a9532ec747466eaeef} 
+void {\bfseries Send\+Total\+QNCount} (Participant\+Order participant\+Order, int count)
+\item 
+\Hypertarget{class_connection_and_spawning_a0a55564aef365b84ac7d5c5ee08d120d}\label{class_connection_and_spawning_a0a55564aef365b84ac7d5c5ee08d120d} 
+Rerun\+Manager {\bfseries Get\+Re\+Run\+Manager} ()
+\item 
+\Hypertarget{class_connection_and_spawning_adfb7d4b816b295f0339980ffc66730aa}\label{class_connection_and_spawning_adfb7d4b816b295f0339980ffc66730aa} 
+void {\bfseries Await\+QN} ()
+\item 
+\Hypertarget{class_connection_and_spawning_ac48ae4fb0188ea9eeb53f7b246c35c97}\label{class_connection_and_spawning_ac48ae4fb0188ea9eeb53f7b246c35c97} 
+QNData\+Storage\+Server {\bfseries Get\+Qn\+Storage\+Server} ()
+\item 
+\Hypertarget{class_connection_and_spawning_a46e99f697ed90d42b5cc465639aaff2f}\label{class_connection_and_spawning_a46e99f697ed90d42b5cc465639aaff2f} 
+\mbox{\hyperlink{class_scenario_manager}{Scenario\+Manager}} {\bfseries Get\+Scenario\+Manager} ()
+\item 
+\Hypertarget{class_connection_and_spawning_a1df62e4f54abc8b0e7cd4249f43973f5}\label{class_connection_and_spawning_a1df62e4f54abc8b0e7cd4249f43973f5} 
+void {\bfseries Switch\+To\+Loading} (string name)
+\item 
+\Hypertarget{class_connection_and_spawning_a766c855f674344ecb5d80ad19de961fb}\label{class_connection_and_spawning_a766c855f674344ecb5d80ad19de961fb} 
+string {\bfseries Get\+Loaded\+Scene} ()
+\item 
+\Hypertarget{class_connection_and_spawning_a03e95e1129ff73d91d2f46bc4713ad08}\label{class_connection_and_spawning_a03e95e1129ff73d91d2f46bc4713ad08} 
+delegate void {\bfseries Server\+State\+Change\+\_\+delegate} (Action\+State state)
+\item 
+\Hypertarget{class_connection_and_spawning_a655441268cbb81abfdc0e0a7e445ee32}\label{class_connection_and_spawning_a655441268cbb81abfdc0e0a7e445ee32} 
+void {\bfseries Switch\+To\+QN} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_connection_and_spawning_a595ea0e0476c8c3868f27a37e9066df1}\label{class_connection_and_spawning_a595ea0e0476c8c3868f27a37e9066df1} 
+SO\+\_\+\+Join\+Type\+To\+Client\+Object {\bfseries Join\+Type\+Config}
+\item 
+\Hypertarget{class_connection_and_spawning_ac576d2356eda390fd721562eb739ba86}\label{class_connection_and_spawning_ac576d2356eda390fd721562eb739ba86} 
+Dictionary$<$ Join\+Type, \mbox{\hyperlink{class_client___object}{Client\+\_\+\+Object}} $>$ {\bfseries Join\+Type\+\_\+\+To\+\_\+\+Client\+\_\+\+Object}
+\item 
+\Hypertarget{class_connection_and_spawning_adf10089e48604bb13b42acb72b5a9d87}\label{class_connection_and_spawning_adf10089e48604bb13b42acb72b5a9d87} 
+SO\+\_\+\+Spawn\+Type\+To\+Interactable\+Object {\bfseries Spawn\+Type\+Config}
+\item 
+\Hypertarget{class_connection_and_spawning_a29d45dfe84e56fcb0ddafe8604847d68}\label{class_connection_and_spawning_a29d45dfe84e56fcb0ddafe8604847d68} 
+Dictionary$<$ Spawn\+Type, \mbox{\hyperlink{class_interactable___object}{Interactable\+\_\+\+Object}} $>$ {\bfseries Spawn\+Type\+\_\+\+To\+\_\+\+Interactable\+Objects}
+\item 
+\Hypertarget{class_connection_and_spawning_ad145d9b18d781c17fb845faeb2423797}\label{class_connection_and_spawning_ad145d9b18d781c17fb845faeb2423797} 
+Game\+Object {\bfseries ref\+\_\+\+Server\+Timing\+Display}
+\item 
+\Hypertarget{class_connection_and_spawning_a3e39fe04c15ff57ac6efd58125deb953}\label{class_connection_and_spawning_a3e39fe04c15ff57ac6efd58125deb953} 
+List$<$ \mbox{\hyperlink{class_scene_field}{Scene\+Field}} $>$ {\bfseries Included\+Scenes} = new()
+\item 
+\Hypertarget{class_connection_and_spawning_aa7d10a3f343b2bc31672cd00d388dc37}\label{class_connection_and_spawning_aa7d10a3f343b2bc31672cd00d388dc37} 
+\mbox{\hyperlink{class_participant_order_mapping}{Participant\+Order\+Mapping}} {\bfseries participants}
+\item 
+\Hypertarget{class_connection_and_spawning_a4b6e956e15416d6477a993c71fb5a95c}\label{class_connection_and_spawning_a4b6e956e15416d6477a993c71fb5a95c} 
+Dictionary$<$ Participant\+Order, \mbox{\hyperlink{class_client___object}{Client\+\_\+\+Object}} $>$ {\bfseries Main\+\_\+\+Participant\+Objects}
+\item 
+\Hypertarget{class_connection_and_spawning_a45296ea1f46b4d18b0e711df9eb57823}\label{class_connection_and_spawning_a45296ea1f46b4d18b0e711df9eb57823} 
+readonly Dictionary$<$ \mbox{\hyperlink{class_scene_field}{Scene\+Field}}, bool $>$ {\bfseries Visited\+Scenes} = new()
+\item 
+\Hypertarget{class_connection_and_spawning_a058e66494200a4d79b1b7b4eab3dd3d9}\label{class_connection_and_spawning_a058e66494200a4d79b1b7b4eab3dd3d9} 
+Server\+State\+Change\+\_\+delegate {\bfseries Server\+State\+Change}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_connection_and_spawning_a78c91a6c7f23d78f82bb9e03cadc8ecf}\label{class_connection_and_spawning_a78c91a6c7f23d78f82bb9e03cadc8ecf} 
+static string {\bfseries Waiting\+Room\+Scene\+Name} = "{}Waiting\+Room"{}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_connection_and_spawning_a24de5ff4d91638c336a63321d42f7e81}\label{class_connection_and_spawning_a24de5ff4d91638c336a63321d42f7e81} 
+bool {\bfseries Serveris\+Running}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\Hypertarget{class_connection_and_spawning_a9eeef6fc2368039cd9dc2f6b7e27e00d}\label{class_connection_and_spawning_a9eeef6fc2368039cd9dc2f6b7e27e00d} 
+Participant\+Order {\bfseries Participant\+Order} = Participant\+Order.\+None\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\Hypertarget{class_connection_and_spawning_a6e443b5ace68679c2d5f15ef913f7de1}\label{class_connection_and_spawning_a6e443b5ace68679c2d5f15ef913f7de1} 
+Action\+State {\bfseries Server\+State}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\Hypertarget{class_connection_and_spawning_a7ea7f13bda8990dcf58dcf633784ca2b}\label{class_connection_and_spawning_a7ea7f13bda8990dcf58dcf633784ca2b} 
+string {\bfseries lang}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\Hypertarget{class_connection_and_spawning_a34cc5c897c31cf9fba590328e2af28e8}\label{class_connection_and_spawning_a34cc5c897c31cf9fba590328e2af28e8} 
+static \mbox{\hyperlink{class_connection_and_spawning}{Connection\+And\+Spawning}} {\bfseries Singleton}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Assets/\+Component\+\_\+\+Core/\+Scripts/\+Networking/Connection\+And\+Spawning.\+cs\end{DoxyCompactItemize}

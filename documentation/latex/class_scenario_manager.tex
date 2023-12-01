@@ -1,0 +1,105 @@
+\doxysection{Scenario\+Manager Class Reference}
+\hypertarget{class_scenario_manager}{}\label{class_scenario_manager}\index{ScenarioManager@{ScenarioManager}}
+
+
+Inheritance diagram for Scenario\+Manager\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=229pt]{class_scenario_manager__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Scenario\+Manager\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=301pt]{class_scenario_manager__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_scenario_manager_a080925744b31ccc80b067e26cddc734a}\label{class_scenario_manager_a080925744b31ccc80b067e26cddc734a} 
+bool {\bfseries Has\+Visual\+Scene} ()
+\item 
+\Hypertarget{class_scenario_manager_a47ffa561927856bbb9bdc9511e2c67e7}\label{class_scenario_manager_a47ffa561927856bbb9bdc9511e2c67e7} 
+bool {\bfseries Get\+Spawn\+Pose} (Participant\+Order participant\+Order, out Pose pose)
+\item 
+\Hypertarget{class_scenario_manager_a87890b0ca89343267e6d727785e389fb}\label{class_scenario_manager_a87890b0ca89343267e6d727785e389fb} 
+void {\bfseries Run\+Questionair\+Now} (Transform My\+Local\+Client\+\_\+)
+\item 
+\Hypertarget{class_scenario_manager_a5431aea1bf834902b922c760b7d20df9}\label{class_scenario_manager_a5431aea1bf834902b922c760b7d20df9} 
+Dictionary$<$ Participant\+Order, Navigation\+Screen.\+Direction $>$ {\bfseries Get\+Starting\+Positions} ()
+\item 
+\Hypertarget{class_scenario_manager_a3c2e607cf564e7730fdf817e45a74bc5}\label{class_scenario_manager_a3c2e607cf564e7730fdf817e45a74bc5} 
+Text\+Asset {\bfseries Get\+Question\+File} ()
+\item 
+\Hypertarget{class_scenario_manager_a6c3232817812e3b3f4c23aa12327b019}\label{class_scenario_manager_a6c3232817812e3b3f4c23aa12327b019} 
+List$<$ Questionnaire\+Question $>$ {\bfseries Read\+String} (string asset)
+\item 
+\Hypertarget{class_scenario_manager_aa141b9896b6fadc9ee7550dc9fbc15d5}\label{class_scenario_manager_aa141b9896b6fadc9ee7550dc9fbc15d5} 
+List$<$ Questionnaire\+Question $>$ {\bfseries Get\+Question\+Object} ()
+\item 
+\Hypertarget{class_scenario_manager_af76043f648aee2f7cd0c4b6f955d79ed}\label{class_scenario_manager_af76043f648aee2f7cd0c4b6f955d79ed} 
+void {\bfseries Set\+Starting\+GPSDirections} ()
+\item 
+\Hypertarget{class_scenario_manager_a4997966e40006d50b22d5c845c46b1a0}\label{class_scenario_manager_a4997966e40006d50b22d5c845c46b1a0} 
+void {\bfseries Update\+All\+GPS} (Dictionary$<$ Participant\+Order, Navigation\+Screen.\+Direction $>$ dict)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_scenario_manager_ae5412447d967838c2b1ffb0969e7abd0}\label{class_scenario_manager_ae5412447d967838c2b1ffb0969e7abd0} 
+Text\+Asset {\bfseries Questionair\+To\+Ask}
+\item 
+\Hypertarget{class_scenario_manager_ab073e2500752bc6df32076651224220f}\label{class_scenario_manager_ab073e2500752bc6df32076651224220f} 
+string {\bfseries condition\+Name}
+\item 
+\Hypertarget{class_scenario_manager_a28abbeb9b14985cecfc5a92a58585002}\label{class_scenario_manager_a28abbeb9b14985cecfc5a92a58585002} 
+Game\+Object {\bfseries Questionair\+Prefab}
+\item 
+\Hypertarget{class_scenario_manager_a8ea3b1e19f4dd699e929e9dba919a637}\label{class_scenario_manager_a8ea3b1e19f4dd699e929e9dba919a637} 
+\mbox{\hyperlink{class_scene_field}{Scene\+Field}} {\bfseries Visual\+Scene\+To\+Use}
+\item 
+\Hypertarget{class_scenario_manager_ac73a911cece8ea36d18f4833c7694649}\label{class_scenario_manager_ac73a911cece8ea36d18f4833c7694649} 
+Navigation\+Screen.\+Direction {\bfseries Starting\+Direction\+ParticipantA}
+\item 
+\Hypertarget{class_scenario_manager_ad8460d363ff946df85149f20ba7b4137}\label{class_scenario_manager_ad8460d363ff946df85149f20ba7b4137} 
+Navigation\+Screen.\+Direction {\bfseries Starting\+Direction\+ParticipantB}
+\item 
+\Hypertarget{class_scenario_manager_a95cdc34798b11a0a6c0ffdcf837ab244}\label{class_scenario_manager_a95cdc34798b11a0a6c0ffdcf837ab244} 
+Navigation\+Screen.\+Direction {\bfseries Starting\+Direction\+ParticipantC}
+\item 
+\Hypertarget{class_scenario_manager_ab3b549643a19645809d8ef53a1ea38a0}\label{class_scenario_manager_ab3b549643a19645809d8ef53a1ea38a0} 
+Navigation\+Screen.\+Direction {\bfseries Starting\+Direction\+ParticipantD}
+\item 
+\Hypertarget{class_scenario_manager_aa9d246c4fac63e938799e7d6cd1ddb1d}\label{class_scenario_manager_aa9d246c4fac63e938799e7d6cd1ddb1d} 
+Navigation\+Screen.\+Direction {\bfseries Starting\+Direction\+ParticipantE}
+\item 
+\Hypertarget{class_scenario_manager_a305eb13d3dc6ff05584546ddbbcf07f0}\label{class_scenario_manager_a305eb13d3dc6ff05584546ddbbcf07f0} 
+Navigation\+Screen.\+Direction {\bfseries Starting\+Direction\+ParticipantF}
+\item 
+\Hypertarget{class_scenario_manager_a32f12ec01c71481f1123a454097bbe28}\label{class_scenario_manager_a32f12ec01c71481f1123a454097bbe28} 
+List$<$ Camera\+Setup\+XC $>$ {\bfseries Camera\+Setups}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_scenario_manager_a15be0f7732bc323128f319d567a051fa}\label{class_scenario_manager_a15be0f7732bc323128f319d567a051fa} 
+static string {\bfseries Overwrite\+QNData\+Folder\+Name} = "{}QN\+\_\+\+Updates"{}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_scenario_manager_a351233d0e61883c121cbf62f25b0e404}\label{class_scenario_manager_a351233d0e61883c121cbf62f25b0e404} 
+bool {\bfseries ready}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Assets/\+Component\+\_\+\+Core/\+Scripts/Scenario\+Manager.\+cs\end{DoxyCompactItemize}

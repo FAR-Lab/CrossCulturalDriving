@@ -1,0 +1,102 @@
+\doxysection{Steering\+Wheel\+Manager Class Reference}
+\hypertarget{class_steering_wheel_manager}{}\label{class_steering_wheel_manager}\index{SteeringWheelManager@{SteeringWheelManager}}
+
+
+Inheritance diagram for Steering\+Wheel\+Manager\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=248pt]{class_steering_wheel_manager__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Steering\+Wheel\+Manager\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=248pt]{class_steering_wheel_manager__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_steering_wheel_manager_a20eea3c615668eb87c18a026cbc47408}\label{class_steering_wheel_manager_a20eea3c615668eb87c18a026cbc47408} 
+void {\bfseries Init} ()
+\item 
+\Hypertarget{class_steering_wheel_manager_a26d4d860818a0e644e685dc57afec8df}\label{class_steering_wheel_manager_a26d4d860818a0e644e685dc57afec8df} 
+string {\bfseries Get\+Product\+Name} (int index)
+\item 
+\Hypertarget{class_steering_wheel_manager_a0f0f0549579627b98731f3164794f939}\label{class_steering_wheel_manager_a0f0f0549579627b98731f3164794f939} 
+void {\bfseries Clean\+Up} ()
+\item 
+\Hypertarget{class_steering_wheel_manager_a39646096d9c62013a90a636a4c967c22}\label{class_steering_wheel_manager_a39646096d9c62013a90a636a4c967c22} 
+void {\bfseries Set\+Constant\+Force} (int force, Participant\+Order po)
+\item 
+\Hypertarget{class_steering_wheel_manager_a390a7fc489baaaa2a05c21e7b7a894f0}\label{class_steering_wheel_manager_a390a7fc489baaaa2a05c21e7b7a894f0} 
+void {\bfseries Set\+Damper\+Force} (int force, Participant\+Order po)
+\item 
+\Hypertarget{class_steering_wheel_manager_a8b1fd05072e0ad7719eccfd90a26340b}\label{class_steering_wheel_manager_a8b1fd05072e0ad7719eccfd90a26340b} 
+void {\bfseries Set\+Spring\+Force} (int sat, int coeff, Participant\+Order po)
+\item 
+\Hypertarget{class_steering_wheel_manager_ac3d0e479af8ec9c3788f6d3fd77422f0}\label{class_steering_wheel_manager_ac3d0e479af8ec9c3788f6d3fd77422f0} 
+void {\bfseries Init\+Spring\+Force} (int sat, int coeff)
+\item 
+\Hypertarget{class_steering_wheel_manager_a62ac29c1a6da4ccdd29fd67ff35b9572}\label{class_steering_wheel_manager_a62ac29c1a6da4ccdd29fd67ff35b9572} 
+void {\bfseries Stop\+Spring\+Force} ()
+\item 
+\Hypertarget{class_steering_wheel_manager_ab8f3b74e1bcb7e96811b680580589c32}\label{class_steering_wheel_manager_ab8f3b74e1bcb7e96811b680580589c32} 
+void {\bfseries On\+GUI} ()
+\item 
+\Hypertarget{class_steering_wheel_manager_a5d84245277a3b404c88aad2671bb798c}\label{class_steering_wheel_manager_a5d84245277a3b404c88aad2671bb798c} 
+void {\bfseries Get\+Accel\+Brake\+Input} (out float accel, out float brk, Participant\+Order po)
+\item 
+\Hypertarget{class_steering_wheel_manager_ad5a8cd36c68b2701730c81900d1123a1}\label{class_steering_wheel_manager_ad5a8cd36c68b2701730c81900d1123a1} 
+bool {\bfseries Get\+Left\+Indicator\+Input} (Participant\+Order po)
+\item 
+\Hypertarget{class_steering_wheel_manager_af7e106bb42bd681146cbaac8708c529b}\label{class_steering_wheel_manager_af7e106bb42bd681146cbaac8708c529b} 
+bool {\bfseries Get\+Right\+Indicator\+Input} (Participant\+Order po)
+\item 
+\Hypertarget{class_steering_wheel_manager_a8069fd1f7497bba52318a8b55e7d66d9}\label{class_steering_wheel_manager_a8069fd1f7497bba52318a8b55e7d66d9} 
+bool {\bfseries Get\+Button\+Input} (Participant\+Order po)
+\item 
+\Hypertarget{class_steering_wheel_manager_a94792de21e3f7cae753bd3b7a1d5bc89}\label{class_steering_wheel_manager_a94792de21e3f7cae753bd3b7a1d5bc89} 
+float {\bfseries Get\+Accel\+Input} (Participant\+Order po)
+\item 
+\Hypertarget{class_steering_wheel_manager_ade26c0a4adf552894be2b01d86be2122}\label{class_steering_wheel_manager_ade26c0a4adf552894be2b01d86be2122} 
+float {\bfseries Get\+Steer\+Input} (Participant\+Order po)
+\item 
+\Hypertarget{class_steering_wheel_manager_a2fcb36bb083f5287824fcb915d543a4b}\label{class_steering_wheel_manager_a2fcb36bb083f5287824fcb915d543a4b} 
+float {\bfseries Get\+Hand\+Brake\+Input} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_steering_wheel_manager_a6d6d8f6e8171050f19bf1c4d3132f598}\label{class_steering_wheel_manager_a6d6d8f6e8171050f19bf1c4d3132f598} 
+static int {\bfseries Int\+Remap} (float value, float from1=-\/10000, float to1=10000, float from2=-\/100, float to2=100)
+\item 
+\Hypertarget{class_steering_wheel_manager_a0207dcb5d6b5b1f71828bf3f9304cd33}\label{class_steering_wheel_manager_a0207dcb5d6b5b1f71828bf3f9304cd33} 
+static int {\bfseries Get\+Number\+Of\+Connected\+Devices} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_steering_wheel_manager_a6a95b3015ea95e7dec12043ece08c8ae}\label{class_steering_wheel_manager_a6a95b3015ea95e7dec12043ece08c8ae} 
+int {\bfseries Found\+Steering\+Wheels}
+\item 
+\Hypertarget{class_steering_wheel_manager_aa88cffa387c08c645cd8aa90a29ee617}\label{class_steering_wheel_manager_aa88cffa387c08c645cd8aa90a29ee617} 
+float {\bfseries FFBGain} = 1f
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_steering_wheel_manager_ab891efa23c50d3bcc3c07e5080aed322}\label{class_steering_wheel_manager_ab891efa23c50d3bcc3c07e5080aed322} 
+static \mbox{\hyperlink{class_steering_wheel_manager}{Steering\+Wheel\+Manager}} {\bfseries Singleton}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Assets/\+Component\+\_\+\+Core/\+Scripts/Steering\+Wheel\+Manager.\+cs\end{DoxyCompactItemize}

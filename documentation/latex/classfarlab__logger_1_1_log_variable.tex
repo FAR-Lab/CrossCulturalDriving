@@ -1,0 +1,55 @@
+\doxysection{farlab\+\_\+logger.\+Log\+Variable Class Reference}
+\hypertarget{classfarlab__logger_1_1_log_variable}{}\label{classfarlab__logger_1_1_log_variable}\index{farlab\_logger.LogVariable@{farlab\_logger.LogVariable}}
+
+
+Collaboration diagram for farlab\+\_\+logger.\+Log\+Variable\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=198pt]{classfarlab__logger_1_1_log_variable__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classfarlab__logger_1_1_log_variable_a0bbd4a3d915ac9b5ebf5373f46a81f2b}\label{classfarlab__logger_1_1_log_variable_a0bbd4a3d915ac9b5ebf5373f46a81f2b} 
+{\bfseries Log\+Variable} (string header\+\_\+name, string value="{}-\/"{})
+\item 
+\Hypertarget{classfarlab__logger_1_1_log_variable_ae6687593daf5fb6251b456e1e674dd13}\label{classfarlab__logger_1_1_log_variable_ae6687593daf5fb6251b456e1e674dd13} 
+{\bfseries Log\+Variable} (string header\+\_\+name, Func$<$ string $>$ updt\+Method)
+\item 
+\Hypertarget{classfarlab__logger_1_1_log_variable_aa30e0da8674729e3c3ce7e94a98777be}\label{classfarlab__logger_1_1_log_variable_aa30e0da8674729e3c3ce7e94a98777be} 
+void {\bfseries Set\+Val} (string value)
+\item 
+\Hypertarget{classfarlab__logger_1_1_log_variable_aaf7e69971c1958ecaa7dde7a9c98a22c}\label{classfarlab__logger_1_1_log_variable_aaf7e69971c1958ecaa7dde7a9c98a22c} 
+void {\bfseries update\+Val} ()
+\item 
+\Hypertarget{classfarlab__logger_1_1_log_variable_ae91fad8248a241292e804ce19ff77f04}\label{classfarlab__logger_1_1_log_variable_ae91fad8248a241292e804ce19ff77f04} 
+void {\bfseries Set\+Name} (string name)
+\item 
+\Hypertarget{classfarlab__logger_1_1_log_variable_a75a6a8352ef1e71f71658ff1dda713d6}\label{classfarlab__logger_1_1_log_variable_a75a6a8352ef1e71f71658ff1dda713d6} 
+string {\bfseries Get\+Name} ()
+\item 
+\Hypertarget{classfarlab__logger_1_1_log_variable_aefaa88bb6e56c31bdd56d0db0a0dc2e6}\label{classfarlab__logger_1_1_log_variable_aefaa88bb6e56c31bdd56d0db0a0dc2e6} 
+string {\bfseries Get\+Val} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classfarlab__logger_1_1_log_variable_a0124e58d533011c3a46c2cbabdbfe39b}\label{classfarlab__logger_1_1_log_variable_a0124e58d533011c3a46c2cbabdbfe39b} 
+static string {\bfseries Get\+Header} ()
+\item 
+\Hypertarget{classfarlab__logger_1_1_log_variable_a9f9fda9cc95f65e82b2d5d5f4aa888da}\label{classfarlab__logger_1_1_log_variable_a9f9fda9cc95f65e82b2d5d5f4aa888da} 
+static string {\bfseries Get\+Vals} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The Log\+Variable class is a blueprint for the variable to be logged. The attributes are \+:-\/ 1) dat\+\_\+id -\/ this is the dataset id for the variable 2) name -\/ this is the name of the variable, this will be the column header for the variable values in the log file 3) val -\/ this is the value of the variable 4) update\+Method -\/ this is the method which is called to update the value of the variable. This method must return a string.
+
+To log a variable you need to provide three things \+:-\/ 1) Dataset ID 2) Variable Name 3) Update method or its value Have a look at the examples in the Awake function. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Assets/\+Component\+\_\+\+Core/\+Scripts/\+Logger/farlab\+\_\+logger.\+cs\end{DoxyCompactItemize}
