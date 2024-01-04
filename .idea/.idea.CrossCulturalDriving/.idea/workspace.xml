@@ -10,10 +10,11 @@
   <component name="ChangeListManager">
     <list default="true" id="1f6d41df-4024-490f-b01c-048cd6957123" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrossCulturalDriving/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrossCulturalDriving/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/ServerZedInstance.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/ServerZedInstance.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scenes/GameManagment.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scenes/GameManagment.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scenes/NetworkPrefabs-28062.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scenes/NetworkPrefabs-28062.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Interactables/Mocopie_Interactable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Interactables/Mocopie_Interactable.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/ConnectionAndSpawning.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/ConnectionAndSpawning.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Driving/Scripts/AutonomousVehicleDriver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Driving/Scripts/AutonomousVehicleDriver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/VR_Participant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/VR_Participant.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Materials/4m8mRoadTexture-112023.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Materials/4m8mRoadTexture-112023.png.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Materials/Material_meshs/Glass.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Materials/Material_meshs/Glass.mat" afterDir="false" />
@@ -239,14 +240,785 @@
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-9_comp_shadowmask.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/Lightmap-9_comp_shadowmask.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/OcclusionCullingData.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/OcclusionCullingData.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/ReflectionProbe-0.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/ReflectionProbe-0.exr" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/FollowParticipant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/FollowParticipant.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Resources/SO/SO_SpawnTypeToGameobject.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/SO/SO_SpawnTypeToGameobject.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/SkeletonNetworkScript.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/SkeletonNetworkScript.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/XR/Settings/OpenXR Package Settings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/XR/Settings/OpenXR Package Settings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/_Studies/Autonomous_MutualAware/MutualCP1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Studies/Autonomous_MutualAware/MutualCP1.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/CustomScripts.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/CustomScripts/DeviceConfigMono.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/CustomScripts/DeviceConfigMono.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/CustomScripts/ZEDMaster.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/CustomScripts/ZEDMaster.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/CustomScripts/ZedAvatarInteractable.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/CustomScripts/ZedAvatarInteractable.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Editor.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Editor/Scripts.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Editor/Scripts/BuildScript.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Editor/Scripts/BuildScript.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Editor/Scripts/RenderingPipelineDefines.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Editor/Scripts/RenderingPipelineDefines.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Editor/Scripts/UpgradePluginToSRP.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Editor/Scripts/UpgradePluginToSRP.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Editor/Scripts/ZEDCameraEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Editor/Scripts/ZEDCameraEditor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Editor/Scripts/ZEDPluginInspector.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Editor/Scripts/ZEDPluginInspector.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Alpha_Body_MAT.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Alpha_Body_MAT.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Alpha_Joints_MAT.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Alpha_Joints_MAT.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/M_Armature_Arms.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/M_Armature_Arms.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/M_Armature_Body.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/M_Armature_Body.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/M_Armature_Legs.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/M_Armature_Legs.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Remy_Bodymat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Remy_Bodymat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Remy_Bottommat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Remy_Bottommat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Remy_Eyelashmat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Remy_Eyelashmat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Remy_Hairmat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Remy_Hairmat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Remy_Shoesmat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Remy_Shoesmat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Remy_Topmat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/Remy_Topmat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/White.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Materials/White.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Remy_fbx.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Remy_fbx.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Body_Diffuse.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Body_Diffuse.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Body_Gloss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Body_Gloss.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Body_Normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Body_Normal.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Body_Opacity.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Body_Opacity.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Body_Specular.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Body_Specular.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Bottom_Diffuse.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Bottom_Diffuse.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Bottom_Gloss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Bottom_Gloss.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Bottom_Normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Bottom_Normal.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Bottom_Specular.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Bottom_Specular.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Hair_Diffuse.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Hair_Diffuse.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Hair_Gloss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Hair_Gloss.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Hair_Normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Hair_Normal.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Hair_Opacity.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Hair_Opacity.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Hair_Specular.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Hair_Specular.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Shoes_Diffuse.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Shoes_Diffuse.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Shoes_Gloss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Shoes_Gloss.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Shoes_Normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Shoes_Normal.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Shoes_Specular.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Shoes_Specular.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Top_Diffuse.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Top_Diffuse.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Top_Gloss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Top_Gloss.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Top_Normal.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Top_Normal.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Top_Specular.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Remy/Remy_Top_Specular.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Arms_AlbedoTransparency.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Arms_AlbedoTransparency.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Arms_MetallicSmoothness.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Arms_MetallicSmoothness.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Arms_Normal.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Arms_Normal.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Arms_RGB.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Arms_RGB.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Body_AlbedoTransparency.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Body_AlbedoTransparency.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Body_MetallicSmoothness.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Body_MetallicSmoothness.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Body_Normal.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Body_Normal.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Body_RGB.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Body_RGB.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Legs_AlbedoTransparency.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Legs_AlbedoTransparency.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Legs_MetallicSmoothness.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Legs_MetallicSmoothness.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Legs_Normal.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Legs_Normal.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Legs_RGB.tif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Textures_Unity/Armature_Legs_RGB.tif.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Unity_fbx.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/Unity_fbx.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/WhiteMesh_fbx.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/WhiteMesh_fbx.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/YBot_fbx.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/YBot_fbx.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/mat_WhiteMesh.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Models/mat_WhiteMesh.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar/Avatar.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar/Avatar.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar/EmptyIKAnimatorController.controller" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar/EmptyIKAnimatorController.controller.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar/Remy_Avatar.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar/Remy_Avatar.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar/Unity_Avatar.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar/Unity_Avatar.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar/YBot_Avatar.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar/YBot_Avatar.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/BodyTrackingModule.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/BodyTrackingModule.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/FollowingSpotLight.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/FollowingSpotLight.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Plane.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Plane.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Virtual Canvas.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Virtual Canvas.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Virtual View Camera.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Virtual View Camera.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Readme.md.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Ressources.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Ressources/Materials.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Ressources/Materials/Ground.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Ressources/Materials/Ground.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Ressources/Materials/ZEDView.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Ressources/Materials/ZEDView.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Ressources/Textures.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Ressources/Textures/Ground.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Ressources/Textures/Ground.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Ressources/Textures/ZEDView.renderTexture" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Ressources/Textures/ZEDView.renderTexture.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scene.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scene/BodyTrackingMulti.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scene/BodyTrackingMulti.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scene/BodyTrackingMulti.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scene/BodyTrackingMulti/BodyTrackingMulti.lighting" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scene/BodyTrackingMulti/BodyTrackingMulti.lighting.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scene/BodyTrackingMulti/LightingData.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scene/BodyTrackingMulti/LightingData.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scene/BodyTrackingMulti/ReflectionProbe-0.exr" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scene/BodyTrackingMulti/ReflectionProbe-0.exr.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scene/BodyTrackingSingle.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scene/BodyTrackingSingle.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scripts.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scripts/AimAt.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Scripts/AimAt.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Prefabs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Prefabs/Environment.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Prefabs/Environment.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Materials.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Materials/crate_diffuse.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Materials/crate_diffuse.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Prefabs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Prefabs/Crate.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Prefabs/Crate.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Prefabs/Crate2.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Prefabs/Crate2.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Prefabs/Crate_low.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Prefabs/Crate_low.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Prefabs/Crate_low2.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Prefabs/Crate_low2.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Textures.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Textures/Crate_diffuse.tga" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Textures/Crate_diffuse.tga.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Textures/Crate_normal.tga" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Crate/Textures/Crate_normal.tga.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Materials.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Materials/Rock.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Materials/Rock.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Materials/alpha.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Materials/alpha.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Materials/domik.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Materials/domik.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Materials/gasStation.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Materials/gasStation.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Prefabs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Prefabs/Environment.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Prefabs/Environment.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Prefabs/GasStation.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Prefabs/GasStation.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Prefabs/Materials.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Prefabs/Materials/gas_station.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Prefabs/Materials/gas_station.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Prefabs/gasStation_OK.mtl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Prefabs/gasStation_OK.mtl.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Textures.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Textures/Rock.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Textures/Rock.jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Textures/Rock_NORM.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Textures/Rock_NORM.jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Textures/domik.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Textures/domik.jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Textures/gas_station.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/GasStation/Textures/gas_station.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground/Material.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground/Material/ground.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground/Material/ground.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground/Textures.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground/Textures/sandyground1_Ambient_Occlusion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground/Textures/sandyground1_Ambient_Occlusion.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground/Textures/sandyground1_Base_Color.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground/Textures/sandyground1_Base_Color.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground/Textures/sandyground1_Height.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground/Textures/sandyground1_Height.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground/Textures/sandyground1_Normal-unity.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Ground/Textures/sandyground1_Normal-unity.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Textures.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Textures/logo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Textures/logo.jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Textures/logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Common/Resources/Textures/logo.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/HDRP_Assets.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/HDRP_Assets/HDRenderPipelineAsset.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/HDRP_Assets/HDRenderPipelineAsset.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/HDRP_Assets/LightingSettings.lighting" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/HDRP_Assets/LightingSettings.lighting.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/HDRP_Assets/VolumeProfile.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/HDRP_Assets/VolumeProfile.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Prefabs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Prefabs/ZED_Rig_Mono.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Prefabs/ZED_Rig_Mono.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Prefabs/ZED_Rig_Stereo.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Prefabs/ZED_Rig_Stereo.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/GUI.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/GUI/Mat_ZED_Fade.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/GUI/Mat_ZED_Fade.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/GUI/Mat_ZED_UITop.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/GUI/Mat_ZED_UITop.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_Deferred.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_Deferred.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_Deferred_Lighting.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_Deferred_Lighting.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_Forward.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_Forward.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_Forward_Lighting.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_Forward_Lighting.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_Forward_Lighting_URP.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_Forward_Lighting_URP.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_HDRP_Lit.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_HDRP_Lit.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_Hide.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Lighting/Mat_ZED_Hide.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PlaneDetection.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PlaneDetection/Mat_ZED_Geometry_WirePlane.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PlaneDetection/Mat_ZED_Geometry_WirePlane.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PointCloud.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PointCloud/Mat_ZED_FusedPC_Disk.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PointCloud/Mat_ZED_FusedPC_Disk.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PointCloud/Mat_ZED_FusedPC_Point.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PointCloud/Mat_ZED_FusedPC_Point.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PointCloud/Mat_ZED_PointCloud.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PointCloud/Mat_ZED_PointCloud.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_Blit.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_Blit.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_Blur.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_Blur.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_MaskCompositor.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_MaskCompositor.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_PostProcessing.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_PostProcessing.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_Stencil2Mask.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_Stencil2Mask.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_Surface_PostProcessing.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_Surface_PostProcessing.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_Unlit_PostProcessing.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/PostProcessing/Mat_ZED_Unlit_PostProcessing.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/SpatialMapping.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/SpatialMapping/Mat_ZED_Geometry_Wireframe.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/SpatialMapping/Mat_ZED_Geometry_Wireframe.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/SpatialMapping/Mat_ZED_PostProcess_Blend.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/SpatialMapping/Mat_ZED_PostProcess_Blend.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/SpatialMapping/Mat_ZED_Texture.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/SpatialMapping/Mat_ZED_Texture.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/SpatialMapping/Mat_ZED_Wireframe_Video_Overlay.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/SpatialMapping/Mat_ZED_Wireframe_Video_Overlay.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Unlit.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Unlit/Mat_ZED_Greenscreen_Unlit.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Unlit/Mat_ZED_Greenscreen_Unlit.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Unlit/Mat_ZED_Unlit.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Unlit/Mat_ZED_Unlit.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Unlit/Mat_ZED_Unlit_BGRA.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Unlit/Mat_ZED_Unlit_BGRA.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Unlit/Mat_ZED_Unlit_RawInput.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/Materials/Unlit/Mat_ZED_Unlit_RawInput.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Animation.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Animation/Loading.anim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Animation/Loading.anim.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Material.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Material/GUIOverlay.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Material/GUIOverlay.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Material/GUIOverlayCustom.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Material/GUIOverlayCustom.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Material/GUIOverlayText.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Material/GUIOverlayText.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Shader/OverlayCustom.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Shader/OverlayCustom.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Textures.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Textures/Loading.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Textures/Loading/HelveticaNeue Medium.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Textures/Loading/HelveticaNeue Medium.ttf.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Textures/Loading/Loading.anim" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Textures/Loading/Loading.anim.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Textures/Loading/LoadingSprite.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Textures/Loading/LoadingSprite.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Textures/Loading/Spinner 1.controller" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Textures/Loading/Spinner 1.controller.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Textures/Loading/backgroundloading.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Textures/Loading/backgroundloading.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Warning.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Warning.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Warning_VR.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Resources/PrefabsUI/Warning_VR.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/HeightOffsetter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/HeightOffsetter.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/RigBone.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/RigBone.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/SkeletonHandler.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/SkeletonHandler.cs.bak" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/SkeletonHandler.cs.bak.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/SkeletonHandler.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/VirtualCamController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/VirtualCamController.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/ZEDBodyTrackingManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/ZEDBodyTrackingManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/ZEDSkeletonAnimator.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/BodyTracking/ZEDSkeletonAnimator.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Display.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Display/HideFromWrongCameras.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Display/HideFromWrongCameras.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Display/ZEDFusedPointCloudRenderer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Display/ZEDFusedPointCloudRenderer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Display/ZEDPointCloudManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Display/ZEDPointCloudManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Display/ZEDPostProcessingTools.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Display/ZEDPostProcessingTools.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Display/ZEDRenderingPlane.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Display/ZEDRenderingPlane.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Interactions.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Interactions/ZEDControllerManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Interactions/ZEDControllerManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Interactions/ZEDControllerTracker.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Interactions/ZEDControllerTracker.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Interactions/ZEDControllerTracker_DemoInputs.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Interactions/ZEDControllerTracker_DemoInputs.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Interactions/ZEDOffsetController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Interactions/ZEDOffsetController.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Interactions/ZEDTransformController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Interactions/ZEDTransformController.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Lighting.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Lighting/ZEDLight.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Lighting/ZEDLight.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/MR.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/MR/ZEDMirror.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/MR/ZEDMirror.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/MR/ZEDMixedRealityPlugin.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/MR/ZEDMixedRealityPlugin.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/ObjectDetection.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/ObjectDetection/BodyTrackingFrame.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/ObjectDetection/BodyTrackingFrame.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/ObjectDetection/DetectedBody.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/ObjectDetection/DetectedBody.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/ObjectDetection/DetectedObject.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/ObjectDetection/DetectedObject.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/ObjectDetection/ObjectDetectionFrame.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/ObjectDetection/ObjectDetectionFrame.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/PlaneDetection.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/PlaneDetection/ZEDPlaneDetectionManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/PlaneDetection/ZEDPlaneDetectionManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/PlaneDetection/ZEDPlaneGameObject.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/PlaneDetection/ZEDPlaneGameObject.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/SpatialMapping.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/SpatialMapping/ZEDMeshRenderer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/SpatialMapping/ZEDMeshRenderer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/SpatialMapping/ZEDSpatialMapping.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/SpatialMapping/ZEDSpatialMapping.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/CappedStack.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/CappedStack.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/ExportNavMesh.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/ExportNavMesh.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/GUIMessage.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/GUIMessage.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/LayerHandler.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/LayerHandler.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/LoadingFade.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/LoadingFade.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/Utils.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/Utils.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/ZEDDefineHandler.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/ZEDDefineHandler.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/ZEDLogMessage.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/ZEDLogMessage.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/ZEDSVOManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/ZEDSVOManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/ZEDSupportFunctions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/Utilities/ZEDSupportFunctions.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/ZEDManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Scripts/ZEDManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/GUI.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/GUI/ZED_Default_OverlayNoZTest.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/GUI/ZED_Default_OverlayNoZTest.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/GUI/ZED_Fade.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/GUI/ZED_Fade.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Deferred.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Deferred.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Deferred_Lighting.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Deferred_Lighting.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Forward.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Forward.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Forward_Lighting.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Forward_Lighting.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Forward_Lighting_URP.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Forward_Lighting_URP.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_HDRP_Lit.shadergraph" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_HDRP_Lit.shadergraph.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Hide.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Hide.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Lighting.cginc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Lighting.cginc.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Lighting_URP.cginc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Lighting/ZED_Lighting_URP.cginc.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PlaneDetection.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PlaneDetection/GeometryWirePlane.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PlaneDetection/GeometryWirePlane.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PointCloud.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PointCloud/Disk.cginc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PointCloud/Disk.cginc.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PointCloud/Disk.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PointCloud/Disk.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PointCloud/Point.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PointCloud/Point.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_Blit.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_Blit.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_Blur.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_Blur.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_ComposeMask.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_ComposeMask.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_Post-Processing.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_Post-Processing.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_StencilToMask.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_StencilToMask.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_Surface_PostProcessing.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_Surface_PostProcessing.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_Unlit_PostProcessing.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/PostProcessing/ZED_Unlit_PostProcessing.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/SpatialMapping.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/SpatialMapping/GeometryWireframe.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/SpatialMapping/GeometryWireframe.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/SpatialMapping/Postprocess_blend.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/SpatialMapping/Postprocess_blend.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/SpatialMapping/Textures.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/SpatialMapping/Textures.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/SpatialMapping/WireframeVideoOverlay.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/SpatialMapping/WireframeVideoOverlay.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Unlit.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Unlit/ZED_Unlit.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Unlit/ZED_Unlit.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Unlit/ZED_Unlit_RawInput.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/Unlit/ZED_Unlit_RawInput.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/ZED_PointCloud.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/ZED_PointCloud.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/ZED_Utils.cginc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Helpers/Shaders/ZED_Utils.cginc.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/NativeInterface.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/NativeInterface/ZEDCamera.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/NativeInterface/ZEDCamera.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/NativeInterface/ZEDCameraSettings.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/NativeInterface/ZEDCameraSettings.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/NativeInterface/ZEDCommon.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/NativeInterface/ZEDCommon.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/NativeInterface/ZEDLayersManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/NativeInterface/ZEDLayersManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/NativeInterface/ZEDMat.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/NativeInterface/ZEDMat.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Plugins.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Plugins/linux.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Plugins/linux/libsl_unitywrapper.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Plugins/linux/libsl_unitywrapper.so.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Plugins/win64.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Plugins/win64/sl_unitywrapper.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Plugins/win64/sl_unitywrapper.dll.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Shaders.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Shaders/ZED_Unlit_BGRA.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/SDK/Shaders/ZED_Unlit_BGRA.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Aluminum.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Aluminum.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Arrow.mtl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Arrow.mtl.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Black.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Black.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/BlueMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/BlueMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/ButtonTile.mtl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/ButtonTile.mtl.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/CalibBallControllerMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/CalibBallControllerMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/CalibBallMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/CalibBallMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/CheckmarkMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/CheckmarkMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/CrossMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/CrossMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/FloorMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/FloorMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/FrustrumEdgeMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/FrustrumEdgeMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/FrustumSideMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/FrustumSideMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Glass.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Glass.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/GrayTransMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/GrayTransMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/GreenMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/GreenMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/HandButtonMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/HandButtonMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/InteractionBallMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/InteractionBallMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Lenses.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Lenses.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/OculusTouchMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/OculusTouchMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/RedMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/RedMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Silver.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Silver.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/ToggleButtonBackground.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/ToggleButtonBackground.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/ViewScreenMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/ViewScreenMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/White_Letters.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/White_Letters.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Yellow.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Materials/Yellow.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Arrow.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Arrow.obj.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/BeveledCube.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/BeveledCube.obj.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/ButtonTile.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/ButtonTile.obj.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/CheckMark.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/CheckMark.obj.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Cross.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Cross.obj.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/ArrowMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/ArrowMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/BeveledCubeMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/BeveledCubeMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/ButtonTile.001Mat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/ButtonTile.001Mat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/ButtonTileMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/ButtonTileMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/RotRingMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/RotRingMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/TouchController_LMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/TouchController_LMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/TouchController_RMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/TouchController_RMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/White Letters.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/Materials/White Letters.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/RotationRing.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/RotationRing.obj.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/TouchControl_L.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/TouchControl_L.obj.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/TouchControl_R.obj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/TouchControl_R.obj.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/ZED.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/ZED.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/ZEDMini.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Models/ZEDMini.fbx.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/AutoCalibration Ball.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/AutoCalibration Ball.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/Belly Menu.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/Belly Menu.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/ChooseTrackedObjectButton.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/ChooseTrackedObjectButton.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/Left Controller.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/Left Controller.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/Right Controller.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/Right Controller.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/ZED Mini Model.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/ZED Mini Model.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/ZED Model.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Prefabs/ZED Model.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/README.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/README.txt.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Resources.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Resources/HoverMat.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Resources/HoverMat.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Resources/HoverMatAlpha.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Resources/HoverMatAlpha.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Resources/TouchControl_L.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Resources/TouchControl_L.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Resources/TouchControl_R.prefab" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Resources/TouchControl_R.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scene.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scene/MR Calibration.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scene/MR Calibration.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/AutoCalibBall.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/AutoCalibBall.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/AutoCalibrationManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/AutoCalibrationManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/BellyMenu.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/BellyMenu.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/Button3D.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/Button3D.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/CalibModeSwitcher.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/CalibModeSwitcher.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/CameraAnchor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/CameraAnchor.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ChooseTrackedObjectButton.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ChooseTrackedObjectButton.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ChooseTrackedObjectMenu.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ChooseTrackedObjectMenu.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ClickButton.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ClickButton.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/CreateZEDModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/CreateZEDModel.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/DrawOutputToPlane.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/DrawOutputToPlane.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ForceTrackingSpaceType.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ForceTrackingSpaceType.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/FrustumDisplay.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/FrustumDisplay.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/LookAtCameraPartialAxis.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/LookAtCameraPartialAxis.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/MessageDisplay.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/MessageDisplay.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ParentToGrandparentOnStart.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ParentToGrandparentOnStart.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/PrimaryHandSwitcher.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/PrimaryHandSwitcher.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/RotateControl.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/RotateControl.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/RotateOnAxes_MRCalib.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/RotateOnAxes_MRCalib.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/RotateRing.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/RotateRing.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/SetControllerSkin.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/SetControllerSkin.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/SpotlightFollow.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/SpotlightFollow.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/TempAudioObject.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/TempAudioObject.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ToggleButton.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ToggleButton.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ToggleGroup3D.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ToggleGroup3D.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/TransformControl.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/TransformControl.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/TransformGrabbable.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/TransformGrabbable.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/TranslateArrow.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/TranslateArrow.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/TranslateControl.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/TranslateControl.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ZEDXRGrabber.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Scripts/ZEDXRGrabber.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Shaders.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Shaders/ColorTexTransparent.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Shaders/ColorTexTransparent.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Shaders/SurfaceDarkenable.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Shaders/SurfaceDarkenable.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Shaders/UnlitDarkenable.shader" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Shaders/UnlitDarkenable.shader.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467552__ryusa__action.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467552__ryusa__action.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467553__ryusa__action-thump.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467553__ryusa__action-thump.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467554__ryusa__action-med.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467554__ryusa__action-med.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467555__ryusa__action-heavy.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467555__ryusa__action-heavy.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467556__ryusa__click-select-4.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467556__ryusa__click-select-4.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467557__ryusa__click-select-3.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467557__ryusa__click-select-3.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467558__ryusa__click-select-2.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467558__ryusa__click-select-2.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467559__ryusa__click-select-1.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467559__ryusa__click-select-1.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467560__ryusa__mouseover.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467560__ryusa__mouseover.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467561__ryusa__click-select-5.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467561__ryusa__click-select-5.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467562__ryusa__popup-001.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467562__ryusa__popup-001.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467563__ryusa__place.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467563__ryusa__place.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467564__ryusa__tap.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467564__ryusa__tap.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467565__ryusa__popup-002.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467565__ryusa__popup-002.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467566__ryusa__tap-heavy.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467566__ryusa__tap-heavy.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467567__ryusa__tap-med.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467567__ryusa__tap-med.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467568__ryusa__reverse.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Sounds/467568__ryusa__reverse.wav.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures/FiveBalls.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures/FiveBalls.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures/GradientUpward.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures/GradientUpward.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures/LeftHandIcon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures/LeftHandIcon.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures/SaveIcon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures/SaveIcon.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures/TransformArrowIcon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures/TransformArrowIcon.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures/Undo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/Tools/Mixed Reality Calibration/Textures/Undo.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/URP_Assets.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/URP_Assets/UniversalRenderPipelineAsset.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/URP_Assets/UniversalRenderPipelineAsset.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/URP_Assets/UniversalRenderPipelineAsset_Renderer.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/ZED/URP_Assets/UniversalRenderPipelineAsset_Renderer.asset.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -322,30 +1094,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Discover.Launch.Via.Unity": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "NewMultiZEDPed",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Diagrams",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Discover.Launch.Via.Unity&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;NewMultiZEDPed&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Diagrams&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache",
-      "C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache",
-      "C:\\Users\\farla\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\farla\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="$PROJECT_DIR$/../../Summer2023/UnityBuilds/2023_11_29\com.farlab.StrangeLand.exe" />

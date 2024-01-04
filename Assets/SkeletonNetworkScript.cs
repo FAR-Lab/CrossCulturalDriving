@@ -10,7 +10,7 @@ public class SkeletonNetworkScript : NetworkBehaviour
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
 
-        Debug.Log("About to destroy clinet irelevant objects!");
+        Debug.Log("About to destroy client irrelevant objects!");
         if (IsServer) { }
         else {
             GetComponent<ReplayObject>().enabled = false;
@@ -19,8 +19,8 @@ public class SkeletonNetworkScript : NetworkBehaviour
                 
             }
 
-            Destroy(GetComponent<ZEDSkeletonAnimator>());
-            Destroy(GetComponent<HeightOffsetter>());
+      //      Destroy(GetComponent<ZEDSkeletonAnimator>());
+            // Destroy(GetComponent<HeightOffsetter>());
             Destroy(GetComponent<Animator>());
 
             GetComponentInChildren<BoxCollider>().enabled = false;

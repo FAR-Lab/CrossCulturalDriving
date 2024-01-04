@@ -18,13 +18,14 @@ public class FollowParticipant : MonoBehaviour {
     }
 
     void FindVRParticipant() {
-        var temParticipant = FindObjectOfType<ZedAvatarInteractable>();
+        return;
+   //     var temParticipant = FindObjectOfType<ZedAvatarInteractable>();
         
-        if(!temParticipant) return;
+      //  if(!temParticipant) return;
         
-        if (temParticipant.m_participantOrder == followPO) {
-            participantToFollow = temParticipant.transform.position;
-        }
+      //  if (temParticipant.m_participantOrder == followPO) {
+      //      participantToFollow = temParticipant.transform.position;
+      //  }
     }
     
 }

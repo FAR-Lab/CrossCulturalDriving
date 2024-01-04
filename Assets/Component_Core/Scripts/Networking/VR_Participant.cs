@@ -204,14 +204,14 @@ public class VR_Participant : Client_Object {
 
   
     public override void CalibrateClient() {
-        if (mySpawnType.Value == SpawnType.PEDESTRIAN && NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null) {
+        if (mySpawnType.Value == SpawnType.PEDESTRIAN){//&& NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null) {
             
             
             // MakeSure the ZEDBodyTrackinManager is where its supposed to be
             //Wait a second for the network to update 
             // Send a callibration re quest to the Client  (ClientRPC) TO move the origin such that skeleton and VR align!
             
-            NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>().WorldCalibration();
+           // NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>().WorldCalibration();
             CalibrateClientRPC();
             
         }else if (mySpawnType.Value == SpawnType.CAR) {
@@ -353,10 +353,11 @@ public class VR_Participant : Client_Object {
                 Debug.Log($"VrCamera Local Position {mainCamera.localPosition}");
                 Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
                 if (transform.parent != null &&
-                    transform.parent == NetworkedInteractableObject.transform &&
-                    NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null) {
+                    transform.parent == NetworkedInteractableObject.transform 
+                    // && NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null
+            ){
                     if (isCalibrationRunning == false) {
-                        StartCoroutine(OverTimeCalibration(mainCamera, NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>().GetCameraPositionObject(),10));
+                      //  StartCoroutine(OverTimeCalibration(mainCamera, NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>().GetCameraPositionObject(),10));
                     }
                     else {
                         Debug.Log("Callibration already running!");

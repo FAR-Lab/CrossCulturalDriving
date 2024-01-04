@@ -10,7 +10,6 @@ using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Newtonsoft.Json;
- using sl;
  using UnityEngine.InputSystem.UI;
 using UnityEngine.Rendering;
  using Pose = UnityEngine.Pose;
