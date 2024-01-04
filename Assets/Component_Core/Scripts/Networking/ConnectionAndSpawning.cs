@@ -1,19 +1,23 @@
-using System;
+ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Rerun;
+ using Mocopi.Receiver;
+ using Rerun;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Newtonsoft.Json;
-using UnityEngine.InputSystem.UI;
+ using sl;
+ using UnityEngine.InputSystem.UI;
 using UnityEngine.Rendering;
+ using Pose = UnityEngine.Pose;
+ using Rect = UnityEngine.Rect;
 
 
-public class ConnectionAndSpawning : MonoBehaviour {
+ public class ConnectionAndSpawning : MonoBehaviour {
     public struct JoinParameters {
         public JoinType _jointype;
         public SpawnType _spawnType;
@@ -216,6 +220,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private void SetUpToServe(string pairName) {
         Application.targetFrameRate = 72;
+
+        var t =FindObjectOfType<MocopiStrangeLandSimpleReceiver>();
+        DontDestroyOnLoad(t.gameObject);
+        t.StartReceiving();
         
         gameObject.AddComponent<SteeringWheelManager>();
         gameObject.AddComponent<farlab_logger>();
@@ -264,8 +272,15 @@ public class ConnectionAndSpawning : MonoBehaviour {
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
 
 
-       var t=  Instantiate(ZedManagerPrefab);
-       DontDestroyOnLoad(t);
+     //  var t=  Instantiate(ZedManagerPrefab);
+      // DontDestroyOnLoad(t);
+       
+     //   t=  Instantiate(ZedManagerPrefab);
+      //  var z = t.GetComponent<ZEDManager>();
+        //z.Close();
+      //  z.cameraID = ZED_CAMERA_ID.CAMERA_ID_02;
+         //     z.StartBodyTracking();
+      // DontDestroyOnLoad(t);
 
     }
 
@@ -287,8 +302,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
         NetworkManager.Singleton.StartHost();
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
         
-        var t=  Instantiate(ZedManagerPrefab);
-        DontDestroyOnLoad(t);
+      //  var t=  Instantiate(ZedManagerPrefab);
+    //    DontDestroyOnLoad(t);
         
     }
 
@@ -336,6 +351,8 @@ public class ConnectionAndSpawning : MonoBehaviour {
         Debug.Log(
             $"Log: Starting as Client. IP: {ip} Port: {port} Language: {_langIN} ParticipantOrder: {po} SpawnType: {_spawnTypeIN} JoinType: {_joinTypeIN}");
 
+        var t =FindObjectOfType<MocopiStrangeLandSimpleReceiver>();
+        Destroy(t.gameObject);
         SetupClientFunctionality();
         ReponseHandler += result;
         SetupTransport(ip, port);

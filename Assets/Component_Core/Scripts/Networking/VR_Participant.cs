@@ -140,7 +140,8 @@ public class VR_Participant : Client_Object {
                     NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
                     break;
                 case SpawnType.PEDESTRIAN:
-                    NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
+                    //NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
+                    //ToDo We might still have to move you to the active sceen (lighting and ReRun considerations... )
                     break;
                 case SpawnType.PASSENGER:
                     break;

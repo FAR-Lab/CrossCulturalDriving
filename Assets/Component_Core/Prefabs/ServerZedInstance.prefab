@@ -58,6 +58,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3e675855c6403a43ac2aa545d0f6e1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_continuesCalibration: 0
+  Head: {fileID: 0}
+  PlayerCamera: {fileID: 0}
 --- !u!1001 &4385585124093133699
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -111,7 +114,27 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114491592745282986, guid: 76db3eb81fd21ae45bab5204e324ae42, type: 3}
+      propertyPath: depthMode
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114491592745282986, guid: 76db3eb81fd21ae45bab5204e324ae42, type: 3}
+      propertyPath: resolution
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114491592745282986, guid: 76db3eb81fd21ae45bab5204e324ae42, type: 3}
       propertyPath: setFloorAsOrigin
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114491592745282986, guid: 76db3eb81fd21ae45bab5204e324ae42, type: 3}
+      propertyPath: bodyTrackingModel
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114491592745282986, guid: 76db3eb81fd21ae45bab5204e324ae42, type: 3}
+      propertyPath: bodyTrackingMaxRange
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 114491592745282986, guid: 76db3eb81fd21ae45bab5204e324ae42, type: 3}
+      propertyPath: bodyTrackingAllowReducedPrecisionInference
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3886748734114740428, guid: 76db3eb81fd21ae45bab5204e324ae42, type: 3}

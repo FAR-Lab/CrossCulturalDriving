@@ -10,11 +10,10 @@
   <component name="ChangeListManager">
     <list default="true" id="1f6d41df-4024-490f-b01c-048cd6957123" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrossCulturalDriving/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrossCulturalDriving/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/ZEDAvatarInteractable.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/ZEDAvatarInteractable.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/ServerZedInstance.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/ServerZedInstance.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scenes/GameManagment.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scenes/GameManagment.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scenes/WaitingRoom.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scenes/WaitingRoom.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/VR_Participant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/VR_Participant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Components/LowPolyBusinessPeople.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/LowPolyBusinessPeople.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/ConnectionAndSpawning.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/ConnectionAndSpawning.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Component_Driving/Scripts/AutonomousVehicleDriver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Driving/Scripts/AutonomousVehicleDriver.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Materials/4m8mRoadTexture-112023.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Materials/4m8mRoadTexture-112023.png.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Materials/Material_meshs/Glass.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/POLYGON city pack/Materials/Material_meshs/Glass.mat" afterDir="false" />
@@ -241,10 +240,13 @@
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/OcclusionCullingData.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/OcclusionCullingData.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/ReflectionProbe-0.exr" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Components/StrangeTown/Assets/Scenes/Intersection/ReflectionProbe-0.exr" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/XR/Settings/OpenXR Package Settings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/XR/Settings/OpenXR Package Settings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ZED/CustomScripts/ZedAvatarInteractable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/ZED/CustomScripts/ZedAvatarInteractable.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar/Office_Avatar.prefab" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ZED/Examples/Body Tracking/Prefabs/Avatar/Office_Avatar.prefab.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Studies/Autonomous_MutualAware/MutualCP1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Studies/Autonomous_MutualAware/MutualCP1.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -260,12 +262,15 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/10871f9e312b442cb78b9b97db88fdcb172a00/95/fa0f1997/Transform.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8a0f19b0e419485eafaaec7c95c00afb27800/44/cd3c2a7e/Animator.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8a0f19b0e419485eafaaec7c95c00afb27800/7f/0c53c53f/HumanBodyBones.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/CSVFilePlayback.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Component_Core/Scripts/Interactables/Mocopie_Interactable.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/ConnectionAndSpawning.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Component_Core/Scripts/ZombieHands.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Component_Core/Scripts/util/ParticipantOrderMapping.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Component_Driving/Scripts/AutonomousVehicleDriver.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/ComputerStartButtonConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Editor/PathExtraction.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/MocopiReceiver/Runtime/MocopiSimpleReceiver.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/MocopiReceiver/Runtime/MocopiStrangeLandSimpleReceiver.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/NetworkComponentEnable.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/OberserverCameraLocalServerObject.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/PedestrianWalkingTarget.cs" root0="FORCE_HIGHLIGHTING" />
@@ -317,31 +322,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Discover.Launch.Via.Unity&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;NewMultiZEDPed&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Discover.Launch.Via.Unity": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "NewMultiZEDPed",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Diagrams",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache&quot;,
-      &quot;C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache&quot;,
-      &quot;C:\\Users\\farla\\AppData\\Local\\Symbols\\src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache",
+      "C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache",
+      "C:\\Users\\farla\\AppData\\Local\\Symbols\\src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/../../Summer2023/UnityBuilds/2023_11_28\com.farlab.StrangeLand.exe" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/../../Summer2023/UnityBuilds/2023_11_29\com.farlab.StrangeLand.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="D:\Summer2023\UnityBuilds\2023_8_21\win" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -349,7 +356,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2022.3.9f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2022.3.16f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath D:\Archive\CrossCulturalDriving -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="D:\Archive\CrossCulturalDriving" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -357,7 +364,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2022.3.9f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2022.3.16f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath D:\Archive\CrossCulturalDriving -testResults Logs/results.xml -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="D:\Archive\CrossCulturalDriving" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -460,6 +467,14 @@
       <workItem from="1700515708788" duration="2212000" />
       <workItem from="1700590117954" duration="8608000" />
       <workItem from="1701111896937" duration="31729000" />
+      <workItem from="1701727014879" duration="253000" />
+      <workItem from="1702312383382" duration="11470000" />
+      <workItem from="1703024693510" duration="1484000" />
+      <workItem from="1703026313638" duration="6823000" />
+      <workItem from="1703182404912" duration="97000" />
+      <workItem from="1703182629054" duration="622000" />
+      <workItem from="1704310259948" duration="82000" />
+      <workItem from="1704315017244" duration="4134000" />
     </task>
     <servers />
   </component>
