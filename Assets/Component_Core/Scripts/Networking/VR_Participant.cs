@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using UltimateReplay;
@@ -41,6 +42,35 @@ public class VR_Participant : Client_Object {
         if (IsServer) {
             ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
         }
+    }
+
+    public override void SetNewNavigationInstruction(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions) {
+        switch (mySpawnType.Value) {
+            case SpawnType.NONE:
+                break;
+            case SpawnType.CAR:
+                var nvc = NetworkedInteractableObject.GetComponent<NetworkVehicleController>();
+                if (nvc != null) {
+                    nvc.SetNewNavigationInstructions(Directions);
+                }
+                break;
+            case SpawnType.PEDESTRIAN:
+                GetComponent<PedestrianNavigationAudioCues>().SetNewNavigationInstructions(Directions, m_participantOrder);
+                break;
+            case SpawnType.PASSENGER:
+                var nvc2 = NetworkedInteractableObject.GetComponent<NetworkVehicleController>();
+                if (nvc2 != null) {
+                    nvc2.SetNewNavigationInstructions(Directions);
+                }
+                
+                break;
+            case SpawnType.ROBOT:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        } 
+            
+        
     }
 
     public static VR_Participant GetJoinTypeObject() {

@@ -135,7 +135,11 @@ public class ThreeScreen_Participant : Client_Object {
         if (!IsLocalPlayer) return;
         PostQuestionServerRPC(OwnerClientId);
     }
-    
+
+    public override void SetNewNavigationInstruction(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions) {
+        throw new System.NotImplementedException();
+    }
+
     [ServerRpc]
     public void PostQuestionServerRPC(ulong clientID)
     {

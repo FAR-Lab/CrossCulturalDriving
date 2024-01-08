@@ -137,7 +137,11 @@ public class OberserverCamera_ClientObject : Client_Object {
         if (!IsLocalPlayer) return;
         PostQuestionServerRPC(OwnerClientId);
     }
-    
+
+    public override void SetNewNavigationInstruction(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions) {
+        throw new NotImplementedException();
+    }
+
     [ServerRpc]
     public void PostQuestionServerRPC(ulong clientID)
     {

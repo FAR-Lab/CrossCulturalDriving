@@ -37,7 +37,7 @@ public class GpsTrigger : MonoBehaviour
                     { ParticipantOrder.E, setDirectionParticipantE },
                     { ParticipantOrder.F, setDirectionParticipantF }
                 };
-            ConnectionAndSpawning.Singleton.GetScenarioManager().UpdateAllGPS(temp);
+            ConnectionAndSpawning.Singleton.GetScenarioManager().UpdateAllNavigationInstructions(temp);
         }
     }
 }

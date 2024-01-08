@@ -140,14 +140,14 @@ public class ScenarioManager : MonoBehaviour {
     #region GPSUpdate
 
     public void SetStartingGPSDirections() {
-        UpdateAllGPS(FindObjectOfType<ScenarioManager>().GetStartingPositions());
+        UpdateAllNavigationInstructions(FindObjectOfType<ScenarioManager>().GetStartingPositions());
     }
 
-    public void UpdateAllGPS(Dictionary<ParticipantOrder, NavigationScreen.Direction> dict) {
-        foreach (NetworkVehicleController v in FindObjectsOfType<NetworkVehicleController>() )
-        {
-            v.SetNavigationScreen(dict);
+    public void UpdateAllNavigationInstructions(Dictionary<ParticipantOrder, NavigationScreen.Direction> dict) {
+        foreach (var t in ConnectionAndSpawning.Singleton.Main_ParticipantObjects.Values) {
+            t.SetNewNavigationInstruction(dict);
         }
+        
     }
 
     #endregion

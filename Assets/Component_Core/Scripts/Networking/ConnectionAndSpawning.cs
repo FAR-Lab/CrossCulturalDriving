@@ -59,7 +59,7 @@ using UnityEngine.Rendering;
     public ParticipantOrderMapping participants;
     private readonly bool ClientListInitDone = false;
 
-    public Dictionary<ParticipantOrder, Client_Object> Main_ParticipantObjects;
+    public Dictionary<ParticipantOrder, Client_Object> Main_ParticipantObjects { private set; get; }
 
     private Dictionary<ParticipantOrder, List<Interactable_Object>> Interactable_ParticipantObjects;
 
@@ -563,7 +563,7 @@ using UnityEngine.Rendering;
         if (!FinishedRunningAwaitCorutine) return;
 
         FinishedRunningAwaitCorutine = false;
-        GetScenarioManager().UpdateAllGPS(StopDict);
+        GetScenarioManager().UpdateAllNavigationInstructions(StopDict);
         i_AwaitCarStopped = StartCoroutine(AwaitCarStopped());
     }
 

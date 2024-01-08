@@ -13,6 +13,9 @@ namespace Mocopi.Receiver
     public sealed class MocopiStrangeLandSimpleReceiver : MonoBehaviour
     {
         #region --Fields--
+
+        public string MulticastAddress;
+        
         /// <summary>
         /// Avatar list
         /// </summary>
@@ -127,9 +130,9 @@ namespace Mocopi.Receiver
                     continue;
                 }
 
-                if (this.UdpReceivers[i] == null)
-                {
-                    this.UdpReceivers[i] = new MocopiUdpReceiver(this.AvatarSettings[i].Port);
+                if (this.UdpReceivers[i] == null) {
+                    this.UdpReceivers[i] = new MocopiUdpReceiver(this.AvatarSettings[i].Port, this.MulticastAddress,
+                        AvatarSettings[i].Port);
                 }
 
                 this.UdpReceivers[i].OnReceiveSkeletonDefinition += this.AvatarSettings[i].MocopiAvatar.InitializeSkeleton;

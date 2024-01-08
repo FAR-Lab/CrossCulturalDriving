@@ -1,18 +1,16 @@
-﻿/*
- * Copyright 2022 Sony Corporation
- */
-using Mocopi.Receiver.Core;
+﻿using Mocopi.Receiver.Core;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Mocopi.Receiver
-{
+namespace Mocopi.Receiver {
     /// <summary>
     /// The simple component for receiving and adapting motion from UDP
     /// </summary>
-    public sealed class MocopiSimpleReceiver : MonoBehaviour
-    {
+    public sealed class MocopiSimpleReceiver : MonoBehaviour {
         #region --Fields--
+
+        public string MulticastAddress;
+
         /// <summary>
         /// Avatar list
         /// </summary>
@@ -22,23 +20,25 @@ namespace Mocopi.Receiver
         /// Switching variable for UDP reception start timing
         /// </summary>
         public bool IsReceivingOnEnable = true;
+
         #endregion --Fields--
 
         #region --Properties--
+
         /// <summary>
         /// UDP list
         /// </summary>
         private MocopiUdpReceiver[] UdpReceivers { get; set; }
+
         #endregion --Properties--
 
         #region --Methods--
+
         /// <summary>
         /// Perform the processing when activated
         /// </summary>
-        private void OnEnable()
-        {
-            if (IsReceivingOnEnable)
-            {
+        private void OnEnable() {
+            if (IsReceivingOnEnable) {
                 this.UdpStart();
             }
         }
@@ -46,10 +46,8 @@ namespace Mocopi.Receiver
         /// <summary>
         /// OnDisable
         /// </summary>
-        private void OnDisable()
-        {
-            if (IsReceivingOnEnable)
-            {
+        private void OnDisable() {
+            if (IsReceivingOnEnable) {
                 this.UdpStop();
             }
         }
@@ -57,25 +55,21 @@ namespace Mocopi.Receiver
         /// <summary>
         /// Destroy the receiver
         /// </summary>
-        private void OnDestroy()
-        {
+        private void OnDestroy() {
             this.UnsetUdpDelegate();
         }
 
         /// <summary>
         /// Start receiving UDP
         /// </summary>
-        private void UdpStart()
-        {
+        private void UdpStart() {
             this.UdpStop();
 
-            if (this.UdpReceivers == null || this.UdpReceivers.Length != this.AvatarSettings.Count)
-            {
+            if (this.UdpReceivers == null || this.UdpReceivers.Length != this.AvatarSettings.Count) {
                 this.InitializeUdpReceiver();
             }
 
-            for (int i = 0; i < this.UdpReceivers.Length; i++)
-            {
+            for (int i = 0; i < this.UdpReceivers.Length; i++) {
                 this.UdpReceivers[i]?.UdpStart();
             }
         }
@@ -83,15 +77,12 @@ namespace Mocopi.Receiver
         /// <summary>
         /// Stop receiving UDP
         /// </summary>
-        private void UdpStop()
-        {
-            if (this.UdpReceivers == null)
-            {
+        private void UdpStop() {
+            if (this.UdpReceivers == null) {
                 return;
             }
 
-            for (int i = 0; i < this.UdpReceivers.Length; i++)
-            {
+            for (int i = 0; i < this.UdpReceivers.Length; i++) {
                 this.UdpReceivers[i]?.UdpStop();
             }
         }
@@ -99,8 +90,7 @@ namespace Mocopi.Receiver
         /// <summary>
         /// Initialize the UDP receiver
         /// </summary>
-        private void InitializeUdpReceiver()
-        {
+        private void InitializeUdpReceiver() {
             this.UnsetUdpDelegate();
             this.UdpReceivers = new MocopiUdpReceiver[this.AvatarSettings.Count];
             this.SetUdpDelegate();
@@ -109,30 +99,29 @@ namespace Mocopi.Receiver
         /// <summary>
         /// Set the process to the UDP delegate
         /// </summary>
-        private void SetUdpDelegate()
-        {
-            if (this.UdpReceivers == null)
-            {
+        private void SetUdpDelegate() {
+            if (this.UdpReceivers == null) {
                 return;
             }
-            for (int i = 0; i < this.UdpReceivers.Length; i++)
-            {
-                if (this.AvatarSettings == null || this.AvatarSettings.Count < i)
-                {
+
+            for (int i = 0; i < this.UdpReceivers.Length; i++) {
+                if (this.AvatarSettings == null || this.AvatarSettings.Count < i) {
                     break;
                 }
 
-                if (this.AvatarSettings[i].MocopiAvatar == null)
-                {
+                if (this.AvatarSettings[i].MocopiAvatar == null) {
                     continue;
                 }
 
-                if (this.UdpReceivers[i] == null)
-                {
-                    this.UdpReceivers[i] = new MocopiUdpReceiver(this.AvatarSettings[i].Port);
+                if (this.UdpReceivers[i] == null) {
+                    this.UdpReceivers[i] = new MocopiUdpReceiver(
+                        this.AvatarSettings[i].Port, 
+                        this.MulticastAddress,
+                        AvatarSettings[i].Port);
                 }
 
-                this.UdpReceivers[i].OnReceiveSkeletonDefinition += this.AvatarSettings[i].MocopiAvatar.InitializeSkeleton;
+                this.UdpReceivers[i].OnReceiveSkeletonDefinition +=
+                    this.AvatarSettings[i].MocopiAvatar.InitializeSkeleton;
                 this.UdpReceivers[i].OnReceiveFrameData += this.AvatarSettings[i].MocopiAvatar.UpdateSkeleton;
             }
         }
@@ -140,31 +129,26 @@ namespace Mocopi.Receiver
         /// <summary>
         /// Unconfigure the UDP delegate
         /// </summary>
-        private void UnsetUdpDelegate()
-        {
-            if (this.UdpReceivers == null)
-            {
+        private void UnsetUdpDelegate() {
+            if (this.UdpReceivers == null) {
                 return;
             }
 
-            for (int i = 0; i < this.UdpReceivers.Length; i++)
-            {
-                if (this.AvatarSettings == null || this.AvatarSettings.Count < i)
-                {
+            for (int i = 0; i < this.UdpReceivers.Length; i++) {
+                if (this.AvatarSettings == null || this.AvatarSettings.Count < i) {
                     break;
                 }
 
-                if (this.AvatarSettings.Count <= i)
-                {
+                if (this.AvatarSettings.Count <= i) {
                     continue;
                 }
 
-                if (this.UdpReceivers[i] == null)
-                {
+                if (this.UdpReceivers[i] == null) {
                     continue;
                 }
 
-                this.UdpReceivers[i].OnReceiveSkeletonDefinition -= this.AvatarSettings[i].MocopiAvatar.InitializeSkeleton;
+                this.UdpReceivers[i].OnReceiveSkeletonDefinition -=
+                    this.AvatarSettings[i].MocopiAvatar.InitializeSkeleton;
                 this.UdpReceivers[i].OnReceiveFrameData -= this.AvatarSettings[i].MocopiAvatar.UpdateSkeleton;
             }
         }
@@ -172,10 +156,8 @@ namespace Mocopi.Receiver
         /// <summary>
         /// Start receiving.
         /// </summary>
-        public void StartReceiving()
-        {
-            if (!IsReceivingOnEnable)
-            {
+        public void StartReceiving() {
+            if (!IsReceivingOnEnable) {
                 this.UdpStart();
             }
         }
@@ -183,10 +165,8 @@ namespace Mocopi.Receiver
         /// <summary>
         /// Stop receiving.
         /// </summary>
-        public void StopReceiving()
-        {
-            if (!IsReceivingOnEnable)
-            {
+        public void StopReceiving() {
+            if (!IsReceivingOnEnable) {
                 this.UdpStop();
             }
         }
@@ -195,19 +175,19 @@ namespace Mocopi.Receiver
         /// Add Avatar to AvatarSettings
         /// </summary>
         /// <param name="port">Port number</param>
-        public void AddAvatar(MocopiAvatar mocopiAvatar, int port)
-        {
+        public void AddAvatar(MocopiAvatar mocopiAvatar, int port) {
             AvatarSettings.Add(new MocopiSimpleReceiverAvatarSettings(mocopiAvatar, port));
         }
+
         #endregion --Methods--
 
         #region --Classes--
+
         /// <summary>
         /// Hold a pair of an avatar and a port id
         /// </summary>
         [System.Serializable]
-        public sealed class MocopiSimpleReceiverAvatarSettings
-        {
+        public sealed class MocopiSimpleReceiverAvatarSettings {
             /// <summary>
             /// mocopi avatar
             /// </summary>
@@ -223,12 +203,12 @@ namespace Mocopi.Receiver
             /// </summary>
             /// <param name="mocopiAvatar">mocopi avatar</param>
             /// <param name="port">Port number</param>
-            public MocopiSimpleReceiverAvatarSettings(MocopiAvatar mocopiAvatar, int port)
-            {
+            public MocopiSimpleReceiverAvatarSettings(MocopiAvatar mocopiAvatar, int port) {
                 this.MocopiAvatar = mocopiAvatar;
                 this.Port = port;
             }
         }
+
         #endregion --Classes--
     }
 }

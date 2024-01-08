@@ -83,9 +83,13 @@ namespace Mocopi.Receiver.Core
         /// Constructor
         /// </summary>
         /// <param name="port">Udp port number</param>
-        public MocopiUdpReceiver(int port)
+        public MocopiUdpReceiver(int port, string multicastAddress, int multicastPort)
         {
             this.Port = port;
+            if (multicastAddress != null) {
+                this._multicastAddress = multicastAddress;
+                this._multicastPort = multicastPort;
+            }
         }
         #endregion --Constructors--
 
@@ -147,6 +151,11 @@ namespace Mocopi.Receiver.Core
         #endregion --Delegates--
 
         #region --Properties--
+        // MULTICAST ADDITION
+        private string _multicastAddress = null;
+        private int _multicastPort = 0;
+        
+        
         /// <summary>
         /// Port 
         /// </summary>
@@ -174,6 +183,9 @@ namespace Mocopi.Receiver.Core
             try
             {
                 this.cancellationTokenSource = new CancellationTokenSource();
+                // MULTICAST ADDITION
+                this.udpClient = new UdpClient(this._multicastPort);
+                this.udpClient.JoinMulticastGroup(IPAddress.Parse(this._multicastAddress));
                 this.task = Task.Run(() => this.UdpTaskAsync(this.cancellationTokenSource.Token));
             }
             catch (System.Exception e)
@@ -196,6 +208,7 @@ namespace Mocopi.Receiver.Core
 
             if (this.udpClient != null)
             {
+                this.udpClient.DropMulticastGroup(IPAddress.Parse(this._multicastAddress));
                 this.udpClient.Close();
                 this.udpClient = null;
             }
@@ -246,7 +259,7 @@ namespace Mocopi.Receiver.Core
         /// <param name="cancellationToken">Cancellation token</param>
         private async void UdpTaskAsync(CancellationToken cancellationToken)
         {
-            this.udpClient = new UdpClient(this.Port);
+            //this.udpClient = new UdpClient(this.Port);
 
             while (!cancellationToken.IsCancellationRequested && this.udpClient != null)
             {

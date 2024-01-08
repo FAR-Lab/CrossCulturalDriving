@@ -12,7 +12,7 @@ public abstract class Interactable_Object : NetworkBehaviour {
     public abstract Transform GetCameraPositionObject();
     public abstract void SetStartingPose(Pose _pose);
     public abstract bool HasActionStopped();
-    
+   
 }
 
 public abstract class Client_Object : NetworkBehaviour {
@@ -30,7 +30,11 @@ public abstract class Client_Object : NetworkBehaviour {
     
     public abstract void  GoForPostQuestion(); 
     
-    public static Client_Object GetJoinTypeObject()
+    public abstract void SetNewNavigationInstruction(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions);
+
+    
+    
+    public static Client_Object GetJoinTypeObject() // I am not sure that this is a smart thing todo...
     {
         foreach (var pic in FindObjectsOfType<Client_Object>())
             if (pic.IsLocalPlayer)

@@ -301,7 +301,11 @@ Debug.Log($"SpawnType {m_spawnType.Value}  FollowType:{tmp} KeepUpdating:{KeepUp
         if (!IsLocalPlayer) return;
         PostQuestionServerRPC(OwnerClientId);
     }
-    
+
+    public override void SetNewNavigationInstruction(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions) {
+       
+    }
+
     [ServerRpc]
     public void PostQuestionServerRPC(ulong clientID)
     {

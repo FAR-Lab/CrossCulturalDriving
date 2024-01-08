@@ -411,7 +411,7 @@ public class NetworkVehicleController : Interactable_Object {
     }
 
 
-    public void SetNavigationScreen(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions) {
+    public void SetNewNavigationInstructions(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions) {
         if (Directions.ContainsKey(m_participantOrder)) {
             GetComponentInChildren<NavigationScreen>().SetDirection(Directions[m_participantOrder]);
             SetNavigationScreenClientRPC(Directions[m_participantOrder]);
