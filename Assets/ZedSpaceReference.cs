@@ -1,6 +1,7 @@
-using System.Collections;
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
 using UnityEditor;
@@ -12,70 +13,31 @@ public class DeviceConfigManagerEditor : Editor {
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector(); // Draws the default inspector
-
-        ZedSpaceReference script = (ZedSpaceReference)target;
-
-        // Button to deserialize JSON data
-        if (GUILayout.Button("Deserialize Object Data"))
-        {
-         //   script.DeserializeObjectData();
+        var reference = (ZedSpaceReference)target;
+        if (GUILayout.Button("Store New Zed Setup")) {
+            reference.storeNewSetup();
         }
-        /*
-        if (GUILayout.Button("SotreSelectedAgentLocation")) {
-            var t = FindObjectOfType<ZEDMaster>();
-            if (t != null) {
-                script.WorkingArea[i].position = t.GetHipPosition();
-                i++;
-                if(script.WorkingArea.Count>i)
-                { i = 0;}
-            }
-        }*/
+        if (GUILayout.Button("Re-Load Setup")) {
+            reference.LoadSetup();
+        }
+    }
+
+    private void OnSceneGUI() {
+      
+    }
+
+    private void OnEnable() {
+        
     }
 }
 #endif
+
 public class ZedSpaceReference : MonoBehaviour {
 
-   public List<Transform> WorkingArea = new List<Transform>();
-    /*
-    public TextAsset ZedCallibrationFile;
-
-    
-    public Dictionary<string, DeviceConfig> m_devices;
-
-    [SerializeField]
-    public List<DeviceConfigMono> m_ZedCameras;
-
-    public Transform ZedRootObject;
-    public const string ZedRootName = "ZedRootObject";
-
-    
-    // Start is called before the first frame update
-    void Start() {
-      
-    }*/
+   private List<Transform> WorkingArea = new List<Transform>();
+   public static string RoomSetUpPath = Application.dataPath + "/Resources/ZedRoomSetUp.json";
+   
     private void OnDrawGizmos() {
-        /*
-        if (m_ZedCameras != null && m_ZedCameras.Count() > 0) {
-
-            float hightoffset = m_ZedCameras[0].transform.position.y;
-            Vector3 of = new Vector3(0, hightoffset, 0);
-            Vector3 prev = Vector3.zero;
-            bool first = true;
-            foreach (var cam  in m_ZedCameras) {
-                if (cam != null) {
-                    if (first) {
-                        first = false;
-                        prev = cam.transform.position;
-                    }
-                    else {
-                     //   Gizmos.DrawLine(cam.transform.position+of,prev+of);
-                        prev = cam.transform.position;
-                    }
-                }
-            } 
-            
-        }*/
-        
         Gizmos.color=Color.red;
         if (WorkingArea != null && WorkingArea.Count > 1) {
             for (int i = 0; i < WorkingArea.Count-1; i++) {
@@ -83,62 +45,62 @@ public class ZedSpaceReference : MonoBehaviour {
             }
             Gizmos.DrawLine(WorkingArea[0].position, WorkingArea[WorkingArea.Count-1].position);
         }
-        
-        Gizmos.matrix = Matrix4x4.TRS(transform.position,transform.rotation,Vector3.one);
-        Gizmos.DrawFrustum(Vector3.zero, 158/4, 10f, 0.25f, 1.77777f);
+        Gizmos.DrawCube(transform.position,Vector3.one*0.1f);
     }
-/*
-    public void DeserializeObjectData() {
-        ZedRootObject = transform.Find(ZedRootName);
-        if (ZedRootObject == null) {
-            ZedRootObject = new GameObject().transform;
-            ZedRootObject.name = ZedRootName;   
-            ZedRootObject.parent=transform;
-            ZedRootObject.localPosition=Vector3.zero;
-        }
 
-        if (m_ZedCameras != null ) {
-            for (int i = 0; i < m_ZedCameras.Count(); i++) {
-                if(m_ZedCameras[i] != null){
-
-                    DestroyImmediate(m_ZedCameras[i].gameObject);
-                }
-            }
-
-            m_ZedCameras.Clear();
-        }
-        else {
-            m_ZedCameras = new List<DeviceConfigMono>();
-        }
-
-        for (int i = 0; i < ZedRootObject.childCount; i++) {
-            DestroyImmediate(ZedRootObject.GetChild(i).gameObject);
-        }
-        m_devices = new Dictionary<string, DeviceConfig>();
-        m_devices =  JsonConvert.DeserializeObject<Dictionary<string, DeviceConfig>>(ZedCallibrationFile.text);
-        Debug.Log(JsonConvert.DeserializeObject<Dictionary<string, DeviceConfig>>(ZedCallibrationFile.text).Values.Count() );
-        
-        foreach (var d in m_devices.Values) {
+    public void storeNewSetup() {
+        float[][] outVal = new float[transform.childCount][]; 
+        for ( int i=0; i< transform.childCount; i++) {
+            var t = transform.GetChild(i);
+            float[] tmp = new float[3];
+            tmp[0] = t.localPosition.x;
+            tmp[1] = t.localPosition.y;
+            tmp[2] = t.localPosition.z;
+            outVal[i] =tmp;
             
-            GameObject g = new GameObject();
-            m_ZedCameras.Add(g.AddComponent<DeviceConfigMono>());
-            g.transform.name = d.Input.Zed.Configuration;
-            g.transform.parent = ZedRootObject;
-            g.GetComponent<DeviceConfigMono>().setConfig(d);
-
         }
+
+        
+        string json = JsonConvert.SerializeObject(outVal, Formatting.Indented);
+        File.WriteAllText(RoomSetUpPath, json);
+        
+    }
+    
+    public void LoadSetup() {
+        if (!File.Exists(RoomSetUpPath)) {
+            return;
+        }
+        string s = File.ReadAllText(RoomSetUpPath);
+        float[][] outVal = JsonConvert
+            .DeserializeObject<float[][]>(s);
+
+        if (outVal.Length > transform.childCount) {
+            int count = outVal.Length - transform.childCount;
+            for (int i = 0; i < count; i++) {
+                var w = new GameObject();
+                w.transform.parent = transform;
+            }
+        }
+
+        WorkingArea.Clear();
+        for ( int i=0; i< transform.childCount; i++) {
+            var t = transform.GetChild(i);
+            Vector3 tmp = new Vector3();
+            
+            tmp.x = outVal[i][0];
+            tmp.y = outVal[i][1];
+            tmp.z = outVal[i][2];
+           
+            t.localPosition = tmp;
+            WorkingArea.Add(t);
+        }
+        string json = JsonConvert.SerializeObject(outVal, Formatting.Indented);
+        File.WriteAllText(RoomSetUpPath, json);
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     
-    */
-    
-    
+    #region OriginalZedConfigData
     public class DeviceConfig
     {
         [JsonProperty("input")]
@@ -180,7 +142,6 @@ public class ZedSpaceReference : MonoBehaviour {
         [JsonProperty("translation")]
         public List<double> Translation { get; set; }
     }
+#endregion
 
-// Main class to hold the dictionary
-  
 }

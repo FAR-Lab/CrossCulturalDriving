@@ -1,19 +1,20 @@
 using System;
-using System.Collections;
+
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Unity.Burst;
 using Unity.Netcode;
-using UnityEngine.Serialization;
-using UnityEngine.XR.Interaction.Toolkit.UI;
 
-public class UICanvas : MonoBehaviour
+
+public class Researcher_UI : MonoBehaviour
 {
     # region Prefabs
     public GameObject buttonTemplate_NoIcon;
     public GameObject buttonTemplate_HasIcon;
+    public GameObject Seperator;
+
     # endregion
     
     # region Fields
@@ -28,6 +29,11 @@ public class UICanvas : MonoBehaviour
 
     [NonSerialized]
     private Dictionary<ParticipantOrder, Transform> _spawnedButtons = new Dictionary<ParticipantOrder, Transform>();
+   
+    
+    Dictionary<string, Dictionary<ParticipantOrder, float[]>> dict;
+
+    public Transform PedIndicator;
     void Awake()
     {
         DontDestroyOnLoad(this);
@@ -43,6 +49,23 @@ public class UICanvas : MonoBehaviour
         NetworkManager.Singleton.OnClientConnectedCallback += CreateButton;
         NetworkManager.Singleton.OnClientDisconnectCallback += DeleteButton;
         _spawnTypeToSprite = Resources.Load<SO_SpawnTypeToSprite>("SO/SO_SpawnTypeToSprite").EnumToValueDictionary;
+
+
+        string path = ScenarioManager.PedestrianSpawnPointLocationPathJson;
+        path= path.Replace(".json","");
+        Debug.Log(path);
+     
+        TextAsset text = Resources.Load<TextAsset>(path); 
+      
+        dict = JsonConvert
+            .DeserializeObject<Dictionary<string, Dictionary<ParticipantOrder, float[]>>>(text.ToString());
+        if (dict != null) {
+            PedIndicator = FindObjectOfType<PedestrianWalkingTarget>().transform;
+        
+          
+        }
+
+       
     }
 
     void Update()
@@ -60,20 +83,46 @@ public class UICanvas : MonoBehaviour
     {
         foreach (var sceneField in ConnectionAndSpawning.Singleton.IncludedScenes)
         {
+            
             if (!ConnectionAndSpawning.Singleton.VisitedScenes.ContainsKey(sceneField))
             {
                 ConnectionAndSpawning.Singleton.VisitedScenes.Add(sceneField, false);
             }
+           if (dict.ContainsKey(sceneField.SceneName)) {
+                GameObject button2 = Instantiate(buttonTemplate_NoIcon);
+                button2.transform.SetParent(scenarioButtons.transform);
+                button2.name = "PreLoad:"+sceneField.SceneName;
+                button2.GetComponentInChildren<TextMeshProUGUI>().text =  button2.name;
+                button2.GetComponentInChildren<Button>().onClick.AddListener(() => { OnPreLoadScenarioButtonPressed(sceneField); });
+            }
+           
             GameObject button = Instantiate(buttonTemplate_NoIcon);
             button.transform.SetParent(scenarioButtons.transform);
             button.name = sceneField.SceneName;
+            
             button.GetComponentInChildren<TextMeshProUGUI>().text = sceneField.SceneName;
             button.GetComponentInChildren<Button>().onClick.AddListener(() => { OnScenarioButtonPressed(sceneField); });
             _buttonToScene.Add(button, sceneField);
+            
+            Debug.Log($"adding more buttons{button.name} {button.transform.parent.name}");
+            GameObject sep = Instantiate(Seperator);
+            sep.transform.SetParent(scenarioButtons.transform);
 
         }
     }
 
+    
+    private void OnPreLoadScenarioButtonPressed(SceneField sceneField) {
+       var spaceRef = FindObjectOfType<ZedSpaceReference>();
+        float[] tmp =dict[sceneField.SceneName][ParticipantOrder.B];
+        Vector3 pos = new Vector3(tmp[0],tmp[1], tmp[2]);
+        
+        pos = spaceRef.transform.TransformPoint(pos) ;
+        PedIndicator.position = pos;
+        PedIndicator.forward =  Quaternion.Euler(0, tmp[3], 0)*spaceRef.transform.forward ;
+
+
+    } 
     private void OnScenarioButtonPressed(SceneField sceneField)
     {
         ConnectionAndSpawning.Singleton.VisitedScenes[sceneField] = true;

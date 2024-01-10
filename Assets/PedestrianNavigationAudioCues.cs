@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
 /*
  //https://ttsmaker.com/
- * Please cross the street.
+Please cross the street.
 
 Please turn left.
 
@@ -46,16 +45,16 @@ public class PedestrianNavigationAudioCues : MonoBehaviour {
     void Start()
     {
         
-        straightSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Cross.ogg");
-        leftSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Left.ogg");
-        rightSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Right.ogg");
-        StopSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Stop.ogg");
-        HurrySound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Hurry.ogg");
-        LoadingSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Wait.ogg");
-        StartRightSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/IntersectionRight.ogg");
-        StartLeftSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/IntersectionLeft.ogg");
-        ComeToStopSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/ComeToStop.ogg");
-        ToHospitalSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Hospital.ogg");
+        straightSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Cross");
+        leftSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Left");
+        rightSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Right");
+        StopSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Stop");
+        HurrySound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Hurry");
+        LoadingSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Wait");
+        StartRightSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/IntersectionRight");
+        StartLeftSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/IntersectionLeft");
+        ComeToStopSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/ComeToStop");
+        ToHospitalSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Hospital");
 
         src = gameObject.AddComponent<AudioSource>();
         src.spatialize = true;

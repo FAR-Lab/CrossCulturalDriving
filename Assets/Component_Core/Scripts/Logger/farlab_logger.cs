@@ -8,6 +8,8 @@ using System.Threading;
 using Rerun;
 using UnityEngine;
 using UnityEngine.XR;
+using UnityEngine.XR.Hands;
+using Object = UnityEngine.Object;
 
 
 // ToDo: Remove Frequent nullPointer references
@@ -17,16 +19,72 @@ using UnityEngine.XR;
 public class farlab_logger : MonoBehaviour {
     public const char sep = ';'; //Separator for data values.
     public const char supSep = '_'; //Separator for values within one cell.
-
+    public const string Fpres = "F6";
 
     public float UpdatedFreqeuncy = 1f / 25f;
 
 
- //   private Transform CarA;
-    
+    public static HumanBodyBones[] BonesToTrack = {
+        HumanBodyBones.Hips,
+        HumanBodyBones.LeftUpperLeg,
+        HumanBodyBones.RightUpperLeg,
+        HumanBodyBones.LeftLowerLeg,
+        HumanBodyBones.RightLowerLeg,
+        HumanBodyBones.LeftFoot,
+        HumanBodyBones.RightFoot,
+        HumanBodyBones.Spine,
+        HumanBodyBones.Chest,
+        HumanBodyBones.Neck,
+        HumanBodyBones.Head,
+        HumanBodyBones.LeftShoulder,
+        HumanBodyBones.RightShoulder,
+        HumanBodyBones.LeftUpperArm,
+        HumanBodyBones.RightUpperArm,
+        HumanBodyBones.LeftLowerArm,
+        HumanBodyBones.RightLowerArm,
+        HumanBodyBones.LeftHand,
+        HumanBodyBones.RightHand,
+        HumanBodyBones.LeftToes,
+        HumanBodyBones.RightToes,
+        HumanBodyBones.LeftEye,
+        HumanBodyBones.RightEye,
+        HumanBodyBones.Jaw,
+        HumanBodyBones.LeftThumbProximal,
+        HumanBodyBones.LeftThumbIntermediate,
+        HumanBodyBones.LeftThumbDistal,
+        HumanBodyBones.LeftIndexProximal,
+        HumanBodyBones.LeftIndexIntermediate,
+        HumanBodyBones.LeftIndexDistal,
+        HumanBodyBones.LeftMiddleProximal,
+        HumanBodyBones.LeftMiddleIntermediate,
+        HumanBodyBones.LeftMiddleDistal,
+        HumanBodyBones.LeftRingProximal,
+        HumanBodyBones.LeftRingIntermediate,
+        HumanBodyBones.LeftRingDistal,
+        HumanBodyBones.LeftLittleProximal,
+        HumanBodyBones.LeftLittleIntermediate,
+        HumanBodyBones.LeftLittleDistal,
+        HumanBodyBones.RightThumbProximal,
+        HumanBodyBones.RightThumbIntermediate,
+        HumanBodyBones.RightThumbDistal,
+        HumanBodyBones.RightIndexProximal,
+        HumanBodyBones.RightIndexIntermediate,
+        HumanBodyBones.RightIndexDistal,
+        HumanBodyBones.RightMiddleProximal,
+        HumanBodyBones.RightMiddleIntermediate,
+        HumanBodyBones.RightMiddleDistal,
+        HumanBodyBones.RightRingProximal,
+        HumanBodyBones.RightRingIntermediate,
+        HumanBodyBones.RightRingDistal,
+        HumanBodyBones.RightLittleProximal,
+        HumanBodyBones.RightLittleIntermediate,
+        HumanBodyBones.RightLittleDistal,
+        HumanBodyBones.UpperChest
+        //  , HumanBodyBones.LastBone
+    };
 
-        
-    
+    //   private Transform CarA;
+
 
     /*
      private Rigidbody carARigidbody;
@@ -47,7 +105,7 @@ public class farlab_logger : MonoBehaviour {
     private float NextUpdate;
     private string path; //Location of the log files
 
-   
+
     private bool RECORDING;
     private double ScenarioStartTime;
     private Thread send; //Independent thread for writing and sending data from databuffer
@@ -63,7 +121,6 @@ public class farlab_logger : MonoBehaviour {
 
         if (enabled) {
 #pragma warning disable 0219
-
 /*
             var LeftHandA = new LogVariable("LeftHandA",
                 delegate {
@@ -71,7 +128,7 @@ public class farlab_logger : MonoBehaviour {
                         ? HandDataStreamRecorder.Singleton.GetLatestState(ParticipantOrder.A, OVRPlugin.Hand.HandLeft)
                         : " ";
                 });
-               
+
             var RightHandA = new LogVariable("RightHandA",
                 delegate {
                     return HandDataStreamRecorder.Singleton != null
@@ -93,187 +150,8 @@ public class farlab_logger : MonoBehaviour {
                         : " ";
                 });
 
-            var velxA = new LogVariable("CarVelocityXA",
-                delegate { return carARigidbody != null ? carARigidbody.velocity.x.ToString("F4") : " "; });
-            var velyA = new LogVariable("Car VelocityYA",
-                delegate { return carARigidbody != null ? carARigidbody.velocity.y.ToString("F4") : " "; });
-            var velzA = new LogVariable("Car VelocityZA",
-                delegate { return carARigidbody != null ? carARigidbody.velocity.z.ToString("F4") : " "; });
 
-
-            var spxA = new LogVariable("Car PositionXA",
-                delegate { return CarA != null ? CarA.position.x.ToString("F4") : " "; });
-            var spyA = new LogVariable("Car PositionYA",
-                delegate { return CarA != null ? CarA.position.y.ToString("F4") : " "; });
-            var spzA = new LogVariable("Car PositionZA",
-                delegate { return CarA != null ? CarA.position.z.ToString("F4") : " "; });
-            var RotxA = new LogVariable("Car RotationXA",
-                delegate { return CarA != null ? CarA.rotation.eulerAngles.x.ToString("F4") : " "; });
-            var RotyA = new LogVariable("Car RotationYA",
-                delegate { return CarA != null ? CarA.rotation.eulerAngles.y.ToString("F4") : " "; });
-            var RotzA = new LogVariable("Car RotationZA",
-                delegate { return CarA != null ? CarA.rotation.eulerAngles.z.ToString("F4") : " "; });
-
-            
-            var spxB = new LogVariable("Car PositionXB",
-                delegate { return CarB != null ? CarB.position.x.ToString("F4") : " "; });
-            var spyB = new LogVariable("Car PositionYB",
-                delegate { return CarB != null ? CarB.position.y.ToString("F4") : " "; });
-            var spzB = new LogVariable("Car PositionZB",
-                delegate { return CarB != null ? CarB.position.z.ToString("F4") : " "; });
-            var RotxB = new LogVariable("Car RotationXB",
-                delegate { return CarB != null ? CarB.rotation.eulerAngles.x.ToString("F4") : " "; });
-            var RotyB = new LogVariable("Car RotationYB",
-                delegate { return CarB != null ? CarB.rotation.eulerAngles.y.ToString("F4") : " "; });
-            var RotzB = new LogVariable("Car RotationZB",
-                delegate { return CarB != null ? CarB.rotation.eulerAngles.z.ToString("F4") : " "; });
-
-            var velxB = new LogVariable("Car VelocityXB",
-                delegate { return carBRigidbody != null ? carBRigidbody.velocity.x.ToString("F4") : " "; });
-            var velyB = new LogVariable("Car VelocityYB",
-                delegate { return carBRigidbody != null ? carBRigidbody.velocity.y.ToString("F4") : " "; });
-           
-            var velzB = new LogVariable("Car VelocityZB",
-                delegate { return carBRigidbody != null ? carBRigidbody.velocity.z.ToString("F4") : " "; });
-
-            var AccelA = new LogVariable("AccelA",
-                delegate {
-                    return SteeringWheelManager.Singleton != null
-                        ? SteeringWheelManager.Singleton.GetAccelInput(ParticipantOrder.A).ToString("F4")
-                        : "";
-                });
-            var AccelB = new LogVariable("AccelB",
-                delegate {
-                    return SteeringWheelManager.Singleton != null
-                        ? SteeringWheelManager.Singleton.GetAccelInput(ParticipantOrder.B).ToString("F4")
-                        : "";
-                });
-
-            var SteerA = new LogVariable("SteerA",
-                delegate {
-                    return SteeringWheelManager.Singleton != null
-                        ? SteeringWheelManager.Singleton.GetSteerInput(ParticipantOrder.A).ToString("F4")
-                        : "";
-                });
-            var SteerB = new LogVariable("SteerB",
-                delegate {
-                    return SteeringWheelManager.Singleton != null
-                        ? SteeringWheelManager.Singleton.GetSteerInput(ParticipantOrder.B).ToString("F4")
-                        : "";
-                });
-
-            var ButtonA = new LogVariable("ButtonA",
-                delegate {
-                    return SteeringWheelManager.Singleton != null
-                        ? SteeringWheelManager.Singleton.GetHornInput(ParticipantOrder.A).ToString()
-                        : "";
-                });
-            var ButtonB = new LogVariable("ButtonB",
-                delegate {
-                    return SteeringWheelManager.Singleton != null
-                        ? SteeringWheelManager.Singleton.GetHornInput(ParticipantOrder.B).ToString()
-                        : "";
-                });
-
-
-            var IndicatorsA = new LogVariable("IndicatorsA",
-                delegate {
-                    return VehicleA != null
-                        ? VehicleA.GetIndicatorString()
-                        : "";
-                });
-            var IndicatorsB = new LogVariable("IndicatorsB",
-                delegate {
-                    return VehicleB != null
-                        ? VehicleB.GetIndicatorString()
-                        : "";
-                });
-
-            //Pedestrian Location
-            //Head location
-            //VectorHandDump
-
-
-            var HeadPosXA = new LogVariable("HeadPosXA",
-                delegate { return PlayerVRCenterA != null ? PlayerVRCenterA.position.x.ToString("F4") : " "; });
-            var HeadPosYA = new LogVariable("HeadPosYA",
-                delegate { return PlayerVRCenterA != null ? PlayerVRCenterA.position.y.ToString("F4") : " "; });
-            var HeadPosZA = new LogVariable("HeadPosZA",
-                delegate { return PlayerVRCenterA != null ? PlayerVRCenterA.position.z.ToString("F4") : " "; });
-            var HeadrotXA = new LogVariable("HeadrotXA",
-                delegate {
-                    return PlayerVRCenterA != null ? PlayerVRCenterA.rotation.eulerAngles.x.ToString("F4") : " ";
-                });
-            var HeadrotYA = new LogVariable("HeadrotYA",
-                delegate {
-                    return PlayerVRCenterA != null ? PlayerVRCenterA.rotation.eulerAngles.y.ToString("F4") : " ";
-                });
-            var HeadrotZA = new LogVariable("HeadrotZA",
-                delegate {
-                    return PlayerVRCenterA != null ? PlayerVRCenterA.rotation.eulerAngles.z.ToString("F4") : " ";
-                });
-
-
-            var HeadPosXB = new LogVariable("HeadPosXB",
-                delegate { return PlayerVRCenterB != null ? PlayerVRCenterB.position.x.ToString("F4") : " "; });
-            var HeadPosYB = new LogVariable("HeadPosYB",
-                delegate { return PlayerVRCenterB != null ? PlayerVRCenterB.position.y.ToString("F4") : " "; });
-            var HeadPosZB = new LogVariable("HeadPosZB",
-                delegate { return PlayerVRCenterB != null ? PlayerVRCenterB.position.z.ToString("F4") : " "; });
-
-            var HeadrotXB = new LogVariable("HeadrotXB",
-                delegate {
-                    return PlayerVRCenterB != null ? PlayerVRCenterB.rotation.eulerAngles.x.ToString("F4") : "";
-                });
-            var HeadrotYB = new LogVariable("HeadrotYB",
-                delegate {
-                    return PlayerVRCenterB != null ? PlayerVRCenterB.rotation.eulerAngles.y.ToString("F4") : "";
-                });
-            var HeadrotZB = new LogVariable("HeadrotZB",
-                delegate {
-                    return PlayerVRCenterB != null ? PlayerVRCenterB.rotation.eulerAngles.z.ToString("F4") : "";
-                });
-
-
-            var VRPosXA = new LogVariable("VRPosXA",
-                delegate { return PlayerHeadA != null ? PlayerHeadA.position.x.ToString("F4") : " "; });
-            var VRPosYA = new LogVariable("VRPosYA",
-                delegate { return PlayerHeadA != null ? PlayerHeadA.position.y.ToString("F4") : " "; });
-            var VRPosZA = new LogVariable("VRPosZA",
-                delegate { return PlayerHeadA != null ? PlayerHeadA.position.z.ToString("F4") : " "; });
-            var VRrotXA = new LogVariable("VRRotXA",
-                delegate { return PlayerHeadA != null ? PlayerHeadA.rotation.eulerAngles.x.ToString("F4") : " "; });
-            var VRrotYA = new LogVariable("VRRotYA",
-                delegate { return PlayerHeadA != null ? PlayerHeadA.rotation.eulerAngles.y.ToString("F4") : " "; });
-            var VRrotZA = new LogVariable("VRRotZA",
-                delegate { return PlayerHeadA != null ? PlayerHeadA.rotation.eulerAngles.z.ToString("F4") : " "; });
-
-
-            var VRPosXB = new LogVariable("VRPosXB",
-                delegate { return PlayerHeadB != null ? PlayerHeadB.position.x.ToString("F4") : " "; });
-            var VRPosYB = new LogVariable("VRPosYB",
-                delegate { return PlayerHeadB != null ? PlayerHeadB.position.y.ToString("F4") : " "; });
-            var VRPosZB = new LogVariable("VRPosZB",
-                delegate { return PlayerHeadB != null ? PlayerHeadB.position.z.ToString("F4") : " "; });
-            var VRrotXB = new LogVariable("VRRotXB",
-                delegate { return PlayerHeadB != null ? PlayerHeadB.rotation.eulerAngles.x.ToString("F4") : " "; });
-            var VRrotYB = new LogVariable("VRRotYB",
-                delegate { return PlayerHeadB != null ? PlayerHeadB.rotation.eulerAngles.y.ToString("F4") : " "; });
-            var VRrotZB = new LogVariable("VRRotZB",
-                delegate { return PlayerHeadB != null ? PlayerHeadB.rotation.eulerAngles.z.ToString("F4") : " "; });
-
-
-            var time = new LogVariable("GameTime", delegate { return Time.time.ToString("F2"); });
-            var realTime = new LogVariable("ScenarioTime",
-                delegate { return (Time.time - ScenarioStartTime).ToString("F4"); });
-            var Framerate = new LogVariable("FrameRate ",
-                delegate { return (1.0f / Time.smoothDeltaTime).ToString(); });
-            var FramerateNew = new LogVariable("FrameRate-XRDevice",
-                delegate { return (1.0f / XRDevice.refreshRate).ToString(); });
-
-            var frame = new LogVariable("Frame Number", delegate { return Time.frameCount.ToString(); });
 */
-
 #pragma warning restore 0219
         }
     }
@@ -282,56 +160,22 @@ public class farlab_logger : MonoBehaviour {
         doneSending = true;
     }
 
-    
+
     // Update is called once per frame
     private void Update() {
-        
         if (!RECORDING) return;
-/*
-        if (PlayerVRCenterA == null)
-            PlayerVRCenterA = ConnectionAndSpawning.Singleton.GetMainClientObject(ParticipantOrder.A);
-
-        if (PlayerVRCenterB == null)
-            PlayerVRCenterB = ConnectionAndSpawning.Singleton.GetMainClientObject(ParticipantOrder.B);
-
-
-        if (PlayerHeadA == null)
-            PlayerHeadA = ConnectionAndSpawning.Singleton.GetClientMainCameraObject(ParticipantOrder.A);
-
-        if (PlayerHeadB == null)
-            PlayerHeadB = ConnectionAndSpawning.Singleton.GetClientMainCameraObject(ParticipantOrder.B);
-
-*/
-    //    if (CarA == null) {
-     //       CarA = ConnectionAndSpawning.Singleton.GetInteractableObjects_For_Participants(ParticipantOrder.A).First()
-   //             .transform;
-        
-    //}
-    /*
-        else {
-            if (carARigidbody == null) carARigidbody = CarA.GetComponent<Rigidbody>();
-
-            if (VehicleA == null) VehicleA = CarA.GetComponent<NetworkVehicleController>();
-        }
-
-        if (CarB == null) {
-            CarB = ConnectionAndSpawning.Singleton.GetInteractableObjects_For_Participants(ParticipantOrder.B).First()
-                .transform;
-        }
-        else {
-            if (carBRigidbody == null) carBRigidbody = CarB.GetComponent<Rigidbody>();
-
-            if (VehicleB == null) VehicleB = CarB.GetComponent<NetworkVehicleController>();
-        }
-        */
     }
-    
+
 
     private void LateUpdate() {
         if (!RECORDING) return;
         if (NextUpdate < Time.time) {
             NextUpdate = Time.time + UpdatedFreqeuncy;
-            EnqueueData(LogVariable.GetVals());
+
+
+            var outVal = "";
+            foreach (var item in logItems) outVal += item.Serialize() + sep;
+            EnqueueData(outVal.TrimEnd(';') + "\n\r");
         }
     }
 
@@ -352,6 +196,8 @@ public class farlab_logger : MonoBehaviour {
         return true;
     }
 
+    private List<LogItem> logItems;
+
     public void StartRecording(RerunManager activeManager, string ScenarioName, string sessionName) {
         var folderpath = activeManager.GetCurrentFolderPath() + "/csv/";
         Directory.CreateDirectory(folderpath);
@@ -360,10 +206,153 @@ public class farlab_logger : MonoBehaviour {
                + "Scenario-" + ScenarioName + '_'
                + "Session-" + sessionName + '_'
                + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".csv";
-        InitLogs();
-        EnqueueData(LogVariable.GetHeader());
 
-        
+
+        InitLogs();
+        logItems = new List<LogItem>();
+
+        logItems.Add(new LogItem(null,
+            (refobj) => Time.time.ToString(Fpres),
+            "GameTime"
+        ));
+        logItems.Add(new LogItem(null,
+            (refobj) => (Time.time - ScenarioStartTime).ToString(Fpres),
+            "ScenarioTime"
+        ));
+        logItems.Add(new LogItem(null,
+            (refobj) => Time.smoothDeltaTime.ToString(Fpres),
+            "FrameRate"
+        ));
+        logItems.Add(new LogItem(null,
+            (refobj) => XRDevice.refreshRate.ToString(Fpres),
+            "FrameRate-XRDevice"
+        ));
+        logItems.Add(new LogItem(null,
+            (refobj) => Time.frameCount.ToString(),
+            "Frame Number"
+        ));
+
+
+        foreach (var vr in FindObjectsOfType<VR_Participant>()) {
+            logItems.Add(new LogItem(vr.GetMainCamera(),
+                PositonLog,
+                $"{vr.m_participantOrder} VR Pos"
+            ));
+
+            logItems.Add(new LogItem(vr.GetMainCamera(),
+                OrientationLog,
+                $"{vr.m_participantOrder} VR Rot"
+            ));
+
+            logItems.Add(new LogItem(vr.transform,
+                PositonLog,
+                $"{vr.m_participantOrder} XR Origin Pos"
+            ));
+
+            logItems.Add(new LogItem(vr.transform,
+                OrientationLog,
+                $"{vr.m_participantOrder} XR Origin  Rot"
+            ));
+        }
+
+
+        foreach (var car in FindObjectsOfType<NetworkVehicleController>()) {
+            logItems.Add(new LogItem(car.transform,
+                PositonLog,
+                $"{car.m_participantOrder.Value} car Pos"
+            ));
+
+            logItems.Add(new LogItem(car.transform,
+                OrientationLog,
+                $"{car.m_participantOrder.Value} car Rot"
+            ));
+
+            logItems.Add(new LogItem(car,
+                (refobj) => ((NetworkVehicleController)refobj).ThrottleInput.ToString(Fpres),
+                $"{car.m_participantOrder.Value} accel"
+            ));
+            logItems.Add(new LogItem(car,
+                (refobj) => ((NetworkVehicleController)refobj).SteeringInput.ToString(Fpres),
+                $"{car.m_participantOrder.Value} steering"
+            ));
+
+            logItems.Add(new LogItem(car.GetComponent<Rigidbody>(),
+                (refobj) => ((Rigidbody)refobj).velocity.ToString(Fpres),
+                $"{car.m_participantOrder.Value} velocity"
+            ));
+
+            logItems.Add(new LogItem(car,
+                (refobj) => ((NetworkVehicleController)refobj).GetIndicatorString(),
+                $"{car.m_participantOrder.Value} indicators"
+            ));
+
+            if (car.VehicleMode == NetworkVehicleController.VehicleOpperationMode.STEERINGWHEEL) {
+                logItems.Add(new LogItem(car,
+                    (refobj) => SteeringWheelManager.Singleton.GetButtonInput(car.m_participantOrder.Value).ToString(),
+                    $"{car.m_participantOrder.Value} Horn Button"
+                ));
+            }
+        }
+
+        foreach (var moco in FindObjectsOfType<Mocopie_Interactable>()) {
+            var avatar = moco.GetMocopiAvatar();
+            logItems.Add(new LogItem(avatar.transform,
+                PositonLog,
+                $"{moco.m_participantOrder.Value} Avatar Pos"
+            ));
+            logItems.Add(new LogItem(avatar.transform,
+                OrientationLog,
+                $"{moco.m_participantOrder.Value} Avatar Rot"
+            ));
+            foreach (var bone in BonesToTrack) {
+                Transform t_bone = avatar.Animator.GetBoneTransform(bone);
+                if (t_bone != null) {
+                    logItems.Add(new LogItem(t_bone,
+                        PositonLog,
+                        $"{moco.m_participantOrder.Value}  Bone Pos {bone}"
+                    ));
+                    logItems.Add(new LogItem(t_bone,
+                        OrientationLog,
+                        $"{moco.m_participantOrder.Value}  Bone Rot {bone}"
+                    ));
+                }
+                else {
+                    Debug.Log($"Skipping bone {bone}");
+                }
+            }
+        }
+
+        foreach (var hand in FindObjectsOfType<XRHandSkeletonDriver>()) {
+            var vrParticipant = hand.transform.GetComponentInParent<VR_Participant>();
+            Handedness l_handenness = hand.GetComponent<XRHandTrackingEvents>().handedness;
+            logItems.Add(new LogItem(hand.rootTransform,
+                PositonLog,
+                $"{vrParticipant.m_participantOrder} Root Hand Pos {l_handenness}"
+            ));
+            logItems.Add(new LogItem(hand.rootTransform,
+                OrientationLog,
+                $"{vrParticipant.m_participantOrder} Root Hand Rot {l_handenness}"
+            ));
+
+            for (int i = 0; i < hand.jointTransformReferences.Count; i++) {
+                var local = hand.jointTransformReferences[i];
+                logItems.Add(new LogItem(local.jointTransform,
+                    PositonLog,
+                    $"{vrParticipant.m_participantOrder} Hand Bone Pos {local.xrHandJointID} {l_handenness}"
+                ));
+                logItems.Add(new LogItem(local.jointTransform,
+                    OrientationLog,
+                    $"{vrParticipant.m_participantOrder} Hand Bone Rot {local.xrHandJointID} {l_handenness}"
+                ));
+            }
+        }
+
+
+        var outVal = "";
+        foreach (var item in logItems) outVal += item.GetJsonPropertyName() + sep;
+        EnqueueData(outVal.TrimEnd(';') + "\n\r");
+
+
         doneSending = false;
         isSending = true;
         send = new Thread(ContinuousDataSend);
@@ -373,6 +362,15 @@ public class farlab_logger : MonoBehaviour {
         RECORDING = true;
     }
 
+    private string PositonLog(object o) {
+        return ((Transform)o).position.ToString(Fpres);
+    }
+
+    private string OrientationLog(object o) {
+        return ((Transform)o).rotation.eulerAngles.ToString(Fpres);
+    }
+
+
     public IEnumerator StopRecording() {
         isSending = false;
         Debug.Log("Stopping Recording");
@@ -380,15 +378,6 @@ public class farlab_logger : MonoBehaviour {
 
         yield return new WaitUntil(() => doneSending);
 
-
-       // PlayerVRCenterA = null;
-      //  PlayerVRCenterB = null;
-       // CarA = null;
-        //CarB = null;
-       // carARigidbody = null;
-       // carBRigidbody = null;
-       // VehicleA = null;
-       // VehicleB = null;
         RECORDING = false;
         CloseLogs();
         Debug.Log("Stopped Recording");
@@ -437,13 +426,34 @@ public class farlab_logger : MonoBehaviour {
         }
 
         while (databuffer.TryDequeue(out dat)) DataSend(dat);
-
+        EnqueueData("]");
         doneSending = true;
         Debug.Log(dat);
     }
 
     public bool isRecording() {
         return RECORDING;
+    }
+
+
+    public class LogItem {
+        public object Reference { get; private set; }
+        private Func<object, string> logProducer;
+        private string jsonPropertyName;
+
+        public LogItem(object reference, Func<object, string> logProducer, string jsonPropertyName) {
+            this.Reference = reference;
+            this.logProducer = logProducer;
+            this.jsonPropertyName = jsonPropertyName;
+        }
+
+        public string Serialize() {
+            return logProducer(Reference);
+        }
+
+        public string GetJsonPropertyName() {
+            return jsonPropertyName;
+        }
     }
 
     /**
@@ -454,17 +464,19 @@ public class farlab_logger : MonoBehaviour {
      * for the variable values in the log file
      * 3) val - this is the value of the variable
      * 4) updateMethod - this is the method which is called to update the value of the variable. This method must return a string.
-     * 
+     *
      * To log a variable you need to provide three things :-
      * 1) Dataset ID
      * 2) Variable Name
      * 3) Update method or its value
      * Have a look at the examples in the Awake function.
      */
+    /*
     public class LogVariable {
         private static readonly List<LogVariable> allVars = new();
         private string name;
         private readonly Func<string> updateMethod;
+        private readonly Action referenceUpdateMethod;
         private string val;
 
 
@@ -476,9 +488,10 @@ public class farlab_logger : MonoBehaviour {
             allVars.Sort(CompareByName);
         }
 
-        public LogVariable(string header_name, Func<string> updtMethod) {
+        public LogVariable(string header_name, Func<string> updtMethod,Action refUpdtMethod) {
             name = header_name;
             updateMethod = updtMethod;
+            referenceUpdateMethod = refUpdtMethod;
 
             allVars.Add(this);
             allVars.Sort(CompareByName);
@@ -530,4 +543,5 @@ public class farlab_logger : MonoBehaviour {
             return val;
         }
     }
+    */
 }

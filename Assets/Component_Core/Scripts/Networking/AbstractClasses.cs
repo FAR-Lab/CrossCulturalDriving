@@ -5,7 +5,7 @@ using UnityEngine;
 
 public abstract class Interactable_Object : NetworkBehaviour {
 
-    public ParticipantOrder m_participantOrder { get; internal set; }
+    public NetworkVariable<ParticipantOrder> m_participantOrder = new NetworkVariable<ParticipantOrder>();
 
     public abstract void Stop_Action();
     public abstract void AssignClient(ulong CLID_, ParticipantOrder _participantOrder_);

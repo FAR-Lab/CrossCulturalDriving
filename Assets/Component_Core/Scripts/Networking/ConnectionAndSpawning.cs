@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
- using Mocopi.Receiver;
  using Rerun;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -220,9 +219,7 @@ using UnityEngine.Rendering;
     private void SetUpToServe(string pairName) {
         Application.targetFrameRate = 72;
 
-        var t =FindObjectOfType<MocopiStrangeLandSimpleReceiver>();
-        DontDestroyOnLoad(t.gameObject);
-        t.StartReceiving();
+      
         
         gameObject.AddComponent<SteeringWheelManager>();
         gameObject.AddComponent<farlab_logger>();
@@ -350,8 +347,7 @@ using UnityEngine.Rendering;
         Debug.Log(
             $"Log: Starting as Client. IP: {ip} Port: {port} Language: {_langIN} ParticipantOrder: {po} SpawnType: {_spawnTypeIN} JoinType: {_joinTypeIN}");
 
-        var t =FindObjectOfType<MocopiStrangeLandSimpleReceiver>();
-        Destroy(t.gameObject);
+       
         SetupClientFunctionality();
         ReponseHandler += result;
         SetupTransport(ip, port);
@@ -821,6 +817,7 @@ using UnityEngine.Rendering;
                 newInteractableObject.GetComponent<NetworkObject>().Spawn(true);
 
                 newInteractableObject.GetComponent<Interactable_Object>().AssignClient(clientID, po);
+                newInteractableObject.GetComponent<Interactable_Object>().m_participantOrder.Value = po; //ToDo unecessairy
                 Debug.Log(
                     $"Is the interactable Spawned here already: {newInteractableObject.GetComponent<Interactable_Object>().IsSpawned}");
                 Interactable_ParticipantObjects[po].Add(newInteractableObject.GetComponent<Interactable_Object>());

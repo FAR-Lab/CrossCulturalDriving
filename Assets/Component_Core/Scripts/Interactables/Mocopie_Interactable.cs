@@ -6,8 +6,9 @@ using UnityEngine.Serialization;
 
 
 public class Mocopie_Interactable : Interactable_Object {
-    private ParticipantOrder m_participantOrder;
 
+    public GameObject MocopiePrefab;
+  
     private ulong m_CLID;
     private Pose StartingPose;
 
@@ -17,14 +18,20 @@ public class Mocopie_Interactable : Interactable_Object {
     public Transform m_participantHead;
     public Transform m_mocopiHead;
     public Transform m_avatarT;
+    public MocopiSimpleReceiver m_mocopi;
     [FormerlySerializedAs("offset")] [Range(-0.5f,0.5f)]
     public float offsetUp;
     [Range(-0.5f,0.5f)]
     public float offsetFwd;
     private bool ready = false;
+    
+    
     // Start is called before the first frame update
     void Start() {
-        m_avatar = FindObjectOfType<MocopiAvatar>();
+        m_mocopi = Instantiate(MocopiePrefab).GetComponent<MocopiSimpleReceiver>();
+        
+        m_avatar = m_mocopi.transform.GetComponentInChildren<MocopiAvatar>();
+        
         if (m_avatar == null) {
             Debug.LogError("Not good I need an avatar!");
         }
@@ -33,7 +40,11 @@ public class Mocopie_Interactable : Interactable_Object {
                m_avatarT = m_avatar.transform;
                Debug.Log($"Got a head{m_mocopiHead} and a main T:{m_avatarT}");
            }
-        
+        m_mocopi.StartReceiving();
+    }
+
+    public MocopiAvatar GetMocopiAvatar() {
+        return m_avatar;
     }
 
     // Update is called once per frame
@@ -47,10 +58,7 @@ public class Mocopie_Interactable : Interactable_Object {
         float angle = Vector2.SignedAngle(new Vector2(m_participantHead.forward.x, m_participantHead.forward.z),
             new Vector2(m_mocopiHead.forward.x, m_mocopiHead.forward.z));
 
-
-
         m_avatarT.Rotate(Vector3.up, angle*0.1f);
-
     }
 
     public override void Stop_Action() {
@@ -58,7 +66,7 @@ public class Mocopie_Interactable : Interactable_Object {
     }
 
     public override void AssignClient(ulong CLID, ParticipantOrder participantOrder) {
-        m_participantOrder = participantOrder;
+        m_participantOrder.Value = participantOrder;
         m_CLID = CLID;
         m_participantHead = ConnectionAndSpawning.Singleton.GetClientMainCameraObject(participantOrder);
         ready = true;
@@ -75,5 +83,11 @@ public class Mocopie_Interactable : Interactable_Object {
 
     public override bool HasActionStopped() {
        return true;
+    }
+
+    public override void OnNetworkDespawn() {
+        m_mocopi.StopReceiving();
+        base.OnNetworkDespawn();
+        
     }
 }

@@ -205,8 +205,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300, y: -150}
-  m_SizeDelta: {x: 200, y: 100}
+  m_AnchoredPosition: {x: 600, y: -150}
+  m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5000001, y: 0.5000002}
 --- !u!114 &6079069886939708476
 MonoBehaviour:
@@ -267,8 +267,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -150}
-  m_SizeDelta: {x: 200, y: 100}
+  m_AnchoredPosition: {x: 200, y: -150}
+  m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2089348111898517893
 MonoBehaviour:
@@ -310,7 +310,7 @@ GameObject:
   - component: {fileID: 6403104962304894698}
   - component: {fileID: -4714652807012001135}
   m_Layer: 5
-  m_Name: UICanvas
+  m_Name: ResearcherUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -415,6 +415,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonTemplate_NoIcon: {fileID: 3515944757342328654, guid: 513b834bb59b7b24db02f103b4fec410, type: 3}
   buttonTemplate_HasIcon: {fileID: 3242158318489703190, guid: b18241012f6691a4da61112e65a8710c, type: 3}
+  PedestrianStartinIndicator: {fileID: 8832683885383544105, guid: 914a9a586db5dcc428ea846158417f15, type: 3}
+  Seperator: {fileID: 7429763630338978876, guid: 1516ca6b04dc7cf48ba0e1a541e26ce0, type: 3}
   scenarioButtons: {fileID: 7399415185468579429}
   driverCalibrationButtons: {fileID: 5529983264732784630}
   serverInformation: {fileID: 945453022474916959}
+  PedIndicator: {fileID: 0}

@@ -7,10 +7,14 @@ using UnityEngine;
 
 public class ScenarioManager : MonoBehaviour {
     public TextAsset QuestionairToAsk;
+    
+    public const string PedestrianSpawnPointLocationPathJson = "PedestrianSpawn.json";
 
 
    
-    public string conditionName;//ToDo: Automate this based on the scene name 
+    public  string ConditionName {
+        get { return gameObject.scene.name;}
+    }
 
 
     public SceneField VisualSceneToUse;
@@ -50,6 +54,8 @@ public class ScenarioManager : MonoBehaviour {
         return false;
         
     }
+
+   
 
     private void Start() {
        

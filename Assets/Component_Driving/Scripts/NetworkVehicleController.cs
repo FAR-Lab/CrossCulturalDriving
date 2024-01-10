@@ -225,7 +225,7 @@ public class NetworkVehicleController : Interactable_Object {
 
 
     public ParticipantOrder getParticipantOrder() {
-        return m_participantOrder;
+        return m_participantOrder.Value;
     }
 
     void Update() {
@@ -240,15 +240,15 @@ public class NetworkVehicleController : Interactable_Object {
                     ThrottleInput = Input.GetAxis("Vertical");
                     break;
                 case VehicleOpperationMode.STEERINGWHEEL:
-                    SteeringInput = SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder);
-                    ThrottleInput = SteeringWheelManager.Singleton.GetAccelInput(m_participantOrder);
+                    SteeringInput = SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder.Value);
+                    ThrottleInput = SteeringWheelManager.Singleton.GetAccelInput(m_participantOrder.Value);
                     TempLeft =
                         SteeringWheelManager.Singleton
-                            .GetLeftIndicatorInput(m_participantOrder);
+                            .GetLeftIndicatorInput(m_participantOrder.Value);
                     TempRight =
                         SteeringWheelManager.Singleton
-                            .GetRightIndicatorInput(m_participantOrder);
-                    TempHonk = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
+                            .GetRightIndicatorInput(m_participantOrder.Value);
+                    TempHonk = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder.Value);
 
 
                     break;
@@ -347,9 +347,9 @@ public class NetworkVehicleController : Interactable_Object {
         if (IsServer) {
             NetworkManager.SceneManager.OnSceneEvent += SceneManager_OnSceneEvent;
             CLID = CLID_;
-            m_participantOrder = _participantOrder_;
-            GetComponent<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder);
-            GetComponent<ForceFeedback>()?.Init(transform.GetComponent<Rigidbody>(), m_participantOrder);
+            m_participantOrder.Value = _participantOrder_;
+            GetComponent<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder.Value);
+            GetComponent<ForceFeedback>()?.Init(transform.GetComponent<Rigidbody>(), m_participantOrder.Value);
         }
         else {
             Debug.LogWarning("Tried to execute something that should never happen. ");
@@ -412,9 +412,9 @@ public class NetworkVehicleController : Interactable_Object {
 
 
     public void SetNewNavigationInstructions(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions) {
-        if (Directions.ContainsKey(m_participantOrder)) {
-            GetComponentInChildren<NavigationScreen>().SetDirection(Directions[m_participantOrder]);
-            SetNavigationScreenClientRPC(Directions[m_participantOrder]);
+        if (Directions.ContainsKey(m_participantOrder.Value)) {
+            GetComponentInChildren<NavigationScreen>().SetDirection(Directions[m_participantOrder.Value]);
+            SetNavigationScreenClientRPC(Directions[m_participantOrder.Value]);
         }
     }
 
@@ -524,7 +524,7 @@ public class NetworkVehicleController : Interactable_Object {
                         break;
                     case VehicleOpperationMode.STEERINGWHEEL:
                         if (SteeringWheelManager.Singleton != null &&
-                            Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder) * -450f) > 90) {
+                            Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder.Value) * -450f) > 90) {
                             indicaterStage = 3;
                         }
 
@@ -543,7 +543,7 @@ public class NetworkVehicleController : Interactable_Object {
                         break;
                     case VehicleOpperationMode.STEERINGWHEEL:
                         if (SteeringWheelManager.Singleton != null &&
-                            Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder) * -450f) < 10) {
+                            Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder.Value) * -450f) < 10) {
                             indicaterStage = 4;
                         }
 

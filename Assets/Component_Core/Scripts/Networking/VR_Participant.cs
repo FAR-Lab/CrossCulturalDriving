@@ -19,7 +19,7 @@ public class VR_Participant : Client_Object {
     public bool FinishedImageSending { get; private set; }
 
     //public Transform FollowTransform;
-    public Transform MyCamera;
+    private Transform MyCamera;
 
     public NetworkVariable<bool> ButtonPushed; // This is only active during QN time
 
@@ -55,7 +55,12 @@ public class VR_Participant : Client_Object {
                 }
                 break;
             case SpawnType.PEDESTRIAN:
-                GetComponent<PedestrianNavigationAudioCues>().SetNewNavigationInstructions(Directions, m_participantOrder);
+                var pnac = GetComponent<PedestrianNavigationAudioCues>();
+                if (pnac == null) {
+                    pnac = gameObject.AddComponent<PedestrianNavigationAudioCues>();
+                }
+                    
+                pnac.SetNewNavigationInstructions(Directions, m_participantOrder);
                 break;
             case SpawnType.PASSENGER:
                 var nvc2 = NetworkedInteractableObject.GetComponent<NetworkVehicleController>();
@@ -171,6 +176,10 @@ public class VR_Participant : Client_Object {
                     break;
                 case SpawnType.PEDESTRIAN:
                     //NetworkObject.TrySetParent(MyInteractableObject.NetworkObject, false);
+                    var pnac = GetComponent<PedestrianNavigationAudioCues>();
+                    if (pnac == null) {
+                        gameObject.AddComponent<PedestrianNavigationAudioCues>();
+                    }
                     //ToDo We might still have to move you to the active sceen (lighting and ReRun considerations... )
                     break;
                 case SpawnType.PASSENGER:
