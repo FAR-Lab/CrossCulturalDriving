@@ -177,10 +177,10 @@ GameObject:
   - component: {fileID: 495970}
   - component: {fileID: 5446136}
   - component: {fileID: 11415450}
+  - component: {fileID: 5308659446361930710}
   - component: {fileID: 114012480399126062}
   - component: {fileID: 11476574}
   - component: {fileID: 82318783350293580}
-  - component: {fileID: 5308659446361930710}
   - component: {fileID: 1995087181796789200}
   - component: {fileID: 2823791921960522932}
   - component: {fileID: -3837203089491521288}
@@ -419,6 +419,26 @@ MonoBehaviour:
   rtraction: 0
   rtractionR: 0
   roadType: 
+--- !u!114 &5308659446361930710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 554996312
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &114012480399126062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -431,6 +451,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b04d65719d2133409ece3889b7d53b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_participantOrder:
+    m_InternalValue: 0
   VehicleMode: 2
   CameraPosition: {fileID: 4056613939988268}
   Left:
@@ -581,26 +603,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5308659446361930710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 102736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &1995087181796789200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -712,7 +714,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bfca834460a1cc48a8c87a6929d6045, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UsePythonBackend: 0
+  Running: 0
   StartingWayPoint: {fileID: 0}
+  IntersectionCenterPosition: {fileID: 0}
 --- !u!114 &-7767813943838450789
 MonoBehaviour:
   m_ObjectHideFlags: 0
