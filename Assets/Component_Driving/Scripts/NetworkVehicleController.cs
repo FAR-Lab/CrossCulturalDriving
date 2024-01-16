@@ -289,21 +289,33 @@ public class NetworkVehicleController : Interactable_Object {
             _steeringAngle = SteeringInput * -450f;
 
 
-            if (TempLeft || TempRight) {
-                DualButtonDebounceIndicator = true;
-                if (TempLeft) {
+            if (NewButtonPress && (TempLeft || TempRight)) {
+                NewButtonPress = false;
+                if (TempLeft && ! TempRight) {
+                    toggleBlinking(true, false);
                     LeftIndicatorDebounce = true;
                 }
 
-                if (TempRight) {
+                else if (TempRight && !TempLeft) {
+                    toggleBlinking(false, true);
                     RightIndicatorDebounce = true;
                 }
+                else {
+                    
+                    toggleBlinking(true, true);
+                    BothIndicatorDebounce = true;
+                }
+                
+                
+            }else if (NewButtonPress == false && !BothIndicatorDebounce && ((TempLeft&& !LeftIndicatorDebounce) || (TempRight&& !RightIndicatorDebounce))) {
+                toggleBlinking(true, true);
+                BothIndicatorDebounce = true;
             }
-            else if (DualButtonDebounceIndicator && !TempLeft && !TempRight) {
-                startBlinking(LeftIndicatorDebounce, RightIndicatorDebounce);
-                DualButtonDebounceIndicator = false;
+            else if (NewButtonPress == false && !TempLeft && !TempRight) {
+                NewButtonPress = true;
                 LeftIndicatorDebounce = false;
                 RightIndicatorDebounce = false;
+                BothIndicatorDebounce = false;
             }
 
             UpdateIndicator();
@@ -431,21 +443,25 @@ public class NetworkVehicleController : Interactable_Object {
     private bool RightActive;
 
 
-    private bool LeftIsActuallyOn;
-    private bool RightIsActuallyOn;
-    private bool ActualLightOn;
+    public bool LeftIsActuallyOn;
+    public bool RightIsActuallyOn;
+    public bool ActualLightOn;
     private float indicaterTimer;
     public float interval;
-    private int indicaterStage;
+    public int indicaterStage;
 
-    private bool DualButtonDebounceIndicator;
-    private bool LeftIndicatorDebounce;
-    private bool RightIndicatorDebounce;
-   
+    public bool NewButtonPress;
+    public bool LeftIndicatorDebounce;
+    public bool RightIndicatorDebounce;
+    public bool BothIndicatorDebounce;
 
-    void startBlinking(bool left, bool right) {
-        indicaterStage = 1;
-        if (left == right == true) {
+    void toggleBlinking(bool left, bool right) {
+        if (indicaterStage == 0) {
+            indicaterStage = 1;
+            
+        }
+        
+        if (left && right ) {
             if (LeftIsActuallyOn != true || RightIsActuallyOn != true) {
                 LeftIsActuallyOn = true;
                 RightIsActuallyOn = true;
@@ -453,17 +469,17 @@ public class NetworkVehicleController : Interactable_Object {
             else if (LeftIsActuallyOn == RightIsActuallyOn == true) {
                 RightIsActuallyOn = false;
                 LeftIsActuallyOn = false;
+                indicaterStage = 4;
             }
         }
 
         if (left != right) {
-            if (LeftIsActuallyOn == RightIsActuallyOn ==
-                true) // When we are returning from the hazard lights we make sure that not the inverse thing turns on
+            if (LeftIsActuallyOn && RightIsActuallyOn) 
             {
                 LeftIsActuallyOn = false;
                 RightIsActuallyOn = false;
+                indicaterStage = 4;
             }
-
             if (left) {
                 if (!LeftIsActuallyOn) {
                     LeftIsActuallyOn = true;
@@ -471,6 +487,7 @@ public class NetworkVehicleController : Interactable_Object {
                 }
                 else {
                     LeftIsActuallyOn = false;
+                    indicaterStage = 4;
                 }
             }
 
@@ -481,6 +498,7 @@ public class NetworkVehicleController : Interactable_Object {
                 }
                 else {
                     RightIsActuallyOn = false;
+                    indicaterStage = 4;
                 }
             }
         }

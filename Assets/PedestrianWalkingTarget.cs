@@ -9,7 +9,8 @@ public class PedestrianWalkingTarget : NetworkBehaviour {
 
   
     private MeshRenderer m_MeshRenderer;
-     
+
+    private SpriteRenderer m_SpriteRenderer;
     // Start is called before the first frame update
     private void Awake() {
         DontDestroyOnLoad(this);
@@ -17,20 +18,60 @@ public class PedestrianWalkingTarget : NetworkBehaviour {
 
     void Start() {
         m_MeshRenderer = GetComponentInChildren<MeshRenderer>();
-        m_MeshRenderer.enabled = true;
-        
+
+        m_SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+    }
+
+    public override void OnNetworkSpawn() {
+        base.OnNetworkSpawn();
+        ConnectionAndSpawning.Singleton.ServerStateChange += EnableDisableFunction;
+    }
+
+    private void EnableDisableFunction(ActionState state) {
+        Debug.Log($"The Pedestrianwalking sign got toled that we now{state}");
+        switch (state) {
+            case ActionState.DEFAULT:
+                break;
+            case ActionState.WAITINGROOM:
+                server_SetShowing(true);
+                break;
+            case ActionState.LOADINGSCENARIO:
+                break;
+            case ActionState.LOADINGVISUALS:
+                break;
+            case ActionState.READY:
+                server_SetShowing(false);
+                break;
+            case ActionState.DRIVE:
+                break;
+            case ActionState.QUESTIONS:
+                break;
+            case ActionState.POSTQUESTIONS:
+                break;
+            case ActionState.RERUN:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(state), state, null);
+        }
+
+    }
+
+    public override void OnNetworkDespawn() {
+        base.OnNetworkDespawn();
+       // ConnectionAndSpawning.Singleton.ServerStateChange -= EnableDisableFunction;
     }
 
 
-    private void server_StartShowing() {
-        m_MeshRenderer.enabled = true;
-        StartShowingClientRPC();
+    private void server_SetShowing(bool val) {
+        m_MeshRenderer.enabled = val;
+        m_SpriteRenderer.enabled = val;
+        SetShowingClientRPC(val);
     }
 
     [ClientRpc]
-    private void StartShowingClientRPC() {
-        var t = VR_Participant.GetJoinTypeObject();
+    private void SetShowingClientRPC(bool val) {
         m_MeshRenderer.enabled = true;
+        m_SpriteRenderer.enabled = val;
     }
     
 }

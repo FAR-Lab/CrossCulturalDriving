@@ -212,7 +212,7 @@ public class farlab_logger : MonoBehaviour {
         logItems = new List<LogItem>();
 
         logItems.Add(new LogItem(null,
-            (refobj) => Time.time.ToString(Fpres),
+            (refobj) => Time.time.ToString(Fpres), 
             "GameTime"
         ));
         logItems.Add(new LogItem(null,
