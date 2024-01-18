@@ -39,6 +39,15 @@ public class NetworkVehicleController : Interactable_Object {
     public Material LightsOff;
     public Material BrakelightsOn;
 
+    public List<Renderer> beamLightGlasses;
+    private List<Material> _beamLightGlassMaterialInstances = new List<Material>();
+    public Color beamLightGlassOnColor;
+    public Color beamLightGlassOffColor;
+    
+    public List<Renderer> beamLights;
+    private List<Material> _beamLightMaterialInstances = new List<Material>();
+    
+
 
     public AudioSource HonkSound;
     public float SteeringInput;
@@ -108,6 +117,16 @@ public class NetworkVehicleController : Interactable_Object {
     private void Start() {
         indicaterStage = 0;
 
+        foreach (Renderer tmpRenderer in beamLights) {
+            Debug.Log(tmpRenderer.materials[0]);
+            _beamLightMaterialInstances.Add(tmpRenderer.materials[0]);
+        }
+        
+        foreach (Renderer tmpRenderer in beamLightGlasses) {
+            _beamLightGlassMaterialInstances.Add(tmpRenderer.materials[0]);
+        }
+        
+        
         HonkSound = GetComponent<AudioSource>();
 
         foreach (Transform t in Left) {
@@ -217,6 +236,26 @@ public class NetworkVehicleController : Interactable_Object {
             controller.steerInput = SteeringInput;
             controller.accellInput = ThrottleInput;
         }
+        
+        // test
+        if (Input.GetKeyDown(KeyCode.Keypad1)) {
+            foreach (Material mat in _beamLightMaterialInstances) {
+                mat.SetFloat("_Opacity", 2);
+            }
+            
+            foreach (Material mat in _beamLightGlassMaterialInstances) {
+                mat.SetColor("_Color", beamLightGlassOnColor);
+            }
+        }
+        if(Input.GetKeyDown(KeyCode.Keypad2)){
+            foreach (Material mat in _beamLightMaterialInstances) {
+                mat.SetFloat("_Opacity", 0);
+            }
+            
+            foreach (Material mat in _beamLightGlassMaterialInstances) {
+                mat.SetColor("_Color", beamLightGlassOffColor);
+            }
+        }
     }
 
 
@@ -232,7 +271,7 @@ public class NetworkVehicleController : Interactable_Object {
         if (!IsServer) return;
 
         if (ConnectionAndSpawning.Singleton.ServerState == ActionState.DRIVE) {
-            bool TempLeft = false, TempRight = false, TempHonk = false;
+            bool tempLeft = false, tempRight = false, tempHonk = false, tempHighBeam =false;
 
             switch (VehicleMode) {
                 case VehicleOpperationMode.KEYBOARD:
@@ -242,24 +281,24 @@ public class NetworkVehicleController : Interactable_Object {
                 case VehicleOpperationMode.STEERINGWHEEL:
                     SteeringInput = SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder.Value);
                     ThrottleInput = SteeringWheelManager.Singleton.GetAccelInput(m_participantOrder.Value);
-                    TempLeft =
+                    tempLeft =
                         SteeringWheelManager.Singleton
                             .GetLeftIndicatorInput(m_participantOrder.Value);
-                    TempRight =
+                    tempRight =
                         SteeringWheelManager.Singleton
                             .GetRightIndicatorInput(m_participantOrder.Value);
-                    TempHonk = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder.Value);
-
+                    tempHonk = SteeringWheelManager.Singleton.GetHornButtonInput(m_participantOrder.Value);
+                    tempHighBeam = SteeringWheelManager.Singleton.GetHighBeamButtonInput(m_participantOrder.Value);
 
                     break;
                 case VehicleOpperationMode.AUTONOMOUS:
 
                     SteeringInput = _autonomousVehicleDriver.GetSteerInput();
                     ThrottleInput = _autonomousVehicleDriver.GetAccelInput();
-                    TempLeft = _autonomousVehicleDriver
+                    tempLeft = _autonomousVehicleDriver
                         .GetLeftIndicatorInput();
-                    TempRight = _autonomousVehicleDriver.GetRightIndicatorInput();
-                    TempHonk = _autonomousVehicleDriver.GetHornInput();
+                    tempRight = _autonomousVehicleDriver.GetRightIndicatorInput();
+                    tempHonk = _autonomousVehicleDriver.GetHornInput();
 
                     if (_autonomousVehicleDriver.StopIndicating()) {
                         _StopIndicating();
@@ -271,9 +310,9 @@ public class NetworkVehicleController : Interactable_Object {
                     if (REMOTEKEYBOARD_NewData) {
                         REMOTEKEYBOARD_NewData = false;
 
-                        TempLeft = leftInput;
-                        TempRight = rightInput;
-                        TempHonk = honkInput;
+                        tempLeft = leftInput;
+                        tempRight = rightInput;
+                        tempHonk = honkInput;
                         
                     };
                     
@@ -289,14 +328,14 @@ public class NetworkVehicleController : Interactable_Object {
             _steeringAngle = SteeringInput * -450f;
 
 
-            if (NewButtonPress && (TempLeft || TempRight)) {
+            if (NewButtonPress && (tempLeft || tempRight)) {
                 NewButtonPress = false;
-                if (TempLeft && ! TempRight) {
+                if (tempLeft && ! tempRight) {
                     toggleBlinking(true, false);
                     LeftIndicatorDebounce = true;
                 }
 
-                else if (TempRight && !TempLeft) {
+                else if (tempRight && !tempLeft) {
                     toggleBlinking(false, true);
                     RightIndicatorDebounce = true;
                 }
@@ -307,11 +346,11 @@ public class NetworkVehicleController : Interactable_Object {
                 }
                 
                 
-            }else if (NewButtonPress == false && !BothIndicatorDebounce && ((TempLeft&& !LeftIndicatorDebounce) || (TempRight&& !RightIndicatorDebounce))) {
+            }else if (NewButtonPress == false && !BothIndicatorDebounce && ((tempLeft&& !LeftIndicatorDebounce) || (tempRight&& !RightIndicatorDebounce))) {
                 toggleBlinking(true, true);
                 BothIndicatorDebounce = true;
             }
-            else if (NewButtonPress == false && !TempLeft && !TempRight) {
+            else if (NewButtonPress == false && !tempLeft && !tempRight) {
                 NewButtonPress = true;
                 LeftIndicatorDebounce = false;
                 RightIndicatorDebounce = false;
@@ -321,9 +360,10 @@ public class NetworkVehicleController : Interactable_Object {
             UpdateIndicator();
 
 
-            if (TempHonk) {
+            if (tempHonk) {
                 HonkMyCar();
             }
+            HighBeamMyCar(tempHighBeam);
 
             if (ThrottleInput < 0 && !breakIsOn) {
                 TurnOnBrakeLightLocalServer(true);
@@ -412,13 +452,41 @@ public class NetworkVehicleController : Interactable_Object {
     private bool breakIsOn;
 
 
+    private bool m_HighBeams;
+    public void HighBeamMyCar(bool tempHighBeam) {
+        if (m_HighBeams == tempHighBeam) return;
+        else {
+            if (tempHighBeam) {
+                foreach (Material mat in _beamLightMaterialInstances) {
+                    mat.SetFloat("_Opacity", 2);
+                }
+            
+                foreach (Material mat in _beamLightGlassMaterialInstances) {
+                    mat.SetColor("_Color", beamLightGlassOnColor);
+                }
+            }
+            else{
+                foreach (Material mat in _beamLightMaterialInstances) {
+                    mat.SetFloat("_Opacity", 0);
+                }
+            
+                foreach (Material mat in _beamLightGlassMaterialInstances) {
+                    mat.SetColor("_Color", beamLightGlassOffColor);
+                }
+            }
+        }
+
+        m_HighBeams = tempHighBeam;
+
+    }
+    
+
     public void HonkMyCar() {
         if (HonkSound.isPlaying) {
             return;
         }
 
         HonkSound.Play();
-        //  Debug.Log("HonkMyCarServerRpc");
         HonkMyCarClientRpc();
     }
 

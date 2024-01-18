@@ -288,7 +288,7 @@ public class farlab_logger : MonoBehaviour {
 
             if (car.VehicleMode == NetworkVehicleController.VehicleOpperationMode.STEERINGWHEEL) {
                 logItems.Add(new LogItem(car,
-                    (refobj) => SteeringWheelManager.Singleton.GetButtonInput(car.m_participantOrder.Value).ToString(),
+                    (refobj) => SteeringWheelManager.Singleton.GetHornButtonInput(car.m_participantOrder.Value).ToString(),
                     $"{car.m_participantOrder.Value} Horn Button"
                 ));
             }

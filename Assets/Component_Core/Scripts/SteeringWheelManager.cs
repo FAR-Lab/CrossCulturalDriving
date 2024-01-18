@@ -32,8 +32,8 @@ public class SteeringWheelManager : MonoBehaviour
 
         public bool L_IndSwitch;
         public bool R_IndSwitch;
-        public bool OtherButton;
-
+        public bool HornButton;
+        public bool HighBeamButton;
         public SteeringWheelData(int index)
         {
             steerInput = 0f;
@@ -49,7 +49,8 @@ public class SteeringWheelManager : MonoBehaviour
             running = false;
             L_IndSwitch = false;
             R_IndSwitch = false;
-            OtherButton = false;
+            HornButton = false;
+            HighBeamButton = false;
         }
     }
 
@@ -283,7 +284,7 @@ public class SteeringWheelManager : MonoBehaviour
 
     private ParticipantOrder CallibrationTarget = ParticipantOrder.None;
 
-    public void OnGUI()
+    public void OnGUI() // ToDo turn this into a canvas interface
     {
         if (ConnectionAndSpawning.Singleton.ServerState == ActionState.WAITINGROOM)
         {
@@ -291,7 +292,7 @@ public class SteeringWheelManager : MonoBehaviour
             {
                 foreach (SteeringWheelData swd in ActiveWheels.Values)
                 {
-                    if (swd.OtherButton)
+                    if (swd.HornButton)
                     {
                         switchSteeringWheels(swd.wheelIndex, CallibrationTarget);
                         CallibrationTarget = ParticipantOrder.None;
@@ -415,17 +416,16 @@ public class SteeringWheelManager : MonoBehaviour
             swd.L_IndSwitch = state.rgbButtons[5] > 0;
             swd.R_IndSwitch = state.rgbButtons[4] > 0;
 
-            swd.OtherButton =
+            swd.HornButton =
                 state.rgbButtons[0] > 0 ||
                 state.rgbButtons[1] > 0 ||
                 state.rgbButtons[2] > 0 ||
                 state.rgbButtons[3] > 0 ||
                 state.rgbButtons[6] > 0 ||
-                state.rgbButtons[7] > 0 ||
-                state.rgbButtons[10] > 0 ||
                 state.rgbButtons[11] > 0 ||
                 state.rgbButtons[23] > 0;
-
+            swd.HighBeamButton = state.rgbButtons[7] > 0 ||
+                                 state.rgbButtons[10] > 0;
             
             if (swd.forceFeedbackPlaying)
             {
@@ -491,11 +491,11 @@ public class SteeringWheelManager : MonoBehaviour
         }
     }
 
-    public bool GetButtonInput(ParticipantOrder po)
+    public bool GetHornButtonInput(ParticipantOrder po)
     {
         if (ActiveWheels.ContainsKey(po))
         {
-            return ActiveWheels[po].OtherButton;
+            return ActiveWheels[po].HornButton;
         }
 
         if (po == ParticipantOrder.A && Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.LeftShift))
@@ -506,6 +506,16 @@ public class SteeringWheelManager : MonoBehaviour
         if (po == ParticipantOrder.B && Input.GetKey(KeyCode.B) && Input.GetKey(KeyCode.LeftShift))
         {
             return true;
+        }
+
+        return false;
+    }
+    
+    public bool GetHighBeamButtonInput(ParticipantOrder po)
+    {
+        if (ActiveWheels.ContainsKey(po))
+        {
+            return ActiveWheels[po].HornButton;
         }
 
         return false;

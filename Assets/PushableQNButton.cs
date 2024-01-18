@@ -10,6 +10,7 @@ public class PushableQNButton : MonoBehaviour {
     public string _Answer;
     private string _SecretCharacter;
     private int AnswerIndex;
+    private bool _useImage;
     
     // Start is called before the first frame update
     void Start() {
@@ -19,12 +20,13 @@ public class PushableQNButton : MonoBehaviour {
     public delegate void FinishedCallBack(int AnswerIndex);
 
     private FinishedCallBack m_callback;
-    public void initButton(string Answer, int AnswerIndex_, FinishedCallBack _callback) {
+    public void initButton(string Answer, int AnswerIndex_, FinishedCallBack _callback, bool useImage) {
         _Answer = Answer;
         AnswerIndex = AnswerIndex_;
         m_TextObject.text = _Answer;
         m_callback = _callback;
         m_button.onClick.AddListener(()=>m_callback(AnswerIndex_));
+        this._useImage = useImage;
     }
 
     

@@ -40,7 +40,7 @@ public class VR_Participant : Client_Object {
  
     private void Update() {
         if (IsServer) {
-            ButtonPushed.Value = SteeringWheelManager.Singleton.GetButtonInput(m_participantOrder);
+            ButtonPushed.Value = SteeringWheelManager.Singleton.GetHornButtonInput(m_participantOrder);
         }
     }
 

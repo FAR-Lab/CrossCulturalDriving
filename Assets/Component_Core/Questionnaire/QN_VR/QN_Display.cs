@@ -26,7 +26,7 @@ public class QN_Display : NetworkBehaviour {
 
     public enum QNStates {
         IDLE,
-        WAITINGFORQUESTION,
+        WAITINGFORQUESTION, 
         LOADINGQUESTION,
         RESPONSEWAIT,
         FINISH
@@ -48,7 +48,7 @@ public class QN_Display : NetworkBehaviour {
     private NetworkedQuestionnaireQuestion currentActiveQustion;
 
 
-    public VerticalLayoutGroup m_VerticalLayoutGroup;
+    public LayoutGroup m_LayoutGroup;
     private int _answerCount;
     private int _totalCount;
 
@@ -236,10 +236,10 @@ public class QN_Display : NetworkBehaviour {
                 var i = 0;
 
                 foreach (var a in currentActiveQustion.Answers.Keys) {
-                    var rcb = Instantiate(ButtonPrefab, m_VerticalLayoutGroup.transform).transform
+                    var rcb = Instantiate(ButtonPrefab, m_LayoutGroup.transform).transform
                         .GetComponentInChildren<PushableQNButton>();
                     
-                    rcb.initButton(SetText(currentActiveQustion.Answers[a]), a, this.OnAnswerClickedHandler);
+                    rcb.initButton(SetText(currentActiveQustion.Answers[a]), a, this.OnAnswerClickedHandler, false);
                     AnswerFields.Add(rcb.transform);
                     
                    // rcb.transform.transform

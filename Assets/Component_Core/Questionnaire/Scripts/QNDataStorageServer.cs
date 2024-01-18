@@ -70,7 +70,6 @@ public class QNDataStorageServer : MonoBehaviour {
                 first = false;
                 StartID = q.getInteralID() - 1; // Start ID to move forward.
             }
-
             activeQuestionList.Add(q.getInteralID(), q);
         }
 
