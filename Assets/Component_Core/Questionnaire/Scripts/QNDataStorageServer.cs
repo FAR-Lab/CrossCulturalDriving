@@ -72,6 +72,16 @@ public class QNDataStorageServer : MonoBehaviour {
             }
             activeQuestionList.Add(q.getInteralID(), q);
         }
+        
+        /*
+        foreach (var a in activeQuestionList[0].Answers) {
+            Debug.Log(a.index);
+            foreach (var v in a.AnswerText.Values) {
+                Debug.Log(v);
+            }
+            Debug.Log(a.AnswerImage);
+        }
+        */
 
 
         foreach (ParticipantOrder po in ConnectionAndSpawning.Singleton.GetCurrentlyConnectedClients()) {
@@ -198,10 +208,18 @@ public class QNDataStorageServer : MonoBehaviour {
                 CurrentScenarioLog.QuestionResults.Add(id, new QuestionLog(activeQuestionList[id]));
             }
 
+            string AnswerTextTMP = "";
+            var tmp = activeQuestionList[id].Answers.First(s => s.index == answerIndex); 
+            if (tmp.AnswerImage?.Length>0) {
+                AnswerTextTMP = tmp.AnswerImage;
+
+            }else {
+                AnswerTextTMP = tmp.AnswerText[LogLanguage];
+            }
+
             QuestionLog.ParticipantsAnswerReponse response = new QuestionLog.ParticipantsAnswerReponse {
                 AnswerId = answerIndex,
-                AnswerText = activeQuestionList[id].Answers.First(s => s.index == answerIndex)
-                    .AnswerText[LogLanguage],
+                AnswerText = AnswerTextTMP,
                 StartTimeQuestion = LastParticipantStartTimes[po],
                 StopTimeQuestion = DateTime.Now,
                 Attempts = 1
@@ -259,8 +277,9 @@ public class QNDataStorageServer : MonoBehaviour {
         val++;
 
         while (activeQuestionList.ContainsKey(val) && !activeQuestionList[val].ContainsOrder(po)) {
-            val++;
             Debug.Log($"Looking for a next relevant question! {val}. {activeQuestionList[val].ContainsOrder(po)}");
+
+            val++;
         }
 
         NetworkedQuestionnaireQuestion outval;

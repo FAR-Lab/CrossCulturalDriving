@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -73,6 +74,7 @@ public class ObjAnswer {
     public int index { get; set; } //This property define the order of the answers
     public Dictionary<string, string> AnswerText { get; set; }
     public bool FinishQN { get; set; }
+    public string AnswerImage { get; set; }
 }
 
 public class QuestionnaireQuestion {
@@ -163,15 +165,20 @@ public class QuestionnaireQuestion {
         var outVal = NetworkedQuestionnaireQuestion.GetDefaultNQQ();
         
         foreach (var a in Answers) {
-            
-            if (a.AnswerText.Keys.Contains(lang)) {
-                outVal.Answers.Add(a.index, a.AnswerText[lang]);
+
+            if (a.AnswerText != null) {
+                if (a.AnswerText.Keys.Contains(lang)) {
+                    outVal.Answers.Add(a.index, a.AnswerText[lang]);
+                }
+                else {
+                    Debug.Log(
+                        "Did not find Answer for requested language. please fix Data and results will be incomplete!: " +
+                        lang + " id:" + a.index);
+                }
             }
 
-            else {
-                Debug.Log(
-                    "Did not find Answer for requested language. please fix Data and results will be incomplete!: " +
-                    lang + " id:" + a.index);
+            if (a.AnswerImage != null) {
+                outVal.AnswerImages.Add(a.index, a.AnswerImage);
             }
         }
 
@@ -204,6 +211,7 @@ public struct NetworkedQuestionnaireQuestion : INetworkSerializable {
     public string QuestionText;
     public replyType reply;
     public Dictionary<int, string> Answers;
+    public Dictionary<int, string> AnswerImages;
     public string QnImagePath;
 
     public NetworkedQuestionnaireQuestion(int ID_, replyType reply_, string QuestionText_, string QnImagePath_) {
@@ -211,6 +219,7 @@ public struct NetworkedQuestionnaireQuestion : INetworkSerializable {
         reply = reply_;
         QuestionText = QuestionText_;
         Answers = new Dictionary<int, string>();
+        AnswerImages = new Dictionary<int, string>();
         QnImagePath = QnImagePath_;
     }
 
@@ -224,24 +233,56 @@ public struct NetworkedQuestionnaireQuestion : INetworkSerializable {
         serializer.SerializeValue(ref ID);
         serializer.SerializeValue(ref QuestionText);
         serializer.SerializeValue(ref reply);
-        serializer.SerializeValue(ref QnImagePath);
 
         var length = 0;
+        bool useImages = false;
+        
+        if (!serializer.IsReader) {
+            Debug.Log($"TTAnswer:{Answers.Count}");
+            Debug.Log($"TTAnswerImage:{AnswerImages.Count}");
 
-        if (!serializer.IsReader) length = Answers.Count;
+            
+            if (Answers.Count == 0) {
+                length = AnswerImages.Count;
+                useImages = true;
+            }
+            else if (AnswerImages.Count == 0) {
+                length = Answers.Count;
+                useImages = false;
+            }
+            else {
+                Debug.LogWarning($"There is a mix of images and texts for this question! Please take a look.");
+            }
+        }
 
         serializer.SerializeValue(ref length);
-
+        serializer.SerializeValue(ref useImages);
+        
         var qIDs = new int[length];
         var answers = new string[length];
 
 
         if (!serializer.IsReader) {
             var count = 0;
-            foreach (var pair in Answers) {
-                qIDs[count] = pair.Key;
-                answers[count] = pair.Value;
-                count++;
+            if(useImages)
+            {            
+                Debug.Log($"Tet useImages");
+
+                foreach (var pair in AnswerImages) {
+                    qIDs[count] = pair.Key;
+                    answers[count] = pair.Value;
+                    count++;
+                }
+            }
+            else {
+                Debug.Log($"Tet NotUseImages");
+
+                foreach (var pair in Answers) {
+                    qIDs[count] = pair.Key;
+                    answers[count] = pair.Value;
+                    count++;
+                    Debug.Log($"{pair.Key}, {pair.Value}");
+                }
             }
         }
 
@@ -251,8 +292,22 @@ public struct NetworkedQuestionnaireQuestion : INetworkSerializable {
         }
 
         if (serializer.IsReader) {
-            Answers = new Dictionary<int, string>();
-            for (var n = 0; n < length; ++n) Answers.Add(qIDs[n], answers[n]);
+            if (useImages) {
+                AnswerImages = new Dictionary<int, string>();
+                for (var n = 0; n < length; ++n) {
+                    Debug.Log($"Adding{qIDs[n]}, {answers[n]} to Image");
+                    AnswerImages.Add(qIDs[n], answers[n]);
+                    
+                }
+            }
+            else {
+                Answers = new Dictionary<int, string>();
+                for (var n = 0; n < length; ++n) {
+                    Debug.Log($"Adding{qIDs[n]}, {answers[n]} to Text");
+
+                    Answers.Add(qIDs[n], answers[n]);
+                }
+            }
         }
     }
 }

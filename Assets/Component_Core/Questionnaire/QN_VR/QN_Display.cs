@@ -48,9 +48,12 @@ public class QN_Display : NetworkBehaviour {
     private NetworkedQuestionnaireQuestion currentActiveQustion;
 
 
-    public LayoutGroup m_LayoutGroup;
+    public GridLayoutGroup m_GridLayoutGroup;
+    public VerticalLayoutGroup m_VerticalLayoutGroup;
     private int _answerCount;
     private int _totalCount;
+    
+    
 
 #if debug
     public List<TextAsset> QNFiles;
@@ -218,42 +221,44 @@ public class QN_Display : NetworkBehaviour {
 
                 QustionField.text = SetText(currentActiveQustion.QuestionText);
 
-                if (currentActiveQustion.QnImagePath.Length > 0) {
-                    try {
-                        AddImage(Resources.Load<Texture2D>(currentActiveQustion.QnImagePath));
-                    }
-                    catch (Exception e) {
-                        Debug.LogWarning(
-                            "I tried to add an image but did not find the image in the referenced path (or something similar). The path was: " +
-                            currentActiveQustion.QnImagePath + e);
-                        if (newImageHolder != null) newImageHolder.gameObject.SetActive(false);
+                // if (currentActiveQustion.QnImagePath.Length > 0) {
+                //     try {
+                //         AddImage(Resources.Load<Texture2D>(currentActiveQustion.QnImagePath));
+                //     }
+                //     catch (Exception e) {
+                //         Debug.LogWarning(
+                //             "I tried to add an image but did not find the image in the referenced path (or something similar). The path was: " +
+                //             currentActiveQustion.QnImagePath + e);
+                //         if (newImageHolder != null) newImageHolder.gameObject.SetActive(false);
+                //     }
+                // }
+                // else {
+                //     if (newImageHolder != null) newImageHolder.gameObject.SetActive(false);
+                // }
+                
+                if (currentActiveQustion.Answers != null) {
+                    if (currentActiveQustion.Answers.Count != 0) {
+                        foreach (var a in currentActiveQustion.Answers.Keys) {
+                            var rcb = Instantiate(ButtonPrefab, m_VerticalLayoutGroup.transform).transform
+                                .GetComponentInChildren<PushableQNButton>();
+                    
+                            rcb.initButton(SetText(currentActiveQustion.Answers[a]), a, this.OnAnswerClickedHandler, "");
+                            AnswerFields.Add(rcb.transform);
+                        }
                     }
                 }
-                else {
-                    if (newImageHolder != null) newImageHolder.gameObject.SetActive(false);
-                }
 
-                var i = 0;
+                if (currentActiveQustion.AnswerImages != null) {
+                    if (currentActiveQustion.AnswerImages.Count != 0) {
+                        foreach (var a in currentActiveQustion.AnswerImages.Keys) {
+                            var rcb = Instantiate(ButtonPrefab, m_GridLayoutGroup.transform).transform
+                                .GetComponentInChildren<PushableQNButton>();
 
-                foreach (var a in currentActiveQustion.Answers.Keys) {
-                    var rcb = Instantiate(ButtonPrefab, m_LayoutGroup.transform).transform
-                        .GetComponentInChildren<PushableQNButton>();
-                    
-                    rcb.initButton(SetText(currentActiveQustion.Answers[a]), a, this.OnAnswerClickedHandler, false);
-                    AnswerFields.Add(rcb.transform);
-                    
-                   // rcb.transform.transform
-                    /*
-                    var rtrans = rcb.transform.GetComponent<RectTransform>();
-                   
+                            rcb.initButton("", a, this.OnAnswerClickedHandler, currentActiveQustion.AnswerImages[a]);
+                            AnswerFields.Add(rcb.transform);
+                        }
+                    }
 
-                    var tempVector = new Vector2(rtrans.anchoredPosition.x,
-                        -i * (165 / currentActiveQustion.Answers.Count) + 55);
-                    rtrans.anchoredPosition= tempVector;
-
-                    i++;
-                    */
-                   
                 }
 
                 m_interalState = QNStates.RESPONSEWAIT;

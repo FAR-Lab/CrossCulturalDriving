@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,7 +14,12 @@ public abstract class Interactable_Object : NetworkBehaviour {
     public abstract Transform GetCameraPositionObject();
     public abstract void SetStartingPose(Pose _pose);
     public abstract bool HasActionStopped();
-   
+    public static IEnumerable<Type> GetAllImplementations() { //https://stackoverflow.com/a/5411981
+
+        return typeof(Interactable_Object)
+            .Assembly.GetTypes()
+            .Where(t => t.IsSubclassOf(typeof(Interactable_Object)) && !t.IsAbstract);
+    }
 }
 
 public abstract class Client_Object : NetworkBehaviour {
@@ -41,7 +48,13 @@ public abstract class Client_Object : NetworkBehaviour {
                 return pic;
         return null;
     }
-    
+
+    public static IEnumerable<Type> GetAllImplementations() { //https://stackoverflow.com/a/5411981
+
+        return typeof(Client_Object)
+            .Assembly.GetTypes()
+            .Where(t => t.IsSubclassOf(typeof(Client_Object)) && !t.IsAbstract);
+    }
 }
 
 

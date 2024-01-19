@@ -675,6 +675,8 @@ using UnityEngine.Rendering;
                     }
                 }
                 else {
+                    
+                    
                     Debug.Log("A client Finished loading But we are not gonna Spawn cause the visuals are missing!");
                 }
 

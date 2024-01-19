@@ -421,10 +421,11 @@ public class SteeringWheelManager : MonoBehaviour
                 state.rgbButtons[1] > 0 ||
                 state.rgbButtons[2] > 0 ||
                 state.rgbButtons[3] > 0 ||
-                state.rgbButtons[6] > 0 ||
+                state.rgbButtons[7] > 0 ||
                 state.rgbButtons[11] > 0 ||
                 state.rgbButtons[23] > 0;
-            swd.HighBeamButton = state.rgbButtons[7] > 0 ||
+            
+            swd.HighBeamButton = state.rgbButtons[6] > 0 ||
                                  state.rgbButtons[10] > 0;
             
             if (swd.forceFeedbackPlaying)

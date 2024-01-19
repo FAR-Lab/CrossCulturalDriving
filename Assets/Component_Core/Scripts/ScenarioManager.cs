@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define USEEXTERNALQNDJSONDATA
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
@@ -7,13 +9,12 @@ using UnityEngine;
 
 public class ScenarioManager : MonoBehaviour {
     public TextAsset QuestionairToAsk;
-    
+
     public const string PedestrianSpawnPointLocationPathJson = "PedestrianSpawn.json";
 
 
-   
-    public  string ConditionName {
-        get { return gameObject.scene.name;}
+    public string ConditionName {
+        get { return gameObject.scene.name; }
     }
 
 
@@ -32,7 +33,7 @@ public class ScenarioManager : MonoBehaviour {
 
     private Transform MyLocalClient;
     private Dictionary<ParticipantOrder, Pose> MySpawnPositions;
-   
+
     public bool ready { get; private set; } // property
 
     public enum FloorType {
@@ -42,26 +43,20 @@ public class ScenarioManager : MonoBehaviour {
     }
 
     [SerializeField] public FloorType m_FloorType;
-  
 
-    public bool HasVisualScene()
-    {
-        if (VisualSceneToUse != null && VisualSceneToUse.SceneName.Length > 0)
-        {
+
+    public bool HasVisualScene() {
+        if (VisualSceneToUse != null && VisualSceneToUse.SceneName.Length > 0) {
             return true;
         }
 
         return false;
-        
     }
 
-   
 
     private void Start() {
-       
         GetSpawnPoints();
         ready = true;
-       
     }
 
     public FloorType GetFloorTypeForThisScenarion() {
@@ -69,8 +64,7 @@ public class ScenarioManager : MonoBehaviour {
     }
 
 
-    private void Update() {
-    }
+    private void Update() { }
 
     public bool GetSpawnPose(ParticipantOrder participantOrder, out Pose pose) {
         GetSpawnPoints();
@@ -95,7 +89,7 @@ public class ScenarioManager : MonoBehaviour {
     private void GetSpawnPoints() {
         if (MySpawnPositions == null || MySpawnPositions.Count == 0) {
             MySpawnPositions = new Dictionary<ParticipantOrder, Pose>();
-           
+
             foreach (var sp in GetComponentsInChildren<SpawnPosition>()) {
                 var transform1 = sp.transform;
                 MySpawnPositions[sp.StartingId] = new Pose(transform1.position, transform1.rotation);
@@ -103,7 +97,7 @@ public class ScenarioManager : MonoBehaviour {
         }
     }
 
-    
+
     public Dictionary<ParticipantOrder, NavigationScreen.Direction> GetStartingPositions() {
         return new Dictionary<ParticipantOrder, NavigationScreen.Direction> {
             { ParticipantOrder.A, StartingDirectionParticipantA },
@@ -115,14 +109,29 @@ public class ScenarioManager : MonoBehaviour {
         };
     }
 
-   
 
     public List<QuestionnaireQuestion> ReadString(string asset) {
-        return JsonConvert.DeserializeObject<List<QuestionnaireQuestion>>(asset);
+        var t = JsonConvert.DeserializeObject<List<QuestionnaireQuestion>>(asset);
+
+        foreach (var q in t) {
+            foreach (var a in q.Answers) {
+                if (a.AnswerImage?.Length > 0 && a.AnswerText != null && a.AnswerText.Count > 0)
+                {
+                    Debug.LogError(
+                        $"For the Answer {a} I got two types of answer types (image and text). PLease make sure Only one is contained in the json file! Answer.index{a.index} for Question {q.QuestionText["English"]} q.id{q.ID}");
+                    Application.Quit();
+                   
+                }
+            }
+        }
+
+        return t;
     }
 
     private string OverwriteQNDataFolderName = "QN_DATA";
+
     public List<QuestionnaireQuestion> GetQuestionObject() {
+#if USEEXTERNALQNDJSONDATA
         var p = Path.Combine(Application.persistentDataPath, OverwriteQNDataFolderName);
         var file = Path.Combine(Application.persistentDataPath, OverwriteQNDataFolderName,
             QuestionairToAsk.name + ".json");
@@ -133,16 +142,19 @@ public class ScenarioManager : MonoBehaviour {
 
 
         var outval = ReadString(File.ReadAllText(file));
-
+#else
+        var outval = ReadString(QuestionairToAsk.text);
+#endif
         var startCounter = 0;
         foreach (var q in outval) {
             q.setInternalID(startCounter);
             startCounter++;
         }
+
         return outval;
     }
-    
-    
+
+
     #region GPSUpdate
 
     public void SetStartingGPSDirections() {
@@ -153,10 +165,7 @@ public class ScenarioManager : MonoBehaviour {
         foreach (var t in ConnectionAndSpawning.Singleton.Main_ParticipantObjects.Values) {
             t.SetNewNavigationInstruction(dict);
         }
-        
     }
 
     #endregion
-    
-    
 }

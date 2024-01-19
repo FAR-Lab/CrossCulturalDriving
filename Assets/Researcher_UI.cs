@@ -48,7 +48,7 @@ public class Researcher_UI : MonoBehaviour
         NetworkManager.Singleton.OnServerStarted += InitializeCanvas;
         NetworkManager.Singleton.OnClientConnectedCallback += CreateButton;
         NetworkManager.Singleton.OnClientDisconnectCallback += DeleteButton;
-        _spawnTypeToSprite = Resources.Load<SO_SpawnTypeToSprite>("SO/SO_SpawnTypeToSprite").EnumToValueDictionary;
+        _spawnTypeToSprite = Resources.Load<SO_SpawnTypeToSprite>("ScriptableObjects/SO_SpawnTypeToSprite").EnumToValueDictionary;
 
 
         string path = ScenarioManager.PedestrianSpawnPointLocationPathJson;
