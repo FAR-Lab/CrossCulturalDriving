@@ -4,124 +4,97 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class TrafficLightController : NetworkBehaviour {
+public class TrafficLightController : NetworkBehaviour
+{
     public Material off;
     public Material red;
     public Material green;
     public Material yellow;
 
-
     public Transform LightSurfaces;
 
-
     public TrafficLightTrigger.TLState StartinTrafficlightStatus;
+    [SerializeField]
+    private TrafficLightTrigger.TLState _currentStatus = TrafficLightTrigger.TLState.NONE;
     public ParticipantOrder m_participantOrder;
-    private bool IdleState;
-
 
     private Renderer LightRenderer;
 
-
-    private void Start() {
+    private void Start()
+    {
         LightRenderer = LightSurfaces.GetComponent<Renderer>();
         InteralGraphicsUpdate(StartinTrafficlightStatus);
+        _currentStatus = StartinTrafficlightStatus;
     }
 
-
-    private void Update() {
+    private void Update()
+    {
     }
 
+    private void InteralGraphicsUpdate(TrafficLightTrigger.TLState inval)
+    {
+        if(_currentStatus == inval)
+        {
+            return;
+        }
 
-    private void InteralGraphicsUpdate(TrafficLightTrigger.TLState inval) {
-        switch (inval) {
-            case TrafficLightTrigger.TLState.IDLE:
-                IdleState = true;
-                StartCoroutine(GoIdle());
+        switch (inval)
+        {
+            case TrafficLightTrigger.TLState.Yellow:
+                
                 break;
             case TrafficLightTrigger.TLState.RED:
-                IdleState = false;
                 StartCoroutine(GoRed());
                 break;
             case TrafficLightTrigger.TLState.GREEN:
                 StartCoroutine(GoGreen());
-                IdleState = false;
                 break;
             case TrafficLightTrigger.TLState.NONE:
-            default: break; 
+                StartCoroutine(GoIdle());
+                break;
+            default: break;
         }
     }
 
-    public void UpdatedTrafficlight(Dictionary<ParticipantOrder, TrafficLightTrigger.TLState> newval) {
-        if (newval.ContainsKey(m_participantOrder)) {
+    public void UpdatedTrafficlight(Dictionary<ParticipantOrder, TrafficLightTrigger.TLState> newval)
+    {
+        if (newval.ContainsKey(m_participantOrder))
+        {
             InteralGraphicsUpdate(newval[m_participantOrder]);
             UpdatedTrafficlightClientRPC(newval[m_participantOrder]);
         }
-        
+
     }
 
     [ClientRpc]
-    public void UpdatedTrafficlightClientRPC(TrafficLightTrigger.TLState newval) {
+    public void UpdatedTrafficlightClientRPC(TrafficLightTrigger.TLState newval)
+    {
         InteralGraphicsUpdate(newval);
     }
 
-    private IEnumerator GoRed() {
-        var mat = LightRenderer.materials;
-        mat[(int)materialID.MID] = yellow;
-        mat[(int)materialID.TOP] = off;
-        mat[(int)materialID.BOTTOM] = off;
-
-        LightRenderer.materials = mat;
-
+    // because of how the material is set up, simply swap the material to change the color
+    // ** Actually not sure if unwrapping uv and do it like this is the best practice
+    private IEnumerator GoRed()
+    {
+        LightRenderer.material = yellow;
         yield return new WaitForSeconds(1);
-
-        mat[(int)materialID.MID] = off;
-        mat[(int)materialID.TOP] = red;
-        mat[(int)materialID.BOTTOM] = off;
-
-        LightRenderer.materials = mat;
+        LightRenderer.material = red;
+        _currentStatus = TrafficLightTrigger.TLState.RED;
     }
 
-    private IEnumerator GoIdle() {
-        var mat = LightRenderer.materials;
-        var tmp = false;
-        while (IdleState) {
-            mat[(int)materialID.MID] = tmp ? yellow : off;
-            mat[(int)materialID.TOP] = off;
-            mat[(int)materialID.BOTTOM] = off;
-
-            LightRenderer.materials = mat;
-            tmp = !tmp;
-            yield return new WaitForSeconds(1);
-        }
-
-        mat[(int)materialID.MID] = off;
-        mat[(int)materialID.TOP] = off;
-        mat[(int)materialID.BOTTOM] = off;
-
-        LightRenderer.materials = mat;
-    }
-
-    private IEnumerator GoGreen() {
-        var mat = LightRenderer.materials;
-        ///  mat[(int) materialID.MID] = yellow;
-        //mat[(int) materialID.TOP] = off;
-        //   mat[(int) materialID.BOTTOM] = off;
-
-        //   LightRenderer.materials = mat;
-
-        //  yield return new WaitForSeconds(1);
-
-        mat[(int)materialID.MID] = off;
-        mat[(int)materialID.TOP] = off;
-        mat[(int)materialID.BOTTOM] = green;
-
-        LightRenderer.materials = mat;
+    private IEnumerator GoIdle()
+    {
+        LightRenderer.material = off;
         yield return null;
+        _currentStatus = TrafficLightTrigger.TLState.NONE;
     }
 
-    private enum materialID {
-        MID = 0,
-        TOP = 1,
-        BOTTOM = 2
+    private IEnumerator GoGreen()
+    {
+        LightRenderer.material = yellow;
+        yield return new WaitForSeconds(1);
+        LightRenderer.material = green;
+        yield return null;
+        _currentStatus = TrafficLightTrigger.TLState.GREEN;
     }
 }
