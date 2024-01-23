@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 531207154056223875}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000029504295}
-  m_LocalPosition: {x: 2, y: 0, z: 1}
+  m_LocalPosition: {x: 2, y: -1.5, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 1815199390029988871}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000029504295}
-  m_LocalPosition: {x: 2, y: 0, z: 10}
+  m_LocalPosition: {x: 2, y: -1.5, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -87,7 +87,7 @@ Transform:
   m_GameObject: {fileID: 1898626361725472657}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000029504295}
-  m_LocalPosition: {x: -2, y: 0, z: 1}
+  m_LocalPosition: {x: -2, y: -1.5, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -141,6 +141,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6b453c012b8aab4fa8c650239ed7c85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WorkingArea:
+  - {fileID: 5126842666233386893}
+  - {fileID: 3289755328271687948}
+  - {fileID: 2819556789087816543}
+  - {fileID: 8696261444671941580}
+  MeshWidth: 0.2
+  MeshHeight: 2
+  NumMeshes: 3
+  MeshSpacing: 1
+  MeshMaterial: {fileID: 0}
 --- !u!1 &6568767569479538174
 GameObject:
   m_ObjectHideFlags: 0
@@ -166,7 +176,7 @@ Transform:
   m_GameObject: {fileID: 6568767569479538174}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000029504295}
-  m_LocalPosition: {x: 0.56, y: 0, z: 10}
+  m_LocalPosition: {x: -2.1799998, y: -1.5, z: 10.000014}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

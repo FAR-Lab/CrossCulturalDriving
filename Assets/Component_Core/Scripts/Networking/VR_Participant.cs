@@ -264,7 +264,9 @@ public class VR_Participant : Client_Object {
 
     public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) {
         if (!IsLocalPlayer) return;
+        Debug.Log("we are going to spawn the questionnaire");
         qnmanager = Instantiate(QuestionairPrefab).GetComponent<QN_Display>();
+        Debug.Log("we have finished spawning the questionnaire");
         qnmanager.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId, true);
         string referenceTransformPath = ""; //TODO this is not Implemented
         QN_Display.FollowType tmp = QN_Display.FollowType.MainCamera;

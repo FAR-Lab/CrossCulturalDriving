@@ -516,7 +516,7 @@ public class SteeringWheelManager : MonoBehaviour
     {
         if (ActiveWheels.ContainsKey(po))
         {
-            return ActiveWheels[po].HornButton;
+            return ActiveWheels[po].HighBeamButton;
         }
 
         return false;

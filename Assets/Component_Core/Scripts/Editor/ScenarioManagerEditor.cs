@@ -23,8 +23,9 @@ public class ScenarioManagerEditor : Editor {
                         Debug.LogWarning("Duplicat ID for " + q.getInteralID());
                     else
                         numbers.Add(q.getInteralID());
-
+                    Debug.Log($"{q.QuestionText["English"]}, po:{q.ContainsOrder(ParticipantOrder.A)}");
                     Debug.Log($"{q.QuestionText["English"]}, po:{q.ContainsOrder(ParticipantOrder.B)}");
+                    
                     var numbersA = new List<int>();
                     foreach (var a in q.Answers)
                         if (numbersA.Contains(a.index))
@@ -32,6 +33,9 @@ public class ScenarioManagerEditor : Editor {
                         else
                             numbersA.Add(a.index);
                 }
+
+                Debug.Log($"Cound for A: {s.Where(x => x.ContainsOrder(ParticipantOrder.A)).Count()}");
+                Debug.Log($"Cound for B: {s.Where(x => x.ContainsOrder(ParticipantOrder.B)).Count()}");
             }
         }
         GUILayout.Label($"ConditionName: {sm.ConditionName}");

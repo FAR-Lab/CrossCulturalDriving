@@ -25,12 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4460633617513482381}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &4460633617513482383
 BoxCollider:
@@ -40,11 +41,19 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4460633617513482381}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 3
+  m_Size: {x: 8.157364, y: 2, z: 9.232876}
+  m_Center: {x: -5.921318, y: 1, z: -1.1165752}
 --- !u!114 &4460633617513482382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,9 +66,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be519273ec0b54abdb6abd64aadbfcd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  setDirectionParticipantA: 1
-  setDirectionParticipantB: 1
+  ParticipantsToReactTo: 61
+  setDirectionParticipantA: 0
+  setDirectionParticipantB: 6
   setDirectionParticipantC: 1
   setDirectionParticipantD: 1
   setDirectionParticipantE: 1
   setDirectionParticipantF: 1
+  triggered: 0

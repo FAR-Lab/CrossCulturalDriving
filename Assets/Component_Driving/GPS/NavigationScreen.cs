@@ -15,7 +15,18 @@ public class NavigationScreen : ReplayBehaviour {
         StartRight,
         StartStraight,
         ComeToStop,
-        ToHospital
+        ToHospital,
+        black_trashcan,
+        blue_trashcan,
+        food_cart,
+        gate,
+        grey_building,
+        grey_building_columns,
+        hotel_entrance,
+        park_entrance,
+        red_building,
+        staircase,
+        stairs_across_street
     }
 
     [ReplayVar(false)] public int recordingDirection = (int)Direction.None;

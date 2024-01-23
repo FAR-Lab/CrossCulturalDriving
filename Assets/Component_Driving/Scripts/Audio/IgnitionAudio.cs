@@ -32,11 +32,13 @@ public class IgnitionAudio : MonoBehaviour {
         engine.clip = engineClip;
         engine.loop = false;
         engine.playOnAwake = false;
+        engine.spread = 1f;
 
         exhaust.outputAudioMixerGroup = mixerGroup;
         exhaust.clip = exhaustClip;
         exhaust.loop = false;
         exhaust.playOnAwake = false;
+        exhaust.spread = 1f;
     }
 
     public void Play(Action OnComplete) {

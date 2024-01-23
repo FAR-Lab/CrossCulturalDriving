@@ -43,10 +43,9 @@ public class NetworkVehicleController : Interactable_Object {
     private List<Material> _beamLightGlassMaterialInstances = new List<Material>();
     public Color beamLightGlassOnColor;
     public Color beamLightGlassOffColor;
-    
+
     public List<Renderer> beamLights;
     private List<Material> _beamLightMaterialInstances = new List<Material>();
-    
 
 
     public AudioSource HonkSound;
@@ -72,6 +71,7 @@ public class NetworkVehicleController : Interactable_Object {
     public NetworkVariable<RoadSurface> CurrentSurface;
 
     private bool REMOTEKEYBOARD_NewData = false;
+
     void UpdateSounds() {
         if (controller == null) return;
         IsShifting.Value = controller.IsShifting;
@@ -121,12 +121,12 @@ public class NetworkVehicleController : Interactable_Object {
             Debug.Log(tmpRenderer.materials[0]);
             _beamLightMaterialInstances.Add(tmpRenderer.materials[0]);
         }
-        
+
         foreach (Renderer tmpRenderer in beamLightGlasses) {
             _beamLightGlassMaterialInstances.Add(tmpRenderer.materials[0]);
         }
-        
-        
+
+
         HonkSound = GetComponent<AudioSource>();
 
         foreach (Transform t in Left) {
@@ -236,22 +236,23 @@ public class NetworkVehicleController : Interactable_Object {
             controller.steerInput = SteeringInput;
             controller.accellInput = ThrottleInput;
         }
-        
+
         // test
         if (Input.GetKeyDown(KeyCode.Keypad1)) {
             foreach (Material mat in _beamLightMaterialInstances) {
                 mat.SetFloat("_Opacity", 2);
             }
-            
+
             foreach (Material mat in _beamLightGlassMaterialInstances) {
                 mat.SetColor("_Color", beamLightGlassOnColor);
             }
         }
-        if(Input.GetKeyDown(KeyCode.Keypad2)){
+
+        if (Input.GetKeyDown(KeyCode.Keypad2)) {
             foreach (Material mat in _beamLightMaterialInstances) {
                 mat.SetFloat("_Opacity", 0);
             }
-            
+
             foreach (Material mat in _beamLightGlassMaterialInstances) {
                 mat.SetColor("_Color", beamLightGlassOffColor);
             }
@@ -271,7 +272,7 @@ public class NetworkVehicleController : Interactable_Object {
         if (!IsServer) return;
 
         if (ConnectionAndSpawning.Singleton.ServerState == ActionState.DRIVE) {
-            bool tempLeft = false, tempRight = false, tempHonk = false, tempHighBeam =false;
+            bool tempLeft = false, tempRight = false, tempHonk = false, tempHighBeam = false;
 
             switch (VehicleMode) {
                 case VehicleOpperationMode.KEYBOARD:
@@ -313,10 +314,11 @@ public class NetworkVehicleController : Interactable_Object {
                         tempLeft = leftInput;
                         tempRight = rightInput;
                         tempHonk = honkInput;
-                        
-                    };
-                    
-                    
+                    }
+
+                    ;
+
+
                     break;
                 default:
                     break;
@@ -330,7 +332,7 @@ public class NetworkVehicleController : Interactable_Object {
 
             if (NewButtonPress && (tempLeft || tempRight)) {
                 NewButtonPress = false;
-                if (tempLeft && ! tempRight) {
+                if (tempLeft && !tempRight) {
                     toggleBlinking(true, false);
                     LeftIndicatorDebounce = true;
                 }
@@ -340,13 +342,12 @@ public class NetworkVehicleController : Interactable_Object {
                     RightIndicatorDebounce = true;
                 }
                 else {
-                    
                     toggleBlinking(true, true);
                     BothIndicatorDebounce = true;
                 }
-                
-                
-            }else if (NewButtonPress == false && !BothIndicatorDebounce && ((tempLeft&& !LeftIndicatorDebounce) || (tempRight&& !RightIndicatorDebounce))) {
+            }
+            else if (NewButtonPress == false && !BothIndicatorDebounce &&
+                     ((tempLeft && !LeftIndicatorDebounce) || (tempRight && !RightIndicatorDebounce))) {
                 toggleBlinking(true, true);
                 BothIndicatorDebounce = true;
             }
@@ -363,6 +364,7 @@ public class NetworkVehicleController : Interactable_Object {
             if (tempHonk) {
                 HonkMyCar();
             }
+
             HighBeamMyCar(tempHighBeam);
 
             if (ThrottleInput < 0 && !breakIsOn) {
@@ -382,10 +384,10 @@ public class NetworkVehicleController : Interactable_Object {
         UpdateSounds();
     }
 
-    
-    bool  leftInput, rightInput, honkInput;
-    
-    
+
+    bool leftInput, rightInput, honkInput;
+
+
     public void NewDataToCome(float i_steering, float i_throttle, bool i_left, bool i_right, bool i_honk) {
         REMOTEKEYBOARD_NewData = true;
         SteeringInput = i_steering;
@@ -393,8 +395,8 @@ public class NetworkVehicleController : Interactable_Object {
         leftInput = i_left;
         rightInput = i_right;
         honkInput = i_honk;
-
     }
+
     public override void AssignClient(ulong CLID_, ParticipantOrder _participantOrder_) {
         if (IsServer) {
             NetworkManager.SceneManager.OnSceneEvent += SceneManager_OnSceneEvent;
@@ -404,7 +406,7 @@ public class NetworkVehicleController : Interactable_Object {
             GetComponent<ForceFeedback>()?.Init(transform.GetComponent<Rigidbody>(), m_participantOrder.Value);
         }
         else {
-            Debug.LogWarning("Tried to execute something that should never happen. ");
+            Debug.LogWarning("Tried to execute something that should never happen.");
         }
     }
 
@@ -453,33 +455,42 @@ public class NetworkVehicleController : Interactable_Object {
 
 
     private bool m_HighBeams;
-    public void HighBeamMyCar(bool tempHighBeam) {
+
+    private void HighBeamMyCar(bool tempHighBeam) {
         if (m_HighBeams == tempHighBeam) return;
-        else {
-            if (tempHighBeam) {
-                foreach (Material mat in _beamLightMaterialInstances) {
-                    mat.SetFloat("_Opacity", 2);
-                }
-            
-                foreach (Material mat in _beamLightGlassMaterialInstances) {
-                    mat.SetColor("_Color", beamLightGlassOnColor);
-                }
+        m_HighBeams = tempHighBeam;
+        if (IsServer) {
+            i_HighBeamMyCar(tempHighBeam);
+            HighBeamMyCarClientRpc(tempHighBeam);
+        }
+    }
+
+    [ClientRpc]
+    private void HighBeamMyCarClientRpc(bool tempHighBeam) {
+        i_HighBeamMyCar(tempHighBeam);
+    }
+
+    private void i_HighBeamMyCar(bool tempHighBeam) {
+        if (tempHighBeam) {
+            foreach (Material mat in _beamLightMaterialInstances) {
+                mat.SetFloat("_Opacity", 2);
             }
-            else{
-                foreach (Material mat in _beamLightMaterialInstances) {
-                    mat.SetFloat("_Opacity", 0);
-                }
-            
-                foreach (Material mat in _beamLightGlassMaterialInstances) {
-                    mat.SetColor("_Color", beamLightGlassOffColor);
-                }
+
+            foreach (Material mat in _beamLightGlassMaterialInstances) {
+                mat.SetColor("_Color", beamLightGlassOnColor);
             }
         }
+        else {
+            foreach (Material mat in _beamLightMaterialInstances) {
+                mat.SetFloat("_Opacity", 0);
+            }
 
-        m_HighBeams = tempHighBeam;
-
+            foreach (Material mat in _beamLightGlassMaterialInstances) {
+                mat.SetColor("_Color", beamLightGlassOffColor);
+            }
+        }
     }
-    
+
 
     public void HonkMyCar() {
         if (HonkSound.isPlaying) {
@@ -526,10 +537,9 @@ public class NetworkVehicleController : Interactable_Object {
     void toggleBlinking(bool left, bool right) {
         if (indicaterStage == 0) {
             indicaterStage = 1;
-            
         }
-        
-        if (left && right ) {
+
+        if (left && right) {
             if (LeftIsActuallyOn != true || RightIsActuallyOn != true) {
                 LeftIsActuallyOn = true;
                 RightIsActuallyOn = true;
@@ -542,12 +552,12 @@ public class NetworkVehicleController : Interactable_Object {
         }
 
         if (left != right) {
-            if (LeftIsActuallyOn && RightIsActuallyOn) 
-            {
+            if (LeftIsActuallyOn && RightIsActuallyOn) {
                 LeftIsActuallyOn = false;
                 RightIsActuallyOn = false;
                 indicaterStage = 4;
             }
+
             if (left) {
                 if (!LeftIsActuallyOn) {
                     LeftIsActuallyOn = true;
@@ -605,12 +615,12 @@ public class NetworkVehicleController : Interactable_Object {
 
             if (indicaterStage == 2) {
                 switch (VehicleMode) {
-                    
                     case VehicleOpperationMode.KEYBOARD:
                         break;
                     case VehicleOpperationMode.STEERINGWHEEL:
                         if (SteeringWheelManager.Singleton != null &&
-                            Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder.Value) * -450f) > 90) {
+                            Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder.Value) * -450f) >
+                            90) {
                             indicaterStage = 3;
                         }
 
@@ -629,7 +639,8 @@ public class NetworkVehicleController : Interactable_Object {
                         break;
                     case VehicleOpperationMode.STEERINGWHEEL:
                         if (SteeringWheelManager.Singleton != null &&
-                            Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder.Value) * -450f) < 10) {
+                            Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder.Value) * -450f) <
+                            10) {
                             indicaterStage = 4;
                         }
 
