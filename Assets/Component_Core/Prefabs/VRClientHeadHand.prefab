@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7336455799827178726}
   - component: {fileID: 5109994540957171420}
   - component: {fileID: 570141284139190367}
+  - component: {fileID: 6850854291680285896}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -194,6 +195,36 @@ MonoBehaviour:
       m_Action: Rotation
       m_Flags: 0
     m_Flags: 0
+--- !u!114 &6850854291680285896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78302314086195320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33f8ec1c9f4fd954aaf4b4cc42d02c92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 1
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &361007526285722407
 GameObject:
   m_ObjectHideFlags: 0
@@ -2726,7 +2757,7 @@ MonoBehaviour:
   m_XRHandTrackingEvents: {fileID: 5787734821228047987}
   m_HandMeshRenderer: {fileID: 3814106046533827031}
   m_ShowMeshWhenTrackingIsAcquired: 1
-  m_HideMeshWhenTrackingIsLost: 1
+  m_HideMeshWhenTrackingIsLost: 0
 --- !u!114 &8160222202133510995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5713,7 +5744,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 53823
+    id: 18148
   replayObject:
     reference: {fileID: 4995632068778713869}
   m_participantOrder: 0
@@ -5731,7 +5762,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isObservedComponentsExpanded: 0
   replayIdentity:
-    id: 14879
+    id: 34260
   prefabIdentity:
     id: 18724
   observedComponents:
@@ -5770,7 +5801,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 61650
+    id: 63762
   replayObject:
     reference: {fileID: 4995632068778713869}
   positionFlags: 263
@@ -6355,7 +6386,7 @@ MonoBehaviour:
   m_XRHandTrackingEvents: {fileID: 1441576945976138709}
   m_HandMeshRenderer: {fileID: 2565215673675954798}
   m_ShowMeshWhenTrackingIsAcquired: 1
-  m_HideMeshWhenTrackingIsLost: 1
+  m_HideMeshWhenTrackingIsLost: 0
 --- !u!114 &8553093884634768456
 MonoBehaviour:
   m_ObjectHideFlags: 0

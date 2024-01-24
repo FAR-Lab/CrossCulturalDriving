@@ -16,7 +16,7 @@ public class ZedReferenceFinder : MonoBehaviour {
     }
     private void UpdateOnReady(ActionState state) {
         if (state is ActionState.READY or ActionState.WAITINGROOM) {
-            var z = FindObjectOfType<ZedSpaceReference>();
+            var z = FindObjectOfType<ExperimentSpaceReference>();
             if (z != null) {
                 var t = z.transform.position;
                 t.y = 0;

@@ -45,7 +45,7 @@ public class ScenarioManagerEditor : Editor {
                 var l = sm.transform.GetComponentsInChildren<SpawnPosition>()
                     .First(x => x.StartingId == pedPO);
 
-                var zed = FindObjectOfType<ZedSpaceReference>();
+                var zed = FindObjectOfType<ExperimentSpaceReference>();
 
                 if (zed != null && l != null) {
                     

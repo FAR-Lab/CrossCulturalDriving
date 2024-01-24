@@ -113,7 +113,7 @@ public class Researcher_UI : MonoBehaviour
 
     
     private void OnPreLoadScenarioButtonPressed(SceneField sceneField) {
-       var spaceRef = FindObjectOfType<ZedSpaceReference>();
+       var spaceRef = FindObjectOfType<ExperimentSpaceReference>();
         float[] tmp =dict[sceneField.SceneName][ParticipantOrder.B];
         Vector3 pos = new Vector3(tmp[0],tmp[1], tmp[2]);
         
