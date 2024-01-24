@@ -84,11 +84,8 @@ public class QuestionnaireQuestion {
     private bool initComplete;
 
     private int InteralTrackingID;
-    public int ID { get; set; } //This will be a unique id for each question in the collection  
-    public string Scenario_ID { get; set; }
-    public string SA_atoms { get; set; } //This property can be used to filter a group of questions
-    public string SA_Level { get; set; } //The level of the question based on SAGAT model
-    public string Awareness_to { get; set; }
+    public string ID { get; set; } //This will be a unique id for each question in the collection  
+    public string Research_Info { get; set; } 
 
     public List<char> Participant { get; set; }
     public Dictionary<string, string> QuestionText { get; set; }
@@ -164,6 +161,9 @@ public class QuestionnaireQuestion {
         Debug.Log($"Generating NetworkVersion! First Answers:{Answers.Count} for langauge{lang}");
         var outVal = NetworkedQuestionnaireQuestion.GetDefaultNQQ();
         
+        if (lang.Length == 0) {
+            lang = "English";
+        }
         foreach (var a in Answers) {
 
             if (a.AnswerText != null) {

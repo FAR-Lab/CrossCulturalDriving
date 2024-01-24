@@ -334,7 +334,7 @@ public class QNDataStorageServer : MonoBehaviour {
             && activeQuestionList.ContainsKey(participantAnswerStatus[po])
             && activeQuestionList[participantAnswerStatus[po]].QuestionText != null) {
             return activeQuestionList[participantAnswerStatus[po]].QuestionText[LogLanguage] + " at Scenario_ID: " +
-                   activeQuestionList[participantAnswerStatus[po]].Scenario_ID + "  =>  " +
+                 //  activeQuestionList[participantAnswerStatus[po]].Scenario_ID + "  =>  " +
                    GetTotalParticiapnAnswerCountString(po);
         }
 
@@ -460,15 +460,10 @@ public struct LogHeader {
 }
 
 public struct QuestionLog {
-    public int ID { get; set; }
-
-    public string Scenario_ID { get; set; }
-
+    public string ID { get; set; }
     public string QuestionText { get; set; }
 
-    public string SA_atoms { get; set; } //This property can be used to filter a group of questions
-    public string SA_Level { get; set; } //The level of the question based on SAGAT model
-    public string Awareness_to { get; set; }
+    public string Research_Info { get; set; } //This property can be used to filter a group of questions
 
     public Dictionary<char, ParticipantsAnswerReponse> ParticipantsResponse { get; set; }
 
@@ -493,10 +488,10 @@ public struct QuestionLog {
     public QuestionLog(QuestionnaireQuestion qIn) {
         ID = qIn.ID;
         QuestionText = qIn.QuestionText[QNDataStorageServer.LogLanguage];
-        Scenario_ID = qIn.Scenario_ID;
-        SA_atoms = qIn.SA_atoms;
-        SA_Level = qIn.SA_Level;
-        Awareness_to = qIn.Awareness_to;
+        Research_Info = qIn.Research_Info;
+        //SA_atoms = qIn.SA_atoms;
+      //  SA_Level = qIn.SA_Level;
+      //  Awareness_to = qIn.Awareness_to;
         ParticipantsResponse = new Dictionary<char, ParticipantsAnswerReponse>();
     }
 }

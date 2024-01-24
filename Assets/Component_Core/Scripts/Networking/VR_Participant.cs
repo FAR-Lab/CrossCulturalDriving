@@ -124,7 +124,7 @@ public class VR_Participant : Client_Object {
         if (IsServer) {
             m_participantOrder = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
-            GetComponent<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder);
+            GetComponentInChildren<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder);
         }
         else {
             foreach (var a in GetComponentsInChildren<ReplayTransform>()) {
@@ -200,7 +200,7 @@ public class VR_Participant : Client_Object {
     }
 
     public override Transform GetMainCamera() {
-        if (MyCamera == null) MyCamera = transform.GetChild(0).Find("CenterEyeAnchor");
+        if (MyCamera == null) MyCamera = GetComponentInChildren<Camera>().transform;
         return MyCamera;
     }
 
@@ -263,11 +263,11 @@ public class VR_Participant : Client_Object {
     private QN_Display qnmanager;
 
     public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) {
-        if (!IsLocalPlayer) return;
-        Debug.Log("we are going to spawn the questionnaire");
-        qnmanager = Instantiate(QuestionairPrefab).GetComponent<QN_Display>();
-        Debug.Log("we have finished spawning the questionnaire");
+        
+        
+        qnmanager = Instantiate(QuestionairPrefab).GetComponentInChildren<QN_Display>();
         qnmanager.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId, true);
+        //qnmanager.GetComponent<Canvas>().worldCamera = GetMainCamera().GetComponent<Camera>();
         string referenceTransformPath = ""; //TODO this is not Implemented
         QN_Display.FollowType tmp = QN_Display.FollowType.MainCamera;
         Vector3 Offset = Vector3.zero;

@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
 public class PushableQNButton : MonoBehaviour {
     public Button m_button;
 
-    public Text m_TextObject;
+    public TMP_Text m_TextObject;
 
     public Image ImageTarget;
     

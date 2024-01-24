@@ -10,8 +10,6 @@ using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit.Samples.Hands;
 
 public class QN_Display : NetworkBehaviour {
-
-
     public enum FollowType {
         NetworkObject,
         MainCamera,
@@ -21,12 +19,11 @@ public class QN_Display : NetworkBehaviour {
     public ParticipantOrder m_participantOrder;
 
 
- 
     public GameObject ButtonPrefab;
 
     public enum QNStates {
         IDLE,
-        WAITINGFORQUESTION, 
+        WAITINGFORQUESTION,
         LOADINGQUESTION,
         RESPONSEWAIT,
         FINISH
@@ -35,12 +32,10 @@ public class QN_Display : NetworkBehaviour {
     public QNStates m_interalState = QNStates.IDLE;
 
 
-
-
     private Text QustionField;
     private readonly List<Transform> AnswerFields = new List<Transform>();
 
-  
+
     private string m_LanguageSelect;
 
     private RectTransform BackButton;
@@ -52,14 +47,13 @@ public class QN_Display : NetworkBehaviour {
     public VerticalLayoutGroup m_VerticalLayoutGroup;
     private int _answerCount;
     private int _totalCount;
-    
-    
+
 
 #if debug
     public List<TextAsset> QNFiles;
 #endif
 
-    public  Transform ParentPosition;
+    public Transform ParentPosition;
     [FormerlySerializedAs("up")] public float xOffset;
     [FormerlySerializedAs("forward")] public float yOffset;
     [FormerlySerializedAs("left")] public float zOffset;
@@ -69,8 +63,7 @@ public class QN_Display : NetworkBehaviour {
         m_LanguageSelect = lang;
     }
 
-    public void setRelativePosition(Transform t, float up_, float forward_, float left_,bool KeepUpdating_) {
-     
+    public void setRelativePosition(Transform t, float up_, float forward_, float left_, bool KeepUpdating_) {
         ParentPosition = t;
         xOffset = up_;
         yOffset = forward_;
@@ -80,21 +73,20 @@ public class QN_Display : NetworkBehaviour {
     }
 
     private void Start() {
-       
         QustionField = transform.Find("QuestionField").GetComponent<Text>();
-        
+
+        GetComponent<Canvas>().worldCamera = Camera.main;
+
         BackButton = transform.Find("BackButton").GetComponent<RectTransform>();
         BackButton.GetComponent<Button>().onClick.AddListener(delegate { OnBackClickedHandler(); });
         CountDisplay = transform.Find("CountDisplay").GetComponent<Text>();
 
-    
-        
+
 #if DEBUGQN
         RequestFirstQuestion(FindObjectOfType<LocalVRPlayer>().transform, QNFiles.ToArray(), "Test");
         changeLanguage("English");
         setRelativePosition(FindObjectOfType<LocalVRPlayer>().transform, 1, 2);
 #endif
-
     }
 
     public GameObject ScenarioImageHolder;
@@ -132,15 +124,15 @@ public class QN_Display : NetworkBehaviour {
     }
 
 
-    
     private Transform positioingRef;
 
     private VR_Participant m_MyLocalClient;
+
     private PokeGestureDetector pokeRight;
+
     // Update is called once per frame
     public void RequestFirstQuestion(ParticipantOrder po) {
         if (m_interalState == QNStates.IDLE) {
-
             Debug.Log(
                 $"Starting To Ask Questions ConnectionAndSpawning.Singleton.lang{ConnectionAndSpawning.Singleton.ThisClient._Language}");
             ChangeLanguage(ConnectionAndSpawning.Singleton.ThisClient._Language);
@@ -149,25 +141,24 @@ public class QN_Display : NetworkBehaviour {
             m_interalState = QNStates.WAITINGFORQUESTION;
             m_participantOrder = po;
 
-            if (ConnectionAndSpawning.Singleton.ThisClient._jointype == JoinType.VR) {
-                m_MyLocalClient = VR_Participant.GetJoinTypeObject(); //ToDO Need to test!!
-                if (m_MyLocalClient != null) {
-                    Transform RightHand = m_MyLocalClient.transform.Find("Camera Offset/Right Hand Tracking");
-                    pokeRight = RightHand
-                        .GetComponent<PokeGestureDetector>(); // ideally this would be done somehwere else...
-                    if (pokeRight == null) {
-                        pokeRight = RightHand.gameObject
-                            .AddComponent<PokeGestureDetector>(); // ideally this would be done somehwere else...
-                    }
-
-                    pokeRight.enabled = true;
-                }
-            }
-            else if (ConnectionAndSpawning.Singleton.ThisClient._jointype == JoinType.INTERACTIONTESTING) {
-                GetComponent<Canvas>().worldCamera = Camera.main;
-                GetComponent<Canvas>().sortingOrder = 5;
-
-            }
+            // if (ConnectionAndSpawning.Singleton.ThisClient._jointype == JoinType.VR) {
+            //     m_MyLocalClient = VR_Participant.GetJoinTypeObject(); //ToDO Need to test!!
+            //     if (m_MyLocalClient != null) {
+            //         Transform RightHand = m_MyLocalClient.transform.Find("XROriginCameraOffset/Right Hand Tracking");
+            //         pokeRight = RightHand
+            //             .GetComponent<PokeGestureDetector>(); // ideally this would be done somehwere else...
+            //         if (pokeRight == null) {
+            //             pokeRight = RightHand.gameObject
+            //                 .AddComponent<PokeGestureDetector>(); // ideally this would be done somehwere else...
+            //         }
+            //
+            //         pokeRight.enabled = true;
+            //     }
+            // }
+            // else if (ConnectionAndSpawning.Singleton.ThisClient._jointype == JoinType.INTERACTIONTESTING) {
+            //     GetComponent<Canvas>().worldCamera = Camera.main;
+            //     GetComponent<Canvas>().sortingOrder = 5;
+            // }
 
             Debug.Log("Requesting new questions from the server!");
             SendQNAnswerServerRPC(-1, 0, m_LanguageSelect);
@@ -185,13 +176,14 @@ public class QN_Display : NetworkBehaviour {
         transform.position = ParentPosition.position +
                              ParentPosition.rotation * new Vector3(xOffset, yOffset, zOffset);
     }
+
     private void Update() {
         if (IsServer) {
-            if (Input.GetKeyUp(KeyCode.Q)&& !Input.GetKey(KeyCode.LeftShift)) m_interalState = QNStates.FINISH;
+            if (Input.GetKeyUp(KeyCode.Q) && !Input.GetKey(KeyCode.LeftShift)) m_interalState = QNStates.FINISH;
         }
 
         if (IsServer && !IsHost) return;
-        
+
         if (KeepUpdating) {
             UpdatePosition();
         }
@@ -235,14 +227,15 @@ public class QN_Display : NetworkBehaviour {
                 // else {
                 //     if (newImageHolder != null) newImageHolder.gameObject.SetActive(false);
                 // }
-                
+
                 if (currentActiveQustion.Answers != null) {
                     if (currentActiveQustion.Answers.Count != 0) {
                         foreach (var a in currentActiveQustion.Answers.Keys) {
                             var rcb = Instantiate(ButtonPrefab, m_VerticalLayoutGroup.transform).transform
                                 .GetComponentInChildren<PushableQNButton>();
-                    
-                            rcb.initButton(SetText(currentActiveQustion.Answers[a]), a, this.OnAnswerClickedHandler, "");
+
+                            rcb.initButton(SetText(currentActiveQustion.Answers[a]), a, this.OnAnswerClickedHandler,
+                                "");
                             AnswerFields.Add(rcb.transform);
                         }
                     }
@@ -258,7 +251,6 @@ public class QN_Display : NetworkBehaviour {
                             AnswerFields.Add(rcb.transform);
                         }
                     }
-
                 }
 
                 m_interalState = QNStates.RESPONSEWAIT;
@@ -282,6 +274,7 @@ public class QN_Display : NetworkBehaviour {
                         QustionField.text = "Please Wait!";
                         break;
                 }
+
                 m_interalState = QNStates.IDLE;
                 GoForPostQuestionServerRPC();
 
@@ -291,31 +284,29 @@ public class QN_Display : NetworkBehaviour {
                 throw new ArgumentOutOfRangeException();
         }
     }
+
     [ServerRpc]
     private void GoForPostQuestionServerRPC() {
         m_Client_Object.GoForPostQuestion();
     }
+
     private void OnAnswerClickedHandler(int AnswerIndex) {
         if (m_interalState == QNStates.RESPONSEWAIT) {
-                SendQNAnswer(currentActiveQustion.ID, AnswerIndex, m_LanguageSelect);
-                _answerCount++;
-                m_interalState = QNStates.WAITINGFORQUESTION;
+            SendQNAnswer(currentActiveQustion.ID, AnswerIndex, m_LanguageSelect);
+            _answerCount++;
+            m_interalState = QNStates.WAITINGFORQUESTION;
         }
-
-      
     }
 
     private void OnBackClickedHandler() {
-        
         if (m_interalState == QNStates.RESPONSEWAIT) {
-                _answerCount--;
-                if (_answerCount < 0) _answerCount = 0;
-                SendQNAnswer(-1, -1, m_LanguageSelect);
-                m_interalState = QNStates.WAITINGFORQUESTION;
-            
+            _answerCount--;
+            if (_answerCount < 0) _answerCount = 0;
+            SendQNAnswer(-1, -1, m_LanguageSelect);
+            m_interalState = QNStates.WAITINGFORQUESTION;
         }
     }
-    
+
 
     private string SetText(string text) {
         return m_LanguageSelect.Contains("Hebrew") ? StringExtension.RTLText(text) : text;
@@ -328,28 +319,28 @@ public class QN_Display : NetworkBehaviour {
     private void updateCountDisaply() {
         CountDisplay.text = 1 + _answerCount + " / " + _totalCount;
     }
-    
+
     #region NetworkConnectivity;
-    
-    
+
     private QNDataStorageServer m_QNDataStorageServer = null;
 
     public delegate bool QuestionSelected();
 
     private Client_Object m_Client_Object;
+
     public void StartQuestionair(QNDataStorageServer in_QNDataStorageServer,
-        ParticipantOrder po, 
+        ParticipantOrder po,
         FollowType followType,
         Vector3 Offset,
         bool KeepUpdating,
         string referenceTransformPath,
-        Client_Object Origin){
+        Client_Object Origin) {
         if (IsServer) {
             m_Client_Object = Origin;
             m_QNDataStorageServer = in_QNDataStorageServer;
             Debug.Log($"Questionnaire Activation for Participant{po} (serverside)");
             m_participantOrder = po;
-            InitQuestionairClientRPC(po,followType,Offset,KeepUpdating,referenceTransformPath);
+            InitQuestionairClientRPC(po, followType, Offset, KeepUpdating, referenceTransformPath);
         }
     }
 
@@ -359,49 +350,52 @@ public class QN_Display : NetworkBehaviour {
         FollowType followType,
         Vector3 Offset,
         bool KeepUpdating_,
-        string referenceTransformPath)
-    {
-        Debug.Log($" (ClientSide) FollowType:{followType} KeepUpdating:{KeepUpdating}  ConnectionAndSpawning:{ConnectionAndSpawning.Singleton.ParticipantOrder} po:{po}");
-      
-            Transform followObj = null;
+        string referenceTransformPath) {
+        Debug.Log(
+            $" (ClientSide) FollowType:{followType} KeepUpdating:{KeepUpdating}  ConnectionAndSpawning:{ConnectionAndSpawning.Singleton.ParticipantOrder} po:{po}");
+        if (OwnerClientId != NetworkManager.Singleton.LocalClientId) {
+            Debug.Log(" ok this is not my qn I will not spawn it.");
+            return;
+        }
 
-            m_participantOrder = po;
-          
-            switch (followType) {
-                case FollowType.NetworkObject:
-                    followObj = null;
-                    Debug.LogWarning("This is not implemented yet.");
-                    break;
-                case FollowType.MainCamera:
-                    followObj = FindObjectsOfType<Client_Object>().Where(x => x.IsLocalPlayer).First().GetMainCamera();
-                    break;
-                case FollowType.Interactable:
-                    followObj = FindObjectsOfType<Client_Object>().Where(x => x.IsLocalPlayer).First().GetFollowTransform().transform;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(followType), followType, null);
-            }
+        Transform followObj = null;
 
-            
-            setRelativePosition(followObj.transform, Offset.x, Offset.y, Offset.z,KeepUpdating);
-            KeepUpdating = KeepUpdating_;
-            Debug.Log($"Questionnaire Activation for Participant{po} (ClientSide)");
-            gameObject.SetActive(true);
-            
-            
-          
+        m_participantOrder = po;
+
+        switch (followType) {
+            case FollowType.NetworkObject:
+                followObj = null;
+                Debug.LogWarning("This is not implemented yet.");
+                break;
+            case FollowType.MainCamera:
+                followObj = FindObjectsOfType<Client_Object>().Where(x => x.IsLocalPlayer).First().GetMainCamera();
+                break;
+            case FollowType.Interactable:
+                followObj = FindObjectsOfType<Client_Object>().Where(x => x.IsLocalPlayer).First().GetFollowTransform()
+                    .transform;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(followType), followType, null);
+        }
+
+        GetComponent<Canvas>().worldCamera = Camera.main;
+        setRelativePosition(followObj.transform, Offset.x, Offset.y, Offset.z, KeepUpdating);
+        KeepUpdating = KeepUpdating_;
+        Debug.Log($"Questionnaire Activation for Participant{po} (ClientSide)");
+        gameObject.SetActive(true);
     }
 
     public void StartQuestionair() {
         startAskingTheQuestionairsClientRPC();
     }
-[ClientRpc]
-    private  void startAskingTheQuestionairsClientRPC() {
+
+    [ClientRpc]
+    private void startAskingTheQuestionairsClientRPC() {
+        if (!IsOwner) return;
         RequestFirstQuestion(m_participantOrder);
     }
-    
-    public void SendQNAnswer(int id, int answerIndex, string lang)
-    {
+
+    public void SendQNAnswer(int id, int answerIndex, string lang) {
         if (!IsOwner) return;
         HasNewData = false;
         SendQNAnswerServerRPC(id, answerIndex, lang);
@@ -411,19 +405,17 @@ public class QN_Display : NetworkBehaviour {
 
 
     [ServerRpc]
-    public void SendQNAnswerServerRPC(int id, int answerIndex, string lang)
-    {
-        if (IsServer && m_QNDataStorageServer != null)
-        {
-            Debug.Log($"Asking for new Data with id:{id}, answerIndex:{answerIndex} and lang:{lang} for participant{m_participantOrder} ");
-            
+    public void SendQNAnswerServerRPC(int id, int answerIndex, string lang) {
+        if (IsServer && m_QNDataStorageServer != null) {
+            Debug.Log(
+                $"Asking for new Data with id:{id}, answerIndex:{answerIndex} and lang:{lang} for participant{m_participantOrder} ");
+
             m_QNDataStorageServer.NewDatapointfromClient(m_participantOrder, id, answerIndex, lang);
         }
     }
 
     [ClientRpc]
-    public void SendNewQuestionClientRPC(NetworkedQuestionnaireQuestion newq)
-    {
+    public void SendNewQuestionClientRPC(NetworkedQuestionnaireQuestion newq) {
         if (!IsOwner) return;
         Debug.Log("Got new data and updated varaible" + HasNewData);
         if (HasNewData)
@@ -431,19 +423,17 @@ public class QN_Display : NetworkBehaviour {
         else
             HasNewData = true;
 
-         lastQuestion = newq;
+        lastQuestion = newq;
     }
 
     NetworkedQuestionnaireQuestion lastQuestion;
-    public bool HasNewQuestion()
-    {
+
+    public bool HasNewQuestion() {
         return HasNewData;
     }
 
-    public NetworkedQuestionnaireQuestion GetNewQuestion()
-    {
-        if (HasNewData)
-        {
+    public NetworkedQuestionnaireQuestion GetNewQuestion() {
+        if (HasNewData) {
             HasNewData = false;
             return lastQuestion;
         }
@@ -453,15 +443,12 @@ public class QN_Display : NetworkBehaviour {
     }
 
     [ClientRpc]
-    public void SetTotalQNCountClientRpc(int outval)
-    {
+    public void SetTotalQNCountClientRpc(int outval) {
         if (!IsOwner) return;
         FindObjectOfType<QN_Display>()?.SetTotalQNCount(outval);
     }
 
-
     #endregion
-    
 }
 
 

@@ -863,7 +863,11 @@ using UnityEngine.Rendering;
                     Instantiate(JoinType_To_Client_Object[joinType],
                         tempPose.position, tempPose.rotation);
                 //   DontDestroyOnLoad(mainParticipantObject);
+                Debug.Log($"obj:{mainParticipantObject.name} n o:{mainParticipantObject.GetComponent<NetworkObject>()} spawn:{mainParticipantObject.IsSpawned}");
+               // mainParticipantObject.GetComponent<NetworkObject>().Spawn();
                 mainParticipantObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, false);
+                Debug.Log($"I just spawned:{mainParticipantObject.IsSpawned}");
+
                 Main_ParticipantObjects.Add(po, mainParticipantObject.GetComponent<Client_Object>());
                 Main_ParticipantObjects[po].SetParticipantOrder(po);
                 m_QNDataStorageServer.SetupForNewRemoteImage(po);
@@ -986,11 +990,15 @@ using UnityEngine.Rendering;
             no.Stop_Action();
         }
 
-       
-        foreach (var po in Main_ParticipantObjects.Keys)
+
+        foreach (var po in Main_ParticipantObjects.Keys) {
+            
+            
             Main_ParticipantObjects[po].GetComponent<Client_Object>()
                 .StartQuestionair(m_QNDataStorageServer);
-       
+
+        }
+
         m_QNDataStorageServer.StartQn(GetScenarioManager(), m_ReRunManager);
         StartCoroutine(farlab_logger.Instance.StopRecording());
     }
