@@ -7,19 +7,20 @@ using UnityEngine;
 
 public class PedestrianWalkingTarget : NetworkBehaviour {
 
-  
-    private MeshRenderer m_MeshRenderer;
 
-    private SpriteRenderer m_SpriteRenderer;
+    private MeshRenderer[] m_MeshRenderer;
+
+    private SpriteRenderer[] m_SpriteRenderer;
+
     // Start is called before the first frame update
     private void Awake() {
         DontDestroyOnLoad(this);
     }
 
     void Start() {
-        m_MeshRenderer = GetComponentInChildren<MeshRenderer>();
+        m_MeshRenderer = GetComponentsInChildren<MeshRenderer>();
 
-        m_SpriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        m_SpriteRenderer = GetComponentsInChildren<SpriteRenderer>();
     }
 
     public override void OnNetworkSpawn() {
@@ -56,22 +57,26 @@ public class PedestrianWalkingTarget : NetworkBehaviour {
 
     }
 
-    public override void OnNetworkDespawn() {
-        base.OnNetworkDespawn();
-       // ConnectionAndSpawning.Singleton.ServerStateChange -= EnableDisableFunction;
-    }
+
 
 
     private void server_SetShowing(bool val) {
-        m_MeshRenderer.enabled = val;
-        m_SpriteRenderer.enabled = val;
+        i_setShowing(val);
         SetShowingClientRPC(val);
     }
 
     [ClientRpc]
     private void SetShowingClientRPC(bool val) {
-        m_MeshRenderer.enabled = true;
-        m_SpriteRenderer.enabled = val;
+        i_setShowing(val);
     }
-    
+
+    private void i_setShowing(bool val) {
+        foreach (var meshRenderer in m_MeshRenderer) {
+            meshRenderer.enabled = val;
+        }
+
+        foreach (var meshRenderer in m_SpriteRenderer) {
+            meshRenderer.enabled = val;
+        }
+    }
 }

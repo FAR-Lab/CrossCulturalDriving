@@ -27,7 +27,7 @@ public class VR_Participant : Client_Object {
     private bool init;
     private Quaternion LastRot = Quaternion.identity;
     private bool lastValue;
-    public ParticipantOrder m_participantOrder = ParticipantOrder.None;
+    public NetworkVariable<ParticipantOrder>  m_participantOrder = new NetworkVariable<ParticipantOrder>();
 
     private NetworkVariable<SpawnType> mySpawnType= new NetworkVariable<SpawnType>();
    
@@ -40,7 +40,7 @@ public class VR_Participant : Client_Object {
  
     private void Update() {
         if (IsServer) {
-            ButtonPushed.Value = SteeringWheelManager.Singleton.GetHornButtonInput(m_participantOrder);
+            ButtonPushed.Value = SteeringWheelManager.Singleton.GetHornButtonInput(m_participantOrder.Value);
         }
     }
 
@@ -60,7 +60,7 @@ public class VR_Participant : Client_Object {
                     pnac = gameObject.AddComponent<PedestrianNavigationAudioCues>();
                 }
                     
-                pnac.SetNewNavigationInstructions(Directions, m_participantOrder);
+                pnac.SetNewNavigationInstructions(Directions, m_participantOrder.Value);
                 break;
             case SpawnType.PASSENGER:
                 var nvc2 = NetworkedInteractableObject.GetComponent<NetworkVehicleController>();
@@ -89,7 +89,7 @@ public class VR_Participant : Client_Object {
     public override void OnNetworkSpawn() //ToDo Turning on and off different elements could be done neater...
     {
         if (IsLocalPlayer) {
-            m_participantOrder = ConnectionAndSpawning.Singleton.ParticipantOrder;
+           // m_participantOrder.Value = ConnectionAndSpawning.Singleton.ParticipantOrder;
         }
         else {
             foreach (var a in GetComponentsInChildren<SkinnedMeshRenderer>()) {
@@ -122,9 +122,9 @@ public class VR_Participant : Client_Object {
         }
 
         if (IsServer) {
-            m_participantOrder = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
+            m_participantOrder.Value = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
-            GetComponentInChildren<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder);
+            GetComponentInChildren<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder.Value);
         }
         else {
             foreach (var a in GetComponentsInChildren<ReplayTransform>()) {
@@ -154,11 +154,11 @@ public class VR_Participant : Client_Object {
 
 
     public override void SetParticipantOrder(ParticipantOrder _ParticipantOrder) {
-        m_participantOrder = _ParticipantOrder;
+        m_participantOrder.Value = _ParticipantOrder;
     }
 
     public override ParticipantOrder GetParticipantOrder() {
-        return m_participantOrder;
+        return m_participantOrder.Value;
     }
 
     public override void SetSpawnType(SpawnType _spawnType) {
@@ -293,7 +293,7 @@ public class VR_Participant : Client_Object {
 
 
         Debug.Log($"Spawning a questionnaire for Participant{m_participantOrder}");
-        qnmanager.StartQuestionair(m_QNDataStorageServer, m_participantOrder, tmp, Offset, KeepUpdating,
+        qnmanager.StartQuestionair(m_QNDataStorageServer, m_participantOrder.Value, tmp, Offset, KeepUpdating,
             referenceTransformPath, this);
 
         foreach (var screenShot in FindObjectsOfType<QnCaptureScreenShot>()) {
@@ -306,7 +306,7 @@ public class VR_Participant : Client_Object {
             }
         }
 
-        m_QNDataStorageServer.RegisterQNSCreen(m_participantOrder, qnmanager);
+        m_QNDataStorageServer.RegisterQNSCreen(m_participantOrder.Value, qnmanager);
     }
 
     private Transform LeftHand;
@@ -320,11 +320,15 @@ public class VR_Participant : Client_Object {
         int runs = 0;
         const int MaxRuns = 250;
         
-        Transform HandModelL= transform.Find("Camera Offset/Left Hand Tracking/L_Wrist/L_Palm");
-        Transform HandModelR = transform.Find("Camera Offset/Right Hand Tracking/R_Wrist/R_Palm");
+      //  Transform HandModelL= transform.Find("Camera Offset/Left Hand Tracking/L_Wrist/L_Palm");
+      //  Transform HandModelR = transform.Find("Camera Offset/Right Hand Tracking/R_Wrist/R_Palm");
+        Transform HandModelL= transform.GetComponent<SeatCalibration>().HandModelL;
+       Transform HandModelR = transform.GetComponent<SeatCalibration>().HandModelR;
+      
      // var interact = FindObjectOfType<SkeletonNetworkScript>();    // We making a bunch of assumptions here, kinda ugly! 
         
-        Debug.Log(ZedOrignReference.position);
+     
+        Debug.Log($"ZedOrignReference{ZedOrignReference}, VrCamera{VrCamera}, HandModelL{HandModelL}, HandModelR{HandModelR}");
         Debug.DrawRay(ZedOrignReference.position,-Vector3.up*ZedOrignReference.position.y,Color.magenta,60);
         Debug.DrawRay(HandModelL.position,Vector3.up,Color.cyan,60);
         Debug.DrawRay(HandModelR.position,Vector3.up,Color.cyan,60);
@@ -337,7 +341,7 @@ public class VR_Participant : Client_Object {
             Vector3 AtoB = B - A;
             Vector3 midPoint= (A + (AtoB * 0.5f));
             Vector3 transformDifference =  ZedOrignReference.position-midPoint;
-            Vector3 artificalForward =   VrCamera.position - midPoint;
+            Vector3 artificalForward =   midPoint - VrCamera.position ;
 
             float angle = Vector3.SignedAngle(new Vector3(artificalForward.x,0,artificalForward.z), 
                 new Vector3(ZedOrignReference.forward.x,0,ZedOrignReference.forward.z),
@@ -360,13 +364,13 @@ public class VR_Participant : Client_Object {
             yield return new WaitForEndOfFrame();
         }
         FinishedCalibration();
-        PedestrianCallibrationFinishedServerRPC();
+     //   PedestrianCallibrationFinishedServerRPC();
         isCalibrationRunning = false;
     }
 
     [ServerRpc]
     private void PedestrianCallibrationFinishedServerRPC() {
-        FindObjectOfType<ZedReferenceFinder>().InitiateInverseContinuesCalibration(GetMainCamera());
+       //  FindObjectOfType<ZedReferenceFinder>().InitiateInverseContinuesCalibration(GetMainCamera());
     }
 
     private bool SkeletonSet = false;
@@ -393,47 +397,14 @@ public class VR_Participant : Client_Object {
                 var mainCamera = GetMainCamera();
                 Debug.Log($"VrCamera Local Position {mainCamera.localPosition}");
                 Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
-                if (transform.parent != null &&
-                    transform.parent == NetworkedInteractableObject.transform 
-                    // && NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null
-            ){
+               
                     if (isCalibrationRunning == false) {
-                      //  StartCoroutine(OverTimeCalibration(mainCamera, NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>().GetCameraPositionObject(),10));
+                        StartCoroutine(OverTimeCalibration(mainCamera, FindObjectOfType<ExperimentSpaceReference>().GetCallibrationPoint(),10));
                     }
                     else {
                         Debug.Log("Callibration already running!");
                     }
-                }
-                else {
-                    Debug.LogError("Pedestrian calibration failed!!");
-                }
-                /*
-                else if (t != null) {
-                    Quaternion q = Quaternion.FromToRotation(tmp.forward, t.forward);
-                    SetNewRotationOffset(Quaternion.Euler(0, q.eulerAngles.y, 0));
-
-
-                    FinishedCalibration();
-                }
-                else {
-                    Debug.Log("Could not find GetCameraPositionObject :-(");
-                    if (ConnectionAndSpawning.Singleton.GetScenarioManager()
-                        .GetSpawnPose(m_participantOrder, out Pose pose)) {
-                        Quaternion q = Quaternion.FromToRotation(tmp.forward, pose.forward);
-                        SetNewRotationOffset(Quaternion.Euler(0, q.eulerAngles.y, 0));
-                    }
-
-                    SetNewPositionOffset(transform.parent.position - tmp.position);
-                    FinishedCalibration();
-                }*/
-/*
-                if (NetworkedInteractableObject.GetType() == typeof(ZEDMaster)) {
-                    var zedMaster = NetworkedInteractableObject.GetComponent<ZEDMaster>();
-                    LeftHand = transform.Find("VrCamera Offset/Left Hand Tracking/L_Wrist");
-                    RightHand = transform.Find("VrCamera Offset/Right Hand Tracking/R_Wrist");
-                    LeftHand.gameObject.GetOrAddComponent<ZombieHands>().Init(zedMaster.GetLeftHandRoot());
-                    RightHand.gameObject.GetOrAddComponent<ZombieHands>().Init(zedMaster.GetRightHandRoot());
-                }*/
+             
 
                 break;
         }
@@ -507,7 +478,7 @@ public class VR_Participant : Client_Object {
         if (!IsLocalPlayer) return;
         if (IsServer) return;
         FinishedImageSending = false;
-        StartCoroutine(SendImageData(m_participantOrder, Image));
+        StartCoroutine(SendImageData(m_participantOrder.Value, Image));
     }
 
 

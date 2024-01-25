@@ -52,6 +52,7 @@ public class PedestrianNavigationAudioCues : MonoBehaviour {
         StartLeftSound,
         ComeToStopSound,
         ToHospitalSound,
+        BusStopSound,
         BlackTrashcanSound,
         BlueTrashcanSound,
         FoodCartSound,
@@ -80,6 +81,7 @@ public class PedestrianNavigationAudioCues : MonoBehaviour {
         StartLeftSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/IntersectionLeft");
         ComeToStopSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/ComeToStop");
         ToHospitalSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Hospital");
+        BusStopSound = Resources.Load<AudioClip>(path: "PedestrianNavigationSounds/new_cues/bus_stop");
         BlackTrashcanSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/new_cues/black_trashcan");
         BlueTrashcanSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/new_cues/blue_trashcan");
         FoodCartSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/new_cues/food_cart");
@@ -141,6 +143,9 @@ public class PedestrianNavigationAudioCues : MonoBehaviour {
                 break;
             case NavigationScreen.Direction.ToHospital:
                 src.PlayOneShot(ToHospitalSound);
+                break;
+            case NavigationScreen.Direction.bus_stop:
+                src.PlayOneShot(BusStopSound);
                 break;
             case NavigationScreen.Direction.black_trashcan:
                 src.PlayOneShot(BlackTrashcanSound);

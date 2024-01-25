@@ -19,13 +19,9 @@ public class SkeletonNetworkScript : NetworkBehaviour
                 
             }
 
-      //      Destroy(GetComponent<ZEDSkeletonAnimator>());
-            // Destroy(GetComponent<HeightOffsetter>());
-            Destroy(GetComponent<Animator>());
 
             GetComponentInChildren<BoxCollider>().enabled = false;
             Debug.Log("OkDoneWithThat!");
-            //GetComponent<HeightOffsetter>().enabled = false;
         }
     }
 

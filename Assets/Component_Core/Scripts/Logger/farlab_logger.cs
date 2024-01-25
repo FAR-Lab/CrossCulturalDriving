@@ -236,22 +236,22 @@ public class farlab_logger : MonoBehaviour {
         foreach (var vr in FindObjectsOfType<VR_Participant>()) {
             logItems.Add(new LogItem(vr.GetMainCamera(),
                 PositonLog,
-                $"{vr.m_participantOrder} VR Pos"
+                $"{vr.GetParticipantOrder()} VR Pos"
             ));
 
             logItems.Add(new LogItem(vr.GetMainCamera(),
                 OrientationLog,
-                $"{vr.m_participantOrder} VR Rot"
+                $"{vr.GetParticipantOrder()} VR Rot"
             ));
 
             logItems.Add(new LogItem(vr.transform,
                 PositonLog,
-                $"{vr.m_participantOrder} XR Origin Pos"
+                $"{vr.GetParticipantOrder()} XR Origin Pos"
             ));
 
             logItems.Add(new LogItem(vr.transform,
                 OrientationLog,
-                $"{vr.m_participantOrder} XR Origin  Rot"
+                $"{vr.GetParticipantOrder()} XR Origin  Rot"
             ));
         }
 
@@ -327,22 +327,22 @@ public class farlab_logger : MonoBehaviour {
             Handedness l_handenness = hand.GetComponent<XRHandTrackingEvents>().handedness;
             logItems.Add(new LogItem(hand.rootTransform,
                 PositonLog,
-                $"{vrParticipant.m_participantOrder} Root Hand Pos {l_handenness}"
+                $"{vrParticipant.GetParticipantOrder()} Root Hand Pos {l_handenness}"
             ));
             logItems.Add(new LogItem(hand.rootTransform,
                 OrientationLog,
-                $"{vrParticipant.m_participantOrder} Root Hand Rot {l_handenness}"
+                $"{vrParticipant.GetParticipantOrder()} Root Hand Rot {l_handenness}"
             ));
 
             for (int i = 0; i < hand.jointTransformReferences.Count; i++) {
                 var local = hand.jointTransformReferences[i];
                 logItems.Add(new LogItem(local.jointTransform,
                     PositonLog,
-                    $"{vrParticipant.m_participantOrder} Hand Bone Pos {local.xrHandJointID} {l_handenness}"
+                    $"{vrParticipant.GetParticipantOrder()} Hand Bone Pos {local.xrHandJointID} {l_handenness}"
                 ));
                 logItems.Add(new LogItem(local.jointTransform,
                     OrientationLog,
-                    $"{vrParticipant.m_participantOrder} Hand Bone Rot {local.xrHandJointID} {l_handenness}"
+                    $"{vrParticipant.GetParticipantOrder()} Hand Bone Rot {local.xrHandJointID} {l_handenness}"
                 ));
             }
         }

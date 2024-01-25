@@ -821,7 +821,7 @@ using UnityEngine.Rendering;
                 newInteractableObject.GetComponent<Interactable_Object>().AssignClient(clientID, po);
                 newInteractableObject.GetComponent<Interactable_Object>().m_participantOrder.Value = po; //ToDo unecessairy
                 Debug.Log(
-                    $"Is the interactable Spawned here already: {newInteractableObject.GetComponent<Interactable_Object>().IsSpawned}");
+                    $"Is the Interactable Spawned here already: {newInteractableObject.GetComponent<Interactable_Object>().IsSpawned}");
                 Interactable_ParticipantObjects[po].Add(newInteractableObject.GetComponent<Interactable_Object>());
                 
                 if (Main_ParticipantObjects[po] != null) {

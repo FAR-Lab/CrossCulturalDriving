@@ -41,13 +41,13 @@ public class SpaceReferenceEditor : Editor
 }
 #endif
 
-public class ExperimentSpaceReference : MonoBehaviour
-{
-
+public class ExperimentSpaceReference : MonoBehaviour {
+    private const int workAreaCount = 4;
     public List<Transform> WorkingArea = new List<Transform>();
-    public static string RoomSetUpPath = Application.dataPath + "/Resources/SpaceReference.json";
+    public static string RoomSetUp = "SpaceReference";
+    public static string RoomSetUpPath = Application.dataPath + "/Resources/"+RoomSetUp+".json";
 
-
+[SerializeField]
     public Transform callibrationPoint;
 
     public float MeshWidth = 0.2f;
@@ -71,6 +71,11 @@ public class ExperimentSpaceReference : MonoBehaviour
         if (callibrationPoint != null) {
             Gizmos.DrawCube(callibrationPoint.position, Vector3.one * 0.1f);
         }
+    }
+
+    private void Start() {
+        Debug.Log("Loading CallibrationPoint");
+        LoadSetup();
     }
 
     public void storeNewSetup()
@@ -105,15 +110,38 @@ public class ExperimentSpaceReference : MonoBehaviour
 
     public void LoadSetup()
     {
+        #if UNITY_EDITOR
         if (!File.Exists(RoomSetUpPath))
         {
             return;
         }
         string s = File.ReadAllText(RoomSetUpPath);
+        #else 
+        var t =  Resources.Load<TextAsset>(RoomSetUp);
+       string s = t.ToString();
+        
+        #endif
+       
         float[][] outVal = JsonConvert
             .DeserializeObject<float[][]>(s);
+        WorkingArea.Clear();
+        for (int i = transform.childCount-1; i >=0 ; i--) {
+          
+            #if UNITY_EDITOR
+            DestroyImmediate(transform.GetChild(i).gameObject);
 
+            #else
+            Destroy(transform.GetChild(i).gameObject);
+#endif
+        }
         
+        
+        if (callibrationPoint == null) {
+            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            callibrationPoint = go.transform;
+            callibrationPoint.parent = transform;
+            callibrationPoint.name = "CallibrationPoint";
+        }
         Vector3 tmp = new Vector3();
         
         tmp.x = outVal[0][0];
@@ -127,21 +155,33 @@ public class ExperimentSpaceReference : MonoBehaviour
         var rotation = callibrationPoint.localRotation;
         rotation.eulerAngles = tmp;
         callibrationPoint.localRotation = rotation;
+        callibrationPoint.localScale=Vector3.one*0.1f;
         
         
-        
-        for (int i = 2; i < WorkingArea.Count+2; i++)
+        for (int i = 2; i < workAreaCount+2; i++)
         {
+            
+            var go = new GameObject();
+            
+            go.transform.parent = transform;
+            go.transform.name = $"Border {i-1}";
+            
             tmp = new Vector3();
             tmp.x = outVal[i][0];
             tmp.y = outVal[i][1];
             tmp.z = outVal[i][2];
 
-            WorkingArea[i-2].localPosition = tmp;
-            WorkingArea[i-2].rotation = transform.rotation;
+            go.transform.localPosition = tmp;
+            go.transform.rotation = transform.rotation;
+
+            WorkingArea.Add(go.transform);
         }
         
 
+    }
+
+    public Transform GetCallibrationPoint() {
+        return callibrationPoint;
     }
     public void Create3DRectangularMeshes()
     {

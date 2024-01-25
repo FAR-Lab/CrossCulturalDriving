@@ -43,9 +43,15 @@ public abstract class Client_Object : NetworkBehaviour {
     
     public static Client_Object GetJoinTypeObject() // I am not sure that this is a smart thing todo...
     {
-        foreach (var pic in FindObjectsOfType<Client_Object>())
-            if (pic.IsLocalPlayer)
-                return pic;
+        return null;
+        //ToDo: David WTF
+        Type[] types = (Type[])GetAllImplementations();
+        foreach (Type t in types){
+            foreach (var pic in FindObjectsOfType(t)) {
+                if (((Client_Object)pic).IsLocalPlayer)
+                    return (Client_Object)pic;
+            }
+        }
         return null;
     }
 

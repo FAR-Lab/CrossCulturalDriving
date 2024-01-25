@@ -16,6 +16,7 @@ public class NavigationScreen : ReplayBehaviour {
         StartStraight,
         ComeToStop,
         ToHospital,
+        bus_stop,
         black_trashcan,
         blue_trashcan,
         food_cart,
