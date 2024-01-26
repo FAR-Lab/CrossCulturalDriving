@@ -138,7 +138,7 @@ public class SeatCalibration : MonoBehaviour {
                     }
 
                     myPic.SetNewPositionOffset(-transformDifference);
-                    Debug.Log("transformDifference" + (-transformDifference).ToString());
+//                    Debug.Log("transformDifference" + (-transformDifference).ToString());
                 }
 
                 if (callibrationTimer > 0) { callibrationTimer -= Time.deltaTime; }
@@ -146,7 +146,7 @@ public class SeatCalibration : MonoBehaviour {
 
                 break;
             case SearCalibrationState.FINISHED:
-                myPic.FinishedCalibration();
+                myPic.FinishedCalibration(steeringWheelCenter.parent);
                 callibrationState = SearCalibrationState.READY;
                 break;
             case SearCalibrationState.READY: break;

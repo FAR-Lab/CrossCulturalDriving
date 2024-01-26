@@ -180,7 +180,7 @@ public class VR_Participant : Client_Object {
                     if (pnac == null) {
                         gameObject.AddComponent<PedestrianNavigationAudioCues>();
                     }
-                    //ToDo We might still have to move you to the active sceen (lighting and ReRun considerations... )
+                    //ToDo We might still have to move you to the active screen (lighting and ReRun considerations... )
                     break;
                 case SpawnType.PASSENGER:
                     break;
@@ -208,21 +208,41 @@ public class VR_Participant : Client_Object {
     private void AssignInteractable_ClientRPC(NetworkObjectReference MyInteractable, ulong targetClient) {
         Debug.Log(
             $"MyInteractable{MyInteractable.NetworkObjectId} targetClient:{targetClient}, OwnerClientId:{OwnerClientId}");
-        if (MyInteractable.TryGet(out var targetObject)) {
-            if (targetClient == OwnerClientId) {
-                var conf = new ConfigFileLoading();
+
+        var conf = new ConfigFileLoading();
+        switch (mySpawnType.Value) {
+            case SpawnType.CAR:
+                if (MyInteractable.TryGet(out var targetObject)) {
+                    if (targetClient == OwnerClientId) {
+
+                        conf.Init(OffsetFileName);
+                        if (conf.FileAvalible()) {
+                            conf.LoadLocalOffset(out var localPosition, out var localRotation);
+                            transform.localPosition = localPosition;
+                            transform.localRotation = localRotation;
+                        }
+
+                        NetworkedInteractableObject = targetObject.transform.GetComponent<Interactable_Object>();
+                    }
+                }
+                else {
+                    Debug.LogError(
+                        "Did not manage to get my Car assigned interactions will not work. Maybe try calling this RPC later.");
+                }
+
+                break;
+            case SpawnType.PEDESTRIAN:
                 conf.Init(OffsetFileName);
                 if (conf.FileAvalible()) {
                     conf.LoadLocalOffset(out var localPosition, out var localRotation);
-                    transform.localPosition = localPosition;
-                    transform.localRotation = localRotation;
+                    var space = FindObjectOfType<ExperimentSpaceReference>().GetCallibrationPoint();
+                    transform.position = space.TransformPoint(localPosition);
+                    transform.forward = space.TransformDirection(localRotation * Vector3.forward);
                 }
-                NetworkedInteractableObject = targetObject.transform.GetComponent<Interactable_Object>();
-            }
-        }
-        else {
-            Debug.LogError(
-                "Did not manage to get my Car assigned interactions will not work. Maybe try calling this RPC later.");
+
+                break;
+            default:
+                break;
         }
     }
 
@@ -246,11 +266,6 @@ public class VR_Participant : Client_Object {
         if (mySpawnType.Value == SpawnType.PEDESTRIAN){//&& NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null) {
             
             
-            // MakeSure the ZEDBodyTrackinManager is where its supposed to be
-            //Wait a second for the network to update 
-            // Send a callibration re quest to the Client  (ClientRPC) TO move the origin such that skeleton and VR align!
-            
-           // NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>().WorldCalibration();
             CalibrateClientRPC();
             
         }else if (mySpawnType.Value == SpawnType.CAR) {
@@ -363,8 +378,7 @@ public class VR_Participant : Client_Object {
             }
             yield return new WaitForEndOfFrame();
         }
-        FinishedCalibration();
-     //   PedestrianCallibrationFinishedServerRPC();
+        FinishedCalibration(ZedOrignReference);
         isCalibrationRunning = false;
     }
 
@@ -422,19 +436,23 @@ public class VR_Participant : Client_Object {
 
 
     public void SetNewRotationOffset(Quaternion offset) {
-        // offsetRotation *= offset;
+       
         transform.rotation *= offset;
     }
 
     public void SetNewPositionOffset(Vector3 positionOffset) {
-        // offsetPositon += positionOffset;
+        
         transform.position += positionOffset;
     }
 
-    public void FinishedCalibration() {
+    public void FinishedCalibration(Transform relativeTransform) {
         var conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
-        conf.StoreLocalOffset(transform.localPosition, transform.localRotation);
+        Vector3 localPosToStore = relativeTransform.InverseTransformPoint(transform.position);
+       
+        Quaternion LocalRotation = Quaternion.Inverse(relativeTransform.rotation) * transform.rotation;
+            
+        conf.StoreLocalOffset(localPosToStore, LocalRotation);
 
         //  ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
     }

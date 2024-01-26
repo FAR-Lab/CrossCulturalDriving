@@ -10,7 +10,7 @@ using UnityEngine.Serialization;
 
 public class Mocopie_Interactable : Interactable_Object {
 
-    //public GameObject MocopiePrefab;
+   
   
     private ulong m_CLID;
     private Pose StartingPose;

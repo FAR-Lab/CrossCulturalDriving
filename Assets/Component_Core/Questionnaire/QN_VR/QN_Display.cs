@@ -385,6 +385,11 @@ public class QN_Display : NetworkBehaviour {
         gameObject.SetActive(true);
     }
 
+    private void OnDisable() {
+        GetComponent<Canvas>().worldCamera = null;
+        ParentPosition = null;
+    }
+
     public void StartQuestionair() {
         startAskingTheQuestionairsClientRPC();
     }
