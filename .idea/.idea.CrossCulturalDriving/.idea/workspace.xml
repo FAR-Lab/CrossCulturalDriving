@@ -10,13 +10,11 @@
   <component name="ChangeListManager">
     <list default="true" id="1f6d41df-4024-490f-b01c-048cd6957123" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.CrossCulturalDriving/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.CrossCulturalDriving/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/VRClientHeadHand.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Prefabs/VRClientHeadHand.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Questionnaire/QN_VR/QN_Display.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Questionnaire/QN_VR/QN_Display.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Questionnaire/QN_VR/QN_Screen.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Questionnaire/QN_VR/QN_Screen.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Interactables/Mocopie_Interactable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Interactables/Mocopie_Interactable.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/VR_Participant.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Core/Scripts/Networking/VR_Participant.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Component_Driving/Scripts/SeatCalibration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Component_Driving/Scripts/SeatCalibration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/PedestrianNavigationAudioCues.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PedestrianNavigationAudioCues.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Resources/PedestrianSpawn.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/PedestrianSpawn.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/Ped_3_Cross.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/Ped_3_Cross.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/Ped_7.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_Studies/Pedestrian_Interaction/Ped_7.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,10 +27,6 @@
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
@@ -118,31 +112,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Attach to Unity Editor.Attach to Unity Editor.executor": "Debug",
-    "Discover.Launch.Via.Unity": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "development",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Attach to Unity Editor.Attach to Unity Editor.executor&quot;: &quot;Debug&quot;,
+    &quot;Discover.Launch.Via.Unity&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;development&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache",
-      "C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache",
-      "C:\\Users\\farla\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\farla\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\farla\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="$PROJECT_DIR$/../../Summer2023/UnityBuilds/2024_01_24\com.farlab.StrangeLand.exe" />
@@ -284,6 +278,7 @@
       <workItem from="1706112690042" duration="11123000" />
       <workItem from="1706133943014" duration="4901000" />
       <workItem from="1706193053600" duration="26277000" />
+      <workItem from="1706303479006" duration="2693000" />
     </task>
     <servers />
   </component>

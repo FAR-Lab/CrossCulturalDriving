@@ -36,7 +36,8 @@ public class VR_Participant : Client_Object {
 
 
     public GameObject QuestionairPrefab;
-
+  
+    private PedestrianNavigationAudioCues AudioCuePlayer;
  
     private void Update() {
         if (IsServer) {
@@ -44,6 +45,7 @@ public class VR_Participant : Client_Object {
         }
     }
 
+    
     public override void SetNewNavigationInstruction(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions) {
         switch (mySpawnType.Value) {
             case SpawnType.NONE:
@@ -55,12 +57,8 @@ public class VR_Participant : Client_Object {
                 }
                 break;
             case SpawnType.PEDESTRIAN:
-                var pnac = GetComponent<PedestrianNavigationAudioCues>();
-                if (pnac == null) {
-                    pnac = gameObject.AddComponent<PedestrianNavigationAudioCues>();
-                }
-                    
-                pnac.SetNewNavigationInstructions(Directions, m_participantOrder.Value);
+                NavigationScreen.Direction oneDirection = Directions[m_participantOrder.Value];
+                SetPedestrianNavigationInstructionsClientRPC(oneDirection);
                 break;
             case SpawnType.PASSENGER:
                 var nvc2 = NetworkedInteractableObject.GetComponent<NetworkVehicleController>();
@@ -74,9 +72,18 @@ public class VR_Participant : Client_Object {
             default:
                 throw new ArgumentOutOfRangeException();
         } 
-            
-        
     }
+
+    [ClientRpc]
+    private void SetPedestrianNavigationInstructionsClientRPC(NavigationScreen.Direction Directions) {
+        
+        if (AudioCuePlayer == null) {
+            var ourMainCamera = GetMainCamera();
+            AudioCuePlayer = ourMainCamera.gameObject.AddComponent<PedestrianNavigationAudioCues>();
+        }
+        AudioCuePlayer.SetNewNavigationInstructions(Directions);
+    }
+
 
     public static VR_Participant GetJoinTypeObject() {
         foreach (var pic in FindObjectsOfType<VR_Participant>())

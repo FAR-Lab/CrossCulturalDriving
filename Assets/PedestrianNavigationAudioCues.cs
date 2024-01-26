@@ -66,9 +66,10 @@ public class PedestrianNavigationAudioCues : MonoBehaviour {
         StairsAcrossStreetSound;
 
     private AudioSource src;
-    
+
+    private bool readyToplay = false;
     // Start is called before the first frame update
-    void Start()
+    void LoadResources()
     {
         
         straightSound=Resources.Load<AudioClip>("PedestrianNavigationSounds/Cross");
@@ -98,8 +99,8 @@ public class PedestrianNavigationAudioCues : MonoBehaviour {
         src.spatialize = true;
         src.spread = 1;
         src.volume = Volume;
-       
 
+        readyToplay = true;
     }
 
     // Update is called once per frame
@@ -108,11 +109,14 @@ public class PedestrianNavigationAudioCues : MonoBehaviour {
         
     }
 
-    public void SetNewNavigationInstructions(Dictionary<ParticipantOrder, NavigationScreen.Direction> directions , ParticipantOrder po ) {
-        NavigationScreen.Direction tmp = directions[po];
-        switch (tmp) {
+    public void SetNewNavigationInstructions( NavigationScreen.Direction directions ) {
+        if (!readyToplay) {
+            LoadResources();
+        }
+        switch (directions) {
             case NavigationScreen.Direction.Straight:
                 src.PlayOneShot(straightSound);
+                Debug.Log("just played straight sound");
                 break;
             case NavigationScreen.Direction.Left:
                 src.PlayOneShot(leftSound);
