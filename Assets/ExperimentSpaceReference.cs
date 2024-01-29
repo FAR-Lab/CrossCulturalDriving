@@ -219,6 +219,8 @@ public class ExperimentSpaceReference : MonoBehaviour {
                 // move outwards from the last mesh
                 Vector3 meshPosition = midPoint + normalToEdge * MeshSpacing * j;
 
+                meshPosition.y += MeshHeight / 2;
+
                 GameObject meshObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 meshObj.transform.position = meshPosition;
                 meshObj.transform.rotation = rotation;
