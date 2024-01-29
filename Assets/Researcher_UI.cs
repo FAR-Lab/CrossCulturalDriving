@@ -118,6 +118,7 @@ public class Researcher_UI : MonoBehaviour
         Vector3 pos = new Vector3(tmp[0],tmp[1], tmp[2]);
         
         pos = spaceRef.transform.TransformPoint(pos) ;
+        pos.y = spaceRef.transform.position.y + 0.05f;
         PedIndicator.position = pos;
         PedIndicator.forward =  Quaternion.Euler(0, tmp[3], 0)*spaceRef.transform.forward ;
 

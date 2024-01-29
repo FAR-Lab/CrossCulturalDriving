@@ -1,30 +1,19 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 
 /*
  //https://ttsmaker.com/
 Please cross the street.
-
 Please turn left.
-
 Please turn right.
-
 Please stop.
-
 Please hurry up.
-
 Please wait.
-
 At the intersection turn right
-
 At the intersection turn left.
-
 Please come to a  stop.
-
 Please go to the hospital.
-
 > Scene 3: Walk towards the bus stop
 > Scene 7: Walk towards the food cart with the umbrella
 > Scene 12: Walk to the red building (???)/ black trash can
@@ -99,15 +88,11 @@ public class PedestrianNavigationAudioCues : MonoBehaviour {
         src.spatialize = true;
         src.spread = 1;
         src.volume = Volume;
-
+        src.maxDistance = 1;
         readyToplay = true;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+  
 
     public void SetNewNavigationInstructions( NavigationScreen.Direction directions ) {
         if (!readyToplay) {

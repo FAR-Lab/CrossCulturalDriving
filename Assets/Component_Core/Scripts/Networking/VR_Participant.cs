@@ -129,6 +129,7 @@ public class VR_Participant : Client_Object {
         }
 
         if (IsServer) {
+            ConnectionAndSpawning.Singleton.ServerStateChange += ChangeRendering;
             m_participantOrder.Value = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
             GetComponentInChildren<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder.Value);
@@ -139,7 +140,60 @@ public class VR_Participant : Client_Object {
             }
         }
     }
+   
 
+    private void ChangeRendering(ActionState state) {
+        if (mySpawnType.Value != SpawnType.PEDESTRIAN) return;
+        switch (state) {
+            case ActionState.DEFAULT:
+                
+                break;
+            case ActionState.WAITINGROOM:
+                SetPedestrianOpenXRRepresentaion(true);
+                break;
+            case ActionState.LOADINGSCENARIO:
+                
+                break;
+            case ActionState.LOADINGVISUALS:
+                
+                break;
+            case ActionState.READY:
+                SetPedestrianOpenXRRepresentaion(false);
+             break;
+            case ActionState.DRIVE:
+                
+                break;
+            case ActionState.QUESTIONS:
+                SetPedestrianOpenXRRepresentaion(true);
+              break;
+            case ActionState.POSTQUESTIONS:
+                SetPedestrianOpenXRRepresentaion(true);
+                break;
+            case ActionState.RERUN:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(state), state, null);
+        }
+    }
+
+    private void SetPedestrianOpenXRRepresentaion(bool val) {
+
+        SetPedestrianOpenXRRepresentaionClientRPC(val);
+        i_setPedestrianOpenXRRepresentaion(val);
+    }
+    [ClientRpc]
+    private void SetPedestrianOpenXRRepresentaionClientRPC(bool val) {
+
+        i_setPedestrianOpenXRRepresentaion(val);
+    }
+    private void i_setPedestrianOpenXRRepresentaion(bool val) {
+        foreach (var smr in GetComponentsInChildren<SkinnedMeshRenderer>()) {
+
+            smr.enabled = val;
+        }
+        
+        
+    }
 
     public override void GoForPostQuestion() {
         if (!IsLocalPlayer) return;
