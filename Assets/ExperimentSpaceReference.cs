@@ -23,9 +23,9 @@ public class SpaceReferenceEditor : Editor
         {
            reference.LoadSetup();
         }
-        if (GUILayout.Button("Create Meshes"))
+        if (GUILayout.Button("Clear Working Area"))
         {
-            reference.Create3DRectangularMeshes();
+            reference.ClearWorkingArea();
         }
     }
 
@@ -71,6 +71,21 @@ public class ExperimentSpaceReference : MonoBehaviour {
         if (callibrationPoint != null) {
             Gizmos.DrawCube(callibrationPoint.position, Vector3.one * 0.1f);
         }
+    }
+
+    public void ClearWorkingArea()
+    {
+        WorkingArea.Clear();
+
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            #if UNITY_EDITOR
+            DestroyImmediate(transform.GetChild(i).gameObject);
+            #else
+            Destroy(transform.GetChild(i).gameObject);
+            #endif
+        }       
+        
     }
 
     private void Start() {
@@ -177,6 +192,8 @@ public class ExperimentSpaceReference : MonoBehaviour {
             WorkingArea.Add(go.transform);
         }
         
+        // load mesh
+        Create3DRectangularMeshes();
 
     }
 
