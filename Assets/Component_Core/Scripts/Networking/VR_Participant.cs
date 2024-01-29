@@ -141,6 +141,7 @@ public class VR_Participant : Client_Object {
         }
     }
    
+    
 
     private void ChangeRendering(ActionState state) {
         if (mySpawnType.Value != SpawnType.PEDESTRIAN) return;
@@ -150,6 +151,7 @@ public class VR_Participant : Client_Object {
                 break;
             case ActionState.WAITINGROOM:
                 SetPedestrianOpenXRRepresentaion(true);
+                SetUpZEDSpaceReferenceClientRPC();
                 break;
             case ActionState.LOADINGSCENARIO:
                 
@@ -159,6 +161,7 @@ public class VR_Participant : Client_Object {
                 break;
             case ActionState.READY:
                 SetPedestrianOpenXRRepresentaion(false);
+                SetUpZEDSpaceReferenceClientRPC();
              break;
             case ActionState.DRIVE:
                 
@@ -174,6 +177,12 @@ public class VR_Participant : Client_Object {
             default:
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);
         }
+    }
+
+    [ClientRpc]
+    private void SetUpZEDSpaceReferenceClientRPC(){
+        var ZedSpaceReference = FindObjectOfType<ExperimentSpaceReference>();
+        ZedSpaceReference.LoadSetup();
     }
 
     private void SetPedestrianOpenXRRepresentaion(bool val) {
