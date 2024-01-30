@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 140914496644520242}
   - component: {fileID: 3325306329956576900}
   - component: {fileID: 197272131835963929}
+  - component: {fileID: 4298128650947994759}
   m_Layer: 0
   m_Name: TrafficLight_New
   m_TagString: Untagged
@@ -166,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 473242513
+  GlobalObjectIdHash: 1056744863
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -194,6 +195,27 @@ MonoBehaviour:
   StartinTrafficlightStatus: 2
   _currentStatus: 0
   m_participantOrder: 97
+--- !u!114 &4298128650947994759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306018947298837483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 65102
+  prefabIdentity:
+    id: 37201
+  observedComponents: []
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &1989369482145387447
 GameObject:
   m_ObjectHideFlags: 0

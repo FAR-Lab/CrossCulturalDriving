@@ -13,13 +13,11 @@ public class SkeletonNetworkScript : NetworkBehaviour
         Debug.Log("About to destroy client irrelevant objects!");
         if (IsServer) { }
         else {
-            GetComponent<ReplayObject>().enabled = false;
+            GetComponentInParent<ReplayObject>().enabled = false;
             foreach (var t in GetComponentsInChildren<ReplayTransform>()) {
                 t.enabled = false;
                 
             }
-
-
             GetComponentInChildren<BoxCollider>().enabled = false;
             Debug.Log("OkDoneWithThat!");
         }

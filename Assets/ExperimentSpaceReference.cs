@@ -96,7 +96,7 @@ public class ExperimentSpaceReference : MonoBehaviour
     private void Start()
     {
         Debug.Log("Loading CallibrationPoint");
-        //LoadSetup();
+        LoadSetup();
     }
 
     public void storeNewSetup()
@@ -202,12 +202,15 @@ public class ExperimentSpaceReference : MonoBehaviour
         }
 
         // load mesh
-        Create3DRectangularMeshes();
+        //Create3DRectangularMeshes();
 
     }
 
     public Transform GetCallibrationPoint()
     {
+        if (callibrationPoint == null) {
+            LoadSetup();
+        }
         return callibrationPoint;
     }
     public void Create3DRectangularMeshes()

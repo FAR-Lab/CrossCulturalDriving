@@ -260,8 +260,9 @@ public class VR_Participant : Client_Object {
                     throw new ArgumentOutOfRangeException();
             }
 
-
-            AssignInteractable_ClientRPC(MyInteractableObject.GetComponent<NetworkObject>(), targetClient);
+            NetworkObjectReference reference = MyInteractableObject.GetComponent<NetworkObject>();
+            Debug.Log($"Object network refeerence{reference} with targetClient{targetClient}");
+            AssignInteractable_ClientRPC(reference,  targetClient);
         }
     }
 
@@ -277,7 +278,7 @@ public class VR_Participant : Client_Object {
     [ClientRpc]
     private void AssignInteractable_ClientRPC(NetworkObjectReference MyInteractable, ulong targetClient) {
         Debug.Log(
-            $"MyInteractable{MyInteractable.NetworkObjectId} targetClient:{targetClient}, OwnerClientId:{OwnerClientId}");
+            $"My Interactable {MyInteractable.NetworkObjectId} targetClient:{targetClient}, OwnerClientId:{OwnerClientId}");
 
         var conf = new ConfigFileLoading();
         switch (mySpawnType.Value) {
@@ -292,7 +293,7 @@ public class VR_Participant : Client_Object {
                             transform.localRotation = localRotation;
                         }
 
-                        NetworkedInteractableObject = targetObject.transform.GetComponent<Interactable_Object>();
+                        NetworkedInteractableObject = targetObject.transform.GetComponent<NetworkVehicleController>();
                     }
                 }
                 else {
@@ -305,9 +306,15 @@ public class VR_Participant : Client_Object {
                 conf.Init(OffsetFileName);
                 if (conf.FileAvalible()) {
                     conf.LoadLocalOffset(out var localPosition, out var localRotation);
+                    
+                    Debug.Log($"FindObjectOfType<ExperimentSpaceReference>(){FindObjectOfType<ExperimentSpaceReference>()}");
                     var space = FindObjectOfType<ExperimentSpaceReference>().GetCallibrationPoint();
                     transform.position = space.TransformPoint(localPosition);
                     transform.forward = space.TransformDirection(localRotation * Vector3.forward);
+                }
+
+                if (MyInteractable.TryGet(out var targetObject2)) {
+                    NetworkedInteractableObject = targetObject2.transform.GetComponent<Mocopie_Interactable>();
                 }
 
                 break;

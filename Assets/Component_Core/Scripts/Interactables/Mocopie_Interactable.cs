@@ -36,7 +36,8 @@ public class Mocopie_Interactable : Interactable_Object {
 
     private void AttemptToFindTheAppropriateHead() {
         Debug.Log($"newValue {m_participantOrder.Value}");
-        if (m_participantOrder.Value != ParticipantOrder.None) {
+        if (m_participantOrder.Value != ParticipantOrder.None  && m_participantOrder.Value != 0 && FindObjectsOfType<VR_Participant>().Length>0) {
+            Debug.Log("Count oif VR participants"+ FindObjectsOfType<VR_Participant>().Length);
             m_participantHead = FindObjectsOfType<VR_Participant>().Where(x => x.GetParticipantOrder() == m_participantOrder.Value)
                 .First().GetMainCamera();
             if (m_participantHead != null) {
