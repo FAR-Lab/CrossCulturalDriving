@@ -27,17 +27,18 @@ public class SpaceReferenceEditor : Editor
         {
             reference.ClearWorkingArea();
         }
+
+        if (GUILayout.Button("Demo Guardian System")) {
+            reference.LoadSetup();
+            var tmp = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            tmp.transform.parent = reference.transform;
+            tmp.transform.localPosition = Vector3.zero;
+            tmp.name = "tmpHead";
+            reference.Create3DRectangularMeshes(tmp.transform);
+        }
     }
 
-    private void OnSceneGUI()
-    {
-
-    }
-
-    private void OnEnable()
-    {
-
-    }
+    
 }
 #endif
 
@@ -213,7 +214,7 @@ public class ExperimentSpaceReference : MonoBehaviour
         }
         return callibrationPoint;
     }
-    public void Create3DRectangularMeshes()
+    public void Create3DRectangularMeshes(Transform transform1)
     {
         for (int i = 0; i < WorkingArea.Count; i++)
         {
@@ -223,79 +224,45 @@ public class ExperimentSpaceReference : MonoBehaviour
             Vector3 midPoint = (startPosition + endPosition) / 2;
             Quaternion rotation = Quaternion.LookRotation(edgeDirection);
 
-            // mornal used for direction to move outwards from the edge  | -->
+            // mornal used for direction to move3 outwards from the edge  | -->
             Vector3 normalToEdge = Vector3.Cross(edgeDirection, Vector3.up).normalized;
             Vector3 scale = new Vector3(MeshWidth, MeshHeight, (endPosition - startPosition).magnitude);
 
-            for (int j = 0; j < NumMeshes; j++)
-            {
-                // move outwards from the last mesh
-                Vector3 meshPosition = midPoint + normalToEdge * MeshSpacing * j;
 
-                meshPosition.y += MeshHeight / 2;
+                GameObject tmp = new GameObject();
+               var  meshFilter = tmp.AddComponent<MeshFilter>();
+               var renderer = tmp.AddComponent<MeshRenderer>();
+               var barrier  = tmp.AddComponent<VRBarrier>();
+               barrier.trackingTransform(transform1);
+               
+               tmp.transform.parent = transform;
+               tmp.transform.position = midPoint;
+               tmp.transform.forward = normalToEdge;
+               
+               
+               
+               Vector3[] vertesiez = new Vector3[4];
+               
+               
+               vertesiez[0] = tmp.transform.InverseTransformPoint(new Vector3(startPosition.x, transform.position.y, startPosition.z));
+               vertesiez[1] = tmp.transform.InverseTransformPoint(new Vector3(startPosition.x, transform.position.y+MeshHeight, startPosition.z));
+               vertesiez[3] =tmp.transform.InverseTransformPoint( new Vector3(endPosition.x, transform.position.y, endPosition.z));
+               vertesiez[2]= tmp.transform.InverseTransformPoint(new Vector3(endPosition.x, transform.position.y+MeshHeight, endPosition.z));
 
-                GameObject meshObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                meshObj.transform.position = meshPosition;
-                meshObj.transform.rotation = rotation;
-                meshObj.transform.localScale = scale;
-                meshObj.transform.parent = transform;
 
-                if (MeshMaterial != null)
-                {
-                    Renderer meshRenderer = meshObj.GetComponent<Renderer>();
-                    meshRenderer.material = MeshMaterial;
-                    meshObj.AddComponent<VRBarrier>();
-                }
-            }
+               meshFilter.sharedMesh = new Mesh();
+               meshFilter.sharedMesh.vertices = vertesiez;
+               meshFilter.sharedMesh.triangles = new[] { 0, 1, 2, 2, 3, 0 };
+               renderer.material = MeshMaterial;
+               
+            
         }
     }
 
-
-
-
-
-    #region OriginalZedConfigData
-    public class DeviceConfig
-    {
-        [JsonProperty("input")]
-        public InputData Input { get; set; }
-
-        [JsonProperty("world")]
-        public WorldData World { get; set; }
+   
+    public void SetBoundaries(Transform transform1) {
+        if (transform1 != null) {
+            Create3DRectangularMeshes(transform1);
+        }
     }
-
-    public class InputData
-    {
-        [JsonProperty("fusion")]
-        public FusionData Fusion { get; set; }
-
-        [JsonProperty("zed")]
-        public ZedData Zed { get; set; }
-    }
-
-    public class FusionData
-    {
-        [JsonProperty("type")]
-        public string Type { get; set; }
-    }
-
-    public class ZedData
-    {
-        [JsonProperty("configuration")]
-        public string Configuration { get; set; }
-
-        [JsonProperty("type")]
-        public string Type { get; set; }
-    }
-
-    public class WorldData
-    {
-        [JsonProperty("rotation")]
-        public List<double> Rotation { get; set; }
-
-        [JsonProperty("translation")]
-        public List<double> Translation { get; set; }
-    }
-    #endregion
-
 }

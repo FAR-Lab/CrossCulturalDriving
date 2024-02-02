@@ -76,7 +76,7 @@ public class VR_Participant : Client_Object {
 
     [ClientRpc]
     private void SetPedestrianNavigationInstructionsClientRPC(NavigationScreen.Direction Directions) {
-        
+        if (!IsLocalPlayer) return;
         if (AudioCuePlayer == null) {
             var ourMainCamera = GetMainCamera();
             AudioCuePlayer = ourMainCamera.gameObject.AddComponent<PedestrianNavigationAudioCues>();
@@ -308,9 +308,11 @@ public class VR_Participant : Client_Object {
                     conf.LoadLocalOffset(out var localPosition, out var localRotation);
                     
                     Debug.Log($"FindObjectOfType<ExperimentSpaceReference>(){FindObjectOfType<ExperimentSpaceReference>()}");
-                    var space = FindObjectOfType<ExperimentSpaceReference>().GetCallibrationPoint();
+                    var esr= FindObjectOfType<ExperimentSpaceReference>();
+                    var space = esr.GetCallibrationPoint();
                     transform.position = space.TransformPoint(localPosition);
                     transform.forward = space.TransformDirection(localRotation * Vector3.forward);
+                    esr.SetBoundaries(GetMainCamera());
                 }
 
                 if (MyInteractable.TryGet(out var targetObject2)) {

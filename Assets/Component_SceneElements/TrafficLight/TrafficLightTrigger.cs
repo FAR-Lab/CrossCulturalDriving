@@ -92,8 +92,6 @@ public class TrafficLightTrigger : MonoBehaviour
                 }
             }
             triggered = true;
-
-
         }
     }
 }

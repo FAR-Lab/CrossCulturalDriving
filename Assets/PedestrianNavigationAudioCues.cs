@@ -27,7 +27,7 @@ Please go to the hospital.
 > Scene 104: Walk towards the park entrance
 > Scene 105: Walk towards the hotel entrance
  */
-public class PedestrianNavigationAudioCues : MonoBehaviour {
+public class PedestrianNavigationAudioCues : MonoBehaviour { //TODO turn into replay behavior
 
     public float Volume=0.8f;
 
