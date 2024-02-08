@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -115,7 +116,7 @@ public class ThreeScreen_Participant : Client_Object {
         
     }
 
-    public override void CalibrateClient() {
+    public override void CalibrateClient(Action<bool> finishedCalibration) {
         if (!IsLocalPlayer) return;
         if (_interactableObject != null) {
             transform.position = _interactableObject.GetCameraPositionObject().position;
@@ -123,8 +124,12 @@ public class ThreeScreen_Participant : Client_Object {
             var conf = new ConfigFileLoading();
             conf.Init(OffsetFileName);
             conf.StoreLocalOffset(transform.localPosition, transform.localRotation);
+            finishedCalibration.Invoke(true);
         }
-        Debug.Log("Not Sure yet how to CalibrateClient for the threeScreen");
+        else {
+            finishedCalibration.Invoke(false);
+            Debug.LogWarning("Couldnt calibrate three screen.");
+        }
     }
 
     public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) {

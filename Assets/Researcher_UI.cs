@@ -175,7 +175,7 @@ public class Researcher_UI : MonoBehaviour
         SpawnType spawnType;
         ConnectionAndSpawning.Singleton.participants.GetSpawnType(po, out spawnType);
         button.transform.Find("Icon").GetComponent<Image>().sprite = _spawnTypeToSprite[spawnType];
-        button.GetComponentInChildren<Button>().onClick.AddListener(() => { OnCalibrationButtonPressed(po); });
+        button.GetComponentInChildren<Button>().onClick.AddListener(() => { OnCalibrationButtonPressed(po,button.transform); });
         _spawnedButtons.Add(po,button.transform);
     }
     
@@ -202,20 +202,15 @@ public class Researcher_UI : MonoBehaviour
         
     }
 
-    private void OnCalibrationButtonPressed(ParticipantOrder participant)
+    private void OnCalibrationButtonPressed(ParticipantOrder participant,Transform button)
     {
-       /*
-        * var success = ConnectionAndSpawning.Singleton.participants.GetClientID(participant, out var clientID);
+        button.GetComponentInChildren<TextMeshProUGUI>().color=new Color(0.5f,0,0,1);;
+        ConnectionAndSpawning.Singleton.Main_ParticipantObjects[participant].CalibrateClient((x) => {
+           if(x) button.GetComponentInChildren<TextMeshProUGUI>().color = new Color(0,0.5f,0,1);
+           else button.GetComponentInChildren<TextMeshProUGUI>().color=new Color(1,0,0,1);;
+        });
+       
         
-        if (!success) return;
-
-        var clientRpcParams = new ClientRpcParams {
-            Send = new ClientRpcSendParams {
-                TargetClientIds = new[] { clientID }
-            }
-        };
-        */
-        ConnectionAndSpawning.Singleton.Main_ParticipantObjects[participant].CalibrateClient();
     }
     
     # endregion

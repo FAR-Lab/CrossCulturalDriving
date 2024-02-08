@@ -199,13 +199,12 @@ public class farlab_logger : MonoBehaviour {
     private List<LogItem> logItems;
 
     public void StartRecording(RerunManager activeManager, string ScenarioName, string sessionName) {
-        var folderpath = activeManager.GetCurrentFolderPath() + "/csv/";
+        var folderpath = DataStoragePathSupervisor.GetCsvDirectory();
         Directory.CreateDirectory(folderpath);
-        path = folderpath
-               + "CSV"
-               + "Scenario-" + ScenarioName + '_'
-               + "Session-" + sessionName + '_'
-               + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".csv";
+        path = Path.Join(folderpath,
+               $"CSV_Scenario-{ScenarioName}_"
+               +$"Session-{sessionName}_"
+               +$"{DateTime.Now.ToString(DataStoragePathSupervisor.DateTimeFormatFolder)}.csv");
 
 
         InitLogs();

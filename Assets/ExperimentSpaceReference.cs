@@ -1,10 +1,9 @@
-
-using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
 using UnityEditor;
+using UnityEngine.Rendering;
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(ExperimentSpaceReference))]
@@ -30,10 +29,11 @@ public class SpaceReferenceEditor : Editor
 
         if (GUILayout.Button("Demo Guardian System")) {
             reference.LoadSetup();
-            var tmp = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var tmp = new GameObject();
             tmp.transform.parent = reference.transform;
             tmp.transform.localPosition = Vector3.zero;
             tmp.name = "tmpHead";
+            tmp.AddComponent<Camera>();
             reference.Create3DRectangularMeshes(tmp.transform);
         }
     }
@@ -230,9 +230,18 @@ public class ExperimentSpaceReference : MonoBehaviour
 
 
                 GameObject tmp = new GameObject();
+                tmp.name = $"VR-Guardian{i}";
                var  meshFilter = tmp.AddComponent<MeshFilter>();
                var renderer = tmp.AddComponent<MeshRenderer>();
                var barrier  = tmp.AddComponent<VRBarrier>();
+               renderer.shadowCastingMode = ShadowCastingMode.Off;
+               renderer.receiveShadows =false;
+               renderer.lightProbeUsage = LightProbeUsage.Off;
+               renderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
+               renderer.motionVectorGenerationMode = MotionVectorGenerationMode.Camera;
+               renderer.allowOcclusionWhenDynamic = false;
+               renderer.material = Instantiate(MeshMaterial);
+               
                barrier.trackingTransform(transform1);
                
                tmp.transform.parent = transform;
@@ -253,7 +262,8 @@ public class ExperimentSpaceReference : MonoBehaviour
                meshFilter.sharedMesh = new Mesh();
                meshFilter.sharedMesh.vertices = vertesiez;
                meshFilter.sharedMesh.triangles = new[] { 0, 1, 2, 2, 3, 0 };
-               renderer.material = MeshMaterial;
+               meshFilter.sharedMesh.uv = new[] { new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) };
+              
                
             
         }

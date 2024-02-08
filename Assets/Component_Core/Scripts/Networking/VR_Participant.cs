@@ -38,6 +38,8 @@ public class VR_Participant : Client_Object {
     public GameObject QuestionairPrefab;
   
     private PedestrianNavigationAudioCues AudioCuePlayer;
+
+    public CalibrationTimerDisplay m_callibDisplay;
  
     private void Update() {
         if (IsServer) {
@@ -95,8 +97,10 @@ public class VR_Participant : Client_Object {
 
     public override void OnNetworkSpawn() //ToDo Turning on and off different elements could be done neater...
     {
+       
         if (IsLocalPlayer) {
            // m_participantOrder.Value = ConnectionAndSpawning.Singleton.ParticipantOrder;
+          
         }
         else {
             foreach (var a in GetComponentsInChildren<SkinnedMeshRenderer>()) {
@@ -133,6 +137,7 @@ public class VR_Participant : Client_Object {
             m_participantOrder.Value = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
             GetComponentInChildren<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder.Value);
+           
         }
         else {
             foreach (var a in GetComponentsInChildren<ReplayTransform>()) {
@@ -162,6 +167,7 @@ public class VR_Participant : Client_Object {
             case ActionState.READY:
                 SetPedestrianOpenXRRepresentaion(false);
                 SetUpZEDSpaceReferenceClientRPC();
+                m_callibDisplay.StopDisplay(); // Just to make sure its off!
              break;
             case ActionState.DRIVE:
                 
@@ -202,6 +208,10 @@ public class VR_Participant : Client_Object {
         }
         
         
+    }
+
+    public void Start() {
+        m_callibDisplay = GetComponentInChildren<CalibrationTimerDisplay>();
     }
 
     public override void GoForPostQuestion() {
@@ -340,16 +350,13 @@ public class VR_Participant : Client_Object {
         Debug.Log("De_assign Interactable ClientRPC");
     }
 
-  
-    public override void CalibrateClient() {
-        if (mySpawnType.Value == SpawnType.PEDESTRIAN){//&& NetworkedInteractableObject.GetComponent<ZedAvatarInteractable>() != null) {
-            
-            
-            CalibrateClientRPC();
-            
-        }else if (mySpawnType.Value == SpawnType.CAR) {
+    private Action<bool> finishedCalibration_ServerSideReference;
+    public override void CalibrateClient(Action <bool> finishedCalibration) {
+        if (mySpawnType.Value is SpawnType.PEDESTRIAN or SpawnType.CAR) {
 
+            finishedCalibration_ServerSideReference = finishedCalibration;
             CalibrateClientRPC();
+            
         }
     }
 
@@ -408,12 +415,15 @@ public class VR_Participant : Client_Object {
 
     private IEnumerator OverTimeCalibration(Transform VrCamera,Transform ZedOrignReference, float maxtime = 10) {
         isCalibrationRunning = true;
-
-        yield return new WaitForSeconds(1);
-        
         int runs = 0;
         const int MaxRuns = 250;
+        m_callibDisplay.StartDispaly();
+        m_callibDisplay.updateMessage("Hold still!");
+        yield return new WaitForSeconds(2);
         
+       
+       
+       
       //  Transform HandModelL= transform.Find("Camera Offset/Left Hand Tracking/L_Wrist/L_Palm");
       //  Transform HandModelR = transform.Find("Camera Offset/Right Hand Tracking/R_Wrist/R_Palm");
         Transform HandModelL= transform.GetComponent<SeatCalibration>().HandModelL;
@@ -455,11 +465,16 @@ public class VR_Participant : Client_Object {
             if (maxtime < 0) {
                 break;
             }
+            m_callibDisplay.updateMessage((MaxRuns-runs).ToString());
             yield return new WaitForEndOfFrame();
         }
+
+        m_callibDisplay.StopDisplay();
         FinishedCalibration(ZedOrignReference);
         isCalibrationRunning = false;
     }
+    
+    
 
     [ServerRpc]
     private void PedestrianCallibrationFinishedServerRPC() {
@@ -483,7 +498,8 @@ public class VR_Participant : Client_Object {
                 calib.StartCalibration(
                     steering,
                     cam,
-                    this);
+                    this,
+                    m_callibDisplay);
                 Debug.Log("Calibrated ClientRPC");
                 break;
             case SpawnType.PEDESTRIAN:
@@ -534,8 +550,18 @@ public class VR_Participant : Client_Object {
         conf.StoreLocalOffset(localPosToStore, LocalRotation);
 
         //  ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
+        FinishedCalibrationServerRPC(true );
     }
 
+    [ServerRpc]
+   private void FinishedCalibrationServerRPC(bool val) {
+       if (finishedCalibration_ServerSideReference != null) {
+           finishedCalibration_ServerSideReference.Invoke(val);
+       }
+       else {
+           Debug.LogWarning($"The Action to notify the server that calibration is finished was never defined");
+       }
+   }
     [ServerRpc]
     public void ShareOffsetServerRPC(Vector3 offsetPositon, Quaternion offsetRotation, Quaternion InitRotation) {
         UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, InitRotation);

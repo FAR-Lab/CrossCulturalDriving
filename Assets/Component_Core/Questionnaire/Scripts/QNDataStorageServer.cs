@@ -1,8 +1,10 @@
 // #define LOGREPLAYIDS
+
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Rerun;
@@ -22,11 +24,9 @@ public class QNDataStorageServer : MonoBehaviour {
     private int StartID = -1;
     private ScenarioLog CurrentScenarioLog;
 
-    public static string DateTimeFormatFolder = "yyyy-MM-dd-HH-mm-ss";
-    public static string DateTimeFormatInternal = "yyyy-MM-dd-HH:mm:ss.ffffffzzz";
 
     public static JsonSerializerSettings JsonDateSerelizerSettings = new JsonSerializerSettings
-        { DateFormatString = DateTimeFormatInternal };
+        { DateFormatString = DataStoragePathSupervisor.DateTimeFormatInternal };
 
     private IEnumerator writtingCorutine;
 
@@ -37,7 +37,7 @@ public class QNDataStorageServer : MonoBehaviour {
     void Start() {
         activeQuestionList = new Dictionary<int, QuestionnaireQuestion>();
         qnDisplays = new Dictionary<ParticipantOrder, QN_Display>();
-        // gtLogger = new GroundTruthLogger();
+        //gtLogger = new GroundTruthLogger();
     }
 
     private void Update() {
@@ -70,9 +70,10 @@ public class QNDataStorageServer : MonoBehaviour {
                 first = false;
                 StartID = q.getInteralID() - 1; // Start ID to move forward.
             }
+
             activeQuestionList.Add(q.getInteralID(), q);
         }
-        
+
         /*
         foreach (var a in activeQuestionList[0].Answers) {
             Debug.Log(a.index);
@@ -167,9 +168,9 @@ public class QNDataStorageServer : MonoBehaviour {
         );
 
         System.IO.File.WriteAllText(fullPath, s);
-        
-        #endif
-        
+
+#endif
+
         foreach (var qnDisplays in qnDisplays.Values) {
             qnDisplays.StartQuestionair();
         }
@@ -187,13 +188,14 @@ public class QNDataStorageServer : MonoBehaviour {
 
 
     public void NewDatapointfromClient(ParticipantOrder po, int id, int answerIndex, string lang) {
-         Debug.Log($"New Data Point from po{po}");
+        Debug.Log($"New Data Point from po{po}");
         if (answerIndex == -1 && id == -1) {
             SendPreviousQuestion(po, lang);
             ParticipantCountCurrent[po]--;
             if (ParticipantCountCurrent[po] < 0) {
                 ParticipantCountCurrent[po] = 0;
             }
+
             UpdateTotalParticipantCounts();
             return;
         }
@@ -209,11 +211,11 @@ public class QNDataStorageServer : MonoBehaviour {
             }
 
             string AnswerTextTMP = "";
-            var tmp = activeQuestionList[id].Answers.First(s => s.index == answerIndex); 
-            if (tmp.AnswerImage?.Length>0) {
+            var tmp = activeQuestionList[id].Answers.First(s => s.index == answerIndex);
+            if (tmp.AnswerImage?.Length > 0) {
                 AnswerTextTMP = tmp.AnswerImage;
-
-            }else {
+            }
+            else {
                 AnswerTextTMP = tmp.AnswerText[LogLanguage];
             }
 
@@ -252,16 +254,13 @@ public class QNDataStorageServer : MonoBehaviour {
     public void StopScenario(RerunManager activeManager) {
         Debug.Log("Stopping Scenario and QN logger.");
         CurrentScenarioLog.Stop();
-        string folderpath = activeManager.GetCurrentFolderPath() + "/QN/";
-        System.IO.Directory.CreateDirectory(folderpath);
-
-        string fullPath = folderpath
-                          + "Scenario-" + CurrentScenarioLog.ScenarioName + '_'
-                          + "sessionName-" + CurrentScenarioLog.participantComboName + '_'
-                          + System.DateTime.Now.ToString(DateTimeFormatFolder) + ".json";
-
+        string folderPath = DataStoragePathSupervisor.GetQNDirectory();
+        string fileName = $"Scenario-{CurrentScenarioLog.ScenarioName}_" +
+                          $"sessionName-{CurrentScenarioLog.participantComboName}_" +
+                          $"{System.DateTime.Now.ToString(DataStoragePathSupervisor.DateTimeFormatFolder)}.json";
+        string fullPath = Path.Join(folderPath, fileName);
         string s = JsonConvert.SerializeObject(CurrentScenarioLog, JsonDateSerelizerSettings);
-        System.IO.File.WriteAllText(fullPath, s);
+        File.WriteAllText(fullPath, s);
         qnDisplays.Clear();
     }
 
@@ -334,7 +333,7 @@ public class QNDataStorageServer : MonoBehaviour {
             && activeQuestionList.ContainsKey(participantAnswerStatus[po])
             && activeQuestionList[participantAnswerStatus[po]].QuestionText != null) {
             return activeQuestionList[participantAnswerStatus[po]].QuestionText[LogLanguage] + " at Scenario_ID: " +
-                 //  activeQuestionList[participantAnswerStatus[po]].Scenario_ID + "  =>  " +
+                   //  activeQuestionList[participantAnswerStatus[po]].Scenario_ID + "  =>  " +
                    GetTotalParticiapnAnswerCountString(po);
         }
 
@@ -398,25 +397,18 @@ public class QNDataStorageServer : MonoBehaviour {
 
     public void NewRemoteImage(ParticipantOrder po, int totalSize) {
         if (ImageRecievers.ContainsKey(po)) {
-            Debug.Log("WillTry To store picture!");
+            Debug.Log("Will try To store picture!");
 
 
-            string folderpath = ConnectionAndSpawning.Singleton.GetReRunManager().GetCurrentFolderPath() +
-                                "/QN_Pictures/";
+            string folderpath = DataStoragePathSupervisor.GetScreenshotPathDirectory();
+            string filename = $"QNImage_Scenario-{CurrentScenarioLog.ScenarioName}_" +
+                              $"sessionName-{CurrentScenarioLog.participantComboName}_" +
+                              $"ParticipantOrder-{po}_" +
+                              $"{DateTime.Now.ToString(DataStoragePathSupervisor.DateTimeFormatFolder)}" +
+                              $".jpg";
 
-            if (!System.IO.Directory.Exists(folderpath)) {
-                System.IO.Directory.CreateDirectory(folderpath);
-            }
-
-            string fullPath = folderpath
-                              + "QNImage"
-                              + "Scenario-" + CurrentScenarioLog.ScenarioName + '_'
-                              + "sessionName-" + CurrentScenarioLog.participantComboName + '_'
-                              + "ParticipantOrder-" + po + '_'
-                              + System.DateTime.Now.ToString(DateTimeFormatFolder) + '_'
-                              + ".jpg";
-            Debug.Log(fullPath);
-            System.IO.File.WriteAllBytes(fullPath, ImageRecievers[po].ToArray());
+            string fullPath = Path.Join(folderpath, filename);
+            File.WriteAllBytes(fullPath, ImageRecievers[po].ToArray());
             ImageRecievers[po].Clear();
         }
     }
@@ -431,7 +423,8 @@ public class QNDataStorageServer : MonoBehaviour {
         if (participantOrder == ParticipantOrder.None) {
             return;
         }
-Debug.Log($"Total Questions count sent to the participant: {count} for ParticipantOrder{participantOrder}");
+
+        Debug.Log($"Total Questions count sent to the participant: {count} for ParticipantOrder{participantOrder}");
         qnDisplays[participantOrder]
             .SetTotalQNCountClientRpc(count);
     }
@@ -489,9 +482,6 @@ public struct QuestionLog {
         ID = qIn.ID;
         QuestionText = qIn.QuestionText[QNDataStorageServer.LogLanguage];
         Research_Info = qIn.Research_Info;
-        //SA_atoms = qIn.SA_atoms;
-      //  SA_Level = qIn.SA_Level;
-      //  Awareness_to = qIn.Awareness_to;
         ParticipantsResponse = new Dictionary<char, ParticipantsAnswerReponse>();
     }
 }

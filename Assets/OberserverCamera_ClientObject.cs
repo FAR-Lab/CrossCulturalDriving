@@ -128,8 +128,9 @@ public class OberserverCamera_ClientObject : Client_Object {
         return _RerunCameraManager.GetFollowCamera();
     }
 
-    public override void CalibrateClient() {
+    public override void CalibrateClient(Action<bool> finishedCalibration) {
         Debug.Log($"Here we could try to find all relevant cameras again..");
+        finishedCalibration.Invoke(true);
     }
 
     public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) { }

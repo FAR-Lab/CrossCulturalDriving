@@ -249,7 +249,7 @@ public class TestScreenClient : Client_Object {
        return m_Camera;
     }
 
-    public override void CalibrateClient() {
+    public override void CalibrateClient(Action<bool> finishedCalibration) {
         if (!IsLocalPlayer) return;
         if (m_InteractableObject != null) {
             transform.position += m_InteractableObject.GetCameraPositionObject().position-GetMainCamera().position;
@@ -257,8 +257,12 @@ public class TestScreenClient : Client_Object {
             var conf = new ConfigFileLoading();
             conf.Init(OffsetFileName);
             conf.StoreLocalOffset(transform.localPosition, transform.localRotation);
+            finishedCalibration.Invoke(true);
         }
-        Debug.Log("Not Sure yet how to CalibrateClient for the threeScreen");
+        else {
+            finishedCalibration.Invoke(false);
+            Debug.LogWarning("Couldnt calibrate Test screen.");
+        }
     }
 
     

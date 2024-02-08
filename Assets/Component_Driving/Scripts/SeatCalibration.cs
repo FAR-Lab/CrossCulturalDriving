@@ -32,6 +32,7 @@ public class SeatCalibration : MonoBehaviour {
 
 #if UNITY_EDITOR
     void OnGUI() {
+        /*
         GUIStyle gs = new GUIStyle();
         gs.fontSize = 30;
         gs.normal.textColor = Color.white;
@@ -63,14 +64,16 @@ public class SeatCalibration : MonoBehaviour {
         }
 
         GUI.Label(new Rect(610, 10, 600, 300), displayString, gs);
+        */
     }
 #endif
 
 
     private Transform cam;
     private VR_Participant myPic;
-
-    public void StartCalibration(Transform SteeringWheel, Transform camera, VR_Participant pic) {
+    private CalibrationTimerDisplay m_callibDisplay;
+    public void StartCalibration(Transform SteeringWheel, Transform camera, VR_Participant pic,
+        CalibrationTimerDisplay mCallibDisplay) {
         Debug.Log("Starting Calibration");
         if (callibrationState != SearCalibrationState.CALIBRATING ||
             callibrationState != SearCalibrationState.STARTCALIBRATING) {
@@ -83,10 +86,22 @@ public class SeatCalibration : MonoBehaviour {
             }
 
             Debug.Log(HandModelL.name);
-            callibrationState = SearCalibrationState.STARTCALIBRATING;
+         
+            if (mCallibDisplay != null) {
+                this.m_callibDisplay = mCallibDisplay;
+            }
+
+            StartCoroutine(DelayedCallibrationStart());
         }
     }
 
+    IEnumerator DelayedCallibrationStart() {
+        m_callibDisplay.StartDispaly();
+        m_callibDisplay.updateMessage("Hold still!");
+        yield return new WaitForSeconds(2f);
+        callibrationState = SearCalibrationState.STARTCALIBRATING;
+        
+    }
     private float callibrationTimer = 0;
     int ReTryCount = 0;
 
@@ -139,6 +154,7 @@ public class SeatCalibration : MonoBehaviour {
 
                     myPic.SetNewPositionOffset(-transformDifference);
 //                    Debug.Log("transformDifference" + (-transformDifference).ToString());
+                   m_callibDisplay.updateMessage(callibrationTimer.ToString("F1"));
                 }
 
                 if (callibrationTimer > 0) { callibrationTimer -= Time.deltaTime; }
@@ -146,6 +162,7 @@ public class SeatCalibration : MonoBehaviour {
 
                 break;
             case SearCalibrationState.FINISHED:
+                m_callibDisplay.StopDisplay();
                 myPic.FinishedCalibration(steeringWheelCenter.parent);
                 callibrationState = SearCalibrationState.READY;
                 break;

@@ -7,8 +7,10 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class VRBarrier : MonoBehaviour {
     private MeshFilter mesh;
+    private MeshRenderer renderer;
     private void OnDrawGizmos() {
         mesh = GetComponent<MeshFilter>();
+        renderer = GetComponent<MeshRenderer>();
         Gizmos.color = Color.red;
 
      //  Matrix4x4 rotationMatrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.localScale);
@@ -41,15 +43,30 @@ public class VRBarrier : MonoBehaviour {
         }
     }
 
+    private  void setSolid() {
+        renderer.sharedMaterial.SetFloat("_invertShape",1);
+        renderer.sharedMaterial.SetColor("_Color",Color.red);
+       // Debug.Log("CalledSet solid");
+    }
+
+    private void setGrid() {
+        renderer.sharedMaterial.SetFloat("_invertShape",0);
+        
+        renderer.sharedMaterial.SetColor("_Color",Color.green);
+       // Debug.Log("CalledSet Grid");
+    }
+    
+
     private void LateUpdate() {
         if (BoundariesSet) {
             if (firstRun) {
+                renderer = GetComponent<MeshRenderer>();
                 localDistance = transform.localPosition.magnitude;
                 firstRun = false;
             }
             else {
                 Vector3 localheadpose =
-                    transform.InverseTransformPoint(m_trackingTransform.position + transform.forward * 0.5f);
+                    transform.InverseTransformPoint(m_trackingTransform.position + transform.forward * 0.3f);
 
                 Vector3 fwd = transform.forward;
                 //Debug.Log($"localheadpose: {localheadpose.z} transfomr.localPositon.z{transform.localPosition.z}");
@@ -57,8 +74,16 @@ public class VRBarrier : MonoBehaviour {
 
                     fwd *= localheadpose.z;
                 }
-                else if (transform.localPosition.magnitude > localDistance && localheadpose.z < 0) {
-                    fwd *= -(transform.localPosition.magnitude - localDistance) * Time.deltaTime*0.95f;
+                else if (transform.localPosition.magnitude >= localDistance && localheadpose.z < 0) {
+                    fwd *= -(transform.localPosition.magnitude - localDistance) * Time.deltaTime*2f;
+                }
+
+               // Debug.Log($"localheadpose.z:{localheadpose.z} transform.localPosition.magnitude:{transform.localPosition.magnitude} localDistance:{localDistance}");
+                if (localheadpose.z>0 || transform.localPosition.magnitude > localDistance+0.25f) {
+                    setSolid();
+                }
+                else if(localheadpose.z<0 )  {
+                    setGrid();
                 }
 
                 transform.position += fwd;

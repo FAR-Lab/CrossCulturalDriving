@@ -258,8 +258,7 @@ using UnityEngine.Rendering;
         DontDestroyOnLoad(ServerCamera);
         m_ReRunManager.RerunInitialization(true, ServerCamera.GetComponent<RerunPlaybackCameraManager>(),
             RerunManager.StartUpMode.RECORDING);
-        m_ReRunManager.SetRecordingFolder(pairName);
-
+        DataStoragePathSupervisor.setStudyName(pairName);
 
 
         NetworkManager.Singleton.StartServer();
@@ -283,7 +282,7 @@ using UnityEngine.Rendering;
     public void StartAsHost(string pairName,ParticipantOrder po, JoinType _jt,SpawnType _st) {
         SetUpToServe(pairName);
         m_ReRunManager.RerunInitialization(true, null, RerunManager.StartUpMode.RECORDING);
-        m_ReRunManager.SetRecordingFolder(pairName);
+        DataStoragePathSupervisor.setStudyName(pairName);
         JoinParameters connectionDataRequest = new JoinParameters() {
             _participantOrder = po,
             _spawnType = _st,

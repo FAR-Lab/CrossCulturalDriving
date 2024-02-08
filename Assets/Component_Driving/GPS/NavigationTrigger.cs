@@ -72,6 +72,19 @@ public class NavigationTrigger : MonoBehaviour {
             }
 
             if (!success) {
+                var pnt = other.transform.GetComponent<ParticipantNavigationTriggerIdent>();
+                if (pnt != null) {
+                    foreach (var t in Client_Object.GetAllImplementations()) {
+                        var elem = pnt.GetComponentInParent(t);
+                        if (elem != null) {
+                            incoming = ((Client_Object)elem).GetParticipantOrder();
+                            success = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!success) {
                 return;
             }
 
