@@ -23,6 +23,20 @@ public abstract class Interactable_Object : NetworkBehaviour {
 }
 
 public abstract class Client_Object : NetworkBehaviour {
+    
+    private static List<Client_Object> instances = new List<Client_Object>(); // Can cause memory leakage if not kept clean...!!! 
+    protected Client_Object() {
+        // Add this instance to the list upon object creation
+        instances.Add(this);
+    }
+
+    protected virtual void OnDestroy() {
+        // Remove this instance from the list when it's destroyed
+        instances.Remove(this);
+    }
+
+    public static IReadOnlyList<Client_Object> Instances => instances.AsReadOnly();
+
     public abstract void SetParticipantOrder(ParticipantOrder _ParticipantOrder);
     public abstract ParticipantOrder GetParticipantOrder();
     public abstract void SetSpawnType(SpawnType _spawnType);

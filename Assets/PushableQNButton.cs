@@ -32,7 +32,7 @@ public class PushableQNButton : MonoBehaviour {
     public void initButton(string Answer, int AnswerIndex_, FinishedCallBack _callback, string AnswerImage) {
         _Answer = Answer;
         Sprite _AnswerImageSprite = Resources.Load<Sprite>(AnswerImage);
-        Debug.Log($"sprite is {_AnswerImageSprite}");
+        Debug.Log($"Loaded sprite is {_AnswerImageSprite} with originalPath:{AnswerImage}");
         ImageTarget.sprite = _AnswerImageSprite;
         AnswerIndex = AnswerIndex_;
         m_TextObject.text = _Answer;

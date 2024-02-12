@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.Mime;
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +7,7 @@ public class SetTextToDataPath : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         m_textMeshPro = GetComponent<Text>();
-        m_textMeshPro.text = $"DataPath=\"{Application.persistentDataPath}\"";
+        m_textMeshPro.text = $"DataPath={DataStoragePathSupervisor.GetJSONPath()}";
     }
 
     // Update is called once per frame

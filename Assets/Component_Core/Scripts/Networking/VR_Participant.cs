@@ -7,6 +7,7 @@ using UltimateReplay;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR.Hands;
 using Quaternion = UnityEngine.Quaternion;
@@ -87,7 +88,7 @@ public class VR_Participant : Client_Object {
     }
 
 
-    public static VR_Participant GetJoinTypeObject() {
+    public new static VR_Participant GetJoinTypeObject() {
         foreach (var pic in FindObjectsOfType<VR_Participant>())
             if (pic.IsLocalPlayer)
                 return pic;
@@ -108,27 +109,30 @@ public class VR_Participant : Client_Object {
             }
 
             foreach (var a in GetComponentsInChildren<XRHandTrackingEvents>()) {
-                a.enabled = false; // should happen twice to activate the hand
+                a.enabled = false; 
             }
 
             foreach (var a in GetComponentsInChildren<XRHandSkeletonDriver>()) {
-                a.enabled = false; // should happen twice to activate the hand
+                a.enabled = false;
             }
 
             foreach (var a in GetComponentsInChildren<XRHandMeshController>()) {
-                a.enabled = false; // should happen twice to activate the hand
+                a.enabled = false; 
             }
 
             foreach (var a in GetComponentsInChildren<Camera>()) {
-                a.enabled = false; // should happen twice to activate the hand
+                a.enabled = false; 
             }
 
             foreach (var a in GetComponentsInChildren<AudioListener>()) {
-                a.enabled = false; // should happen twice to activate the hand
+                a.enabled = false; 
             }
 
             foreach (var a in GetComponentsInChildren<TrackedPoseDriver>()) {
-                a.enabled = false; // should happen twice to activate the hand
+                a.enabled = false;
+            }
+            foreach (var componentsInChild in GetComponentsInChildren<EventSystem>()) {
+                componentsInChild.enabled = false;
             }
         }
 
@@ -137,7 +141,12 @@ public class VR_Participant : Client_Object {
             m_participantOrder.Value = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
             GetComponentInChildren<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder.Value);
-           
+          //  var cam =  GetMainCamera();
+           // var boxCollider = cam.gameObject.AddComponent<BoxCollider>();
+          //  var rigidbody = cam.gameObject.AddComponent<Rigidbody>();
+           // rigidbody.isKinematic = true;
+          
+            
         }
         else {
             foreach (var a in GetComponentsInChildren<ReplayTransform>()) {
@@ -609,7 +618,6 @@ public class VR_Participant : Client_Object {
     private IEnumerator SendImageData(ParticipantOrder po, byte[] ImageArray) {
         var CurrentDataIndex = 0;
         var TotalBufferSize = ImageArray.Length;
-        var DebugCounter = 0;
         while (CurrentDataIndex < TotalBufferSize - 1) {
             //determine the remaining amount of bytes, still need to be sent.
             var bufferSize = QNDataStorageServer.ByteArraySize;

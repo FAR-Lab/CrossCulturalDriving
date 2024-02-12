@@ -44,8 +44,7 @@ using UnityEngine.Rendering;
     public SerializedDictionary<string, SerializedDictionary<ParticipantOrder, Pose>> WaitingRoomSpawnPositonData =
         new SerializedDictionary<string, SerializedDictionary<ParticipantOrder, Pose>>();
 
-    public GameObject ref_ServerTimingDisplay;
-    public GameObject ZedManagerPrefab;
+  
 
     public List<SceneField> IncludedScenes = new();
     private string LastLoadedVisualScene;
@@ -107,7 +106,7 @@ using UnityEngine.Rendering;
     }
 
     private void Start() {
-        DontDestroyOnLoad(FindObjectOfType<InputSystemUIInputModule>());
+//        DontDestroyOnLoad(FindObjectOfType<InputSystemUIInputModule>());
         LastLoadedVisualScene = "";
         if (FindObjectsOfType<RerunManager>().Length > 1) {
             Debug.LogError("We found more than 1 RerunManager. This is not support. Check your Hiracy");
@@ -233,16 +232,14 @@ using UnityEngine.Rendering;
         SteeringWheelManager.Singleton.Init();
 
         Debug.Log("Starting Server for session: " + pairName);
-
-        if (ref_ServerTimingDisplay != null) {
-            var val = Instantiate(ref_ServerTimingDisplay, Vector3.zero, Quaternion.identity, transform)
-                .GetComponent<ServerTimeDisplay>();
-            val.StartDisplay();
-        }
     }
 
 
     public void StartAsServer(string pairName) {
+        if (pairName == String.Empty) {
+            pairName = $"UnNamed at{DateTime.Now.ToString(DataStoragePathSupervisor.DateTimeFormatFolder)}";
+        }
+        
         SetUpToServe(pairName);
 
         if (LocalServerCameraRig == null) {
@@ -258,6 +255,7 @@ using UnityEngine.Rendering;
         DontDestroyOnLoad(ServerCamera);
         m_ReRunManager.RerunInitialization(true, ServerCamera.GetComponent<RerunPlaybackCameraManager>(),
             RerunManager.StartUpMode.RECORDING);
+        
         DataStoragePathSupervisor.setStudyName(pairName);
 
 
@@ -265,17 +263,6 @@ using UnityEngine.Rendering;
         participants.AddParticipant(ParticipantOrder.None, NetworkManager.Singleton.LocalClientId, SpawnType.NONE,
             JoinType.SERVER);
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
-
-
-     //  var t=  Instantiate(ZedManagerPrefab);
-      // DontDestroyOnLoad(t);
-       
-     //   t=  Instantiate(ZedManagerPrefab);
-      //  var z = t.GetComponent<ZEDManager>();
-        //z.Close();
-      //  z.cameraID = ZED_CAMERA_ID.CAMERA_ID_02;
-         //     z.StartBodyTracking();
-      // DontDestroyOnLoad(t);
 
     }
 

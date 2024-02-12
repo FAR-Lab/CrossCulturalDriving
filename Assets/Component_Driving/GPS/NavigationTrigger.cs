@@ -1,10 +1,11 @@
 ﻿//#define DEBUGSHADYCODE
+
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 public class NavigationTrigger : MonoBehaviour {
-
     public List<ParticipantOrder> ParticipantsToReactTo = new List<ParticipantOrder>();
     public NavigationScreen.Direction setDirectionParticipantA;
     public NavigationScreen.Direction setDirectionParticipantB;
@@ -14,83 +15,29 @@ public class NavigationTrigger : MonoBehaviour {
     public NavigationScreen.Direction setDirectionParticipantF;
     public bool triggered;
 
+
+    private List<Transform> ObjectsToTrack = new List<Transform>();
+    private BoxCollider m_boxcollider;
+
     private void Start() {
         if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer &&
-            !NetworkManager.Singleton.IsHost)
+            !NetworkManager.Singleton.IsHost) {
             Destroy(gameObject);
+        }
+        else {
+            m_boxcollider = GetComponent<BoxCollider>();
+            foreach (Client_Object participant in Client_Object.Instances) {
+                if (ParticipantsToReactTo.Contains(participant.GetParticipantOrder())) {
+                    ObjectsToTrack.Add(participant.GetMainCamera());
+                }
+            }
+        }
     }
 
-    private void OnTriggerEnter(Collider other) {
-
-
-        if (!triggered) {
-
-            ParticipantOrder incoming = ParticipantOrder.None;
-            bool success = false;
-            foreach (var t in Client_Object.GetAllImplementations()) {
-          #if DEBUGSHADYCODE      
-                Debug.Log($"Found type{t.FullName}");
-#endif
-                var elem = other.transform.GetComponent(t);
-#if DEBUGSHADYCODE  
-                Debug.Log($"Found elem{elem}");
-#endif
-                if (elem != null) {
-                    incoming= ((Client_Object)elem).GetParticipantOrder();
-#if DEBUGSHADYCODE
-                    Debug.Log($"Cast worked and po is {incoming}");
-#endif
-                    success = true;
-                    break;
-                }
-            }
-
-            if (!success) {
-                foreach (var t in Interactable_Object.GetAllImplementations()) {
-#if DEBUGSHADYCODE
-                    Debug.Log($"Found type{t.FullName}");
-#endif
-                    var elem = other.transform.GetComponent(t);
-                    if (other.transform.parent != null) {
-                        elem = other.transform.GetComponentInParent(t);
-                    }
-#if DEBUGSHADYCODE
-                    Debug.Log($"Found elem{elem}");
-#endif
-                    if (elem != null) {
-                        var io = (Interactable_Object)elem;
-                        if (io != null && io.m_participantOrder != null) {
-                            incoming = ((Interactable_Object)elem).m_participantOrder.Value;
-#if DEBUGSHADYCODE
-                            Debug.Log($"Cast worked and po is {incoming}");
-                    #endif        
-                            success = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (!success) {
-                var pnt = other.transform.GetComponent<ParticipantNavigationTriggerIdent>();
-                if (pnt != null) {
-                    foreach (var t in Client_Object.GetAllImplementations()) {
-                        var elem = pnt.GetComponentInParent(t);
-                        if (elem != null) {
-                            incoming = ((Client_Object)elem).GetParticipantOrder();
-                            success = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (!success) {
-                return;
-            }
-
-            if (ParticipantsToReactTo.Contains(incoming)) {
+    private void Update() {
+        foreach (var t in ObjectsToTrack) {
+            if (!triggered && m_boxcollider.bounds.Contains(t.position)) {
                 triggered = true;
-               
                 var temp =
                     new Dictionary<ParticipantOrder, NavigationScreen.Direction> {
                         { ParticipantOrder.A, setDirectionParticipantA },
@@ -100,10 +47,9 @@ public class NavigationTrigger : MonoBehaviour {
                         { ParticipantOrder.E, setDirectionParticipantE },
                         { ParticipantOrder.F, setDirectionParticipantF }
                     };
-                Debug.Log($"We triggered for Participant A We want to play{temp[ParticipantOrder.A]}");
+                Debug.Log($"We triggered for Participant We want to play{temp[ParticipantOrder.A]}");
                 ConnectionAndSpawning.Singleton.GetScenarioManager().UpdateAllNavigationInstructions(temp);
             }
         }
     }
-
 }

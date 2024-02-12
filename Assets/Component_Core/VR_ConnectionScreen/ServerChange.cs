@@ -220,12 +220,7 @@ public class ServerChange : MonoBehaviour
             return false;
         }
 
-        ServerIPTextBox.text = "IP: " + ServerIPString;
-        ParticipantTextBox.text = "ID: " + ParticipantIDString;
-        LanguageTextBox.text = "lang: " + LanguageString;
-
-        LanguageDropdownItemSelected(ParticipantDropdown);
-        ParticipantDropdownItemSelected(ParticipantDropdown);
+     
     }
 
     public void StoreConf(string participantID, string serverIP, string language){

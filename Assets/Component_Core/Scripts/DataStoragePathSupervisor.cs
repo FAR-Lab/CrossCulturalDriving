@@ -16,6 +16,8 @@ public static class DataStoragePathSupervisor {
     public static string DateTimeFormatInternal = "yyyy-MM-dd-HH:mm:ss.ffffffzzz";
     
     
+    
+    
     static DataStoragePathSupervisor() {
         // Construct the path to the configuration file within the Assets folder
         string configFilePath = Path.Combine(Application.dataPath, "ServerApplicationConfig.json");
@@ -48,6 +50,11 @@ public static class DataStoragePathSupervisor {
         }
     }
 
+    
+    public static string GetJSONPath() {
+       return Path.Combine(Application.dataPath, "ServerApplicationConfig.json");
+
+    }
     public static void setStudyName(string s) {
         StudyName = s;
         nameSet = true;
@@ -66,7 +73,7 @@ public static class DataStoragePathSupervisor {
             return StudyName;
         }
         else {
-              setStudyName($"UnNanmed at{DateTime.Now.ToString(DateTimeFormatFolder)}");
+              setStudyName($"UnNamed at{DateTime.Now.ToString(DateTimeFormatFolder)}");
         }
 
         return StudyName;

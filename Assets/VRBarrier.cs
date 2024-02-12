@@ -6,11 +6,11 @@ using UnityEngine;
 
 [ExecuteInEditMode]
 public class VRBarrier : MonoBehaviour {
-    private MeshFilter mesh;
-    private MeshRenderer renderer;
+    private MeshFilter m_mesh;
+    private MeshRenderer m_renderer;
     private void OnDrawGizmos() {
-        mesh = GetComponent<MeshFilter>();
-        renderer = GetComponent<MeshRenderer>();
+        m_mesh = GetComponent<MeshFilter>();
+        m_renderer = GetComponent<MeshRenderer>();
         Gizmos.color = Color.red;
 
      //  Matrix4x4 rotationMatrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.localScale);
@@ -18,10 +18,10 @@ public class VRBarrier : MonoBehaviour {
      //   Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
         
         
-       if (mesh.sharedMesh != null) {
-           for (int i = 0; i < mesh.sharedMesh.vertices.Length; i++) {
-               Vector3 startPosition = mesh.sharedMesh.vertices[i];
-               Vector3 endPosition = mesh.sharedMesh.vertices[(i + 1) % mesh.sharedMesh.vertices.Length];
+       if (m_mesh.sharedMesh != null) {
+           for (int i = 0; i < m_mesh.sharedMesh.vertices.Length; i++) {
+               Vector3 startPosition = m_mesh.sharedMesh.vertices[i];
+               Vector3 endPosition = m_mesh.sharedMesh.vertices[(i + 1) % m_mesh.sharedMesh.vertices.Length];
 
                Gizmos.DrawLine(transform.TransformPoint(startPosition), transform.TransformPoint(endPosition));
            }
@@ -44,15 +44,15 @@ public class VRBarrier : MonoBehaviour {
     }
 
     private  void setSolid() {
-        renderer.sharedMaterial.SetFloat("_invertShape",1);
-        renderer.sharedMaterial.SetColor("_Color",Color.red);
+        m_renderer.sharedMaterial.SetFloat("_invertShape",1);
+        m_renderer.sharedMaterial.SetColor("_Color",Color.red);
        // Debug.Log("CalledSet solid");
     }
 
     private void setGrid() {
-        renderer.sharedMaterial.SetFloat("_invertShape",0);
+        m_renderer.sharedMaterial.SetFloat("_invertShape",0);
         
-        renderer.sharedMaterial.SetColor("_Color",Color.green);
+        m_renderer.sharedMaterial.SetColor("_Color",Color.green);
        // Debug.Log("CalledSet Grid");
     }
     
@@ -60,7 +60,7 @@ public class VRBarrier : MonoBehaviour {
     private void LateUpdate() {
         if (BoundariesSet) {
             if (firstRun) {
-                renderer = GetComponent<MeshRenderer>();
+                m_renderer = GetComponent<MeshRenderer>();
                 localDistance = transform.localPosition.magnitude;
                 firstRun = false;
             }
