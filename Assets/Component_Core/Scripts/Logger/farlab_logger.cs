@@ -362,11 +362,22 @@ public class farlab_logger : MonoBehaviour {
     }
 
     private string PositonLog(object o) {
-        return ((Transform)o).position.ToString(Fpres);
+        
+        byte[] outArray = new byte[3 * 4];
+       Array.Copy(BitConverter.GetBytes(((Transform)o).position.x),0,outArray,0,4); //ToDo: maybe we need to check the size of a float...
+       Array.Copy(BitConverter.GetBytes(((Transform)o).position.y),0,outArray,4,4);
+       Array.Copy(BitConverter.GetBytes(((Transform)o).position.z),0,outArray,8,4);
+       return Convert.ToBase64String(outArray);
     }
 
     private string OrientationLog(object o) {
-        return ((Transform)o).rotation.eulerAngles.ToString(Fpres);
+        
+        byte[] outArray = new byte[3 * 4];
+        Array.Copy(BitConverter.GetBytes(((Transform)o).rotation.eulerAngles.x),0,outArray,0,4); //ToDo: maybe we need to check the size of a float...
+        Array.Copy(BitConverter.GetBytes(((Transform)o).rotation.eulerAngles.y),0,outArray,4,4);
+        Array.Copy(BitConverter.GetBytes(((Transform)o).rotation.eulerAngles.z),0,outArray,8,4);
+        return Convert.ToBase64String(outArray);
+        //return ((Transform)o).rotation.eulerAngles.ToString(Fpres);
     }
 
 

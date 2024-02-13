@@ -18,7 +18,7 @@ public class NavigationTrigger : MonoBehaviour {
 
     private List<Transform> ObjectsToTrack = new List<Transform>();
     private BoxCollider m_boxcollider;
-
+    private bool isRunning = false;
     private void Start() {
         if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer &&
             !NetworkManager.Singleton.IsHost) {
@@ -29,13 +29,19 @@ public class NavigationTrigger : MonoBehaviour {
             foreach (Client_Object participant in Client_Object.Instances) {
                 if (ParticipantsToReactTo.Contains(participant.GetParticipantOrder())) {
                     ObjectsToTrack.Add(participant.GetMainCamera());
+                    isRunning = true;
                 }
             }
         }
     }
 
     private void Update() {
+        if (!isRunning) return;
         foreach (var t in ObjectsToTrack) {
+            if (t == null) {
+                isRunning = false;
+                break;
+            }
             if (!triggered && m_boxcollider.bounds.Contains(t.position)) {
                 triggered = true;
                 var temp =
