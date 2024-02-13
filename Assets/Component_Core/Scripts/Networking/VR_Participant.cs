@@ -165,7 +165,10 @@ public class VR_Participant : Client_Object {
                 break;
             case ActionState.WAITINGROOM:
                 SetPedestrianOpenXRRepresentaion(true);
-                SetUpZEDSpaceReferenceClientRPC();
+                if (mySpawnType.Value == SpawnType.PEDESTRIAN) {
+                    SetUpZEDSpaceReferenceClientRPC();
+                }
+
                 break;
             case ActionState.LOADINGSCENARIO:
                 
@@ -175,7 +178,9 @@ public class VR_Participant : Client_Object {
                 break;
             case ActionState.READY:
                 SetPedestrianOpenXRRepresentaion(false);
-                SetUpZEDSpaceReferenceClientRPC();
+                if (mySpawnType.Value == SpawnType.PEDESTRIAN) {
+                    SetUpZEDSpaceReferenceClientRPC();
+                }
                 m_callibDisplay.StopDisplay(); // Just to make sure its off!
              break;
             case ActionState.DRIVE:
@@ -212,7 +217,6 @@ public class VR_Participant : Client_Object {
     }
     private void i_setPedestrianOpenXRRepresentaion(bool val) {
         foreach (var smr in GetComponentsInChildren<SkinnedMeshRenderer>()) {
-
             smr.enabled = val;
         }
         
