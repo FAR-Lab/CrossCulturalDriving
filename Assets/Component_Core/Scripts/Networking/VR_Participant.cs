@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.XR.Hands;
+using UnityEngine.XR.Interaction.Toolkit;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
@@ -28,28 +29,29 @@ public class VR_Participant : Client_Object {
     private bool init;
     private Quaternion LastRot = Quaternion.identity;
     private bool lastValue;
-    public NetworkVariable<ParticipantOrder>  m_participantOrder = new NetworkVariable<ParticipantOrder>();
+    public NetworkVariable<ParticipantOrder> m_participantOrder = new NetworkVariable<ParticipantOrder>();
 
-    private NetworkVariable<SpawnType> mySpawnType= new NetworkVariable<SpawnType>();
-   
+    public NetworkVariable<SpawnType> mySpawnType = new NetworkVariable<SpawnType>();
+
     private Vector3 offsetPositon = Vector3.zero;
     private Quaternion offsetRotation = Quaternion.identity;
 
 
     public GameObject QuestionairPrefab;
-  
+
     private PedestrianNavigationAudioCues AudioCuePlayer;
 
     public CalibrationTimerDisplay m_callibDisplay;
- 
+
     private void Update() {
         if (IsServer) {
             ButtonPushed.Value = SteeringWheelManager.Singleton.GetHornButtonInput(m_participantOrder.Value);
         }
     }
 
-    
-    public override void SetNewNavigationInstruction(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions) {
+
+    public override void SetNewNavigationInstruction(
+        Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions) {
         switch (mySpawnType.Value) {
             case SpawnType.NONE:
                 break;
@@ -58,6 +60,7 @@ public class VR_Participant : Client_Object {
                 if (nvc != null) {
                     nvc.SetNewNavigationInstructions(Directions);
                 }
+
                 break;
             case SpawnType.PEDESTRIAN:
                 NavigationScreen.Direction oneDirection = Directions[m_participantOrder.Value];
@@ -68,13 +71,13 @@ public class VR_Participant : Client_Object {
                 if (nvc2 != null) {
                     nvc2.SetNewNavigationInstructions(Directions);
                 }
-                
+
                 break;
             case SpawnType.ROBOT:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
-        } 
+        }
     }
 
     [ClientRpc]
@@ -84,6 +87,7 @@ public class VR_Participant : Client_Object {
             var ourMainCamera = GetMainCamera();
             AudioCuePlayer = ourMainCamera.gameObject.AddComponent<PedestrianNavigationAudioCues>();
         }
+
         AudioCuePlayer.SetNewNavigationInstructions(Directions);
     }
 
@@ -98,10 +102,9 @@ public class VR_Participant : Client_Object {
 
     public override void OnNetworkSpawn() //ToDo Turning on and off different elements could be done neater...
     {
-       
         if (IsLocalPlayer) {
-           // m_participantOrder.Value = ConnectionAndSpawning.Singleton.ParticipantOrder;
-          
+            MyLineRenderer = GetComponentsInChildren<XRRayInteractor>().ToArray();
+                
         }
         else {
             foreach (var a in GetComponentsInChildren<SkinnedMeshRenderer>()) {
@@ -109,7 +112,7 @@ public class VR_Participant : Client_Object {
             }
 
             foreach (var a in GetComponentsInChildren<XRHandTrackingEvents>()) {
-                a.enabled = false; 
+                a.enabled = false;
             }
 
             foreach (var a in GetComponentsInChildren<XRHandSkeletonDriver>()) {
@@ -117,20 +120,30 @@ public class VR_Participant : Client_Object {
             }
 
             foreach (var a in GetComponentsInChildren<XRHandMeshController>()) {
-                a.enabled = false; 
+                a.enabled = false;
             }
 
             foreach (var a in GetComponentsInChildren<Camera>()) {
-                a.enabled = false; 
+                a.enabled = false;
             }
 
             foreach (var a in GetComponentsInChildren<AudioListener>()) {
-                a.enabled = false; 
+                a.enabled = false;
             }
 
             foreach (var a in GetComponentsInChildren<TrackedPoseDriver>()) {
                 a.enabled = false;
             }
+            foreach (var a in GetComponentsInChildren<XRPokeInteractor>()) {
+                a.transform.gameObject.SetActive(false);
+            }
+            foreach (var a in GetComponentsInChildren<XRDirectInteractor>()) {
+                a.transform.gameObject.SetActive(false);
+            }
+            foreach (var a in GetComponentsInChildren<XRRayInteractor>()) {
+                a.transform.gameObject.SetActive(false);
+            }
+
             foreach (var componentsInChild in GetComponentsInChildren<EventSystem>()) {
                 componentsInChild.enabled = false;
             }
@@ -141,12 +154,10 @@ public class VR_Participant : Client_Object {
             m_participantOrder.Value = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
             GetComponentInChildren<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder.Value);
-          //  var cam =  GetMainCamera();
-           // var boxCollider = cam.gameObject.AddComponent<BoxCollider>();
-          //  var rigidbody = cam.gameObject.AddComponent<Rigidbody>();
-           // rigidbody.isKinematic = true;
-          
-            
+            //  var cam =  GetMainCamera();
+            // var boxCollider = cam.gameObject.AddComponent<BoxCollider>();
+            //  var rigidbody = cam.gameObject.AddComponent<Rigidbody>();
+            // rigidbody.isKinematic = true;
         }
         else {
             foreach (var a in GetComponentsInChildren<ReplayTransform>()) {
@@ -154,43 +165,55 @@ public class VR_Participant : Client_Object {
             }
         }
     }
-   
-    
+
+    public XRRayInteractor[] MyLineRenderer;
 
     private void ChangeRendering(ActionState state) {
-        if (mySpawnType.Value != SpawnType.PEDESTRIAN) return;
+        
         switch (state) {
             case ActionState.DEFAULT:
-                
-                break;
-            case ActionState.WAITINGROOM:
-                SetPedestrianOpenXRRepresentaion(true);
-                if (mySpawnType.Value == SpawnType.PEDESTRIAN) {
-                    SetUpZEDSpaceReferenceClientRPC();
-                }
 
                 break;
-            case ActionState.LOADINGSCENARIO:
+            case ActionState.WAITINGROOM:
                 
+                if (mySpawnType.Value == SpawnType.PEDESTRIAN) {
+                    SetUpZEDSpaceReferenceClientRPC();
+                    SetPedestrianOpenXRRepresentaion(true);
+                }
+                SetInternalRayInteractor(true);
+                break;
+            case ActionState.LOADINGSCENARIO:
+
                 break;
             case ActionState.LOADINGVISUALS:
-                
+
                 break;
             case ActionState.READY:
-                SetPedestrianOpenXRRepresentaion(false);
+                
                 if (mySpawnType.Value == SpawnType.PEDESTRIAN) {
+                    SetPedestrianOpenXRRepresentaion(false);
                     SetUpZEDSpaceReferenceClientRPC();
                 }
                 m_callibDisplay.StopDisplay(); // Just to make sure its off!
-             break;
+                SetInternalRayInteractor(false);
+                break;
             case ActionState.DRIVE:
-                
+                SetInternalRayInteractor(false);
                 break;
             case ActionState.QUESTIONS:
-                SetPedestrianOpenXRRepresentaion(true);
-              break;
+                if (mySpawnType.Value == SpawnType.PEDESTRIAN) {
+                    SetPedestrianOpenXRRepresentaion(true);
+                }
+
+                SetInternalRayInteractor(true);
+                break;
             case ActionState.POSTQUESTIONS:
-                SetPedestrianOpenXRRepresentaion(true);
+                if (mySpawnType.Value == SpawnType.PEDESTRIAN) {
+                    SetPedestrianOpenXRRepresentaion(true);
+                }
+
+                SetInternalRayInteractor(true);
+                
                 break;
             case ActionState.RERUN:
                 break;
@@ -200,29 +223,47 @@ public class VR_Participant : Client_Object {
     }
 
     [ClientRpc]
-    private void SetUpZEDSpaceReferenceClientRPC(){
+    private void SetUpZEDSpaceReferenceClientRPC() {
         var ZedSpaceReference = FindObjectOfType<ExperimentSpaceReference>();
         ZedSpaceReference.LoadSetup();
     }
 
     private void SetPedestrianOpenXRRepresentaion(bool val) {
-
         SetPedestrianOpenXRRepresentaionClientRPC(val);
         i_setPedestrianOpenXRRepresentaion(val);
     }
+
     [ClientRpc]
     private void SetPedestrianOpenXRRepresentaionClientRPC(bool val) {
-
         i_setPedestrianOpenXRRepresentaion(val);
     }
     private void i_setPedestrianOpenXRRepresentaion(bool val) {
         foreach (var smr in GetComponentsInChildren<SkinnedMeshRenderer>()) {
             smr.enabled = val;
         }
-        
-        
     }
 
+    
+    
+    private void SetInternalRayInteractor(bool val) {
+        SetInternalRayInteractorClientRPC(val);
+        i_SetInternalRayInteractor(val);
+    }
+
+    [ClientRpc]
+    private void SetInternalRayInteractorClientRPC(bool val) {
+        i_SetInternalRayInteractor(val);
+    }
+
+
+    private void i_SetInternalRayInteractor(bool val) {
+        foreach (XRRayInteractor lineRenderer in MyLineRenderer) {
+            lineRenderer.enabled = val;
+        }
+    }
+    
+    
+    
     public void Start() {
         m_callibDisplay = GetComponentInChildren<CalibrationTimerDisplay>();
     }
@@ -273,6 +314,7 @@ public class VR_Participant : Client_Object {
                     if (pnac == null) {
                         gameObject.AddComponent<PedestrianNavigationAudioCues>();
                     }
+
                     //ToDo We might still have to move you to the active screen (lighting and ReRun considerations... )
                     break;
                 case SpawnType.PASSENGER:
@@ -285,7 +327,7 @@ public class VR_Participant : Client_Object {
 
             NetworkObjectReference reference = MyInteractableObject.GetComponent<NetworkObject>();
             Debug.Log($"Object network refeerence{reference} with targetClient{targetClient}");
-            AssignInteractable_ClientRPC(reference,  targetClient);
+            AssignInteractable_ClientRPC(reference, targetClient);
         }
     }
 
@@ -298,17 +340,16 @@ public class VR_Participant : Client_Object {
         return MyCamera;
     }
 
-    [ClientRpc]
-    private void AssignInteractable_ClientRPC(NetworkObjectReference MyInteractable, ulong targetClient) {
-        Debug.Log(
-            $"My Interactable {MyInteractable.NetworkObjectId} targetClient:{targetClient}, OwnerClientId:{OwnerClientId}");
+    IEnumerator ClientSideCallibrationAwait(NetworkObjectReference MyInteractable, ulong targetClient) {
+        yield return new WaitUntil(() => mySpawnType.Value != SpawnType.NONE);
 
+        Debug.Log(
+            $"Spawn{mySpawnType.Value} : My Interactable {MyInteractable.NetworkObjectId} targetClient:{targetClient}, OwnerClientId:{OwnerClientId}");
         var conf = new ConfigFileLoading();
         switch (mySpawnType.Value) {
             case SpawnType.CAR:
                 if (MyInteractable.TryGet(out var targetObject)) {
                     if (targetClient == OwnerClientId) {
-
                         conf.Init(OffsetFileName);
                         if (conf.FileAvalible()) {
                             conf.LoadLocalOffset(out var localPosition, out var localRotation);
@@ -316,7 +357,12 @@ public class VR_Participant : Client_Object {
                             transform.localRotation = localRotation;
                         }
 
+                        Debug.Log($"Found the car,{targetObject} and now trying to get the vehiclecontroler");
                         NetworkedInteractableObject = targetObject.transform.GetComponent<NetworkVehicleController>();
+                    }
+                    else {
+                        Debug.LogWarning(
+                            $" Some how  these are not the same?targetClient:{targetClient}, OwnerClientId:{OwnerClientId}");
                     }
                 }
                 else {
@@ -329,9 +375,10 @@ public class VR_Participant : Client_Object {
                 conf.Init(OffsetFileName);
                 if (conf.FileAvalible()) {
                     conf.LoadLocalOffset(out var localPosition, out var localRotation);
-                    
-                    Debug.Log($"FindObjectOfType<ExperimentSpaceReference>(){FindObjectOfType<ExperimentSpaceReference>()}");
-                    var esr= FindObjectOfType<ExperimentSpaceReference>();
+
+                    Debug.Log(
+                        $"FindObjectOfType<ExperimentSpaceReference>(){FindObjectOfType<ExperimentSpaceReference>()}");
+                    var esr = FindObjectOfType<ExperimentSpaceReference>();
                     var space = esr.GetCallibrationPoint();
                     transform.position = space.TransformPoint(localPosition);
                     transform.forward = space.TransformDirection(localRotation * Vector3.forward);
@@ -345,6 +392,14 @@ public class VR_Participant : Client_Object {
                 break;
             default:
                 break;
+        }
+    }
+
+    [ClientRpc]
+    private void AssignInteractable_ClientRPC(NetworkObjectReference MyInteractable, ulong targetClient) {
+        if (OwnerClientId != targetClient) return;
+        else {
+            StartCoroutine(ClientSideCallibrationAwait(MyInteractable, targetClient));
         }
     }
 
@@ -364,12 +419,11 @@ public class VR_Participant : Client_Object {
     }
 
     private Action<bool> finishedCalibration_ServerSideReference;
-    public override void CalibrateClient(Action <bool> finishedCalibration) {
-        if (mySpawnType.Value is SpawnType.PEDESTRIAN or SpawnType.CAR) {
 
+    public override void CalibrateClient(Action<bool> finishedCalibration) {
+        if (mySpawnType.Value is SpawnType.PEDESTRIAN or SpawnType.CAR) {
             finishedCalibration_ServerSideReference = finishedCalibration;
             CalibrateClientRPC();
-            
         }
     }
 
@@ -377,11 +431,8 @@ public class VR_Participant : Client_Object {
     private QN_Display qnmanager;
 
     public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) {
-        
-        
         qnmanager = Instantiate(QuestionairPrefab).GetComponentInChildren<QN_Display>();
         qnmanager.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId, true);
-        //qnmanager.GetComponent<Canvas>().worldCamera = GetMainCamera().GetComponent<Camera>();
         string referenceTransformPath = ""; //TODO this is not Implemented
         QN_Display.FollowType tmp = QN_Display.FollowType.MainCamera;
         Vector3 Offset = Vector3.zero;
@@ -426,59 +477,58 @@ public class VR_Participant : Client_Object {
     private Transform LeftHand;
     private Transform RightHand;
 
-    private IEnumerator OverTimeCalibration(Transform VrCamera,Transform ZedOrignReference, float maxtime = 10) {
+    private IEnumerator OverTimeCalibration(Transform VrCamera, Transform ZedOrignReference, float maxtime = 10) {
         isCalibrationRunning = true;
         int runs = 0;
         const int MaxRuns = 250;
         m_callibDisplay.StartDispaly();
         m_callibDisplay.updateMessage("Hold still!");
         yield return new WaitForSeconds(2);
-        
-       
-       
-       
-      //  Transform HandModelL= transform.Find("Camera Offset/Left Hand Tracking/L_Wrist/L_Palm");
-      //  Transform HandModelR = transform.Find("Camera Offset/Right Hand Tracking/R_Wrist/R_Palm");
-        Transform HandModelL= transform.GetComponent<SeatCalibration>().HandModelL;
-       Transform HandModelR = transform.GetComponent<SeatCalibration>().HandModelR;
-      
-     // var interact = FindObjectOfType<SkeletonNetworkScript>();    // We making a bunch of assumptions here, kinda ugly! 
-        
-     
-        Debug.Log($"ZedOrignReference{ZedOrignReference}, VrCamera{VrCamera}, HandModelL{HandModelL}, HandModelR{HandModelR}");
-        Debug.DrawRay(ZedOrignReference.position,-Vector3.up*ZedOrignReference.position.y,Color.magenta,60);
-        Debug.DrawRay(HandModelL.position,Vector3.up,Color.cyan,60);
-        Debug.DrawRay(HandModelR.position,Vector3.up,Color.cyan,60);
 
-   
+
+        //  Transform HandModelL= transform.Find("Camera Offset/Left Hand Tracking/L_Wrist/L_Palm");
+        //  Transform HandModelR = transform.Find("Camera Offset/Right Hand Tracking/R_Wrist/R_Palm");
+        Transform HandModelL = transform.GetComponent<SeatCalibration>().HandModelL;
+        Transform HandModelR = transform.GetComponent<SeatCalibration>().HandModelR;
+
+        // var interact = FindObjectOfType<SkeletonNetworkScript>();    // We making a bunch of assumptions here, kinda ugly! 
+
+
+        Debug.Log(
+            $"ZedOrignReference{ZedOrignReference}, VrCamera{VrCamera}, HandModelL{HandModelL}, HandModelR{HandModelR}");
+        Debug.DrawRay(ZedOrignReference.position, -Vector3.up * ZedOrignReference.position.y, Color.magenta, 60);
+        Debug.DrawRay(HandModelL.position, Vector3.up, Color.cyan, 60);
+        Debug.DrawRay(HandModelR.position, Vector3.up, Color.cyan, 60);
+
+
         while (runs < MaxRuns) {
-            
-            Vector3 A = HandModelL.position; 
+            Vector3 A = HandModelL.position;
             Vector3 B = HandModelR.position;
             Vector3 AtoB = B - A;
-            Vector3 midPoint= (A + (AtoB * 0.5f));
-            Vector3 transformDifference =  ZedOrignReference.position-midPoint;
-            Vector3 artificalForward =   midPoint - VrCamera.position ;
+            Vector3 midPoint = (A + (AtoB * 0.5f));
+            Vector3 transformDifference = ZedOrignReference.position - midPoint;
+            Vector3 artificalForward = midPoint - VrCamera.position;
 
-            float angle = Vector3.SignedAngle(new Vector3(artificalForward.x,0,artificalForward.z), 
-                new Vector3(ZedOrignReference.forward.x,0,ZedOrignReference.forward.z),
+            float angle = Vector3.SignedAngle(new Vector3(artificalForward.x, 0, artificalForward.z),
+                new Vector3(ZedOrignReference.forward.x, 0, ZedOrignReference.forward.z),
                 Vector3.up);
-            
-            
+
+
             Debug.Log($"Angle:{angle}");
-            Debug.DrawLine(A,B,Color.green,10);
-            Debug.DrawRay(VrCamera.position,transformDifference,Color.blue,10);
-            Debug.DrawRay(midPoint,artificalForward,Color.red,10);
-            
-            SetNewRotationOffset(Quaternion.Euler(0, angle*0.9f, 0));
-            SetNewPositionOffset(transformDifference*0.9f);
-            
+            Debug.DrawLine(A, B, Color.green, 10);
+            Debug.DrawRay(VrCamera.position, transformDifference, Color.blue, 10);
+            Debug.DrawRay(midPoint, artificalForward, Color.red, 10);
+
+            SetNewRotationOffset(Quaternion.Euler(0, angle * 0.9f, 0));
+            SetNewPositionOffset(transformDifference * 0.9f);
+
             maxtime -= Time.deltaTime;
             runs++;
             if (maxtime < 0) {
                 break;
             }
-            m_callibDisplay.updateMessage((MaxRuns-runs).ToString());
+
+            m_callibDisplay.updateMessage((MaxRuns - runs).ToString());
             yield return new WaitForEndOfFrame();
         }
 
@@ -486,12 +536,16 @@ public class VR_Participant : Client_Object {
         FinishedCalibration(ZedOrignReference);
         isCalibrationRunning = false;
     }
-    
-    
 
-    [ServerRpc]
-    private void PedestrianCallibrationFinishedServerRPC() {
-       //  FindObjectOfType<ZedReferenceFinder>().InitiateInverseContinuesCalibration(GetMainCamera());
+    private void FindInteractable() {
+        if (NetworkedInteractableObject == null) {
+            foreach (Interactable_Object io in Interactable_Object.Instances) {
+                if (io.m_participantOrder.Value == m_participantOrder.Value) {
+                    NetworkedInteractableObject = io;
+                    break;
+                }
+            }
+        }
     }
 
     private bool SkeletonSet = false;
@@ -504,6 +558,10 @@ public class VR_Participant : Client_Object {
 
         switch (mySpawnType.Value) {
             case SpawnType.CAR:
+                if (NetworkedInteractableObject == null) {
+                    FindInteractable();
+                }
+
                 var steering = NetworkedInteractableObject.transform.Find("SteeringCenter");
                 var cam = GetMainCamera();
                 var calib = GetComponent<SeatCalibration>();
@@ -519,14 +577,15 @@ public class VR_Participant : Client_Object {
                 var mainCamera = GetMainCamera();
                 Debug.Log($"VrCamera Local Position {mainCamera.localPosition}");
                 Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
-               
-                    if (isCalibrationRunning == false) {
-                        StartCoroutine(OverTimeCalibration(mainCamera, FindObjectOfType<ExperimentSpaceReference>().GetCallibrationPoint(),10));
-                    }
-                    else {
-                        Debug.Log("Callibration already running!");
-                    }
-             
+
+                if (isCalibrationRunning == false) {
+                    StartCoroutine(OverTimeCalibration(mainCamera,
+                        FindObjectOfType<ExperimentSpaceReference>().GetCallibrationPoint(), 10));
+                }
+                else {
+                    Debug.Log("Callibration already running!");
+                }
+
 
                 break;
         }
@@ -544,12 +603,10 @@ public class VR_Participant : Client_Object {
 
 
     public void SetNewRotationOffset(Quaternion offset) {
-       
         transform.rotation *= offset;
     }
 
     public void SetNewPositionOffset(Vector3 positionOffset) {
-        
         transform.position += positionOffset;
     }
 
@@ -557,24 +614,25 @@ public class VR_Participant : Client_Object {
         var conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
         Vector3 localPosToStore = relativeTransform.InverseTransformPoint(transform.position);
-       
+
         Quaternion LocalRotation = Quaternion.Inverse(relativeTransform.rotation) * transform.rotation;
-            
+
         conf.StoreLocalOffset(localPosToStore, LocalRotation);
 
         //  ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
-        FinishedCalibrationServerRPC(true );
+        FinishedCalibrationServerRPC(true);
     }
 
     [ServerRpc]
-   private void FinishedCalibrationServerRPC(bool val) {
-       if (finishedCalibration_ServerSideReference != null) {
-           finishedCalibration_ServerSideReference.Invoke(val);
-       }
-       else {
-           Debug.LogWarning($"The Action to notify the server that calibration is finished was never defined");
-       }
-   }
+    private void FinishedCalibrationServerRPC(bool val) {
+        if (finishedCalibration_ServerSideReference != null) {
+            finishedCalibration_ServerSideReference.Invoke(val);
+        }
+        else {
+            Debug.LogWarning($"The Action to notify the server that calibration is finished was never defined");
+        }
+    }
+
     [ServerRpc]
     public void ShareOffsetServerRPC(Vector3 offsetPositon, Quaternion offsetRotation, Quaternion InitRotation) {
         UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, InitRotation);

@@ -14,12 +14,21 @@ public abstract class Interactable_Object : NetworkBehaviour {
     public abstract Transform GetCameraPositionObject();
     public abstract void SetStartingPose(Pose _pose);
     public abstract bool HasActionStopped();
-    public static IEnumerable<Type> GetAllImplementations() { //https://stackoverflow.com/a/5411981
-
-        return typeof(Interactable_Object)
-            .Assembly.GetTypes()
-            .Where(t => t.IsSubclassOf(typeof(Interactable_Object)) && !t.IsAbstract);
+    
+     
+    private static List<Interactable_Object> instances = new List<Interactable_Object>(); // Can cause memory leakage if not kept clean...!!! 
+    protected Interactable_Object() {
+        // Add this instance to the list upon object creation
+        instances.Add(this);
     }
+
+    protected virtual void OnDestroy() {
+        // Remove this instance from the list when it's destroyed
+        instances.Remove(this);
+    }
+
+    public static IReadOnlyList<Interactable_Object> Instances => instances.AsReadOnly();
+ 
 }
 
 public abstract class Client_Object : NetworkBehaviour {
@@ -56,27 +65,6 @@ public abstract class Client_Object : NetworkBehaviour {
     public abstract void SetNewNavigationInstruction(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions);
 
     
-    
-    public static Client_Object GetJoinTypeObject() // I am not sure that this is a smart thing todo...
-    {
-        return null;
-        //ToDo: David WTF
-        Type[] types = (Type[])GetAllImplementations();
-        foreach (Type t in types){
-            foreach (var pic in FindObjectsOfType(t)) {
-                if (((Client_Object)pic).IsLocalPlayer)
-                    return (Client_Object)pic;
-            }
-        }
-        return null;
-    }
-
-    public static IEnumerable<Type> GetAllImplementations() { //https://stackoverflow.com/a/5411981
-
-        return typeof(Client_Object)
-            .Assembly.GetTypes()
-            .Where(t => t.IsSubclassOf(typeof(Client_Object)) && !t.IsAbstract);
-    }
 }
 
 

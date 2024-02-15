@@ -6362,6 +6362,7 @@ GameObject:
   - component: {fileID: 2703922561500448890}
   - component: {fileID: 1189612310200418351}
   - component: {fileID: 9157688523806211344}
+  - component: {fileID: 8425436365001121014}
   m_Layer: 0
   m_Name: VRClientHeadHand
   m_TagString: Untagged
@@ -6400,7 +6401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 187006646
+  GlobalObjectIdHash: 2814301739
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -6425,8 +6426,11 @@ MonoBehaviour:
   NetworkedInteractableObject: {fileID: 0}
   m_participantOrder:
     m_InternalValue: 0
+  mySpawnType:
+    m_InternalValue: 0
   QuestionairPrefab: {fileID: 1853806982428388, guid: bb398da6725f53c4283a5f88c90d86ed, type: 3}
   m_callibDisplay: {fileID: 0}
+  MyLineRenderer: []
 --- !u!114 &8281548716836415492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6441,7 +6445,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 21259
+    id: 50850
   replayObject:
     reference: {fileID: 4995632068778713869}
   m_participantOrder: 0
@@ -6459,7 +6463,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isObservedComponentsExpanded: 0
   replayIdentity:
-    id: 44355
+    id: 23487
   prefabIdentity:
     id: 18724
   observedComponents:
@@ -6498,7 +6502,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 50434
+    id: 20379
   replayObject:
     reference: {fileID: 4995632068778713869}
   positionFlags: 263
@@ -6534,6 +6538,18 @@ MonoBehaviour:
   InLocalSpace: 1
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &8425436365001121014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4778306584232404464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a49e1d1dcb4ca844b9dd90748dc49ace, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4838422809082925877
 GameObject:
   m_ObjectHideFlags: 0

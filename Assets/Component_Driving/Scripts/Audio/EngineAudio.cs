@@ -40,6 +40,7 @@ public class EngineAudio : MonoBehaviour {
             instance.sample = s;
             instance.source = gameObject.AddComponent<AudioSource>();
             instance.source.spread = 1;
+            instance.source.spatialBlend = 1;
             instance.source.outputAudioMixerGroup = group;
             instance.source.volume = 0f;
             instance.source.clip = s.clip;
