@@ -10,10 +10,15 @@ public class scr_Selector : MonoBehaviour {
     private int pick = 0;
     private int count = 0;
     public List<GameObject> Suits;
-    public List<GameObject> Heads;
+    public List<GameObject>  Heads;
     private Renderer oRenderer;
     
+    public enum Gender{
+        Male,
+        Female
+    }
     
+    public Gender gender;
 
 
     // Use this for initialization
