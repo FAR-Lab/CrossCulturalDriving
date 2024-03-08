@@ -97,12 +97,27 @@ public class NavigationScreen : ReplayBehaviour {
                 return ComeToStopImage;
             case Direction.ToHospital:
                 return ToHospital;
+            case Direction.Loading:
+            case Direction.None:
+            case Direction.bus_stop:
+            case Direction.black_trashcan:
+            case Direction.blue_trashcan:
+            case Direction.food_cart:
+            case Direction.gate:
+            case Direction.grey_building:
+            case Direction.grey_building_columns:
+            case Direction.hotel_entrance:
+            case Direction.park_entrance:
+            case Direction.red_building:
+            case Direction.staircase:
+            case Direction.stairs_across_street:
             default:
                 return null;
         }
     }
 
     public void SetDirection(Direction newDirection) {
+        if (newDirection == Direction.None) return;
         if (previousDirection != newDirection) {
             previousDirection = newDirection;
             gpsImagePlane.sprite = spriteForDirection(newDirection);

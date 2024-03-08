@@ -207,7 +207,7 @@ public class QN_Display : NetworkBehaviour {
             case QNStates.LOADINGQUESTION:
 
                 updateCountDisaply();
-                foreach (var r in AnswerFields) Destroy(r.gameObject);
+                foreach (var r in AnswerFields) {if(r!=null){Destroy(r.gameObject);}}
 
                 AnswerFields.Clear();
 
@@ -300,6 +300,13 @@ public class QN_Display : NetworkBehaviour {
 
     private void OnBackClickedHandler() {
         if (m_interalState == QNStates.RESPONSEWAIT) {
+            _answerCount--;
+            if (_answerCount < 0) _answerCount = 0;
+            SendQNAnswer(-1, -1, m_LanguageSelect);
+            m_interalState = QNStates.WAITINGFORQUESTION;
+        }
+
+        if (m_interalState is QNStates.FINISH or QNStates.IDLE) {
             _answerCount--;
             if (_answerCount < 0) _answerCount = 0;
             SendQNAnswer(-1, -1, m_LanguageSelect);
@@ -449,8 +456,7 @@ public class QN_Display : NetworkBehaviour {
 
     [ClientRpc]
     public void SetTotalQNCountClientRpc(int outval) {
-        if (!IsOwner) return;
-        FindObjectOfType<QN_Display>()?.SetTotalQNCount(outval);
+        SetTotalQNCount(outval);
     }
 
     #endregion

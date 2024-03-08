@@ -21,9 +21,11 @@ public class OberserverCameraLocalServerObject : MonoBehaviour {
             case ActionState.DEFAULT:
                 break;
             case ActionState.WAITINGROOM:
-                DelinkCameras();
+                LinkCameras();
+               
                 break;
             case ActionState.LOADINGSCENARIO:
+                 DelinkCameras();
                 break;
             case ActionState.LOADINGVISUALS:
                 break;
@@ -36,6 +38,7 @@ public class OberserverCameraLocalServerObject : MonoBehaviour {
             case ActionState.QUESTIONS:
                 break;
             case ActionState.POSTQUESTIONS:
+                DelinkCameras();
                 break;
             case ActionState.RERUN:
                 SetupForRerun();
