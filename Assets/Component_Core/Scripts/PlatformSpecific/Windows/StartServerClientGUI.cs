@@ -67,7 +67,7 @@ public class StartServerClientGUI : MonoBehaviour {
                 ConnectionAndSpawning.Singleton.StartAsClient("English", 
                     po:_po,
                     ip: _ip,
-                    port: 7777,
+                    port: 8000,
                     result:ResponseDelegate,
                     _spawnTypeIN: _spawnTypeIN,
                     _joinTypeIN: _joinTypeIN

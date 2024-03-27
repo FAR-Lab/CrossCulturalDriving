@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -8226642694867612659}
   - component: {fileID: 202493132015356521}
   - component: {fileID: 1963304621324834815}
+  - component: {fileID: 8182398900667770509}
   m_Layer: 0
   m_Name: CrowdAgent_Female
   m_TagString: Untagged
@@ -48,7 +49,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3400212103818724408}
   m_Enabled: 1
   m_AgentTypeID: -334000983
-  m_Radius: 0.5
+  m_Radius: 0.2
   m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
@@ -59,7 +60,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 1.05
-  m_WalkableMask: 1
+  m_WalkableMask: 25
   m_ObstacleAvoidanceType: 4
 --- !u!114 &-362756279486981980
 MonoBehaviour:
@@ -187,6 +188,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8182398900667770509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3400212103818724408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79f97ad05ffd84e0880534b0619aa449, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minDistanceDiff: 10
 --- !u!1001 &6494492282362515566
 PrefabInstance:
   m_ObjectHideFlags: 0

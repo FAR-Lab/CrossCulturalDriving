@@ -260,7 +260,7 @@ using UnityEngine.Rendering;
             RerunManager.StartUpMode.RECORDING);
         DataStoragePathSupervisor.setStudyName(pairName);
 
-
+        
         NetworkManager.Singleton.StartServer();
         participants.AddParticipant(ParticipantOrder.None, NetworkManager.Singleton.LocalClientId, SpawnType.NONE,
             JoinType.SERVER);
