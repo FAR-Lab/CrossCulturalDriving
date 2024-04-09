@@ -69,6 +69,8 @@ public class CrowdAgentManager : NetworkBehaviour
         }
         spawnArea.isTrigger = true;
 
+        // initialSpawnCount = 1;
+
         for (int i = 0; i < initialSpawnCount; i++)
         {
             SpawnAgent();
@@ -82,31 +84,41 @@ public class CrowdAgentManager : NetworkBehaviour
 
     void SpawnAgent()
     {
+        // initialSpawnCount = 10;
         if (agentInstances.Count >= maxAgentCount)
         {
             return;
         }
 
-        Vector3 randomPoint = new Vector3(
-            Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x),
-            transform.position.y,
-            Random.Range(spawnArea.bounds.min.z, spawnArea.bounds.max.z)
-        );
+        Vector3 pos = new Vector3(20, 0f, 104f);
+        GameObject randomPrefab = agentPrefabs[Random.Range(0, agentPrefabs.Length)];
+        GameObject agentInstance = Instantiate(randomPrefab, pos, Quaternion.identity);
 
-        // try to see if the random point is on the navmesh
-        if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, spawnArea.size.magnitude, NavMesh.AllAreas))
-        {
-            GameObject randomPrefab = agentPrefabs[Random.Range(0, agentPrefabs.Length)];
-            GameObject agentInstance = Instantiate(randomPrefab, hit.position, Quaternion.identity);
+        agentInstance.GetComponent<NetworkObject>().Spawn();
+        agentInstance.transform.parent = agentSpawn;
+        agentInstances.Add(agentInstance);
 
-            agentInstance.GetComponent<NetworkObject>().Spawn();
-            agentInstance.transform.parent = agentSpawn;
-            agentInstances.Add(agentInstance);
-        }
-        else
-        {
-            SpawnAgent();
-        }
+        // Vector3 randomPoint = new Vector3(
+        //     Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x),
+        //     transform.position.y,
+        //     Random.Range(spawnArea.bounds.min.z, spawnArea.bounds.max.z)
+        // );
+
+        // // try to see if the random point is on the navmesh
+        // if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, spawnArea.size.magnitude, NavMesh.AllAreas))
+        // {
+        //     GameObject randomPrefab = agentPrefabs[Random.Range(0, agentPrefabs.Length)];
+        //     Vector3 pos = new Vector3(hit.position.x, hit.position.y+1,hit.position.z);
+        //     GameObject agentInstance = Instantiate(randomPrefab, pos, Quaternion.identity);
+
+        //     agentInstance.GetComponent<NetworkObject>().Spawn();
+        //     agentInstance.transform.parent = agentSpawn;
+        //     agentInstances.Add(agentInstance);
+        // }
+        // else
+        // {
+        //     SpawnAgent();
+        // }
     }
 
     public void DestroyAgent(CrowdAgent agent)

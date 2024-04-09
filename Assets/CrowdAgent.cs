@@ -57,35 +57,42 @@ public class CrowdAgent : NetworkBehaviour
 
     void SetRandomDestination(int attempts = 0)
     {
+
         if (attempts >= maxAttempts) return;
 
-        Vector3 randomDirection = Random.insideUnitSphere * radius;
-        randomDirection += transform.position;
-        NavMeshHit hit;
+        Vector3 vec1 = new Vector3(11, 0f, 92f);
+        agent.SetDestination(vec1);
+        print("dest is "+agent.destination);
+        targetPosition = vec1;
 
-        //if (!NavMesh.SamplePosition(transform.position, out hit, 1.0f, NavMesh.AllAreas))
-        //{
-        //    Destroy(gameObject, 0.1f);
-        //    return;
-        //}
+        // Vector3 randomDirection = Random.insideUnitSphere * radius;
+        // randomDirection += transform.position;
+        // NavMeshHit hit;
 
-        if (NavMesh.SamplePosition(randomDirection, out hit, radius, NavMesh.AllAreas))
-        {
-            NavMeshPath path = new NavMeshPath();
-            if (agent.CalculatePath(hit.position, path) && path.status == NavMeshPathStatus.PathComplete)
-            {
-                agent.SetDestination(hit.position);
-                targetPosition = hit.position;
-            }
-            else
-            {
-                SetRandomDestination(attempts + 1);
-            }
-        }
-        else
-        {
-            SetRandomDestination(attempts + 1);
-        }
+        // //if (!NavMesh.SamplePosition(transform.position, out hit, 1.0f, NavMesh.AllAreas))
+        // //{
+        // //    Destroy(gameObject, 0.1f);
+        // //    return;
+        // //}
+
+        // if (NavMesh.SamplePosition(randomDirection, out hit, radius, NavMesh.AllAreas))
+        // {
+        //     NavMeshPath path = new NavMeshPath();
+        //     if (agent.CalculatePath(hit.position, path) && path.status == NavMeshPathStatus.PathComplete)
+        //     {
+        //         print("Setting destination");
+        //         agent.SetDestination(hit.position);
+        //         targetPosition = hit.position;
+        //     }
+        //     else
+        //     {
+        //         SetRandomDestination(attempts + 1);
+        //     }
+        // }
+        // else
+        // {
+        //     SetRandomDestination(attempts + 1);
+        // }
     }
 
     private void OnDrawGizmos()
