@@ -1,59 +1,11 @@
 fileFormatVersion: 2
 guid: 982c47258c708ba438ead7dc5ae84a04
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: XE_lowPoly_mdl:XE_matt_1
-    100002: XE_lowPoly_mdl:XE_seats
-    100004: XE_lowPoly_mdl:XE_steering
-    100006: //RootNode
-    100008: XE_lowPoly_mdl:XE_headlight
-    100010: XE_lowPoly_mdl:XE_headlight.001
-    100012: XE_lowPoly_mdl:XE_rearLamp
-    100014: XE_lowPoly_mdl:XE_rearLamp.002
-    100016: XE_lowPoly_mdl:XE_rearLamp.003
-    100018: XE_lowPoly_mdl:XE_rearLamp.004
-    400000: XE_lowPoly_mdl:XE_matt_1
-    400002: XE_lowPoly_mdl:XE_seats
-    400004: XE_lowPoly_mdl:XE_steering
-    400006: //RootNode
-    400008: XE_lowPoly_mdl:XE_headlight
-    400010: XE_lowPoly_mdl:XE_headlight.001
-    400012: XE_lowPoly_mdl:XE_rearLamp
-    400014: XE_lowPoly_mdl:XE_rearLamp.002
-    400016: XE_lowPoly_mdl:XE_rearLamp.003
-    400018: XE_lowPoly_mdl:XE_rearLamp.004
-    2100000: phong1
-    2300000: XE_lowPoly_mdl:XE_matt_1
-    2300002: XE_lowPoly_mdl:XE_seats
-    2300004: XE_lowPoly_mdl:XE_steering
-    2300006: XE_lowPoly_mdl:XE_headlight
-    2300008: XE_lowPoly_mdl:XE_headlight.001
-    2300010: XE_lowPoly_mdl:XE_rearLamp
-    2300012: XE_lowPoly_mdl:XE_rearLamp.002
-    2300014: XE_lowPoly_mdl:XE_rearLamp.003
-    2300016: XE_lowPoly_mdl:XE_rearLamp.004
-    3300000: XE_lowPoly_mdl:XE_matt_1
-    3300002: XE_lowPoly_mdl:XE_seats
-    3300004: XE_lowPoly_mdl:XE_steering
-    3300006: XE_lowPoly_mdl:XE_headlight
-    3300008: XE_lowPoly_mdl:XE_headlight.001
-    3300010: XE_lowPoly_mdl:XE_rearLamp
-    3300012: XE_lowPoly_mdl:XE_rearLamp.002
-    3300014: XE_lowPoly_mdl:XE_rearLamp.003
-    3300016: XE_lowPoly_mdl:XE_rearLamp.004
-    4300000: XE_lowPoly_mdl:XE_steering
-    4300002: XE_lowPoly_mdl:XE_seats
-    4300004: XE_lowPoly_mdl:XE_matt_1
-    4300006: XE_lowPoly_mdl:XE_headlight.001
-    4300008: XE_lowPoly_mdl:XE_headlight
-    4300010: XE_lowPoly_mdl:XE_rearLamp.004
-    4300012: XE_lowPoly_mdl:XE_rearLamp.003
-    4300014: XE_lowPoly_mdl:XE_rearLamp.002
-    4300016: XE_lowPoly_mdl:XE_rearLamp
+  serializedVersion: 22200
+  internalIDToNameTable: []
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 2
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -62,6 +14,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -79,40 +32,55 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 1
+    isReadable: 0
   meshes:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
     addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
+    strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
-  importAnimation: 0
-  copyAvatar: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -122,13 +90,19 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
   humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
