@@ -27,7 +27,7 @@ public class BlocksManager : MonoBehaviour {
 
     void Awake() {
         _instance = this;
-        print("Awake");
+        // print("Awake");
         _instance._buildingBlocks = new List<BoxCollider>();
         for (int i = 0; i< _instance.transform.childCount;i++) {
             _instance._buildingBlocks.Add(_instance.transform.GetChild(i).GetComponent<BoxCollider>());

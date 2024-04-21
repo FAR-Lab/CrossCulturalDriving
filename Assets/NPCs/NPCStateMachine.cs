@@ -10,19 +10,16 @@ using Vector3 = UnityEngine.Vector3;
 
 public class NPCStateMachine : MonoBehaviour
 {
-    // Start is called before the first frame update
     private NavMeshAgent nav;
     private NPCConstants.NPCState agentState;
     private Animator anim;
     private Vector3 destination;
     
-    //03-13
     private Transform _transform;
     private bool crossingStreet = false;
     private MeshCollider crossWalk = null;
     private bool finishedCrossing = false;
     
-    //03-25
     private int bornBlockIndex;
     private int destBlockIndex;
 
@@ -33,12 +30,7 @@ public class NPCStateMachine : MonoBehaviour
 
     public bool useTraffic = false;
     private void Awake() {
-        // if (transform.GetComponent<Animator>()) {
-        //     anim = transform.GetComponent<Animator>();
-        // }
-        // else {
-        //     anim = transform.GetChild(0).GetComponent<Animator>();
-        // }
+
         anim = transform.GetChild(0).GetComponent<Animator>();
         nav = GetComponent<NavMeshAgent>();
         if (!nav) {
@@ -86,7 +78,6 @@ public class NPCStateMachine : MonoBehaviour
         this.useTraffic = useTraffic;
     }
 
-    //TODO: Replace anim with new animator along with blend tree animation
     private void FixedUpdate() {
         switch (agentState) {
             case NPCConstants.NPCState.Idle:
@@ -95,32 +86,25 @@ public class NPCStateMachine : MonoBehaviour
                 break;
             case NPCConstants.NPCState.Move:
                 anim.SetBool("isIdling", false);
-                // anim.SetBool("isChecking",false);
                 break;
             case NPCConstants.NPCState.Pause:
     
                 anim.SetBool("isIdling",true);
-                // anim.SetBool("isChecking",true);
                 break;
             case NPCConstants.NPCState.CrossStreet:
                 anim.SetBool("isIdling",false);
-                // anim.SetBool("isChecking",false);
                 break;
         }
     }
 
-    //03-25
+    //NPC change
     //Get a random dest block index;Get a random location in that block
     //Set as the NPC's targetDestination
     Vector3 SelectRandomDestination() {
         if (destinationAreas != null) {
             int index = Random.Range(0, destinationAreas.Count);
-            //TODO:Rethink if needs to make dest and start in different blocks; now only checks the distance between the two position
             
-            // //destBlock has to be different from bornBlock
-            // while (index == bornBlockIndex) {
-            //     index = Random.Range(0, destinationAreas.Count);
-            // }
+            //TODO:Do we want dest and start locations to be in different blocks; now only checks the distance between the two position
 
             BoxCollider destBox = destinationAreas[index];
             Vector3 randomDest = new Vector3(
@@ -140,6 +124,9 @@ public class NPCStateMachine : MonoBehaviour
                     Random.Range(destBox.bounds.min.z,destBox.bounds.max.z)
                 );
             }
+            
+            //Still can spawn agents on illegal places such as benches, need to update the prefabs
+            //Comment out this codes to remove "SetDestination" and "CalculatePath" errors
 
             // if (!nav.CalculatePath(hit.position, path)
             //     || path.status != NavMeshPathStatus.PathComplete) {
@@ -158,7 +145,6 @@ public class NPCStateMachine : MonoBehaviour
     }
 
     //set the final destination for the NPC
-    //NOTE: THIS IS DIFFERENT FROM NAVMESHAGENT.SETDESTINATION
     void SetTargetDestination() {
         Vector3 dest = SelectRandomDestination();
         if (dest == -1 * Vector3.one) {
@@ -168,17 +154,14 @@ public class NPCStateMachine : MonoBehaviour
 
         destination = dest;
         nav.SetDestination(destination);
-        // anim.SetBool("isIdling",false);
         agentState = NPCConstants.NPCState.Move;
         
-        // print("Switch to Move");
     }
 
     void MoveToTarget() {
         //after crossing crosswalk, first check if has destination, if so, continue to original path
         if (finishedCrossing) {
             if (destination != -1 * Vector3.one) {
-                print("After sidewalk");
                 nav.SetDestination(destination);
                 finishedCrossing = false;
                 return;
@@ -187,8 +170,6 @@ public class NPCStateMachine : MonoBehaviour
         
         //if reach the destination, reset
         if (nav.isOnNavMesh && !nav.pathPending && nav.remainingDistance < 0.3f) {
-            print("Finished Path");
-            // anim.SetBool("isIdling",true);
             agentState = NPCConstants.NPCState.Idle;
             
             return;
@@ -216,7 +197,6 @@ public class NPCStateMachine : MonoBehaviour
                 return;
             }
             
-            // anim.SetBool("isIdling",true);
             agentState = NPCConstants.NPCState.Pause;
             
         }
@@ -236,8 +216,7 @@ public class NPCStateMachine : MonoBehaviour
         }
         return null; 
     }
-
-    //03-13 state machine functions
+    
     IEnumerator Pause() {
         if (!isPaused) {
             isPaused = true;
@@ -245,7 +224,6 @@ public class NPCStateMachine : MonoBehaviour
             //set random stand pose, only when switch from move to idle
             int standIndex = Random.Range(0, 3);
             anim.SetInteger("StandNum",standIndex);
-            // anim.SetBool("isIdling",true);
             
             //Stop and Turn to Face Crosswalk
             nav.isStopped = true;
@@ -292,7 +270,6 @@ public class NPCStateMachine : MonoBehaviour
             //switch state to cross street
             yield return new WaitForSeconds(Random.Range(1f,2f));
             isPaused = false;
-            // anim.SetBool("isIdling",false);
             agentState = NPCConstants.NPCState.CrossStreet;
             
         }
@@ -328,12 +305,10 @@ public class NPCStateMachine : MonoBehaviour
         }
         else {
             if (!nav.pathPending && nav.remainingDistance < 0.3f) {
-                // print("Finishing Crosswalk");
                 //finish crossing, set to regular move to target
                 crossingStreet = false;
                 finishedCrossing = true;
                 crossWalk = null;
-                // anim.SetBool("isIdling",false);
                 agentState = NPCConstants.NPCState.Move;
                 
             }
@@ -341,7 +316,6 @@ public class NPCStateMachine : MonoBehaviour
     }
 
     void TurnToFaceCrosswalk() {
-        print("Turn to face crosswalk");
         RaycastHit[] hits;
         Vector3 unit_forward = _transform.forward;
         unit_forward.Normalize();

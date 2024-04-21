@@ -23,7 +23,7 @@ public class CrowdAgentManager : NetworkBehaviour
     public float spawnRate = 1f;
     
     
-    //03-26
+    //NPC change
     private List<BoxCollider> blockAreas;
     public static CrowdAgentManager Singleton;
     public bool dummyTrafficLight = false;
@@ -128,7 +128,6 @@ public class CrowdAgentManager : NetworkBehaviour
     }
     
     Vector3 SelectRandomBirthplace() {
-        // print("Block number "+blockAreas.Count);
         if (blockAreas != null) {
             int index = Random.Range(0, blockAreas.Count);
 
@@ -138,7 +137,6 @@ public class CrowdAgentManager : NetworkBehaviour
                 gameObject.transform.position.y,
                 Random.Range(startBox.bounds.min.z,startBox.bounds.max.z)
             );
-            // print("Test Random "+randomDest);
             NavMeshHit hit;
             int walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
             while (! NavMesh.SamplePosition(randomDest, out hit, 5f, walkableMask)) {
@@ -156,7 +154,6 @@ public class CrowdAgentManager : NetworkBehaviour
     }
     
     void SpawnAgent() {
-        print("agent area" + spawnArea.bounds);
         
         Vector3 randomPoint = new Vector3(
             Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x),
@@ -185,10 +182,12 @@ public class CrowdAgentManager : NetworkBehaviour
     public void DestroyAgent(CrowdAgent agent)
     {
         print("Destroy "+ agent.transform.position);
-        // agentInstances.Remove(agent.gameObject);
-        // Destroy(agent.gameObject);
+        agentInstances.Remove(agent.gameObject);
+        Destroy(agent.gameObject);
     }
 }
+
+//Original codes
 
 // using System.Collections.Generic;
 // using Unity.Netcode;
