@@ -28,8 +28,8 @@ public class CrowdAgentManager : NetworkBehaviour
     
     //03-26
     private List<BoxCollider> blockAreas;
-
     public static CrowdAgentManager Singleton;
+    public bool dummyTrafficLight = false;
 
     void Awake()
     {
@@ -60,7 +60,6 @@ public class CrowdAgentManager : NetworkBehaviour
         }
         
 
-
     }
 
     private void Update()
@@ -90,7 +89,6 @@ public class CrowdAgentManager : NetworkBehaviour
         for (int i = 0; i < initialSpawnCount; i++)
         {
             // SpawnAgent();
-            // FixedSpawn(i);
             
             RandomSpawn();
         }
@@ -98,7 +96,10 @@ public class CrowdAgentManager : NetworkBehaviour
         if (spawnOverTime)
         {
             // InvokeRepeating(nameof(SpawnAgent), spawnRate, spawnRate);
-            InvokeRepeating(nameof(SpawnAgent), spawnRate, spawnRate);
+            
+            //04-10 NEED TO CHANGE TO MY FUNCTION
+            // InvokeRepeating(nameof(SpawnAgent), spawnRate, spawnRate);
+            InvokeRepeating(nameof(RandomSpawn), spawnRate, spawnRate);
         }
     }
     
@@ -116,8 +117,17 @@ public class CrowdAgentManager : NetworkBehaviour
 
         agentInstance.GetComponent<NetworkObject>().Spawn();
         agentInstance.transform.parent = agentSpawn;
+        agentInstance.GetComponent<NPCStateMachine>().useTraffic = this.dummyTrafficLight;
         agentInstances.Add(agentInstance);
-
+        
+        
+        //Only can remove the agents with un-reachable destinations
+        //Still need to modify the assets
+        //Comment this code to remove the errors about "SetDestination" and "CalculatePath"
+        if (agentInstances.Count >= maxAgentCount) {
+            CancelInvoke(nameof(RandomSpawn));
+        }
+        
     }
     
     Vector3 SelectRandomBirthplace() {
@@ -131,9 +141,10 @@ public class CrowdAgentManager : NetworkBehaviour
                 gameObject.transform.position.y,
                 Random.Range(startBox.bounds.min.z,startBox.bounds.max.z)
             );
-            print("Test Random "+randomDest);
+            // print("Test Random "+randomDest);
             NavMeshHit hit;
-            while (! NavMesh.SamplePosition(randomDest, out hit, 5f, NavMesh.AllAreas)) {
+            int walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
+            while (! NavMesh.SamplePosition(randomDest, out hit, 5f, walkableMask)) {
                 randomDest = new Vector3(
                     Random.Range(startBox.bounds.min.x,startBox.bounds.max.x),
                     gameObject.transform.position.y,
@@ -147,26 +158,26 @@ public class CrowdAgentManager : NetworkBehaviour
         return new Vector3(-1, -1, -1);
     }
 
-    void FixedSpawn(int i) {
-
-        // try to see if the random point is on the navmesh
-        Vector3 startPos = startpoints[i].position;
-        if (NavMesh.SamplePosition(startPos, out NavMeshHit hit, spawnArea.size.magnitude, NavMesh.AllAreas))
-        {
-            GameObject randomPrefab = agentPrefabs[Random.Range(0, agentPrefabs.Length)];
-            Vector3 spawnPosition = new Vector3(hit.position.x, hit.position.y + 1, hit.position.z);
-            GameObject agentInstance = Instantiate(randomPrefab, spawnPosition, Quaternion.identity);
-
-            agentInstance.GetComponent<NetworkObject>().Spawn();
-            agentInstance.transform.parent = agentSpawn;
-            print("hit position"+spawnPosition+"parent"+ agentSpawn.transform.position+ "agent" + agentInstance.transform.position);
-            agentInstances.Add(agentInstance);
-        }
-        else
-        {
-            FixedSpawn(i);
-        }
-    }
+    // void FixedSpawn(int i) {
+    //
+    //     // try to see if the random point is on the navmesh
+    //     Vector3 startPos = startpoints[i].position;
+    //     if (NavMesh.SamplePosition(startPos, out NavMeshHit hit, spawnArea.size.magnitude, NavMesh.AllAreas))
+    //     {
+    //         GameObject randomPrefab = agentPrefabs[Random.Range(0, agentPrefabs.Length)];
+    //         Vector3 spawnPosition = new Vector3(hit.position.x, hit.position.y + 1, hit.position.z);
+    //         GameObject agentInstance = Instantiate(randomPrefab, spawnPosition, Quaternion.identity);
+    //
+    //         agentInstance.GetComponent<NetworkObject>().Spawn();
+    //         agentInstance.transform.parent = agentSpawn;
+    //         print("hit position"+spawnPosition+"parent"+ agentSpawn.transform.position+ "agent" + agentInstance.transform.position);
+    //         agentInstances.Add(agentInstance);
+    //     }
+    //     else
+    //     {
+    //         FixedSpawn(i);
+    //     }
+    // }
 
     void SpawnAgent() {
         print("agent area" + spawnArea.bounds);
@@ -176,10 +187,10 @@ public class CrowdAgentManager : NetworkBehaviour
             transform.position.y,
             Random.Range(spawnArea.bounds.min.z, spawnArea.bounds.max.z)
         );
-        print("random" + randomPoint);
 
         // try to see if the random point is on the navmesh
-        if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, spawnArea.size.magnitude, NavMesh.AllAreas))
+        int walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
+        if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, spawnArea.size.magnitude, walkableMask))
         {
             GameObject randomPrefab = agentPrefabs[Random.Range(0, agentPrefabs.Length)];
             Vector3 spawnPosition = new Vector3(hit.position.x, hit.position.y + 1, hit.position.z);
@@ -187,7 +198,6 @@ public class CrowdAgentManager : NetworkBehaviour
 
             agentInstance.GetComponent<NetworkObject>().Spawn();
             agentInstance.transform.parent = agentSpawn;
-            print("hit position"+spawnPosition+"parent"+ agentSpawn.transform.position+ "agent" + agentInstance.transform.position);
             agentInstances.Add(agentInstance);
         }
         else
@@ -198,7 +208,8 @@ public class CrowdAgentManager : NetworkBehaviour
 
     public void DestroyAgent(CrowdAgent agent)
     {
-        agentInstances.Remove(agent.gameObject);
-        Destroy(agent.gameObject);
+        print("Destroy "+ agent.transform.position);
+        // agentInstances.Remove(agent.gameObject);
+        // Destroy(agent.gameObject);
     }
 }

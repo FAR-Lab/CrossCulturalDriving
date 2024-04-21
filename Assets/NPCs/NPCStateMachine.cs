@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using System.Numerics;
 using UnityEngine;
 using UnityEngine.AI;
@@ -29,7 +30,15 @@ public class NPCStateMachine : MonoBehaviour
     public float minDistanceDiff = 50f;
     private bool isPaused = false;
     private bool finishedRegularPause = false;
+
+    public bool useTraffic = false;
     private void Awake() {
+        // if (transform.GetComponent<Animator>()) {
+        //     anim = transform.GetComponent<Animator>();
+        // }
+        // else {
+        //     anim = transform.GetChild(0).GetComponent<Animator>();
+        // }
         anim = transform.GetChild(0).GetComponent<Animator>();
         nav = GetComponent<NavMeshAgent>();
         if (!nav) {
@@ -45,6 +54,7 @@ public class NPCStateMachine : MonoBehaviour
     void Start() {
         destinationAreas = BlocksManager.GetBuildingBlocks();
         agentState = NPCConstants.NPCState.Idle;
+        anim.SetBool("isIdling", true);
     }
 
     // Update is called once per frame
@@ -72,21 +82,29 @@ public class NPCStateMachine : MonoBehaviour
         }
     }
 
+    void setUseTraffic(bool useTraffic) {
+        this.useTraffic = useTraffic;
+    }
+
     //TODO: Replace anim with new animator along with blend tree animation
     private void FixedUpdate() {
         switch (agentState) {
             case NPCConstants.NPCState.Idle:
                 anim.SetBool("isIdling",true);
+                
                 break;
             case NPCConstants.NPCState.Move:
                 anim.SetBool("isIdling", false);
+                // anim.SetBool("isChecking",false);
                 break;
             case NPCConstants.NPCState.Pause:
-
+    
                 anim.SetBool("isIdling",true);
+                // anim.SetBool("isChecking",true);
                 break;
             case NPCConstants.NPCState.CrossStreet:
                 anim.SetBool("isIdling",false);
+                // anim.SetBool("isChecking",false);
                 break;
         }
     }
@@ -112,13 +130,22 @@ public class NPCStateMachine : MonoBehaviour
             );
             
             NavMeshHit hit;
-            while (! NavMesh.SamplePosition(randomDest, out hit, 5f, NavMesh.AllAreas) || Vector3.Distance(hit.position,_transform.position)<=minDistanceDiff) {
+            int walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
+            NavMeshPath path = new NavMeshPath();
+            while (! NavMesh.SamplePosition(randomDest, out hit, 5f, walkableMask) || Vector3.Distance(
+                       hit.position,_transform.position)<=minDistanceDiff ) {
                 randomDest = new Vector3(
                     Random.Range(destBox.bounds.min.x,destBox.bounds.max.x),
                     _transform.position.y,
                     Random.Range(destBox.bounds.min.z,destBox.bounds.max.z)
                 );
             }
+
+            // if (!nav.CalculatePath(hit.position, path)
+            //     || path.status != NavMeshPathStatus.PathComplete) {
+            //     CrowdAgentManager.Singleton.DestroyAgent(gameObject.GetComponent<CrowdAgent>());
+            // }
+
             return hit.position;
         }
         return new Vector3(-1, -1, -1);
@@ -141,8 +168,10 @@ public class NPCStateMachine : MonoBehaviour
 
         destination = dest;
         nav.SetDestination(destination);
+        // anim.SetBool("isIdling",false);
         agentState = NPCConstants.NPCState.Move;
-        print("Switch to Move");
+        
+        // print("Switch to Move");
     }
 
     void MoveToTarget() {
@@ -157,16 +186,39 @@ public class NPCStateMachine : MonoBehaviour
         }
         
         //if reach the destination, reset
-        if (nav.isActiveAndEnabled && !nav.pathPending && nav.remainingDistance < 0.3f) {
+        if (nav.isOnNavMesh && !nav.pathPending && nav.remainingDistance < 0.3f) {
             print("Finished Path");
+            // anim.SetBool("isIdling",true);
             agentState = NPCConstants.NPCState.Idle;
+            
             return;
         }
         
         //while moving to final destination, check if about to cross the street continuously
         crossWalk = (MeshCollider) GetCrosswalk();
         if(crossWalk != null) {
+            //Check if the closest point is at corner(don't want the agents to walks diagonally across the street)
+            Vector3 closestPoint = crossWalk.ClosestPoint(_transform.position);
+            if (closestPoint.x.Equals(crossWalk.bounds.min.x)  && 
+                closestPoint.z.Equals(crossWalk.bounds.min.z)) {
+                return;
+            }
+            if (closestPoint.x.Equals(crossWalk.bounds.max.x) &&
+                      closestPoint.z.Equals(crossWalk.bounds.max.z)) {
+                return;
+            }
+            if (closestPoint.x.Equals(crossWalk.bounds.max.x) &&
+                closestPoint.z.Equals(crossWalk.bounds.min.z)) {
+                return;
+            }
+            if (closestPoint.x.Equals(crossWalk.bounds.min.x) &&
+                closestPoint.z.Equals(crossWalk.bounds.max.z)) {
+                return;
+            }
+            
+            // anim.SetBool("isIdling",true);
             agentState = NPCConstants.NPCState.Pause;
+            
         }
     }
 
@@ -189,13 +241,20 @@ public class NPCStateMachine : MonoBehaviour
     IEnumerator Pause() {
         if (!isPaused) {
             isPaused = true;
+            
+            //set random stand pose, only when switch from move to idle
+            int standIndex = Random.Range(0, 3);
+            anim.SetInteger("StandNum",standIndex);
+            // anim.SetBool("isIdling",true);
+            
             //Stop and Turn to Face Crosswalk
             nav.isStopped = true;
         
             TurnToFaceCrosswalk();
             
             //TODO: should do look around animation here; also do random wait time
-            yield return new WaitForSeconds(2);
+            float waitTime = Random.Range(2, 3);
+            yield return new WaitForSeconds(waitTime);
             finishedRegularPause = true;
         }
         
@@ -206,7 +265,7 @@ public class NPCStateMachine : MonoBehaviour
         Vector3[] rayDirections = { Vector3.forward, Vector3.back, Vector3.left, Vector3.right };
 
         for (int i = 0; i < 5; i++) {
-            raycastPoints[i] = new Vector3(_transform.position.x,_transform.position.y,transform.position.z)+_transform.forward*i;
+            raycastPoints[i] = new Vector3(_transform.position.x,_transform.position.y,_transform.position.z)+_transform.forward*i;
         }
         //check traffic light
         trafficRed = CheckTrafficLight();
@@ -219,7 +278,7 @@ public class NPCStateMachine : MonoBehaviour
                 hits = Physics.RaycastAll(ray,direction,maxDistance:10f);
                 if(hits.Length>0){
                     foreach (RaycastHit hit in hits) {
-                        if (hit.collider.GetComponent<NetworkVehicleController>()) {
+                        if (hit.collider.gameObject.transform.parent.GetComponent<NetworkVehicleController>()) {
                             // also need to check if the car is actually moving at certain speed
                             carApproaching = true;
                             break;
@@ -231,15 +290,21 @@ public class NPCStateMachine : MonoBehaviour
 
         if (!carApproaching && !trafficRed) {
             //switch state to cross street
-            yield return new WaitForSeconds(Random.Range(0.1f,1f));
+            yield return new WaitForSeconds(Random.Range(1f,2f));
             isPaused = false;
+            // anim.SetBool("isIdling",false);
             agentState = NPCConstants.NPCState.CrossStreet;
+            
         }
-        
     }
 
     //replace this with similar code to vehicle traffic checking(trigger based)
     bool CheckTrafficLight() {
+        //always return false if not using traffic system
+        if (!useTraffic) {
+            return false;
+        }
+
         if (crossWalk != null) {
             DummyTrafficLight trafficLight = crossWalk.GetComponentInParent<DummyTrafficLight>();
             if (trafficLight != null && trafficLight.isRed) {
@@ -268,7 +333,9 @@ public class NPCStateMachine : MonoBehaviour
                 crossingStreet = false;
                 finishedCrossing = true;
                 crossWalk = null;
+                // anim.SetBool("isIdling",false);
                 agentState = NPCConstants.NPCState.Move;
+                
             }
         }
     }
@@ -281,18 +348,12 @@ public class NPCStateMachine : MonoBehaviour
         unit_forward *= 0.5f;
         Vector3 direction = new Vector3(unit_forward.x,-1,unit_forward.z);
 
-        hits = Physics.RaycastAll(transform.position, direction, 2.5f);
+        hits = Physics.RaycastAll(_transform.position, direction, 2.5f);
         if (hits.Length >0) {
             for (int i = 0; i < hits.Length; i++) {
                 if (hits[i].collider.gameObject.layer == 11) {
-                    Vector3 closestPoint = hits[i].collider.gameObject.GetComponent<MeshCollider>().ClosestPoint(transform.position);
+                    Vector3 closestPoint = hits[i].collider.gameObject.GetComponent<MeshCollider>().ClosestPoint(_transform.position);
                     _transform.LookAt(new Vector3(closestPoint.x,_transform.position.y,closestPoint.z));
-                    // nav.isStopped = false;
-                    // // need to make the length relative to the size of the crosswalk
-                    // // or keep moving forward while on crosswalk
-                    // anim.SetBool("isIdling", false);
-                    // print("cross target"+(_transform.position+5.1f*_transform.forward));
-                    // nav.SetDestination(_transform.position+5.1f*_transform.forward);
                     return;
                 }
             }
@@ -300,7 +361,6 @@ public class NPCStateMachine : MonoBehaviour
     }
     
     Collider CloseToCrosswalk() {
-        // print("check");
         RaycastHit[] hits;
         Vector3 unit_forward = _transform.forward;
         unit_forward.Normalize();
@@ -317,5 +377,4 @@ public class NPCStateMachine : MonoBehaviour
         }
         return null;
     }
-    
 }
