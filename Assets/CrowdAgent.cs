@@ -18,7 +18,7 @@ public class CrowdAgent : NetworkBehaviour
 
     void Start()
     {
-
+        print("random change");
         animator = transform.GetChild(0).GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
 
