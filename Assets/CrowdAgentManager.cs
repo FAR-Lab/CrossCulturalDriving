@@ -22,11 +22,8 @@ public class CrowdAgentManager : NetworkBehaviour
     public bool spawnOverTime = true;
     public float spawnRate = 1f;
     
-    //02-29
-    public Transform[] startpoints;
-    public Transform endpoint;
     
-    //03-26
+    //NPC change
     private List<BoxCollider> blockAreas;
     public static CrowdAgentManager Singleton;
     public bool dummyTrafficLight = false;
@@ -59,7 +56,6 @@ public class CrowdAgentManager : NetworkBehaviour
             AgentSetup(null);
         }
         
-
     }
 
     private void Update()
@@ -96,9 +92,6 @@ public class CrowdAgentManager : NetworkBehaviour
         if (spawnOverTime)
         {
             // InvokeRepeating(nameof(SpawnAgent), spawnRate, spawnRate);
-            
-            //04-10 NEED TO CHANGE TO MY FUNCTION
-            // InvokeRepeating(nameof(SpawnAgent), spawnRate, spawnRate);
             InvokeRepeating(nameof(RandomSpawn), spawnRate, spawnRate);
         }
     }
@@ -117,13 +110,10 @@ public class CrowdAgentManager : NetworkBehaviour
 
         agentInstance.GetComponent<NetworkObject>().Spawn();
         agentInstance.transform.parent = agentSpawn;
-        agentInstance.GetComponent<NPCStateMachine>().useTraffic = this.dummyTrafficLight;
+        agentInstance.GetComponent<NPCStateMachine>().SetUseTraffic(dummyTrafficLight);
         agentInstances.Add(agentInstance);
         
         
-        //Only can remove the agents with un-reachable destinations
-        //Still need to modify the assets
-        //Comment this code to remove the errors about "SetDestination" and "CalculatePath"
         if (agentInstances.Count >= maxAgentCount) {
             CancelInvoke(nameof(RandomSpawn));
         }
@@ -158,29 +148,7 @@ public class CrowdAgentManager : NetworkBehaviour
         return new Vector3(-1, -1, -1);
     }
 
-    // void FixedSpawn(int i) {
-    //
-    //     // try to see if the random point is on the navmesh
-    //     Vector3 startPos = startpoints[i].position;
-    //     if (NavMesh.SamplePosition(startPos, out NavMeshHit hit, spawnArea.size.magnitude, NavMesh.AllAreas))
-    //     {
-    //         GameObject randomPrefab = agentPrefabs[Random.Range(0, agentPrefabs.Length)];
-    //         Vector3 spawnPosition = new Vector3(hit.position.x, hit.position.y + 1, hit.position.z);
-    //         GameObject agentInstance = Instantiate(randomPrefab, spawnPosition, Quaternion.identity);
-    //
-    //         agentInstance.GetComponent<NetworkObject>().Spawn();
-    //         agentInstance.transform.parent = agentSpawn;
-    //         print("hit position"+spawnPosition+"parent"+ agentSpawn.transform.position+ "agent" + agentInstance.transform.position);
-    //         agentInstances.Add(agentInstance);
-    //     }
-    //     else
-    //     {
-    //         FixedSpawn(i);
-    //     }
-    // }
-
     void SpawnAgent() {
-        print("agent area" + spawnArea.bounds);
         
         Vector3 randomPoint = new Vector3(
             Random.Range(spawnArea.bounds.min.x, spawnArea.bounds.max.x),
@@ -209,7 +177,7 @@ public class CrowdAgentManager : NetworkBehaviour
     public void DestroyAgent(CrowdAgent agent)
     {
         print("Destroy "+ agent.transform.position);
-        // agentInstances.Remove(agent.gameObject);
-        // Destroy(agent.gameObject);
+        agentInstances.Remove(agent.gameObject);
+        Destroy(agent.gameObject);
     }
 }
