@@ -253,6 +253,7 @@ public class NPCStateMachine : MonoBehaviour
         foreach (Vector3 ray in raycastPoints) {
             foreach (Vector3 direction in rayDirections) {
                 RaycastHit[] hits;
+                //TODO: if car is in front of NPC, stop anyway; if not check if car is within certain distance and if it is moving
                 hits = Physics.RaycastAll(ray,direction,maxDistance:10f);
                 if(hits.Length>0){
                     foreach (RaycastHit hit in hits) {
