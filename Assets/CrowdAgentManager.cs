@@ -26,6 +26,9 @@ public class CrowdAgentManager : NetworkBehaviour
     //NPC change
     private List<BoxCollider> blockAreas;
     public static CrowdAgentManager Singleton;
+    
+    //If want to use the dummyTrafficLight signals;
+    //if true, NPCs will stop when in red; if not, they will ignore the signal
     public bool dummyTrafficLight = false;
 
     void Awake()

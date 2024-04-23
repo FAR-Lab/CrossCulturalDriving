@@ -17,31 +17,40 @@ public class DummyTrafficLight : MonoBehaviour
     public bool wasOff = false;
     public bool turnOn = true;
 
+    //set to true if want to hide the signal spheres
+    public bool hideTrafficLight = false;
     private void Awake() {
-        _transform = gameObject.GetComponent<Transform>();
-        if (!_transform) {
-            Debug.Log("Cannot create dummy traffic signal.");
+        if (!hideTrafficLight) {
+            _transform = gameObject.GetComponent<Transform>();
+            if (!_transform) {
+                Debug.Log("Cannot create dummy traffic signal.");
+            }
+            //instantiate a ball a little bit above the crosswalk
+            Vector3 position = new Vector3(_transform.position.x, _transform.position.y + 3.5f, _transform.position.z);
+            _trafficSignal = Instantiate(signalPrefab,position,Quaternion.identity);
+            _trafficSignal.GetComponent<Renderer>().material.color = Color.red;
+            interval += Random.Range(1, 5);
         }
-        //instantiate a ball a little bit above the crosswalk
-        Vector3 position = new Vector3(_transform.position.x, _transform.position.y + 3.5f, _transform.position.z);
-        _trafficSignal = Instantiate(signalPrefab,position,Quaternion.identity);
-        _trafficSignal.GetComponent<Renderer>().material.color = Color.red;
-        interval += Random.Range(1, 5);
     }
 
     void Start() {
-        StartCoroutine(SwitchTrafficLight());
+        if (!hideTrafficLight) {
+            StartCoroutine(SwitchTrafficLight());
+        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (wasOff && turnOn) {
-            StartCoroutine(SwitchTrafficLight());
-            wasOff = false;
-        }else if (!turnOn) {
-            StopCoroutine(SwitchTrafficLight());
-            wasOff = true;
+        if (!hideTrafficLight) {
+            if (wasOff && turnOn) {
+                StartCoroutine(SwitchTrafficLight());
+                wasOff = false;
+            }else if (!turnOn) {
+                StopCoroutine(SwitchTrafficLight());
+                wasOff = true;
+            }
         }
     }
 
