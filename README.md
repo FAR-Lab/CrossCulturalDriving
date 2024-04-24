@@ -16,6 +16,7 @@ Unity:
 import the necessary third party packages:
 [Ultimate Replay](https://assetstore.unity.com/packages/tools/camera/ultimate-replay-2-0-178602)
 [Runtime File Browser](https://assetstore.unity.com/packages/tools/gui/runtime-file-browser-113006)
+[Oculus Integration](https://developer.oculus.com/downloads/package/unity-integration)
 
 ### What to keep in mind while developing a scenario
 The individual scenarios need to contain the ScenarioManager prefab. SpawnPoints denote the starting positions of the participants. Trigger Boxes are the end zones of the scenario and start of the questionnaire. 
