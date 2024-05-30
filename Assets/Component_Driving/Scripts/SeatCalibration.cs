@@ -7,7 +7,7 @@ using UnityEngine.XR;
 
 
 public class SeatCalibration : MonoBehaviour {
-    public enum SearCalibrationState {
+    public enum SeatCalibrationState {
         NONE,
         STARTCALIBRATING,
         CALIBRATING,
@@ -23,7 +23,7 @@ public class SeatCalibration : MonoBehaviour {
 
     public Transform steeringWheelCenter;
 
-    SearCalibrationState callibrationState = SearCalibrationState.NONE;
+    SeatCalibrationState calibrationState = SeatCalibrationState.NONE;
 
     private Vector3 OriginalPosition;
 
@@ -71,12 +71,12 @@ public class SeatCalibration : MonoBehaviour {
 
     private Transform cam;
     private VR_Participant myPic;
-    private CalibrationTimerDisplay m_callibDisplay;
+    private CalibrationTimerDisplay m_calibDisplay;
     public void StartCalibration(Transform SteeringWheel, Transform camera, VR_Participant pic,
-        CalibrationTimerDisplay mCallibDisplay) {
+        CalibrationTimerDisplay mCalibDisplay) {
         Debug.Log("Starting Calibration");
-        if (callibrationState != SearCalibrationState.CALIBRATING ||
-            callibrationState != SearCalibrationState.STARTCALIBRATING) {
+        if (calibrationState != SeatCalibrationState.CALIBRATING ||
+            calibrationState != SeatCalibrationState.STARTCALIBRATING) {
             steeringWheelCenter = SteeringWheel;
             cam = camera;
             myPic = pic;
@@ -87,22 +87,22 @@ public class SeatCalibration : MonoBehaviour {
 
             Debug.Log(HandModelL.name);
          
-            if (mCallibDisplay != null) {
-                this.m_callibDisplay = mCallibDisplay;
+            if (mCalibDisplay != null) {
+                this.m_calibDisplay = mCalibDisplay;
             }
 
-            StartCoroutine(DelayedCallibrationStart());
+            StartCoroutine(DelayedCalibrationStart());
         }
     }
 
-    IEnumerator DelayedCallibrationStart() {
-        m_callibDisplay.StartDispaly();
-        m_callibDisplay.updateMessage("Hold still!");
+    IEnumerator DelayedCalibrationStart() {
+        m_calibDisplay.StartDispaly();
+        m_calibDisplay.updateMessage("Hold still!");
         yield return new WaitForSeconds(2f);
-        callibrationState = SearCalibrationState.STARTCALIBRATING;
+        calibrationState = SeatCalibrationState.STARTCALIBRATING;
         
     }
-    private float callibrationTimer = 0;
+    private float calibrationTimer = 0;
     int ReTryCount = 0;
 
     void Update() {
@@ -111,7 +111,7 @@ public class SeatCalibration : MonoBehaviour {
             HandModelL == null ||
             HandModelR == null ||
             myPic == null) {
-            if (callibrationState == SearCalibrationState.STARTCALIBRATING) {
+            if (calibrationState == SeatCalibrationState.STARTCALIBRATING) {
                 Debug.Log("calibrationScript is not Running something is missing");
             }
 
@@ -119,10 +119,10 @@ public class SeatCalibration : MonoBehaviour {
         }
 
 
-        switch (callibrationState) {
-            case SearCalibrationState.NONE: break;
+        switch (calibrationState) {
+            case SeatCalibrationState.NONE: break;
           
-            case SearCalibrationState.STARTCALIBRATING:
+            case SeatCalibrationState.STARTCALIBRATING:
                 //TODO switch from OVR to openXR
                 //OVRPlugin.RecenterTrackingOrigin(OVRPlugin.RecenterFlags.Default);
                 
@@ -132,10 +132,10 @@ public class SeatCalibration : MonoBehaviour {
                 
                 Debug.Log($"rotation.eulerAngles.y { rotation.eulerAngles.y}");
                 myPic.SetNewRotationOffset(Quaternion.Euler(0, rotation.eulerAngles.y, 0));
-                callibrationState = SearCalibrationState.CALIBRATING;
-                callibrationTimer = 5f;
+                calibrationState = SeatCalibrationState.CALIBRATING;
+                calibrationTimer = 5f;
                 break;
-            case SearCalibrationState.CALIBRATING:
+            case SeatCalibrationState.CALIBRATING:
                 //TODO switch from OVR to openXR
                 
                if(true){// if (HandModelL.IsDataHighConfidence && HandModelR.IsDataHighConfidence) { //TODO switch from OVR to openXR
@@ -149,25 +149,25 @@ public class SeatCalibration : MonoBehaviour {
                     Debug.DrawRay(midPoint,transformDifference);
                     if (transformDifference.magnitude > 100) {
                         Debug.Log(transformDifference.magnitude);
-                        callibrationState = SearCalibrationState.ERROR;
+                        calibrationState = SeatCalibrationState.ERROR;
                     }
 
                     myPic.SetNewPositionOffset(-transformDifference);
 //                    Debug.Log("transformDifference" + (-transformDifference).ToString());
-                   m_callibDisplay.updateMessage(callibrationTimer.ToString("F1"));
+                   m_calibDisplay.updateMessage(calibrationTimer.ToString("F1"));
                 }
 
-                if (callibrationTimer > 0) { callibrationTimer -= Time.deltaTime; }
-                else { callibrationState = SearCalibrationState.FINISHED; }
+                if (calibrationTimer > 0) { calibrationTimer -= Time.deltaTime; }
+                else { calibrationState = SeatCalibrationState.FINISHED; }
 
                 break;
-            case SearCalibrationState.FINISHED:
-                m_callibDisplay.StopDisplay();
+            case SeatCalibrationState.FINISHED:
+                m_calibDisplay.StopDisplay();
                 myPic.FinishedCalibration(steeringWheelCenter.parent);
-                callibrationState = SearCalibrationState.READY;
+                calibrationState = SeatCalibrationState.READY;
                 break;
-            case SearCalibrationState.READY: break;
-            case SearCalibrationState.ERROR:
+            case SeatCalibrationState.READY: break;
+            case SeatCalibrationState.ERROR:
                 if (ReTryCount > 10) {
                     if (!myPic.DeleteCallibrationFile()) {
                         Debug.LogWarning("Could not delete calibration file. The data in that file is probably corrupt. Please consider removing the file manually.");
@@ -183,11 +183,11 @@ public class SeatCalibration : MonoBehaviour {
                     myPic.SetNewRotationOffset(Quaternion.identity);
                     myPic.SetNewPositionOffset(Vector3.zero);
                     ReTryCount++;
-                    callibrationState = SearCalibrationState.STARTCALIBRATING;
+                    calibrationState = SeatCalibrationState.STARTCALIBRATING;
                 }
 
                 break;
-            case SearCalibrationState.DEFAULT: break;
+            case SeatCalibrationState.DEFAULT: break;
             default: throw new ArgumentOutOfRangeException();
         }
     }

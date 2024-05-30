@@ -18,7 +18,7 @@ public class StartServerClientGUI : MonoBehaviour {
     
     
     public GameObject ServerStartGUI;
-    private Transform ServerGuiSintance;
+    private Transform ServerGuiInstance;
     
     private Text SessionName;
     private Text TargetIP;
@@ -27,16 +27,16 @@ public class StartServerClientGUI : MonoBehaviour {
 
 
         if (ServerStartGUI == null) return;
-        ServerGuiSintance = Instantiate(ServerStartGUI).transform;
+        ServerGuiInstance = Instantiate(ServerStartGUI).transform;
 
-        SessionName = ServerGuiSintance.Find("HostPanel/PairName")?.GetComponent<InputField>().textComponent;
-        ServerGuiSintance.Find("HostPanel/IpAddress").GetComponent<Text>().text = LocalIPAddress();
+        SessionName = ServerGuiInstance.Find("HostPanel/PairName")?.GetComponent<InputField>().textComponent;
+        ServerGuiInstance.Find("HostPanel/IpAddress").GetComponent<Text>().text = LocalIPAddress();
         
-        TargetIP = ServerGuiSintance.Find("ClientPanel/ClientOptions/TargetIPAddress").GetComponent<InputField>()?.textComponent;
-        ServerGuiSintance.Find("StartAsReRun").GetComponent<Button>().onClick.AddListener(()=>StartAsReRuInterfaceCallback());
+        TargetIP = ServerGuiInstance.Find("ClientPanel/ClientOptions/TargetIPAddress").GetComponent<InputField>()?.textComponent;
+        ServerGuiInstance.Find("StartAsReRun").GetComponent<Button>().onClick.AddListener(()=>StartAsReRuInterfaceCallback());
         
         
-        foreach (var t in ServerGuiSintance.GetComponentsInChildren<ComputerStartButtonConfiguration>()) {
+        foreach (var t in ServerGuiInstance.GetComponentsInChildren<ComputerStartButtonConfiguration>()) {
             t.GetComponent<Button>().onClick.AddListener(
                 ()=>StartUsingParameters(t.ThisStartType,
                     t.ThisParticipantOrder,
@@ -78,7 +78,7 @@ public class StartServerClientGUI : MonoBehaviour {
         }
 
         
-        Destroy(ServerGuiSintance.gameObject);
+        Destroy(ServerGuiInstance.gameObject);
         enabled = false;
     }
     
@@ -87,7 +87,7 @@ public class StartServerClientGUI : MonoBehaviour {
     public void StartAsReRuInterfaceCallback() {
         Debug.Log("Starting as Rerun Button Call!");
         ConnectionAndSpawning.Singleton.StartAsRerun();
-        Destroy(ServerGuiSintance.gameObject);
+        Destroy(ServerGuiInstance.gameObject);
         enabled = false;
     }
 
@@ -96,7 +96,7 @@ public class StartServerClientGUI : MonoBehaviour {
         if (tmp.Length <= 1) tmp = "Unnamed_" + DateTime.Now.ToString("yyyyMMddTHHmmss");
 
         ConnectionAndSpawning.Singleton.StartAsServer(tmp);
-        Destroy(ServerGuiSintance.gameObject);
+        Destroy(ServerGuiInstance.gameObject);
         enabled = false;
     }
 

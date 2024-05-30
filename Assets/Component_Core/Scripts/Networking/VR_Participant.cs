@@ -8,6 +8,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.Serialization;
 using UnityEngine.XR.Hands;
 using UnityEngine.XR.Interaction.Toolkit;
 using Quaternion = UnityEngine.Quaternion;
@@ -40,7 +41,7 @@ public class VR_Participant : Client_Object {
 
     private PedestrianNavigationAudioCues AudioCuePlayer;
 
-    public CalibrationTimerDisplay m_callibDisplay;
+    [FormerlySerializedAs("m_callibDisplay")] public CalibrationTimerDisplay m_calibDisplay;
 
     private void Update() {
         if (IsServer) {
@@ -193,7 +194,7 @@ public class VR_Participant : Client_Object {
                     SetPedestrianOpenXRRepresentaion(false);
                     SetUpZEDSpaceReferenceClientRPC();
                 }
-                m_callibDisplay.StopDisplay(); // Just to make sure its off!
+                m_calibDisplay.StopDisplay(); // Just to make sure its off!
                 SetInternalRayInteractor(false);
                 break;
             case ActionState.DRIVE:
@@ -264,7 +265,7 @@ public class VR_Participant : Client_Object {
     
     
     public void Start() {
-        m_callibDisplay = GetComponentInChildren<CalibrationTimerDisplay>();
+        m_calibDisplay = GetComponentInChildren<CalibrationTimerDisplay>();
     }
 
     public override void GoForPostQuestion() {
@@ -378,7 +379,7 @@ public class VR_Participant : Client_Object {
                     Debug.Log(
                         $"FindObjectOfType<ExperimentSpaceReference>(){FindObjectOfType<ExperimentSpaceReference>()}");
                     var esr = FindObjectOfType<ExperimentSpaceReference>();
-                    var space = esr.GetCallibrationPoint();
+                    var space = esr.GetCalibrationPoint();
                     transform.position = space.TransformPoint(localPosition);
                     transform.forward = space.TransformDirection(localRotation * Vector3.forward);
                     esr.SetBoundaries(GetMainCamera());
@@ -470,18 +471,15 @@ public class VR_Participant : Client_Object {
             }
         }
 
-        m_QNDataStorageServer.RegisterQNSCreen(m_participantOrder.Value, qnmanager);
+        m_QNDataStorageServer.RegisterQNScreen(m_participantOrder.Value, qnmanager);
     }
 
-    private Transform LeftHand;
-    private Transform RightHand;
-
-    private IEnumerator OverTimeCalibration(Transform VrCamera, Transform ZedOrignReference, float maxtime = 10) {
+    private IEnumerator OverTimeCalibration(Transform VrCamera, Transform ZedOriginReference, float maxtime = 10) {
         isCalibrationRunning = true;
         int runs = 0;
         const int MaxRuns = 250;
-        m_callibDisplay.StartDispaly();
-        m_callibDisplay.updateMessage("Hold still!");
+        m_calibDisplay.StartDispaly();
+        m_calibDisplay.updateMessage("Hold still!");
         yield return new WaitForSeconds(2);
 
 
@@ -494,8 +492,8 @@ public class VR_Participant : Client_Object {
 
 
         Debug.Log(
-            $"ZedOrignReference{ZedOrignReference}, VrCamera{VrCamera}, HandModelL{HandModelL}, HandModelR{HandModelR}");
-        Debug.DrawRay(ZedOrignReference.position, -Vector3.up * ZedOrignReference.position.y, Color.magenta, 60);
+            $"ZedOriginReference{ZedOriginReference}, VrCamera{VrCamera}, HandModelL{HandModelL}, HandModelR{HandModelR}");
+        Debug.DrawRay(ZedOriginReference.position, -Vector3.up * ZedOriginReference.position.y, Color.magenta, 60);
         Debug.DrawRay(HandModelL.position, Vector3.up, Color.cyan, 60);
         Debug.DrawRay(HandModelR.position, Vector3.up, Color.cyan, 60);
 
@@ -505,18 +503,18 @@ public class VR_Participant : Client_Object {
             Vector3 B = HandModelR.position;
             Vector3 AtoB = B - A;
             Vector3 midPoint = (A + (AtoB * 0.5f));
-            Vector3 transformDifference = ZedOrignReference.position - midPoint;
-            Vector3 artificalForward = midPoint - VrCamera.position;
+            Vector3 transformDifference = ZedOriginReference.position - midPoint; // literally vector from the virtual hands to the calibration point (0 in real life)
+            Vector3 artificialForward = midPoint - VrCamera.position; // difference in angle between virtual avatar and calibration point (calib points directly into wall)
 
-            float angle = Vector3.SignedAngle(new Vector3(artificalForward.x, 0, artificalForward.z),
-                new Vector3(ZedOrignReference.forward.x, 0, ZedOrignReference.forward.z),
+            float angle = Vector3.SignedAngle(new Vector3(artificialForward.x, 0, artificialForward.z),
+                new Vector3(ZedOriginReference.forward.x, 0, ZedOriginReference.forward.z),
                 Vector3.up);
 
 
             Debug.Log($"Angle:{angle}");
             Debug.DrawLine(A, B, Color.green, 10);
             Debug.DrawRay(VrCamera.position, transformDifference, Color.blue, 10);
-            Debug.DrawRay(midPoint, artificalForward, Color.red, 10);
+            Debug.DrawRay(midPoint, artificialForward, Color.red, 10);
 
             SetNewRotationOffset(Quaternion.Euler(0, angle * 0.9f, 0));
             SetNewPositionOffset(transformDifference * 0.9f);
@@ -527,12 +525,12 @@ public class VR_Participant : Client_Object {
                 break;
             }
 
-            m_callibDisplay.updateMessage((MaxRuns - runs).ToString());
+            m_calibDisplay.updateMessage((MaxRuns - runs).ToString());
             yield return new WaitForEndOfFrame();
         }
 
-        m_callibDisplay.StopDisplay();
-        FinishedCalibration(ZedOrignReference);
+        m_calibDisplay.StopDisplay();
+        FinishedCalibration(ZedOriginReference);
         isCalibrationRunning = false;
     }
 
@@ -569,7 +567,7 @@ public class VR_Participant : Client_Object {
                     steering,
                     cam,
                     this,
-                    m_callibDisplay);
+                    m_calibDisplay);
                 Debug.Log("Calibrated ClientRPC");
                 break;
             case SpawnType.PEDESTRIAN:
@@ -579,10 +577,10 @@ public class VR_Participant : Client_Object {
 
                 if (isCalibrationRunning == false) {
                     StartCoroutine(OverTimeCalibration(mainCamera,
-                        FindObjectOfType<ExperimentSpaceReference>().GetCallibrationPoint(), 10));
+                        FindObjectOfType<ExperimentSpaceReference>().GetCalibrationPoint(), 10));
                 }
                 else {
-                    Debug.Log("Callibration already running!");
+                    Debug.Log("Calibration already running!");
                 }
 
 

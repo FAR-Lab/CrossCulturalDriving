@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(ExperimentSpaceReference))]
@@ -46,11 +48,15 @@ public class ExperimentSpaceReference : MonoBehaviour
 {
     private const int workAreaCount = 4;
     public List<Transform> WorkingArea = new List<Transform>();
+    
+    // first two vector3s are the pos and rot of calibration point
+    // rotation of the calib point should face same way as participant when calibrating
+    // next four vector3s are the corners of the room
     public static string RoomSetUp = "SpaceReference";
     public static string RoomSetUpPath = Application.dataPath + "/Resources/" + RoomSetUp + ".json";
 
-    [SerializeField]
-    public Transform callibrationPoint;
+    [FormerlySerializedAs("callibrationPoint")] [SerializeField]
+    public Transform calibrationPoint;
 
     public float MeshWidth = 0.2f;
     public float MeshHeight = 2f;
@@ -73,9 +79,9 @@ public class ExperimentSpaceReference : MonoBehaviour
             Gizmos.DrawLine(WorkingArea[0].position, WorkingArea[WorkingArea.Count - 1].position);
         }
 
-        if (callibrationPoint != null)
+        if (calibrationPoint != null)
         {
-            Gizmos.DrawCube(callibrationPoint.position, Vector3.one * 0.1f);
+            Gizmos.DrawCube(calibrationPoint.position, Vector3.one * 0.1f);
         }
     }
 
@@ -100,19 +106,19 @@ public class ExperimentSpaceReference : MonoBehaviour
         LoadSetup();
     }
 
-    public void storeNewSetup()
+    public void StoreNewSetup()
     {
         float[][] outVal = new float[transform.childCount + 1][];
         float[] tmp = new float[3];
 
-        tmp[0] = callibrationPoint.localPosition.x;
-        tmp[1] = callibrationPoint.localPosition.y;
-        tmp[2] = callibrationPoint.localPosition.z;
+        tmp[0] = calibrationPoint.localPosition.x;
+        tmp[1] = calibrationPoint.localPosition.y;
+        tmp[2] = calibrationPoint.localPosition.z;
         outVal[0] = tmp;
         tmp = new float[3];
-        tmp[0] = callibrationPoint.localRotation.eulerAngles.x;
-        tmp[1] = callibrationPoint.localRotation.eulerAngles.y;
-        tmp[2] = callibrationPoint.localRotation.eulerAngles.z;
+        tmp[0] = calibrationPoint.localRotation.eulerAngles.x;
+        tmp[1] = calibrationPoint.localRotation.eulerAngles.y;
+        tmp[2] = calibrationPoint.localRotation.eulerAngles.z;
         outVal[1] = tmp;
 
         for (int i = 2; i < WorkingArea.Count + 2; i++)
@@ -160,27 +166,27 @@ public class ExperimentSpaceReference : MonoBehaviour
         }
 
 
-        if (callibrationPoint == null)
+        if (calibrationPoint == null)
         {
             var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            callibrationPoint = go.transform;
-            callibrationPoint.parent = transform;
-            callibrationPoint.name = "CallibrationPoint";
+            calibrationPoint = go.transform;
+            calibrationPoint.parent = transform;
+            calibrationPoint.name = "CallibrationPoint";
         }
         Vector3 tmp = new Vector3();
 
         tmp.x = outVal[0][0];
         tmp.y = outVal[0][1];
         tmp.z = outVal[0][2];
-        callibrationPoint.localPosition = tmp;
+        calibrationPoint.localPosition = tmp;
         tmp = new Vector3();
         tmp.x = outVal[1][0];
         tmp.y = outVal[1][1];
         tmp.z = outVal[1][2];
-        var rotation = callibrationPoint.localRotation;
+        var rotation = calibrationPoint.localRotation;
         rotation.eulerAngles = tmp;
-        callibrationPoint.localRotation = rotation;
-        callibrationPoint.localScale = Vector3.one * 0.1f;
+        calibrationPoint.localRotation = rotation;
+        calibrationPoint.localScale = Vector3.one * 0.1f;
 
 
         for (int i = 2; i < workAreaCount + 2; i++)
@@ -207,12 +213,12 @@ public class ExperimentSpaceReference : MonoBehaviour
 
     }
 
-    public Transform GetCallibrationPoint()
+    public Transform GetCalibrationPoint()
     {
-        if (callibrationPoint == null) {
+        if (calibrationPoint == null) {
             LoadSetup();
         }
-        return callibrationPoint;
+        return calibrationPoint;
     }
     public void Create3DRectangularMeshes(Transform transform1)
     {
@@ -250,17 +256,17 @@ public class ExperimentSpaceReference : MonoBehaviour
                
                
                
-               Vector3[] vertesiez = new Vector3[4];
+               Vector3[] vertices = new Vector3[4];
                
                
-               vertesiez[0] = tmp.transform.InverseTransformPoint(new Vector3(startPosition.x, transform.position.y, startPosition.z));
-               vertesiez[1] = tmp.transform.InverseTransformPoint(new Vector3(startPosition.x, transform.position.y+MeshHeight, startPosition.z));
-               vertesiez[3] =tmp.transform.InverseTransformPoint( new Vector3(endPosition.x, transform.position.y, endPosition.z));
-               vertesiez[2]= tmp.transform.InverseTransformPoint(new Vector3(endPosition.x, transform.position.y+MeshHeight, endPosition.z));
+               vertices[0] = tmp.transform.InverseTransformPoint(new Vector3(startPosition.x, transform.position.y, startPosition.z));
+               vertices[1] = tmp.transform.InverseTransformPoint(new Vector3(startPosition.x, transform.position.y+MeshHeight, startPosition.z));
+               vertices[3] =tmp.transform.InverseTransformPoint( new Vector3(endPosition.x, transform.position.y, endPosition.z));
+               vertices[2]= tmp.transform.InverseTransformPoint(new Vector3(endPosition.x, transform.position.y+MeshHeight, endPosition.z));
 
 
                meshFilter.sharedMesh = new Mesh();
-               meshFilter.sharedMesh.vertices = vertesiez;
+               meshFilter.sharedMesh.vertices = vertices;
                meshFilter.sharedMesh.triangles = new[] { 0, 1, 2, 2, 3, 0 };
                meshFilter.sharedMesh.uv = new[] { new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) };
               
