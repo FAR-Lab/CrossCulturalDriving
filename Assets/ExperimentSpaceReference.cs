@@ -55,7 +55,7 @@ public class ExperimentSpaceReference : MonoBehaviour
     public static string RoomSetUp = "SpaceReference";
     public static string RoomSetUpPath = Application.dataPath + "/Resources/" + RoomSetUp + ".json";
 
-    [FormerlySerializedAs("callibrationPoint")] [SerializeField]
+    [SerializeField]
     public Transform calibrationPoint;
 
     public float MeshWidth = 0.2f;
