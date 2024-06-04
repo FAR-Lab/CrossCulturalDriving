@@ -53,7 +53,7 @@ public class ExperimentSpaceReference : MonoBehaviour {
     public Material MeshMaterial;
 
     private void Start() {
-        Debug.Log("Loading CallibrationPoint");
+        Debug.Log("Loading CalibrationPoint");
         LoadSetup();
     }
 
@@ -82,65 +82,78 @@ public class ExperimentSpaceReference : MonoBehaviour {
         }
     }
 
-    // TODO: Make this store 2 calibration points
     public void StoreNewSetup() {
-        var outVal = new float[transform.childCount + 1][];
-        var tmp = new float[3];
+        var outVal = new Dictionary<string, Dictionary<string, List<float>>> {
+            ["Cal1"] = StoreCalibrationPoint(calibrationPoint1),
+            ["Cal2"] = StoreCalibrationPoint(calibrationPoint2)
+        };
 
-        tmp[0] = calibrationPoint1.localPosition.x;
-        tmp[1] = calibrationPoint1.localPosition.y;
-        tmp[2] = calibrationPoint1.localPosition.z;
-        outVal[0] = tmp;
-        tmp = new float[3];
-        tmp[0] = calibrationPoint1.localRotation.eulerAngles.x;
-        tmp[1] = calibrationPoint1.localRotation.eulerAngles.y;
-        tmp[2] = calibrationPoint1.localRotation.eulerAngles.z;
-        outVal[1] = tmp;
-
-        for (var i = 2; i < WorkingArea.Count + 2; i++) {
-            var t = WorkingArea[i - 2];
-            tmp = new float[3];
-            tmp[0] = t.localPosition.x;
-            tmp[1] = t.localPosition.y;
-            tmp[2] = t.localPosition.z;
-            outVal[i] = tmp;
-            Debug.Log(t.localPosition.x);
+        for (var i = 0; i < WorkingArea.Count; i++) {
+            var t = WorkingArea[i];
+            outVal.Add("Border" + (i + 1), StoreBorderPoint(t));
         }
 
         var json = JsonConvert.SerializeObject(outVal, Formatting.Indented);
         File.WriteAllText(RoomSetUpPath, json);
     }
 
-    private GameObject CreateCalibrationPoint(Dictionary<string, List<int>> coords) {
-        var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        go.transform.parent = transform;
+    private Dictionary<string, List<float>> StoreCalibrationPoint(Transform calibrationPoint) {
+        var outVal = new Dictionary<string, List<float>> {
+            ["pos"] = new() {
+                calibrationPoint.localPosition.x,
+                calibrationPoint.localPosition.y,
+                calibrationPoint.localPosition.z
+            },
+            ["rot"] = new() {
+                calibrationPoint.localRotation.eulerAngles.x,
+                calibrationPoint.localRotation.eulerAngles.y,
+                calibrationPoint.localRotation.eulerAngles.z
+            }
+        };
+        return outVal;
+    }
+
+    private Dictionary<string, List<float>> StoreBorderPoint(Transform borderPoint) {
+        var outVal = new Dictionary<string, List<float>> {
+            ["pos"] = new() {
+                borderPoint.localPosition.x,
+                borderPoint.localPosition.y,
+                borderPoint.localPosition.z
+            }
+        };
+        return outVal;
+    }
+
+    private Transform CreateCalibrationPoint(Dictionary<string, List<float>> coords) {
+        var t = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
+        t.parent = transform;
 
         var pos = new Vector3 {
             x = coords["pos"][0],
             y = coords["pos"][1],
             z = coords["pos"][2]
         };
-        calibrationPoint1.localPosition = pos;
+        t.localPosition = pos;
 
         var rot = new Vector3 {
             x = coords["rot"][0],
             y = coords["rot"][1],
             z = coords["rot"][2]
         };
-        var rotation = calibrationPoint1.localRotation;
+        var rotation = t.localRotation;
         rotation.eulerAngles = rot;
-        calibrationPoint1.localRotation = rotation;
+        t.localRotation = rotation;
 
-        calibrationPoint1.localScale = Vector3.one * 0.1f;
+        t.localScale = Vector3.one * 0.1f;
 
-        return go;
+        return t;
     }
 
-    private GameObject CreateBorderPoint(Dictionary<string, List<int>> coords) {
+    private Transform CreateBorderPoint(Dictionary<string, List<float>> coords) {
         var go = new GameObject {
             transform = {
                 parent = transform,
-                position = new Vector3 {
+                localPosition = new Vector3 {
                     x = coords["pos"][0],
                     y = coords["pos"][1],
                     z = coords["pos"][2]
@@ -148,7 +161,7 @@ public class ExperimentSpaceReference : MonoBehaviour {
                 rotation = transform.rotation
             }
         };
-        return go;
+        return go.transform;
     }
 
     public void LoadSetup() {
@@ -162,7 +175,7 @@ public class ExperimentSpaceReference : MonoBehaviour {
 #endif
 
         var outVal = JsonConvert
-            .DeserializeObject<Dictionary<string, Dictionary<string, List<int>>>>(s);
+            .DeserializeObject<Dictionary<string, Dictionary<string, List<float>>>>(s);
         WorkingArea.Clear();
         for (var i = transform.childCount - 1; i >= 0; i--) {
 #if UNITY_EDITOR
@@ -175,30 +188,19 @@ public class ExperimentSpaceReference : MonoBehaviour {
 
 
         if (calibrationPoint1 == null) {
-            calibrationPoint1 = CreateCalibrationPoint(outVal["Cal1"]).transform;
+            calibrationPoint1 = CreateCalibrationPoint(outVal["Cal1"]);
             calibrationPoint1.name = "CalibrationPoint1";
         }
 
         if (calibrationPoint2 == null) {
-            calibrationPoint2 = CreateCalibrationPoint(outVal["Cal2"]).transform;
+            calibrationPoint2 = CreateCalibrationPoint(outVal["Cal2"]);
             calibrationPoint2.name = "CalibrationPoint2";
         }
 
-        for (var i = 2; i < workAreaCount + 2; i++) {
-            var go = new GameObject();
-
-            go.transform.parent = transform;
-            go.transform.name = $"Border {i - 1}";
-
-            tmp = new Vector3();
-            tmp.x = outVal[i][0];
-            tmp.y = outVal[i][1];
-            tmp.z = outVal[i][2];
-
-            go.transform.localPosition = tmp;
-            go.transform.rotation = transform.rotation;
-
-            WorkingArea.Add(go.transform);
+        for (var i = 1; i <= workAreaCount; i++) {
+            var borderPoint = CreateBorderPoint(outVal["Border" + i]);
+            borderPoint.name = "BorderPoint" + i;
+            WorkingArea.Add(borderPoint);
         }
 
         // load mesh
