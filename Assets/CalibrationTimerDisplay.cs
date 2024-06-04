@@ -1,32 +1,31 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CalibrationTimerDisplay : MonoBehaviour {
+    public const float TurnOfDelay = 1f;
+
     private TextMeshProUGUI Text;
 
-    public const float TurnOfDelay = 1f;
     // Start is called before the first frame update
-    void Start() {
+    private void Start() {
         Debug.Log(transform.Find("timer"));
         Text = transform.Find("timer").GetComponent<TextMeshProUGUI>();
         Text.text = "";
         SetActive(false);
     }
-    
- 
 
-    public void StartDispaly() {
+
+    public void StartDisplay() {
         SetActive(true);
-        Text.color=Color.red;
+        Text.color = Color.red;
     }
+
     private void SetActive(bool val) {
-        
         gameObject.SetActive(val);
     }
-    public void updateMessage(string toString) {
+
+    public void UpdateMessage(string toString) {
         Text.text = toString;
     }
 
@@ -36,12 +35,11 @@ public class CalibrationTimerDisplay : MonoBehaviour {
             Text.color = Color.green;
             StartCoroutine(StopDisplayCoroutine());
         }
-        
     }
 
     private IEnumerator StopDisplayCoroutine() {
-            yield return new WaitForSeconds(TurnOfDelay);
-            Text.text = "";
-            SetActive(false);
+        yield return new WaitForSeconds(TurnOfDelay);
+        Text.text = "";
+        SetActive(false);
     }
 }

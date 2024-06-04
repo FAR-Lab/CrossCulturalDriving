@@ -12,7 +12,7 @@ public class SpaceReferenceEditor : Editor {
 
     public override void OnInspectorGUI() {
         DrawDefaultInspector(); // Draws the default inspector
-        var reference = (ExperimentSpaceReference) target;
+        var reference = (ExperimentSpaceReference)target;
         if (GUILayout.Button("Store New Zed Setup")) {
             //reference.storeNewSetup();
         }
@@ -207,9 +207,9 @@ public class ExperimentSpaceReference : MonoBehaviour {
         //Create3DRectangularMeshes();
     }
 
-    public Transform GetCalibrationPoint() {
-        if (calibrationPoint1 == null) LoadSetup();
-        return calibrationPoint1;
+    public (Transform, Transform) GetCalibrationPoints() {
+        if (calibrationPoint1 == null || calibrationPoint2 == null) LoadSetup();
+        return (calibrationPoint1, calibrationPoint2);
     }
 
     public void Create3DRectangularMeshes(Transform transform1) {
@@ -262,9 +262,9 @@ public class ExperimentSpaceReference : MonoBehaviour {
 
             meshFilter.sharedMesh = new Mesh();
             meshFilter.sharedMesh.vertices = vertices;
-            meshFilter.sharedMesh.triangles = new[] {0, 1, 2, 2, 3, 0};
+            meshFilter.sharedMesh.triangles = new[] { 0, 1, 2, 2, 3, 0 };
             meshFilter.sharedMesh.uv = new[]
-                {new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0)};
+                { new Vector2(0, 0), new Vector2(0, 1), new Vector2(1, 1), new Vector2(1, 0) };
         }
     }
 

@@ -349,10 +349,10 @@ public class VR_Participant : Client_Object {
                 if (conf.FileAvalible()) {
                     conf.LoadLocalOffset(out var localPosition, out var localRotation);
 
-                    Debug.Log(
-                        $"FindObjectOfType<ExperimentSpaceReference>(){FindObjectOfType<ExperimentSpaceReference>()}");
                     var esr = FindObjectOfType<ExperimentSpaceReference>();
-                    var space = esr.GetCalibrationPoint();
+                    Debug.Log(
+                        $"FindObjectOfType<ExperimentSpaceReference>(){esr}");
+                    var space = esr.GetCalibrationPoints().Item2;
                     transform.position = space.TransformPoint(localPosition);
                     transform.forward = space.TransformDirection(localRotation * Vector3.forward);
                     esr.SetBoundaries(GetMainCamera());
@@ -433,67 +433,97 @@ public class VR_Participant : Client_Object {
         m_QNDataStorageServer.RegisterQNScreen(m_participantOrder.Value, qnmanager);
     }
 
-    // TODO: Make a coroutine that calibrates 1 vector3, then run this method twice (using coroutines)
-    // Then, using these two points, set the position and rotation of the player interactable object
-    private IEnumerator OverTimeCalibration(Transform VrCamera, Transform originReference, float maxtime = 10) {
-        isCalibrationRunning = true;
-        var runs = 0;
-        const int MaxRuns = 250;
-        m_calibDisplay.StartDispaly();
-        m_calibDisplay.updateMessage("Hold still!");
+    // TODO: Get rid of VrCamera, I don't think it is used here
+    private IEnumerator PositionCalibration(Transform VrCamera, Transform originReference, float maxTime = 10) {
+        m_calibDisplay.UpdateMessage("Hold still!");
         yield return new WaitForSeconds(2);
 
-
-        //  Transform HandModelL= transform.Find("Camera Offset/Left Hand Tracking/L_Wrist/L_Palm");
-        //  Transform HandModelR = transform.Find("Camera Offset/Right Hand Tracking/R_Wrist/R_Palm");
         var HandModelL = transform.GetComponent<SeatCalibration>().HandModelL;
         var HandModelR = transform.GetComponent<SeatCalibration>().HandModelR;
 
-        // var interact = FindObjectOfType<SkeletonNetworkScript>();    // We making a bunch of assumptions here, kinda ugly! 
-
-
         Debug.Log(
-            $"ZedOriginReference{originReference}, VrCamera{VrCamera}, HandModelL{HandModelL}, HandModelR{HandModelR}");
+            $"OriginReference{originReference}, VrCamera{VrCamera}, HandModelL{HandModelL}, HandModelR{HandModelR}");
         Debug.DrawRay(originReference.position, -Vector3.up * originReference.position.y, Color.magenta, 60);
         Debug.DrawRay(HandModelL.position, Vector3.up, Color.cyan, 60);
         Debug.DrawRay(HandModelR.position, Vector3.up, Color.cyan, 60);
 
-
-        while (runs < MaxRuns) {
+        const int MaxRuns = 250;
+        for (var runs = 0; runs < MaxRuns; runs++) {
             var A = HandModelL.position;
             var B = HandModelR.position;
             var AtoB = B - A;
             var midPoint = A + AtoB * 0.5f;
             var transformDifference =
                 originReference.position -
-                midPoint; // literally vector from the virtual hands to the calibration point (0 in real life)
-            var artificialForward =
-                midPoint - VrCamera
-                    .position; // difference in angle between virtual avatar and calibration point (calib points directly into wall)
-
-            var angle = Vector3.SignedAngle(new Vector3(artificialForward.x, 0, artificialForward.z),
-                new Vector3(originReference.forward.x, 0, originReference.forward.z),
-                Vector3.up);
-
-
-            Debug.Log($"Angle:{angle}");
+                midPoint;
             Debug.DrawLine(A, B, Color.green, 10);
             Debug.DrawRay(VrCamera.position, transformDifference, Color.blue, 10);
-            Debug.DrawRay(midPoint, artificialForward, Color.red, 10);
 
-            SetNewRotationOffset(Quaternion.Euler(0, angle * 0.9f, 0));
             SetNewPositionOffset(transformDifference * 0.9f);
 
-            maxtime -= Time.deltaTime;
-            runs++;
-            if (maxtime < 0) break;
+            maxTime -= Time.deltaTime;
+            if (maxTime < 0) break;
 
-            m_calibDisplay.updateMessage((MaxRuns - runs).ToString());
+            m_calibDisplay.UpdateMessage((MaxRuns - runs).ToString());
             yield return new WaitForEndOfFrame();
         }
+    }
+
+    private IEnumerator RotationCalibration(Transform pivot, Transform originReference, float maxTime = 10) {
+        m_calibDisplay.UpdateMessage("Hold still!");
+        yield return new WaitForSeconds(2);
+
+        var HandModelL = transform.GetComponent<SeatCalibration>().HandModelL;
+        var HandModelR = transform.GetComponent<SeatCalibration>().HandModelR;
+
+        Debug.Log(
+            $"OriginReference{originReference}, HandModelL{HandModelL}, HandModelR{HandModelR}");
+        Debug.DrawRay(originReference.position, -Vector3.up * originReference.position.y, Color.magenta, 60);
+        Debug.DrawRay(HandModelL.position, Vector3.up, Color.cyan, 60);
+        Debug.DrawRay(HandModelR.position, Vector3.up, Color.cyan, 60);
+
+        const int MaxRuns = 250;
+        for (var runs = 0; runs < MaxRuns; runs++) {
+            var A = HandModelL.position;
+            var B = HandModelR.position;
+            var AtoB = B - A;
+            var midPoint = A + AtoB * 0.5f;
+            var pivotPosition = pivot.position;
+            var realDifference = midPoint - pivotPosition;
+            var virtualDifference = originReference.position - pivotPosition;
+            var angleDifference = Vector3.SignedAngle(new Vector3(realDifference.x, 0, realDifference.z),
+                new Vector3(virtualDifference.x, 0, virtualDifference.z),
+                Vector3.up);
+            Debug.DrawLine(A, B, Color.green, 10);
+
+            transform.RotateAround(pivotPosition, Vector3.up, angleDifference * 0.9f);
+
+            maxTime -= Time.deltaTime;
+            if (maxTime < 0) break;
+
+            m_calibDisplay.UpdateMessage((MaxRuns - runs).ToString());
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    private IEnumerator OverTimeCalibration(Transform VrCamera, Transform calibrationPoint1,
+        Transform calibrationPoint2, float maxTime) {
+        isCalibrationRunning = true;
+        m_calibDisplay.StartDisplay();
+
+        yield return StartCoroutine(PositionCalibration(VrCamera, calibrationPoint1, maxTime));
+
+        m_calibDisplay.UpdateMessage("Now walk to the second point");
+        yield return new WaitForSeconds(2);
+        for (var i = 20; i >= 0; i--) {
+            m_calibDisplay.UpdateMessage("Rotation calibration starting in: " + i);
+            yield return new WaitForSeconds(1);
+        }
+
+        yield return StartCoroutine(RotationCalibration(calibrationPoint1, calibrationPoint2, maxTime));
 
         m_calibDisplay.StopDisplay();
-        FinishedCalibration(originReference);
+        FinishedCalibration(calibrationPoint2);
         isCalibrationRunning = false;
     }
 
@@ -530,9 +560,11 @@ public class VR_Participant : Client_Object {
                 Debug.Log($"VrCamera Local Position {mainCamera.localPosition}");
                 Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
 
+                var esr = FindObjectOfType<ExperimentSpaceReference>();
+                var calibs = esr.GetCalibrationPoints();
                 if (isCalibrationRunning == false)
                     StartCoroutine(OverTimeCalibration(mainCamera,
-                        FindObjectOfType<ExperimentSpaceReference>().GetCalibrationPoint()));
+                        calibs.Item1, calibs.Item2, 10));
                 else
                     Debug.Log("Calibration already running!");
 
@@ -637,7 +669,7 @@ public class VR_Participant : Client_Object {
             var buffer = new byte[bufferSize];
             Array.Copy(ImageArray, CurrentDataIndex, buffer, 0, bufferSize);
 
-            var tmp = new BasicByteArraySender {DataSendArray = buffer};
+            var tmp = new BasicByteArraySender { DataSendArray = buffer };
 
             var writer = new FastBufferWriter(bufferSize + 8, Allocator.TempJob);
             writer.WriteNetworkSerializable(tmp);
