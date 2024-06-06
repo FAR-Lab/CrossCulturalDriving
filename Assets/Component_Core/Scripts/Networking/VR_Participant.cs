@@ -504,19 +504,25 @@ public class VR_Participant : Client_Object {
         }
     }
 
+    private IEnumerator CountDown(string message, int seconds) {
+        for (var i = seconds; i >= 0; i--) {
+            m_calibDisplay.UpdateMessage(message + i);
+            yield return new WaitForSeconds(1);
+        }
+    }
+
     private IEnumerator OverTimeCalibration(Transform calibrationPoint1,
         Transform calibrationPoint2, float maxTime) {
         isCalibrationRunning = true;
         m_calibDisplay.StartDisplay();
 
+        yield return StartCoroutine(CountDown("Position calibration starting in:", 20));
         yield return StartCoroutine(PositionCalibration(calibrationPoint1, maxTime));
 
         m_calibDisplay.UpdateMessage("Now walk to the second point");
         yield return new WaitForSeconds(2);
-        for (var i = 20; i >= 0; i--) {
-            m_calibDisplay.UpdateMessage("Rotation calibration starting in: " + i);
-            yield return new WaitForSeconds(1);
-        }
+        yield return StartCoroutine(CountDown("Rotation calibration starting in:", 20));
+
 
         yield return StartCoroutine(RotationCalibration(calibrationPoint1, calibrationPoint2, maxTime));
 
