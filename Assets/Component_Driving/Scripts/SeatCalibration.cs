@@ -101,7 +101,7 @@ public class SeatCalibration : MonoBehaviour {
             case SeatCalibrationState.READY: break;
             case SeatCalibrationState.ERROR:
                 if (ReTryCount > 10) {
-                    if (!myPic.DeleteCallibrationFile())
+                    if (!myPic.DeleteCalibrationFile())
                         Debug.LogWarning(
                             "Could not delete calibration file. The data in that file is probably corrupt. Please consider removing the file manually.");
                     Debug.LogError("Had 10 retries calibrating the play. Did not work. Quitting.");

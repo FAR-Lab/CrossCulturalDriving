@@ -426,15 +426,14 @@ public class VR_Participant : Client_Object {
             if (screenShot.ContainsPO(ConnectionAndSpawning.Singleton.ParticipantOrder))
                 if (screenShot.triggered) {
                     qnmanager.AddImage(screenShot.GetTexture());
-                    InitiateImageTransfere(screenShot.GetTexture().EncodeToJPG(50));
+                    InitiateImageTransfer(screenShot.GetTexture().EncodeToJPG(50));
                     break;
                 }
 
         m_QNDataStorageServer.RegisterQNScreen(m_participantOrder.Value, qnmanager);
     }
 
-    // TODO: Get rid of VrCamera, I don't think it is used here
-    private IEnumerator PositionCalibration(Transform VrCamera, Transform originReference, float maxTime = 10) {
+    private IEnumerator PositionCalibration(Transform originReference, float maxTime = 10) {
         m_calibDisplay.UpdateMessage("Hold still!");
         yield return new WaitForSeconds(2);
 
@@ -442,7 +441,7 @@ public class VR_Participant : Client_Object {
         var HandModelR = transform.GetComponent<SeatCalibration>().HandModelR;
 
         Debug.Log(
-            $"OriginReference{originReference}, VrCamera{VrCamera}, HandModelL{HandModelL}, HandModelR{HandModelR}");
+            $"OriginReference{originReference}, HandModelL{HandModelL}, HandModelR{HandModelR}");
         Debug.DrawRay(originReference.position, -Vector3.up * originReference.position.y, Color.magenta, 60);
         Debug.DrawRay(HandModelL.position, Vector3.up, Color.cyan, 60);
         Debug.DrawRay(HandModelR.position, Vector3.up, Color.cyan, 60);
@@ -457,7 +456,6 @@ public class VR_Participant : Client_Object {
                 originReference.position -
                 midPoint;
             Debug.DrawLine(A, B, Color.green, 10);
-            Debug.DrawRay(VrCamera.position, transformDifference, Color.blue, 10);
 
             SetNewPositionOffset(transformDifference * 0.9f);
 
@@ -506,12 +504,12 @@ public class VR_Participant : Client_Object {
         }
     }
 
-    private IEnumerator OverTimeCalibration(Transform VrCamera, Transform calibrationPoint1,
+    private IEnumerator OverTimeCalibration(Transform calibrationPoint1,
         Transform calibrationPoint2, float maxTime) {
         isCalibrationRunning = true;
         m_calibDisplay.StartDisplay();
 
-        yield return StartCoroutine(PositionCalibration(VrCamera, calibrationPoint1, maxTime));
+        yield return StartCoroutine(PositionCalibration(calibrationPoint1, maxTime));
 
         m_calibDisplay.UpdateMessage("Now walk to the second point");
         yield return new WaitForSeconds(2);
@@ -563,8 +561,7 @@ public class VR_Participant : Client_Object {
                 var esr = FindObjectOfType<ExperimentSpaceReference>();
                 var calibs = esr.GetCalibrationPoints();
                 if (isCalibrationRunning == false)
-                    StartCoroutine(OverTimeCalibration(mainCamera,
-                        calibs.Item1, calibs.Item2, 10));
+                    StartCoroutine(OverTimeCalibration(calibs.Item1, calibs.Item2, 10));
                 else
                     Debug.Log("Calibration already running!");
 
@@ -597,9 +594,9 @@ public class VR_Participant : Client_Object {
         conf.Init(OffsetFileName);
         var localPosToStore = relativeTransform.InverseTransformPoint(transform.position);
 
-        var LocalRotation = Quaternion.Inverse(relativeTransform.rotation) * transform.rotation;
+        var localRotation = Quaternion.Inverse(relativeTransform.rotation) * transform.rotation;
 
-        conf.StoreLocalOffset(localPosToStore, LocalRotation);
+        conf.StoreLocalOffset(localPosToStore, localRotation);
 
         //  ShareOffsetServerRPC(offsetPositon, offsetRotation, LastRot);
         FinishedCalibrationServerRPC(true);
@@ -638,7 +635,7 @@ public class VR_Participant : Client_Object {
         return NetworkedInteractableObject.transform;
     }
 
-    public bool DeleteCallibrationFile() {
+    public bool DeleteCalibrationFile() {
         var conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
         return conf.DeleteFile();
@@ -648,7 +645,7 @@ public class VR_Participant : Client_Object {
         FinishedImageSending = true;
     }
 
-    public void InitiateImageTransfere(byte[] Image) {
+    public void InitiateImageTransfer(byte[] Image) {
         if (!IsLocalPlayer) return;
         if (IsServer) return;
         FinishedImageSending = false;
