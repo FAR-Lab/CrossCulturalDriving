@@ -296,7 +296,7 @@ Debug.Log($"SpawnType {m_spawnType.Value}  FollowType:{tmp} KeepUpdating:{KeepUp
         
         qnmanager.StartQuestionair(m_QNDataStorageServer,m_participantOrder.Value,tmp,Offset,KeepUpdating,referenceTransformPath ,this);
         
-        m_QNDataStorageServer.RegisterQNSCreen(m_participantOrder.Value, qnmanager);
+        m_QNDataStorageServer.RegisterQNScreen(m_participantOrder.Value, qnmanager);
         
         Debug.Log("Setup Questionnaire serverside, ready for Questions");
     }

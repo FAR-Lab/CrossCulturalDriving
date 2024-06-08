@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class QNTrigger : MonoBehaviour
 {
-    private ScenarioManager scenMen;
+    private ScenarioManager scenarioManager;
 
     public ParticipantOrder StartingId;
 
@@ -16,8 +16,8 @@ public class QNTrigger : MonoBehaviour
     // Start is called before the first frame update
     void Start(){
         if (NetworkManager.Singleton.IsServer){
-            scenMen = transform.parent.GetComponentInParent<ScenarioManager>();
-            if (scenMen == null){
+            scenarioManager = transform.parent.GetComponentInParent<ScenarioManager>();
+            if (scenarioManager == null){
                 Debug.LogError("Could not find a scenario manager to call when I get triggered");
             }
         }

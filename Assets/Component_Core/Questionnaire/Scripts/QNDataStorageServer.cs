@@ -429,7 +429,7 @@ public class QNDataStorageServer : MonoBehaviour {
             .SetTotalQNCountClientRpc(count);
     }
 
-    public void RegisterQNSCreen(ParticipantOrder po, QN_Display qnmanager) {
+    public void RegisterQNScreen(ParticipantOrder po, QN_Display qnmanager) {
         Debug.Log($"Got a QN_Display for po{po}");
         qnDisplays.Add(po, qnmanager);
     }
