@@ -145,15 +145,23 @@ public class VR_Participant : Client_Object {
             m_participantOrder.Value = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
             GetComponentInChildren<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder.Value);
-            //  var cam =  GetMainCamera();
-            // var boxCollider = cam.gameObject.AddComponent<BoxCollider>();
-            //  var rigidbody = cam.gameObject.AddComponent<Rigidbody>();
-            // rigidbody.isKinematic = true;
+            SetupButtons();
         }
         else {
             foreach (var a in
                      GetComponentsInChildren<ReplayTransform>())
                 a.enabled = false; // should happen twice to activate the hand
+        }
+    }
+
+    private void SetupButtons() {
+        var researcher_UI = FindObjectOfType<Researcher_UI>();
+        switch (mySpawnType.Value) {
+            case SpawnType.PEDESTRIAN:
+                researcher_UI.CreateButton("Calibration Pedestrian Position",);
+                break;
+            case SpawnType.CAR:
+                break;
         }
     }
 
@@ -432,6 +440,8 @@ public class VR_Participant : Client_Object {
 
         m_QNDataStorageServer.RegisterQNScreen(m_participantOrder.Value, qnmanager);
     }
+
+    private void CalibratePosition() { }
 
     private IEnumerator PositionCalibration(Transform originReference, float maxTime = 10) {
         m_calibDisplay.UpdateMessage("Hold still!");

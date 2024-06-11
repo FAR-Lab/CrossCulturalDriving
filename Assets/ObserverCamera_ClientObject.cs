@@ -1,29 +1,33 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Rerun;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
 [RequireComponent(typeof(RerunPlaybackCameraManager))]
-public class OberserverCamera_ClientObject : Client_Object {
-    private ParticipantOrder m_ParticipantOrder;
-    private SpawnType spawnType;
-    private Interactable_Object MyInteractableObject;
-    private ulong targetClient;
-
-
+public class ObserverCamera_ClientObject : Client_Object {
     private RerunPlaybackCameraManager _RerunCameraManager;
 
+    private bool initFinished = false;
+    private ParticipantOrder m_ParticipantOrder;
+    private Interactable_Object MyInteractableObject;
+    private SpawnType spawnType;
+    private ulong targetClient;
+
     // Start is called before the first frame update
-    void Start() {
+    private void Start() {
         _RerunCameraManager = GetComponent<RerunPlaybackCameraManager>();
         Debug.Log("ObserverCamera Manger ");
         ConnectionAndSpawning.Singleton.ServerStateChange += CameraUpdateStateTracker;
-        
-        
+    }
+
+    private void OnDisable() {
+        if (ConnectionAndSpawning.Singleton != null &&
+            ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN) {
+            SceneManager.sceneLoaded -= LoadUnityAction;
+            SceneManager.sceneUnloaded -= UnloadUnityAction;
+        }
     }
 
     private void CameraUpdateStateTracker(ActionState state) {
@@ -56,32 +60,19 @@ public class OberserverCamera_ClientObject : Client_Object {
         }
     }
 
-    void OnDisable() {
-        if (ConnectionAndSpawning.Singleton != null &&
-            ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN) {
-            SceneManager.sceneLoaded -= LoadUnityAction;
-            SceneManager.sceneUnloaded -= UnloadUnityAction;
-        }
-    }
-
     private void SetupForRerun() {
         SceneManager.sceneLoaded += LoadUnityAction;
         SceneManager.sceneUnloaded += UnloadUnityAction;
     }
 
-    private bool initFinished = false;
-
     private void UnloadUnityAction(Scene arg0) {
-        if (ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN) {
-            DelinkCameras();
-        }
+        if (ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN) DelinkCameras();
     }
 
     private void LoadUnityAction(Scene arg0, LoadSceneMode arg1) {
         if (ConnectionAndSpawning.Singleton.ServerState == ActionState.RERUN &&
-            arg0.name != ConnectionAndSpawning.WaitingRoomSceneName) {
+            arg0.name != ConnectionAndSpawning.WaitingRoomSceneName)
             LinkCameras();
-        }
     }
 
     private void DelinkCameras() {
@@ -94,9 +85,7 @@ public class OberserverCamera_ClientObject : Client_Object {
 
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
-        if (!IsServer) {
-            gameObject.SetActive(false);
-        }
+        if (!IsServer) gameObject.SetActive(false);
     }
 
     public override void SetParticipantOrder(ParticipantOrder _ParticipantOrder) {
@@ -129,23 +118,24 @@ public class OberserverCamera_ClientObject : Client_Object {
     }
 
     public override void CalibrateClient(Action<bool> finishedCalibration) {
-        Debug.Log($"Here we could try to find all relevant cameras again..");
+        Debug.Log("Here we could try to find all relevant cameras again..");
         finishedCalibration.Invoke(true);
     }
 
     public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) { }
+
     public override void GoForPostQuestion() {
         if (!IsLocalPlayer) return;
         PostQuestionServerRPC(OwnerClientId);
     }
 
-    public override void SetNewNavigationInstruction(Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions) {
+    public override void SetNewNavigationInstruction(
+        Dictionary<ParticipantOrder, NavigationScreen.Direction> Directions) {
         throw new NotImplementedException();
     }
 
     [ServerRpc]
-    public void PostQuestionServerRPC(ulong clientID)
-    {
+    public void PostQuestionServerRPC(ulong clientID) {
         ConnectionAndSpawning.Singleton.FinishedQuestionair(clientID);
     }
 }
