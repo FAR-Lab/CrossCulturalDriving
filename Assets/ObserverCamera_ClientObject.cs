@@ -86,6 +86,12 @@ public class ObserverCamera_ClientObject : Client_Object {
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
         if (!IsServer) gameObject.SetActive(false);
+        if (IsServer) SetupButtons();
+    }
+
+    private void SetupButtons() {
+        var researcher_UI = FindObjectOfType<Researcher_UI>();
+        researcher_UI.CreateButton("Calibrate", Calibrate, OwnerClientId);
     }
 
     public override void SetParticipantOrder(ParticipantOrder _ParticipantOrder) {
@@ -117,7 +123,7 @@ public class ObserverCamera_ClientObject : Client_Object {
         return _RerunCameraManager.GetFollowCamera();
     }
 
-    public override void CalibrateClient(Action<bool> finishedCalibration) {
+    public void Calibrate(Action<bool> finishedCalibration) {
         Debug.Log("Here we could try to find all relevant cameras again..");
         finishedCalibration.Invoke(true);
     }

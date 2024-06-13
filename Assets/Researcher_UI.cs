@@ -28,8 +28,7 @@ public class Researcher_UI : MonoBehaviour {
         ConnectionAndSpawning.Singleton.ServerStateChange += ToggleScenarioButtonVisibility;
 
         NetworkManager.Singleton.OnServerStarted += InitializeCanvas;
-        // NetworkManager.Singleton.OnClientConnectedCallback += CreateButton;
-        // NetworkManager.Singleton.OnClientDisconnectCallback += DeleteButton;
+        NetworkManager.Singleton.OnClientDisconnectCallback += DeleteButton;
         _spawnTypeToSprite = Resources.Load<SO_SpawnTypeToSprite>("ScriptableObjects/SO_SpawnTypeToSprite")
             .EnumToValueDictionary;
 
@@ -144,32 +143,15 @@ public class Researcher_UI : MonoBehaviour {
 
     # region Calibration Buttons
 
-    // private void CreateButton(ulong clientID) {
-    //     ParticipantOrder po;
-    //     var success = ConnectionAndSpawning.Singleton.participants.GetOrder(clientID, out po);
-    //     if (!success) return;
-    //     Debug.Log($"Creating button for {po}");
-    //     var button = Instantiate(buttonTemplate_HasIcon);
-    //     button.transform.SetParent(driverCalibrationButtons.transform);
-    //     button.name = $"Calibrate {po}";
-    //     button.GetComponentInChildren<TextMeshProUGUI>().text = $"Calibrate {po}";
-    //     SpawnType spawnType;
-    //     ConnectionAndSpawning.Singleton.participants.GetSpawnType(po, out spawnType);
-    //     button.transform.Find("Icon").GetComponent<Image>().sprite = _spawnTypeToSprite[spawnType];
-    //     button.GetComponentInChildren<Button>().onClick.AddListener(() => {
-    //         OnCalibrationButtonPressed(po, button.transform);
-    //     });
-    //     _spawnedButtons.Add(po, button.transform);
-    // }
-
     public void CreateButton(string text, Action<Action<bool>> onPress, ulong clientID,
         Action<Transform, bool> onFinished = null) {
+        Debug.Log("Create Button Called");
         var success = ConnectionAndSpawning.Singleton.participants.GetOrder(clientID, out var po);
         if (!success) return;
         Debug.Log($"Creating button for {po}");
         var button = Instantiate(buttonTemplate_HasIcon, driverCalibrationButtons.transform, true);
-        button.name = text;
-        button.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        button.name = text + $" {po}";
+        button.GetComponentInChildren<TextMeshProUGUI>().text = button.name;
         ConnectionAndSpawning.Singleton.participants.GetSpawnType(po, out var spawnType);
         button.transform.Find("Icon").GetComponent<Image>().sprite = _spawnTypeToSprite[spawnType];
 
@@ -183,50 +165,22 @@ public class Researcher_UI : MonoBehaviour {
         if (_spawnedButtons.TryGetValue(po, out var buttons))
             buttons.Add(button.transform);
         else
-            _spawnedButtons.Add(po, new List<Transform> {button.transform});
-        var numPreviousButtons = _spawnedButtons[po].Count - 1;
-        button.transform.localPosition += new Vector3(numPreviousButtons * 200, 0, 0);
+            _spawnedButtons.Add(po, new List<Transform> { button.transform });
     }
 
-    public void DeleteButton(string text, ulong clientID) {
+    public void DeleteButton(ulong clientID) {
         var success = ConnectionAndSpawning.Singleton.participants.GetOrder(clientID, out var po);
         if (!success) return;
 
+        Debug.Log("Deleting Buttons");
+
         if (_spawnedButtons.ContainsKey(po)) {
-            var tmp = _spawnedButtons[po].Find(b => b.name == text);
-            if (tmp != null) {
-                _spawnedButtons[po].Remove(tmp);
-                Destroy(tmp.gameObject);
-            }
+            _spawnedButtons[po].ForEach(b => Destroy(b.gameObject));
+            _spawnedButtons.Remove(po);
         }
         else {
             Debug.LogWarning($"Could not find calibration button for po:{po}");
         }
-    }
-
-    // private void DeleteButton(ulong clientID) {
-    //     ParticipantOrder po;
-    //     var success = ConnectionAndSpawning.Singleton.participants.GetOrder(clientID, out po);
-    //     if (!success) return;
-    //
-    //     if (_spawnedButtons.ContainsKey(po)) {
-    //         var tmp = _spawnedButtons[po];
-    //         _spawnedButtons.Remove(po);
-    //         Destroy(tmp.gameObject);
-    //     }
-    //     else {
-    //         Debug.LogWarning($"Could not find calibration button for po:{po}");
-    //     }
-    // }
-
-    private void OnCalibrationButtonPressed(ParticipantOrder participant, Transform button) {
-        button.GetComponentInChildren<TextMeshProUGUI>().color = new Color(0.5f, 0, 0, 1);
-        ;
-        ConnectionAndSpawning.Singleton.Main_ParticipantObjects[participant].CalibrateClient(x => {
-            if (x) button.GetComponentInChildren<TextMeshProUGUI>().color = new Color(0, 0.5f, 0, 1);
-            else button.GetComponentInChildren<TextMeshProUGUI>().color = new Color(1, 0, 0, 1);
-            ;
-        });
     }
 
     # endregion
