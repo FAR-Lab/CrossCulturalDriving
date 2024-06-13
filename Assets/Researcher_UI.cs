@@ -162,7 +162,7 @@ public class Researcher_UI : MonoBehaviour {
     //     _spawnedButtons.Add(po, button.transform);
     // }
 
-    public void CreateButton(string text, Func<bool> onPress, ulong clientID,
+    public void CreateButton(string text, Action<Action<bool>> onPress, ulong clientID,
         Action<Transform, bool> onFinished = null) {
         var success = ConnectionAndSpawning.Singleton.participants.GetOrder(clientID, out var po);
         if (!success) return;
@@ -178,13 +178,14 @@ public class Researcher_UI : MonoBehaviour {
                 s ? new Color(0, 0.5f, 0, 1) : new Color(1, 0, 0, 1);
         };
         button.GetComponentInChildren<Button>().onClick.AddListener(() => {
-            var s = onPress.Invoke();
-            onFinished(button.transform, s);
+            onPress.Invoke(s => onFinished(button.transform, s));
         });
         if (_spawnedButtons.TryGetValue(po, out var buttons))
             buttons.Add(button.transform);
         else
-            _spawnedButtons.Add(po, new List<Transform> { button.transform });
+            _spawnedButtons.Add(po, new List<Transform> {button.transform});
+        var numPreviousButtons = _spawnedButtons[po].Count - 1;
+        button.transform.localPosition += new Vector3(numPreviousButtons * 200, 0, 0);
     }
 
     public void DeleteButton(string text, ulong clientID) {

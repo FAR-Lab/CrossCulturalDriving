@@ -34,8 +34,8 @@ public class VR_Participant : Client_Object {
 
     private PedestrianNavigationAudioCues AudioCuePlayer;
 
-    // use "FinishedCalibrationServerRPC" to notify the server that the calibration is finished
-    private Action<bool> finishedCalibration_ServerSideReference;
+    // called after calibration finished
+    private Action<bool> calibrationCallback;
     private bool init;
     private bool isCalibrationRunning;
     private Quaternion LastRot = Quaternion.identity;
@@ -158,9 +158,11 @@ public class VR_Participant : Client_Object {
         var researcher_UI = FindObjectOfType<Researcher_UI>();
         switch (mySpawnType.Value) {
             case SpawnType.PEDESTRIAN:
-                researcher_UI.CreateButton("Calibration Pedestrian Position",);
+                researcher_UI.CreateButton("Calibration Pedestrian Position", CalibratePosition, OwnerClientId);
+                researcher_UI.CreateButton("Calibration Pedestrian Rotation", CalibrateRotation, OwnerClientId);
                 break;
             case SpawnType.CAR:
+                researcher_UI.CreateButton("Calibration Car", CalibrateCar, OwnerClientId);
                 break;
         }
     }
@@ -396,7 +398,7 @@ public class VR_Participant : Client_Object {
 
     public override void CalibrateClient(Action<bool> finishedCalibration) {
         if (mySpawnType.Value is SpawnType.PEDESTRIAN or SpawnType.CAR) {
-            finishedCalibration_ServerSideReference = finishedCalibration;
+            calibrationCallback = finishedCalibration;
             CalibrateClientRPC();
         }
     }
@@ -441,9 +443,49 @@ public class VR_Participant : Client_Object {
         m_QNDataStorageServer.RegisterQNScreen(m_participantOrder.Value, qnmanager);
     }
 
-    private void CalibratePosition() { }
+    public void CalibrateCar(Action<bool> calibrationCallback) {
+        this.calibrationCallback = calibrationCallback;
+        CalibrateCarClientRPC();
+    }
 
-    private IEnumerator PositionCalibration(Transform originReference, float maxTime = 10) {
+    [ClientRpc]
+    private void CalibrateCarClientRPC() {
+        if (NetworkedInteractableObject == null) FindInteractable();
+
+        var steering = NetworkedInteractableObject.transform.Find("SteeringCenter");
+        var cam = GetMainCamera();
+        var calib = GetComponent<SeatCalibration>();
+        Debug.Log($"Calib{calib}, SteeringCenterObject:{steering.name}, and VrCamera{cam}");
+        calib.StartCalibration(
+            steering,
+            cam,
+            this,
+            m_calibDisplay);
+    }
+
+    public void CalibratePosition(Action<bool> calibrationCallback) {
+        this.calibrationCallback = calibrationCallback;
+        CalibratePositionClientRPC();
+    }
+
+    [ClientRpc]
+    private void CalibratePositionClientRPC() {
+        if (!IsLocalPlayer) return;
+        var mainCamera = GetMainCamera();
+        Debug.Log($"VrCamera Local Position {mainCamera.localPosition}");
+        Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
+
+        var esr = FindObjectOfType<ExperimentSpaceReference>();
+        var calibs = esr.GetCalibrationPoints();
+        if (isCalibrationRunning == false)
+            StartCoroutine(OverTimePositionCalibration(calibs.Item1));
+        else
+            Debug.Log("Calibration already running!");
+    }
+
+    private IEnumerator OverTimePositionCalibration(Transform originReference, float maxTime = 10) {
+        isCalibrationRunning = true;
+        m_calibDisplay.StartDisplay();
         m_calibDisplay.UpdateMessage("Hold still!");
         yield return new WaitForSeconds(2);
 
@@ -475,9 +517,35 @@ public class VR_Participant : Client_Object {
             m_calibDisplay.UpdateMessage((MaxRuns - runs).ToString());
             yield return new WaitForEndOfFrame();
         }
+
+        m_calibDisplay.StopDisplay();
+        FinishedCalibration();
+        isCalibrationRunning = false;
     }
 
-    private IEnumerator RotationCalibration(Transform pivot, Transform originReference, float maxTime = 10) {
+    public void CalibrateRotation(Action<bool> calibrationCallback) {
+        this.calibrationCallback = calibrationCallback;
+        CalibrateRotationClientRPC();
+    }
+
+    [ClientRpc]
+    private void CalibrateRotationClientRPC() {
+        if (!IsLocalPlayer) return;
+        var mainCamera = GetMainCamera();
+        Debug.Log($"VrCamera Local Position {mainCamera.localPosition}");
+        Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
+
+        var esr = FindObjectOfType<ExperimentSpaceReference>();
+        var calibs = esr.GetCalibrationPoints();
+        if (isCalibrationRunning == false)
+            StartCoroutine(OverTimeRotationCalibration(calibs.Item1, calibs.Item2));
+        else
+            Debug.Log("Calibration already running!");
+    }
+
+    private IEnumerator OverTimeRotationCalibration(Transform pivot, Transform originReference, float maxTime = 10) {
+        isCalibrationRunning = true;
+        m_calibDisplay.StartDisplay();
         m_calibDisplay.UpdateMessage("Hold still!");
         yield return new WaitForSeconds(2);
 
@@ -512,6 +580,10 @@ public class VR_Participant : Client_Object {
             m_calibDisplay.UpdateMessage((MaxRuns - runs).ToString());
             yield return new WaitForEndOfFrame();
         }
+
+        m_calibDisplay.StopDisplay();
+        FinishedCalibration(originReference);
+        isCalibrationRunning = false;
     }
 
     private IEnumerator CountDown(string message, int seconds) {
@@ -527,14 +599,14 @@ public class VR_Participant : Client_Object {
         m_calibDisplay.StartDisplay();
 
         yield return StartCoroutine(CountDown("Position calibration starting in:", 20));
-        yield return StartCoroutine(PositionCalibration(calibrationPoint1, maxTime));
+        yield return StartCoroutine(OverTimePositionCalibration(calibrationPoint1, maxTime));
 
         m_calibDisplay.UpdateMessage("Now walk to the second point");
         yield return new WaitForSeconds(2);
         yield return StartCoroutine(CountDown("Rotation calibration starting in:", 20));
 
 
-        yield return StartCoroutine(RotationCalibration(calibrationPoint1, calibrationPoint2, maxTime));
+        yield return StartCoroutine(OverTimeRotationCalibration(calibrationPoint1, calibrationPoint2, maxTime));
 
         m_calibDisplay.StopDisplay();
         FinishedCalibration(calibrationPoint2);
@@ -605,6 +677,10 @@ public class VR_Participant : Client_Object {
         transform.position += positionOffset;
     }
 
+    public void FinishedCalibration() {
+        FinishedCalibrationServerRPC(true);
+    }
+
     public void FinishedCalibration(Transform relativeTransform) {
         var conf = new ConfigFileLoading();
         conf.Init(OffsetFileName);
@@ -620,8 +696,8 @@ public class VR_Participant : Client_Object {
 
     [ServerRpc]
     private void FinishedCalibrationServerRPC(bool val) {
-        if (finishedCalibration_ServerSideReference != null)
-            finishedCalibration_ServerSideReference.Invoke(val);
+        if (calibrationCallback != null)
+            calibrationCallback.Invoke(val);
         else
             Debug.LogWarning("The Action to notify the server that calibration is finished was never defined");
     }
@@ -682,7 +758,7 @@ public class VR_Participant : Client_Object {
             var buffer = new byte[bufferSize];
             Array.Copy(ImageArray, CurrentDataIndex, buffer, 0, bufferSize);
 
-            var tmp = new BasicByteArraySender { DataSendArray = buffer };
+            var tmp = new BasicByteArraySender {DataSendArray = buffer};
 
             var writer = new FastBufferWriter(bufferSize + 8, Allocator.TempJob);
             writer.WriteNetworkSerializable(tmp);

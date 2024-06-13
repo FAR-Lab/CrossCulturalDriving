@@ -55,7 +55,7 @@ public abstract class Client_Object : NetworkBehaviour {
     public abstract void De_AssignFollowTransform(ulong clientID,NetworkObject netobj);
     public abstract Transform GetMainCamera();
     
-    //Once finished callibration return a True to the provided function. onm the server we then know callibration was succesfful. false for callibration failed.
+    //Once finished calibration return a True to the provided function. on the server we then know calibration was successful. false for calibration failed.
     public abstract void CalibrateClient(Action<bool> calibrationFinishedCallback);
     
     public abstract void  StartQuestionair(QNDataStorageServer m_QNDataStorageServer);
