@@ -604,7 +604,7 @@ namespace Mocopi.Receiver
 
             foreach (MocopiBone bone in this.bones)
             {
-                MocopiBone parent = this.bones.Find(_ => _.Id == bone.ParentId);
+                MocopiBone parent = this.bones.Find(m => m.Id == bone.ParentId);
 
                 Vector3 position = bone.Transform.localPosition;
                 Quaternion rotation = bone.Transform.localRotation;
