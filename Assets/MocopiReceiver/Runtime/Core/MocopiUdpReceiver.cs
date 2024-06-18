@@ -208,6 +208,7 @@ namespace Mocopi.Receiver.Core
 
             if (this.udpClient != null)
             {
+                //MULTICAST ADDITION
                 this.udpClient.DropMulticastGroup(IPAddress.Parse(this._multicastAddress));
                 this.udpClient.Close();
                 this.udpClient = null;
@@ -259,6 +260,7 @@ namespace Mocopi.Receiver.Core
         /// <param name="cancellationToken">Cancellation token</param>
         private async void UdpTaskAsync(CancellationToken cancellationToken)
         {
+            //TODO: this probably should come back
             //this.udpClient = new UdpClient(this.Port);
 
             while (!cancellationToken.IsCancellationRequested && this.udpClient != null)
