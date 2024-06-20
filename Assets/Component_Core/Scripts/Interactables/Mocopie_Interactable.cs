@@ -1,43 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Mocopi.Receiver;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Serialization;
-
 
 public class Mocopie_Interactable : Interactable_Object {
-
-   
-  
-    private ulong m_CLID;
-    private Pose StartingPose;
-
-
-    private MocopiAvatar m_avatar;
-
+    public bool UseMulticast = false;
     public Transform m_participantHead;
     public Transform m_mocopiHead;
     public Transform m_avatarT;
     public MocopiSimpleReceiver m_mocopi;
-    [SerializeField]
-    [Range(-0.5f,0.5f)]
-    public float offsetUp;
-    [SerializeField]
-    [Range(-0.5f,0.5f)]
-    public float offsetFwd;
-    private bool ready = false;
-    
-    
+
+    [SerializeField] [Range(-0.5f, 0.5f)] public float offsetUp;
+
+    [SerializeField] [Range(-0.5f, 0.5f)] public float offsetFwd;
+
+
+    private MocopiAvatar m_avatar;
+
+
+    private ulong m_CLID;
+    private bool ready;
+    private Pose StartingPose;
+
+    // Update is called once per frame
+    private void Update() {
+        if (ready) {
+            var tmp = m_participantHead.position - -m_participantHead.up * offsetUp +
+                      m_participantHead.forward * offsetFwd;
+            m_avatarT.position += tmp - m_mocopiHead.position;
+            var angle = Vector2.SignedAngle(new Vector2(m_participantHead.forward.x, m_participantHead.forward.z),
+                new Vector2(m_mocopiHead.forward.x, m_mocopiHead.forward.z));
+            m_avatarT.Rotate(Vector3.up, angle * 0.1f);
+        }
+        else {
+            AttemptToFindTheAppropriateHead();
+        }
+    }
+
+
     // Start is called before the first frame update
-    
+
 
     private void AttemptToFindTheAppropriateHead() {
         Debug.Log($"newValue {m_participantOrder.Value}");
-        if (m_participantOrder.Value != ParticipantOrder.None  && m_participantOrder.Value != 0 && FindObjectsOfType<VR_Participant>().Length>0) {
-            Debug.Log("Count oif VR participants"+ FindObjectsOfType<VR_Participant>().Length);
+        if (m_participantOrder.Value != ParticipantOrder.None && m_participantOrder.Value != 0 &&
+            FindObjectsOfType<VR_Participant>().Length > 0) {
+            Debug.Log("Count oif VR participants" + FindObjectsOfType<VR_Participant>().Length);
             m_participantHead = FindObjectsOfType<VR_Participant>()
                 .First(x => x.GetParticipantOrder() == m_participantOrder.Value).GetMainCamera();
             ready = m_participantHead != null;
@@ -51,17 +58,25 @@ public class Mocopie_Interactable : Interactable_Object {
         m_mocopi = transform.GetComponent<MocopiSimpleReceiver>();
         m_avatar = m_mocopi.transform.GetComponentInChildren<MocopiAvatar>();
         m_avatar = GetComponentInChildren<MocopiAvatar>();
-        
+
         if (m_avatar == null) {
             Debug.LogError("Not good I need an avatar!");
         }
-        else{
+        else {
             m_mocopiHead = m_avatar.Animator.GetBoneTransform(HumanBodyBones.Head);
             m_avatarT = m_avatar.transform;
             Debug.Log($"Got a head{m_mocopiHead} and a main T:{m_avatarT}");
         }
-        if (IsServer) {
+        
+        if (UseMulticast) {
             m_mocopi.StartReceiving();
+            Debug.Log("Multicast");
+        }
+        else if (IsServer) {
+            m_mocopi.MulticastAddress = null;
+            Debug.Log(m_mocopi.MulticastAddress);
+            m_mocopi.StartReceiving();
+            Debug.Log("Single Cast Server");
         }
         else {
             m_mocopi.enabled = false;
@@ -74,33 +89,16 @@ public class Mocopie_Interactable : Interactable_Object {
         return m_avatar;
     }
 
-    // Update is called once per frame
-    void Update() {
-        if (ready) {
-            Vector3 tmp = m_participantHead.position - (-m_participantHead.up * offsetUp) +
-                          (m_participantHead.forward * offsetFwd);
-            // TODO: make this disable the component of network transform on m_avatarT if not multicasting
-            m_avatarT.position += tmp - m_mocopiHead.position;
-            float angle = Vector2.SignedAngle(new Vector2(m_participantHead.forward.x, m_participantHead.forward.z),
-                new Vector2(m_mocopiHead.forward.x, m_mocopiHead.forward.z));
-            m_avatarT.Rotate(Vector3.up, angle * 0.1f);
-        }
-        else {
-            AttemptToFindTheAppropriateHead();
-        }
-    }
-
-    public override void Stop_Action() {
-       
-    }
+    public override void Stop_Action() { }
 
     public override void AssignClient(ulong CLID, ParticipantOrder participantOrder) {
         m_participantOrder.Value = participantOrder;
         m_CLID = CLID;
-        m_participantHead = FindObjectsOfType<VR_Participant>().First(x => x.GetParticipantOrder()==participantOrder).GetMainCamera();
+        m_participantHead = FindObjectsOfType<VR_Participant>().First(x => x.GetParticipantOrder() == participantOrder)
+            .GetMainCamera();
         ready = true;
     }
-    
+
     public override Transform GetCameraPositionObject() {
         return transform;
     }
@@ -110,14 +108,13 @@ public class Mocopie_Interactable : Interactable_Object {
     }
 
     public override bool HasActionStopped() {
-       return true;
+        return true;
     }
 
     public override void OnNetworkDespawn() {
-        if (IsServer) {
+        if (UseMulticast)
             m_mocopi.StopReceiving();
-        }
+        else if (IsServer) m_mocopi.StopReceiving();
         base.OnNetworkDespawn();
-        
     }
 }

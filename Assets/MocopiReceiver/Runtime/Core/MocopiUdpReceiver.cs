@@ -1,111 +1,105 @@
 ﻿/*
  * Copyright 2022 Sony Corporation
  */
-using Sony.SMF;
+
 using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Sony.SMF;
 using UnityEngine;
 
-namespace Mocopi.Receiver.Core
-{
+namespace Mocopi.Receiver.Core {
     /// <summary>
-    /// Class receiving by UDP from the sensor for handling
+    ///     Class receiving by UDP from the sensor for handling
     /// </summary>
-    public sealed class MocopiUdpReceiver
-    {
+    public sealed class MocopiUdpReceiver {
+        #region --Constructors--
+
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <param name="port">Udp port number</param>
+        public MocopiUdpReceiver(int port, string multicastAddress = null, int multicastPort = 0) {
+            Port = port;
+            // MULTICAST ADDITION
+            if (multicastAddress != null) {
+                _multicastAddress = multicastAddress;
+                _multicastPort = multicastPort;
+                UseMulticast = true;
+            }
+            else {
+                UseMulticast = false;
+            }
+        }
+
+        #endregion --Constructors--
+
+        #region --Finalizers--
+
+        /// <summary>
+        ///     Destructor
+        /// </summary>
+        ~MocopiUdpReceiver() {
+            UdpStop();
+        }
+
+        #endregion --Finalizers--
+
         #region --Fields--
+
         /// <summary>
-        /// Delegate type variables for bone initialization
+        ///     Delegate type variables for bone initialization
         /// </summary>
-        public ReceiveSkeletonDefinitionEvent OnReceiveSkeletonDefinition = new ReceiveSkeletonDefinitionEvent(
-            (
-                int[] boneIds, int[] parentBoneIds,
-                float[] rotationsX, float[] rotationsY, float[] rotationsZ, float[] rotationsW,
-                float[] positionsX, float[] positionsY, float[] positionsZ
-            ) => 
-            { 
-            }
-
-        );
+        public ReceiveSkeletonDefinitionEvent OnReceiveSkeletonDefinition = (boneIds, parentBoneIds, rotationsX,
+            rotationsY, rotationsZ, rotationsW, positionsX, positionsY, positionsZ
+        ) => { };
 
         /// <summary>
-        /// Delegate type variables for achieving bone movement
+        ///     Delegate type variables for achieving bone movement
         /// </summary>
-        public ReceiveFrameDataEvent OnReceiveFrameData = new ReceiveFrameDataEvent(
-            (
-                int frameId, float timestamp, double unixTime,
-                int[] boneIds,
-                float[] rotationsX, float[] rotationsY, float[] rotationsZ, float[] rotationsW,
-                float[] positionsX, float[] positionsY, float[] positionsZ
-            ) => 
-            {
-            }
-
-        );
+        public ReceiveFrameDataEvent OnReceiveFrameData = (frameId, timestamp, unixTime, boneIds, rotationsX,
+            rotationsY, rotationsZ, rotationsW, positionsX, positionsY, positionsZ
+        ) => { };
 
         /// <summary>
-        /// Delegate type variables for start error event
+        ///     Delegate type variables for start error event
         /// </summary>
-        public ErrorOccurredEvent OnUdpStartFailed = new ErrorOccurredEvent((_) => { });
+        public ErrorOccurredEvent OnUdpStartFailed = _ => { };
 
         /// <summary>
-        /// Delegate type variables for receive error event
+        ///     Delegate type variables for receive error event
         /// </summary>
-        public ErrorOccurredEvent OnUdpReceiveFailed = new ErrorOccurredEvent((_) => { });
+        public ErrorOccurredEvent OnUdpReceiveFailed = _ => { };
 
         /// <summary>
-        /// Object for exclusive access control
+        ///     Object for exclusive access control
         /// </summary>
-        private static object lockObject = new object();
+        private static readonly object lockObject = new();
 
         /// <summary>
-        /// Threading task
+        ///     Threading task
         /// </summary>
         private Task task;
 
         /// <summary>
-        /// Manage cancellation notifications to cancellation tokens
+        ///     Manage cancellation notifications to cancellation tokens
         /// </summary>
         private CancellationTokenSource cancellationTokenSource;
 
         /// <summary>
-        /// Udp client
+        ///     Udp client
         /// </summary>
         private UdpClient udpClient;
+
         #endregion --Fields--
 
-        #region --Constructors--
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="port">Udp port number</param>
-        public MocopiUdpReceiver(int port, string multicastAddress, int multicastPort)
-        {
-            this.Port = port;
-            if (multicastAddress != null) {
-                this._multicastAddress = multicastAddress;
-                this._multicastPort = multicastPort;
-            }
-        }
-        #endregion --Constructors--
-
-        #region --Finalizers--
-        /// <summary>
-        /// Destructor
-        /// </summary>
-        ~MocopiUdpReceiver()
-        {
-            this.UdpStop();
-        }
-        #endregion --Finalizers--
-
         #region --Delegates--
+
         /// <summary>
-        /// Define a delegate for bone initialization
+        ///     Define a delegate for bone initialization
         /// </summary>
         /// <param name="boneIds">Id of bones</param>
         /// <param name="parentBoneIds">Id of parent bones</param>
@@ -123,7 +117,7 @@ namespace Mocopi.Receiver.Core
         );
 
         /// <summary>
-        /// Define a delegate to achieve bone movement
+        ///     Define a delegate to achieve bone movement
         /// </summary>
         /// <param name="frameId">Frame Id</param>
         /// <param name="timestamp">Timestamp</param>
@@ -144,91 +138,91 @@ namespace Mocopi.Receiver.Core
         );
 
         /// <summary>
-        /// Define a delegate to error event
+        ///     Define a delegate to error event
         /// </summary>
         /// <param name="e">Content of exception</param>
-        public delegate void ErrorOccurredEvent(System.Exception e);
+        public delegate void ErrorOccurredEvent(Exception e);
+
         #endregion --Delegates--
 
         #region --Properties--
+
         // MULTICAST ADDITION
-        private string _multicastAddress = null;
-        private int _multicastPort = 0;
-        
-        
-        /// <summary>
-        /// Port 
-        /// </summary>
-        public int Port { get; private set; }
+        public bool UseMulticast;
+        private readonly string _multicastAddress;
+        private readonly int _multicastPort;
+
 
         /// <summary>
-        /// Is it running
+        ///     Port
         /// </summary>
-        public bool IsRuning { get { return this.task != null && !this.task.IsCanceled && !this.task.IsCompleted; } }
+        public int Port { get; }
+
+        /// <summary>
+        ///     Is it running
+        /// </summary>
+        public bool IsRunning => task != null && !task.IsCanceled && !task.IsCompleted;
+
         #endregion --Properties--
 
         #region --Methods--
+
         /// <summary>
-        /// Start receiving UDP
+        ///     Start receiving UDP
         /// </summary>
-        public void UdpStart()
-        {
-            this.UdpStop();
+        public void UdpStart() {
+            UdpStop();
 
-            if (this.IsRuning)
-            {
-                return;
-            }
+            if (IsRunning) return;
 
-            try
-            {
-                this.cancellationTokenSource = new CancellationTokenSource();
+            try {
+                cancellationTokenSource = new CancellationTokenSource();
                 // MULTICAST ADDITION
-                this.udpClient = new UdpClient(this._multicastPort);
-                this.udpClient.JoinMulticastGroup(IPAddress.Parse(this._multicastAddress));
-                this.task = Task.Run(() => this.UdpTaskAsync(this.cancellationTokenSource.Token));
+                if (UseMulticast) {
+                    udpClient = new UdpClient(_multicastPort);
+                    udpClient.JoinMulticastGroup(IPAddress.Parse(_multicastAddress));
+                }
+                else {
+                    udpClient = new UdpClient(Port);
+                }
+
+                task = Task.Run(() => UdpTaskAsync(cancellationTokenSource.Token));
             }
-            catch (System.Exception e)
-            {
+            catch (Exception e) {
                 Debug.LogErrorFormat($"[MocopiUdpReceiver] Udp start failed. {e.GetType()} : {e.Message}");
-                this.OnUdpStartFailed?.Invoke(e);
+                OnUdpStartFailed?.Invoke(e);
             }
         }
 
         /// <summary>
-        /// Stop receiving UDP
+        ///     Stop receiving UDP
         /// </summary>
-        public void UdpStop()
-        {
-            if (this.cancellationTokenSource != null)
-            {
-                this.cancellationTokenSource.Cancel();
-                this.task = null;
+        public void UdpStop() {
+            if (cancellationTokenSource != null) {
+                cancellationTokenSource.Cancel();
+                task = null;
             }
 
-            if (this.udpClient != null)
-            {
+            if (udpClient != null) {
                 //MULTICAST ADDITION
-                this.udpClient.DropMulticastGroup(IPAddress.Parse(this._multicastAddress));
-                this.udpClient.Close();
-                this.udpClient = null;
+                if (UseMulticast) udpClient.DropMulticastGroup(IPAddress.Parse(_multicastAddress));
+                udpClient.Close();
+                udpClient = null;
             }
         }
 
         /// <summary>
-        /// Convert pointers to arrays
+        ///     Convert pointers to arrays
         /// </summary>
         /// <typeparam name="T">Generic class</typeparam>
         /// <param name="ptr">Pointer</param>
         /// <param name="length">Length</param>
         /// <returns>Converted array</returns>
-        private static T[] PointerToArray<T>(IntPtr ptr, int length)
-        {
-            int size = Marshal.SizeOf(typeof(T));
-            T[] array = new T[length];
-            for (int i = 0; i < length; i++)
-            {
-                IntPtr p = new IntPtr(ptr.ToInt64() + i * size);
+        private static T[] PointerToArray<T>(IntPtr ptr, int length) {
+            var size = Marshal.SizeOf(typeof(T));
+            var array = new T[length];
+            for (var i = 0; i < length; i++) {
+                var p = new IntPtr(ptr.ToInt64() + i * size);
                 array[i] = Marshal.PtrToStructure<T>(p);
             }
 
@@ -236,12 +230,11 @@ namespace Mocopi.Receiver.Core
         }
 
         /// <summary>
-        /// Convert IP address from ULong type to string
+        ///     Convert IP address from ULong type to string
         /// </summary>
         /// <param name="u">String type IP address</param>
         /// <returns>String type IP address</returns>
-        private static string ULongToIpAddressString(ulong u)
-        {
+        private static string ULongToIpAddressString(ulong u) {
             short ip1, ip2, ip3, ip4;
             ip4 = (short)(u % 1000);
             u /= 1000;
@@ -255,40 +248,29 @@ namespace Mocopi.Receiver.Core
         }
 
         /// <summary>
-        /// Convert the data received by UDP to move the avatar
+        ///     Convert the data received by UDP to move the avatar
         /// </summary>
         /// <param name="cancellationToken">Cancellation token</param>
-        private async void UdpTaskAsync(CancellationToken cancellationToken)
-        {
-            //TODO: this probably should come back
-            //this.udpClient = new UdpClient(this.Port);
-
-            while (!cancellationToken.IsCancellationRequested && this.udpClient != null)
-            {
-                int id = System.Threading.Thread.CurrentThread.ManagedThreadId;
-                try
-                {
+        private async void UdpTaskAsync(CancellationToken cancellationToken) {
+            while (!cancellationToken.IsCancellationRequested && udpClient != null) {
+                var id = Thread.CurrentThread.ManagedThreadId;
+                try {
                     IPEndPoint remoteEP = null;
-                    byte[] message = this.udpClient.Receive(ref remoteEP);
+                    var message = udpClient.Receive(ref remoteEP);
 
-                    lock (lockObject)
-                    {
+                    lock (lockObject) {
                         if (SonyMotionFormat.IsSmfBytes(message.Length, message))
-                        {
                             // Processing of data acquired in "SonyMotionFormat"
-                            this.HandleSonyMotionFormatData(message);
-                        }
+                            HandleSonyMotionFormatData(message);
                     }
                 }
-                catch (SocketException e)
-                {
+                catch (SocketException e) {
                     Debug.Log($"[MocopiUdpReceiver] {e.Message} : {e.GetType()}");
                 }
-                catch (System.Exception e)
-                {
+                catch (Exception e) {
                     Debug.LogErrorFormat($"[MocopiUdpReceiver] Udp receive failed. {e.Message} : {e.GetType()}");
-                    this.UdpStop();
-                    this.OnUdpReceiveFailed?.Invoke(e);
+                    UdpStop();
+                    OnUdpReceiveFailed?.Invoke(e);
                     break;
                 }
 
@@ -297,32 +279,29 @@ namespace Mocopi.Receiver.Core
         }
 
         /// <summary>
-        /// Convert "SonyMotionFormat" data to move the avatar
+        ///     Convert "SonyMotionFormat" data to move the avatar
         /// </summary>
         /// <param name="message">Udp data</param>
-        private void HandleSonyMotionFormatData(byte[] message)
-        {
-            int bytesSize = message.Length;
-            if (SonyMotionFormat.IsSkeletonDefinitionBytes(bytesSize, message))
-            {
+        private void HandleSonyMotionFormatData(byte[] message) {
+            var bytesSize = message.Length;
+            if (SonyMotionFormat.IsSkeletonDefinitionBytes(bytesSize, message)) {
                 if (SonyMotionFormat.ConvertBytesToSkeletonDefinition(
-                    bytesSize,
-                    message,
-                    out ulong ulongSenderIp,
-                    out int senderPort,
-                    out int size,
-                    out IntPtr ptrBoneIds,
-                    out IntPtr ptrParentBoneIds,
-                    out IntPtr ptrRotationsX,
-                    out IntPtr ptrRotationsY,
-                    out IntPtr ptrRotationsZ,
-                    out IntPtr ptrRotationsW,
-                    out IntPtr ptrPositionsX,
-                    out IntPtr ptrPositionsY,
-                    out IntPtr ptrPositionsZ
-                ))
-                {
-                    this.SetSkeletonDefinition(
+                        bytesSize,
+                        message,
+                        out var ulongSenderIp,
+                        out var senderPort,
+                        out var size,
+                        out var ptrBoneIds,
+                        out var ptrParentBoneIds,
+                        out var ptrRotationsX,
+                        out var ptrRotationsY,
+                        out var ptrRotationsZ,
+                        out var ptrRotationsW,
+                        out var ptrPositionsX,
+                        out var ptrPositionsY,
+                        out var ptrPositionsZ
+                    ))
+                    SetSkeletonDefinition(
                         ULongToIpAddressString(ulongSenderIp),
                         senderPort,
                         PointerToArray<int>(ptrBoneIds, size),
@@ -335,30 +314,27 @@ namespace Mocopi.Receiver.Core
                         PointerToArray<float>(ptrPositionsY, size),
                         PointerToArray<float>(ptrPositionsZ, size)
                     );
-                }
             }
-            else if (SonyMotionFormat.IsFrameDataBytes(bytesSize, message))
-            {
+            else if (SonyMotionFormat.IsFrameDataBytes(bytesSize, message)) {
                 if (SonyMotionFormat.ConvertBytesToFrameData(
-                    bytesSize,
-                    message,
-                    out ulong ulongSenderIp,
-                    out int senderPort,
-                    out int frameid,
-                    out float timestamp,
-                    out double unixTime,
-                    out int size,
-                    out IntPtr ptrBoneIds,
-                    out IntPtr ptrRotationsX,
-                    out IntPtr ptrRotationsY,
-                    out IntPtr ptrRotationsZ,
-                    out IntPtr ptrRotationsW,
-                    out IntPtr ptrPositionsX,
-                    out IntPtr ptrPositionsY,
-                    out IntPtr ptrPositionsZ
-                ))
-                {
-                    this.SetSkeletonData(
+                        bytesSize,
+                        message,
+                        out var ulongSenderIp,
+                        out var senderPort,
+                        out var frameid,
+                        out var timestamp,
+                        out var unixTime,
+                        out var size,
+                        out var ptrBoneIds,
+                        out var ptrRotationsX,
+                        out var ptrRotationsY,
+                        out var ptrRotationsZ,
+                        out var ptrRotationsW,
+                        out var ptrPositionsX,
+                        out var ptrPositionsY,
+                        out var ptrPositionsZ
+                    ))
+                    SetSkeletonData(
                         ULongToIpAddressString(ulongSenderIp),
                         senderPort,
                         frameid,
@@ -373,12 +349,11 @@ namespace Mocopi.Receiver.Core
                         PointerToArray<float>(ptrPositionsY, size),
                         PointerToArray<float>(ptrPositionsZ, size)
                     );
-                }
             }
         }
 
         /// <summary>
-        /// Set skeleton data for bone initialization
+        ///     Set skeleton data for bone initialization
         /// </summary>
         /// <param name="senderIp">Sender IP address</param>
         /// <param name="senderPort">Sender port number</param>
@@ -396,9 +371,8 @@ namespace Mocopi.Receiver.Core
             int[] boneIds, int[] parentBoneIds,
             float[] rotationsX, float[] rotationsY, float[] rotationsZ, float[] rotationsW,
             float[] positionsX, float[] positionsY, float[] positionsZ
-        )
-        {
-            this.OnReceiveSkeletonDefinition?.Invoke(
+        ) {
+            OnReceiveSkeletonDefinition?.Invoke(
                 boneIds, parentBoneIds,
                 rotationsX, rotationsY, rotationsZ, rotationsW,
                 positionsX, positionsY, positionsZ
@@ -406,7 +380,7 @@ namespace Mocopi.Receiver.Core
         }
 
         /// <summary>
-        /// Set skeleton data for achieving bone movement
+        ///     Set skeleton data for achieving bone movement
         /// </summary>
         /// <param name="senderIp">Sender IP address</param>
         /// <param name="senderPort">Sender port number</param>
@@ -423,19 +397,19 @@ namespace Mocopi.Receiver.Core
         /// <param name="positionsZ">Z coordinate of position</param>
         private void SetSkeletonData(
             string senderIp, int senderPort,
-            int frameid, float timestamp,double unixTime,
+            int frameid, float timestamp, double unixTime,
             int[] boneIds,
             float[] rotationsX, float[] rotationsY, float[] rotationsZ, float[] rotationsW,
             float[] positionsX, float[] positionsY, float[] positionsZ
-        )
-        {
-            this.OnReceiveFrameData?.Invoke(
+        ) {
+            OnReceiveFrameData?.Invoke(
                 frameid, timestamp, unixTime,
                 boneIds,
                 rotationsX, rotationsY, rotationsZ, rotationsW,
                 positionsX, positionsY, positionsZ
             );
         }
+
         #endregion --Methods--
     }
 }

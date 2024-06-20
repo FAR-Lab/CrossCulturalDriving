@@ -316,6 +316,7 @@ namespace Mocopi.Receiver
             float[] positionsX, float[] positionsY, float[] positionsZ
         )
         {
+            Debug.Log("started mocopi");
             this.skeletonDefinitionData.BoneIds = boneIds;
             this.skeletonDefinitionData.ParentBoneIds = parentBoneIds;
             this.skeletonDefinitionData.RotationsX = rotationsX;

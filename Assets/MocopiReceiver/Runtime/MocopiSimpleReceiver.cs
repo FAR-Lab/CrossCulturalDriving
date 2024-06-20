@@ -113,13 +113,14 @@ namespace Mocopi.Receiver {
                     continue;
                 }
 
-                //TODO: this is the part that was changed for multicast
+                // Multicast change
 
                 if (this.UdpReceivers[i] == null) {
                     this.UdpReceivers[i] = new MocopiUdpReceiver(
                         this.AvatarSettings[i].Port, 
                         this.MulticastAddress,
                         AvatarSettings[i].Port);
+                    Debug.Log($"Multicast receiving from {MulticastAddress}");
                 }
 
                 this.UdpReceivers[i].OnReceiveSkeletonDefinition +=
