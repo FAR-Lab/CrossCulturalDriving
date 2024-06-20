@@ -79,6 +79,7 @@ public class Mocopie_Interactable : Interactable_Object {
         if (ready) {
             Vector3 tmp = m_participantHead.position - (-m_participantHead.up * offsetUp) +
                           (m_participantHead.forward * offsetFwd);
+            // TODO: make this disable the component of network transform on m_avatarT if not multicasting
             m_avatarT.position += tmp - m_mocopiHead.position;
             float angle = Vector2.SignedAngle(new Vector2(m_participantHead.forward.x, m_participantHead.forward.z),
                 new Vector2(m_mocopiHead.forward.x, m_mocopiHead.forward.z));

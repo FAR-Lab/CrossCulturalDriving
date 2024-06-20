@@ -107,10 +107,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isObservedComponentsExpanded: 0
   replayIdentity:
-    id: 53667
+    id: 38630
   prefabIdentity:
     id: 50373
   observedComponents:
+  - {fileID: 8747290223544356192}
   - {fileID: 5688582270168313518}
   - {fileID: 5431116045481675555}
   - {fileID: 7014157168246524562}
@@ -322,9 +323,24 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8763745153705102242, guid: 6abe45088824aff4a9148071b132eeec, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763745153705102242, guid: 6abe45088824aff4a9148071b132eeec, type: 3}
+      propertyPath: SyncRotAngleX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763745153705102242, guid: 6abe45088824aff4a9148071b132eeec, type: 3}
+      propertyPath: SyncRotAngleY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763745153705102242, guid: 6abe45088824aff4a9148071b132eeec, type: 3}
+      propertyPath: SyncRotAngleZ
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3689883503810676356, guid: 6abe45088824aff4a9148071b132eeec, type: 3}
-    - {fileID: 8763745153705102242, guid: 6abe45088824aff4a9148071b132eeec, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -334,6 +350,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2610034303736523156, guid: 6abe45088824aff4a9148071b132eeec, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9011191820177506163}
+    - targetCorrespondingSourceObject: {fileID: 2610034303736523156, guid: 6abe45088824aff4a9148071b132eeec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8747290223544356192}
     - targetCorrespondingSourceObject: {fileID: 8396260905521458044, guid: 6abe45088824aff4a9148071b132eeec, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5688582270168313518}
@@ -549,10 +568,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 29639
+    id: 1950
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &125050043934081369 stripped
@@ -574,10 +593,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 22461
+    id: 48875
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &138497837304954865 stripped
@@ -599,10 +618,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 47890
+    id: 10149
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &184268585998464190 stripped
@@ -624,10 +643,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 1682
+    id: 54698
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &556279569111412804 stripped
@@ -649,7 +668,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 24552
+    id: 5958
   replayObject:
     reference: {fileID: 8052399341075153809}
   positionFlags: 263
@@ -674,10 +693,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 52334
+    id: 21000
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &912607326763420296 stripped
@@ -699,10 +718,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 38511
+    id: 60655
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &1526380430572467270 stripped
@@ -724,10 +743,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 57162
+    id: 897
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &1694796659713783501 stripped
@@ -749,10 +768,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 54066
+    id: 41319
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &1712170833493981490 stripped
@@ -774,10 +793,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 58011
+    id: 62374
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &1892539791889998480 stripped
@@ -799,10 +818,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 45604
+    id: 7459
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &1935589163644086143 stripped
@@ -824,10 +843,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 21884
+    id: 9298
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &2266585043915456351 stripped
@@ -849,10 +868,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 23902
+    id: 53587
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &2375505694245549418 stripped
@@ -874,10 +893,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 39146
+    id: 36734
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &2474230321408708166 stripped
@@ -899,10 +918,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 1376
+    id: 57572
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &2853613924250523841 stripped
@@ -924,10 +943,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 50762
+    id: 40916
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &3020186939463210303 stripped
@@ -949,10 +968,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 11656
+    id: 56044
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &3110668353583786231 stripped
@@ -974,10 +993,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 22197
+    id: 23423
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &3457914479479988667 stripped
@@ -999,10 +1018,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 35343
+    id: 31709
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &3723534665967763078 stripped
@@ -1024,10 +1043,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 35165
+    id: 58006
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &3952353130535289356 stripped
@@ -1049,10 +1068,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 7376
+    id: 16076
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &4066228605241304028 stripped
@@ -1074,10 +1093,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 32224
+    id: 61484
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &4122981354777683428 stripped
@@ -1099,10 +1118,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 29189
+    id: 5642
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &4290478767088359679 stripped
@@ -1124,10 +1143,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 1870
+    id: 25358
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &4352534612434752664 stripped
@@ -1149,10 +1168,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 45834
+    id: 3135
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!4 &4430137487119390228 stripped
@@ -1179,10 +1198,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 44905
+    id: 40793
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &4931851451030637988 stripped
@@ -1204,10 +1223,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 33413
+    id: 47205
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &5017636104019650183 stripped
@@ -1229,10 +1248,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 151
+    id: 55800
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &5373412515037387529 stripped
@@ -1254,10 +1273,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 9841
+    id: 18540
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &5408708544557841661 stripped
@@ -1279,10 +1298,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 60249
+    id: 23914
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &5457586532959492673 stripped
@@ -1304,10 +1323,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 7723
+    id: 11385
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &5508612181718874414 stripped
@@ -1329,10 +1348,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 14062
+    id: 38059
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &5547777875589146610 stripped
@@ -1354,10 +1373,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 24050
+    id: 46751
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &5615881448092694996 stripped
@@ -1379,10 +1398,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 7506
+    id: 39118
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &5623229798357466613 stripped
@@ -1404,10 +1423,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 59084
+    id: 4664
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &5650170939878889053 stripped
@@ -1429,10 +1448,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 31933
+    id: 53967
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &5701537652665247617 stripped
@@ -1454,10 +1473,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 35356
+    id: 41322
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &6028207223467698187 stripped
@@ -1479,10 +1498,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 22740
+    id: 41082
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &6218971187106057114 stripped
@@ -1504,10 +1523,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 5741
+    id: 15037
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &6270554130115654316 stripped
@@ -1551,6 +1570,26 @@ MonoBehaviour:
   MotionSmoothness: 0
   IsBufferingEnabled: 1
   DelayRecoveryRate: 0.001
+--- !u!114 &8747290223544356192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6270554130115654316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 5974
+  replayObject:
+    reference: {fileID: 8052399341075153809}
+  positionFlags: 256
+  rotationFlags: 256
+  scaleFlags: 0
 --- !u!1 &6419784379689398513 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3038355788827896777, guid: 6abe45088824aff4a9148071b132eeec, type: 3}
@@ -1570,10 +1609,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 25405
+    id: 45421
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &6575162146711047028 stripped
@@ -1595,10 +1634,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 59506
+    id: 3446
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &6654905989725238298 stripped
@@ -1620,10 +1659,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 43825
+    id: 35127
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &6669744472358464689 stripped
@@ -1645,10 +1684,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 18875
+    id: 15616
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &6670078652112244860 stripped
@@ -1670,10 +1709,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 4788
+    id: 61839
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &6905367112290207924 stripped
@@ -1695,10 +1734,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 36249
+    id: 47425
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &6956013680327978356 stripped
@@ -1720,10 +1759,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 48100
+    id: 56392
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &7024378897061722861 stripped
@@ -1745,10 +1784,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 58442
+    id: 50062
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &7085455229962101394 stripped
@@ -1770,10 +1809,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 29564
+    id: 17669
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &7267667051155772290 stripped
@@ -1795,10 +1834,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 27435
+    id: 29590
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &7398561392574265724 stripped
@@ -1820,10 +1859,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 23220
+    id: 33243
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &7428870139694042981 stripped
@@ -1845,10 +1884,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 63577
+    id: 43352
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &7520312727902859235 stripped
@@ -1870,10 +1909,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 32163
+    id: 15337
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &7616440940928842733 stripped
@@ -1895,10 +1934,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 43555
+    id: 40310
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &7828854026620271848 stripped
@@ -1920,10 +1959,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 40703
+    id: 1586
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &7850616318226695127 stripped
@@ -1945,10 +1984,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 13104
+    id: 60450
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &7939296126979311145 stripped
@@ -1970,10 +2009,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 39657
+    id: 33142
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &8126727840598601206 stripped
@@ -1995,10 +2034,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 51560
+    id: 15664
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &8258993016870066833 stripped
@@ -2020,10 +2059,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 52199
+    id: 54887
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &8540978441651824541 stripped
@@ -2045,10 +2084,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 31458
+    id: 54544
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &8547054334384063016 stripped
@@ -2070,10 +2109,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 2664
+    id: 57047
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &8612827628949985078 stripped
@@ -2095,10 +2134,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 48139
+    id: 58007
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &8703596367918689445 stripped
@@ -2120,10 +2159,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 59415
+    id: 26164
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &8902687740180157348 stripped
@@ -2145,10 +2184,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 43396
+    id: 7952
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &8937238967027906399 stripped
@@ -2170,10 +2209,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 5470
+    id: 54950
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
 --- !u!1 &9079637506399603444 stripped
@@ -2195,9 +2234,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 13484
+    id: 3187
   replayObject:
     reference: {fileID: 8052399341075153809}
-  positionFlags: 263
+  positionFlags: 256
   rotationFlags: 263
   scaleFlags: 0
