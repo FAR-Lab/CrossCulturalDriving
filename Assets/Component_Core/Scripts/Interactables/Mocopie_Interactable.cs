@@ -1,5 +1,7 @@
 using System.Linq;
 using Mocopi.Receiver;
+using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public class Mocopie_Interactable : Interactable_Object {
@@ -61,20 +63,20 @@ public class Mocopie_Interactable : Interactable_Object {
 
         if (m_avatar == null) {
             Debug.LogError("Not good I need an avatar!");
+            return;
         }
-        else {
-            m_mocopiHead = m_avatar.Animator.GetBoneTransform(HumanBodyBones.Head);
-            m_avatarT = m_avatar.transform;
-            Debug.Log($"Got a head{m_mocopiHead} and a main T:{m_avatarT}");
-        }
-        
+
+        m_mocopiHead = m_avatar.Animator.GetBoneTransform(HumanBodyBones.Head);
+        m_avatarT = m_avatar.transform;
+        Debug.Log($"Got a head{m_mocopiHead} and a main T:{m_avatarT}");
+
         if (UseMulticast) {
+            DisableNetworkTransforms();
             m_mocopi.StartReceiving();
             Debug.Log("Multicast");
         }
         else if (IsServer) {
             m_mocopi.MulticastAddress = null;
-            Debug.Log(m_mocopi.MulticastAddress);
             m_mocopi.StartReceiving();
             Debug.Log("Single Cast Server");
         }
@@ -82,6 +84,13 @@ public class Mocopie_Interactable : Interactable_Object {
             m_mocopi.enabled = false;
             m_avatar.enabled = false;
             m_avatar.Animator.enabled = false;
+        }
+    }
+    
+    private void DisableNetworkTransforms() {
+        GetComponent<NetworkObject>().SynchronizeTransform = false;
+        foreach (var t in GetComponentsInChildren<NetworkTransform>()) {
+            t.enabled = false;
         }
     }
 
