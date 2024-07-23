@@ -132,7 +132,11 @@ public class AutonomousVehicleDriver : MonoBehaviour {
             outdata[3] = (m_rigidBody.position-IntersectionCenterPosition.position).magnitude; //"A_Head_Center_Distance",
             outdata[4] = (o_rigidBody.position-IntersectionCenterPosition.position).magnitude; // "B_Head_Center_Distance",
             outdata[5] = o_rigidBody.velocity.magnitude; // "Filtered_B_Head_Velocity_Total",
-            outdata[6] = RelativeRotation; // "RelativeRotation"]
+            // outdata[6] = // "A_Turn"
+            // outdata[7] = // "B_Indicator"
+            // outdata[8] = // "Centerline_Offset_B"
+            // outdata[9] = RelativeRotation; // "RelativeRotation"]
+            
             udpSocket.SendDataToPython(outdata);
             m_outdata = outdata;
             yield return new WaitForSeconds(1f / 18f);
@@ -140,10 +144,12 @@ public class AutonomousVehicleDriver : MonoBehaviour {
     }
 
     float ExternThrottle;
-
+    float ExternCenterlineOffset;
+    
     private void NewPythonData(float[] data) {
-        if (data.Length > 0)
+        if (data.Length > 1)
             ExternThrottle = data[0];
+            ExternCenterlineOffset = data[1];
     }
 
     private void OnDestroy() {
