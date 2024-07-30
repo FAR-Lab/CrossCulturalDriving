@@ -37,6 +37,11 @@ public enum RoadSurface
 
 public class VehicleController : MonoBehaviour
 {
+    [Tooltip("Used for creating the Centerline for the AI model to follow")]
+    [SerializeField]
+    public SplineCenterlineUtility SplineCLCreator;
+
+
     //all car wheel info
     public List<AxleInfo> axles;
 
