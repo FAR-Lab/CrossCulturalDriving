@@ -48,6 +48,7 @@ public class AutonomousVehicleDriver : MonoBehaviour {
 
     public Transform IntersectionCenterPosition;
     private VehicleController otherCar;
+    private NetworkVehicleController otherCarNet;
     void Start() {
         if (GetComponent<NetworkVehicleController>().IsServer) {
             _vehicleController = GetComponent<VehicleController>();
@@ -74,7 +75,8 @@ public class AutonomousVehicleDriver : MonoBehaviour {
                 .GetInteractableObjects_For_Participants(ParticipantOrder.A);
 
             if (t != null && t.Count>0) {
-                otherCar= t.First().GetComponent<VehicleController>(); 
+                otherCar = t.First().GetComponent<VehicleController>();
+                otherCarNet = t.First().GetComponent<NetworkVehicleController>();
             }
 
             if (otherCar != null) {
@@ -95,7 +97,7 @@ public class AutonomousVehicleDriver : MonoBehaviour {
         s.GotNewAiData += NewPythonData;
         Running = true;
         
-        StartCoroutine(SendArtificalData(s, otherCar)); 
+        StartCoroutine(SendArtificalData(s, otherCar, otherCarNet)); 
     }
 
     private float[] m_outdata = new float[7];
@@ -104,7 +106,7 @@ public class AutonomousVehicleDriver : MonoBehaviour {
         GUI.Label(new Rect(0,0,400,20),s );
         
     }
-    private IEnumerator SendArtificalData(UdpSocket udpSocket, VehicleController l_otherCar) {
+    private IEnumerator SendArtificalData(UdpSocket udpSocket, VehicleController l_otherCar, NetworkVehicleController l_otherCarNet) {
         Rigidbody m_rigidBody = _vehicleController.GetComponent<Rigidbody>();
         Rigidbody o_rigidBody = l_otherCar.GetComponent<Rigidbody>();
 
@@ -113,7 +115,28 @@ public class AutonomousVehicleDriver : MonoBehaviour {
         Vector3 Distance, RelVelocity;
         float dot, Rel_Pos_Magnitude, ApproachRate, RelativeRotation;
         
-        while (Running) {
+        while (Running)
+        {
+            float b_indicator = 0f;
+
+            foreach (Transform t in l_otherCarNet.Right)
+            {
+                // In Unity, we can't compare a material instance (when the game is playing) to a base material
+                // Therefore, we check to see if their properties are equal instead
+                if (t.GetComponent<MeshRenderer>().material.color.Equals(l_otherCarNet.IndicatorOn.color))
+                {
+                    Debug.Log("Right turn signal on");
+                    b_indicator = 1f; // Right indicator is on
+                }
+            }
+            foreach (Transform t in l_otherCarNet.Left)
+            {
+                if (t.GetComponent<MeshRenderer>().material.color.Equals(l_otherCarNet.IndicatorOn.color))
+                {
+                    Debug.Log("Left turn signal on");
+                    b_indicator = -1f;  // Left indicator is on
+                }
+            }
             Distance = m_rigidBody.position - o_rigidBody.position;
             RelVelocity = m_rigidBody.velocity - o_rigidBody.velocity;
             dot = Vector3.Dot(Distance, RelVelocity);
@@ -132,11 +155,10 @@ public class AutonomousVehicleDriver : MonoBehaviour {
             outdata[3] = (m_rigidBody.position-IntersectionCenterPosition.position).magnitude; //"A_Head_Center_Distance",
             outdata[4] = (o_rigidBody.position-IntersectionCenterPosition.position).magnitude; // "B_Head_Center_Distance",
             outdata[5] = o_rigidBody.velocity.magnitude; // "Filtered_B_Head_Velocity_Total",
-            // outdata[6] = // "A_Turn"
-            // outdata[7] = // "B_Indicator"
-            // outdata[8] = // "Centerline_Offset_B"
-            // outdata[9] = RelativeRotation; // "RelativeRotation"]
-            
+            outdata[6] = _vehicleController.WheelFL.steerAngle; //    A Turn
+            outdata[7] = b_indicator; //    B Indicator
+            outdata[8] = l_otherCar.SplineCLCreator.GetClosestDistanceToSpline(o_rigidBody.position); //    Centerline Offset_B
+            outdata[9] = RelativeRotation; // "RelativeRotation"]
             udpSocket.SendDataToPython(outdata);
             m_outdata = outdata;
             yield return new WaitForSeconds(1f / 18f);
