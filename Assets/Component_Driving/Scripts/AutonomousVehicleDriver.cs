@@ -53,7 +53,7 @@ public class AutonomousVehicleDriver : MonoBehaviour {
         if (GetComponent<NetworkVehicleController>().IsServer) {
             _vehicleController = GetComponent<VehicleController>();
             _avDrivingState = AVDrivingState.DEFAULT;
-            ConnectionAndSpawning.Singleton.ServerStateChange += InterntalStateUpdate;
+            ConnectionAndSpawning.Singleton.ServerStateChange += InternalStateUpdate;
 
             AvoidBox = transform.Find("AvoidBox").GetComponent<TriggerPlayerTracker>();
             YieldBox = transform.Find("YieldBox").GetComponent<TriggerPlayerTracker>();
@@ -93,6 +93,11 @@ public class AutonomousVehicleDriver : MonoBehaviour {
         
         IntersectionCenterPosition = FindObjectOfType<IntersectionCenter>().transform;
         var s = gameObject.AddComponent<UdpSocket>();
+        
+        //TODO: spawn the AI car in at 30 meters
+        //Spawn it in with velocity of around 5 meters per second
+        //Spawn it in at the first centerline offset so it doesn't need to change anything
+        //NOTE: The waypoints are only for the section before 30 meters, don't need to use them
         
         s.GotNewAiData += NewPythonData;
         Running = true;
@@ -149,16 +154,20 @@ public class AutonomousVehicleDriver : MonoBehaviour {
                 o_rigidBody.rotation.eulerAngles
                     .y; //innerArea['RelativeRotation'] = innerArea['HeadrotYA']- innerArea['HeadrotYB']
 //HeaderWithoutAccel = ["ApproachRate", "Rel_Pos_Magnitude", "SteerB", "A_Head_Center_Distance", "B_Head_Center_Distance", "Filtered_B_Head_Velocity_Total","RelativeRotation"]
-            outdata[0] = ApproachRate; // ["ApproachRate", 
+            outdata[0] = ApproachRate; // "ApproachRate", 
             outdata[1] = Rel_Pos_Magnitude; //"Rel_Pos_Magnitude", 
             outdata[2] = l_otherCar.steerInput; //"SteerB", 
             outdata[3] = (m_rigidBody.position-IntersectionCenterPosition.position).magnitude; //"A_Head_Center_Distance",
             outdata[4] = (o_rigidBody.position-IntersectionCenterPosition.position).magnitude; // "B_Head_Center_Distance",
             outdata[5] = o_rigidBody.velocity.magnitude; // "Filtered_B_Head_Velocity_Total",
             outdata[6] = _vehicleController.WheelFL.steerAngle; //    A Turn
+            //TODO: A Turn should be -1 if AI car is turning left, 0 if straight, 1 if right (constant for the whole run)
+            //get rid of the steer angle
             outdata[7] = b_indicator; //    B Indicator
             outdata[8] = l_otherCar.SplineCLCreator.GetClosestDistanceToSpline(o_rigidBody.position); //    Centerline Offset_B
-            outdata[9] = RelativeRotation; // "RelativeRotation"]
+            //TODO: make the centerline offset have a sign
+            //TODO: make the scene have two centerline offset objects, one for A one for B
+            outdata[9] = RelativeRotation; // "RelativeRotation"
             udpSocket.SendDataToPython(outdata);
             m_outdata = outdata;
             yield return new WaitForSeconds(1f / 18f);
@@ -166,22 +175,27 @@ public class AutonomousVehicleDriver : MonoBehaviour {
     }
 
     float ExternThrottle;
+    //TODO: use externcenterlineoffset to determine steering
+    //Use PID controller that targets the angle the car SHOULD be at
+    //Calculate this angle using the car's current pos and target next frame pos
+    //Get the target next frame pos using the centerline offset, acceleration, and velocity
     float ExternCenterlineOffset;
     
     private void NewPythonData(float[] data) {
-        if (data.Length > 1)
+        if (data.Length > 1) {
             ExternThrottle = data[0];
             ExternCenterlineOffset = data[1];
+        }
     }
 
     private void OnDestroy() {
         if (GetComponent<NetworkVehicleController>().IsServer &&
             ConnectionAndSpawning.Singleton != null) {
-            ConnectionAndSpawning.Singleton.ServerStateChange -= InterntalStateUpdate;
+            ConnectionAndSpawning.Singleton.ServerStateChange -= InternalStateUpdate;
         }
     }
 
-    private void InterntalStateUpdate(ActionState state) {
+    private void InternalStateUpdate(ActionState state) {
         switch (state) {
             case ActionState.DEFAULT:
                 _avDrivingState = AVDrivingState.DEFAULT;

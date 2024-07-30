@@ -46,9 +46,10 @@ public class SplineCenterlineUtility : MonoBehaviour
     {
         if (points.Count > 1)
             points.Clear();
-        
-        foreach (CLPoints CL in CLs)
+
+        foreach (CLPoints CL in CLs) {
             points.Add(new Vector3(CL.HeadPosX, 0, CL.HeadPosZ));
+        }
 
         CreateSpline();
     }
@@ -71,18 +72,14 @@ public class SplineCenterlineUtility : MonoBehaviour
             BezierKnot knot = new BezierKnot(points[i]);
             spline.Insert(i, knot);  // Insert points along the spline
         }
-
-        if(lineRenderer != null)
-            
-
-
+        
         if (lineRenderer != null)
         {
             lineRenderer.positionCount = numPoints;  // Creates the line renderer
 
             for (int i = 0; i < numPoints; i++)  // Populate line renderer with points from the spline
-                {
-                    float t = (float)i / (numPoints - 1);
+            {
+                float t = (float)i / (numPoints - 1);
                 lineRenderer.SetPosition(i, spline.EvaluatePosition(t));
             }
         }

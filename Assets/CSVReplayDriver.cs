@@ -22,6 +22,8 @@ public class CSVReplayDriver : MonoBehaviour {
         Debug.Log(File.bytes);
         ReadingInFile(File);
         yield return new WaitUntil(() => ConnectionAndSpawning.Singleton.ServerState == ActionState.DRIVE);
+        //TODO: Spawn this car in at 30 meters away from the intersection center
+        //Match replay speed, position, rotation
         startTime = Time.time;
     }
 
