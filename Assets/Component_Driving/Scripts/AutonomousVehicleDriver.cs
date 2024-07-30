@@ -321,22 +321,22 @@ public class AutonomousVehicleDriver : MonoBehaviour {
 
     public bool GetLeftIndicatorInput() {
         newDataRead = true;
-        return NextWaypoint != null ? NextWaypoint.IndicateLeft & newWayPointFound : false;
+        return NextWaypoint != null && NextWaypoint.IndicateLeft & newWayPointFound;
     }
 
     public bool GetRightIndicatorInput() {
         newDataRead = true;
-        return NextWaypoint != null ? NextWaypoint.IndicateRight & newWayPointFound : false;
+        return NextWaypoint != null && NextWaypoint.IndicateRight & newWayPointFound;
     }
 
     public bool StopIndicating() {
         newDataRead = true;
-        return NextWaypoint != null ? NextWaypoint.StopIndicating & newWayPointFound : false;
+        return NextWaypoint != null && NextWaypoint.StopIndicating & newWayPointFound;
     }
 
 
     public bool GetHornInput() {
         newDataRead = true;
-        return NextWaypoint != null ? NextWaypoint.Horn & newWayPointFound : false;
+        return NextWaypoint != null && NextWaypoint.Horn & newWayPointFound;
     }
 }

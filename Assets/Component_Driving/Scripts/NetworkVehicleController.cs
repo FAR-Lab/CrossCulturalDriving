@@ -22,7 +22,8 @@ public class NetworkVehicleController : Interactable_Object {
         KEYBOARD,
         STEERINGWHEEL,
         AUTONOMOUS,
-        REMOTEKEYBOARD
+        REMOTEKEYBOARD,
+        REPLAY
     }
 
     [SerializeField] public VehicleOpperationMode VehicleMode;
@@ -30,6 +31,7 @@ public class NetworkVehicleController : Interactable_Object {
 
     private VehicleController controller;
     private AutonomousVehicleDriver _autonomousVehicleDriver;
+    private CSVReplayDriver _csvReplayDriver;
 
     public Transform[] Left;
     public Transform[] Right;
@@ -75,7 +77,7 @@ public class NetworkVehicleController : Interactable_Object {
     void UpdateSounds() {
         if (controller == null) return;
         IsShifting.Value = controller.IsShifting;
-        accellInput.Value = controller.accellInput;
+        accellInput.Value = controller.accelInput;
         RPM.Value = controller.RPM;
         traction.Value = (controller.traction + controller.tractionR + controller.rtraction + controller.rtractionR) /
                          4.0f;
@@ -115,7 +117,7 @@ public class NetworkVehicleController : Interactable_Object {
     }
 
     private void Start() {
-        indicaterStage = 0;
+        indicatorStage = 0;
 
         foreach (Renderer tmpRenderer in beamLights) {
             Debug.Log(tmpRenderer.materials[0]);
@@ -143,6 +145,10 @@ public class NetworkVehicleController : Interactable_Object {
 
         if (VehicleMode == VehicleOpperationMode.AUTONOMOUS) {
             _autonomousVehicleDriver = GetComponent<AutonomousVehicleDriver>();
+        }
+
+        if (VehicleMode == VehicleOpperationMode.REPLAY) {
+            _csvReplayDriver = GetComponent<CSVReplayDriver>();
         }
 
         if (SteeringWheelManager.Singleton == null) {
@@ -234,7 +240,7 @@ public class NetworkVehicleController : Interactable_Object {
     private void LateUpdate() {
         if (IsServer && controller != null) {
             controller.steerInput = SteeringInput;
-            controller.accellInput = ThrottleInput;
+            controller.accelInput = ThrottleInput;
         }
 
         // test
@@ -296,16 +302,13 @@ public class NetworkVehicleController : Interactable_Object {
 
                     SteeringInput = _autonomousVehicleDriver.GetSteerInput();
                     ThrottleInput = _autonomousVehicleDriver.GetAccelInput();
-                    tempLeft = _autonomousVehicleDriver
-                        .GetLeftIndicatorInput();
+                    tempLeft = _autonomousVehicleDriver.GetLeftIndicatorInput();
                     tempRight = _autonomousVehicleDriver.GetRightIndicatorInput();
                     tempHonk = _autonomousVehicleDriver.GetHornInput();
 
                     if (_autonomousVehicleDriver.StopIndicating()) {
                         _StopIndicating();
                     }
-
-
                     break;
                 case VehicleOpperationMode.REMOTEKEYBOARD:
                     if (REMOTEKEYBOARD_NewData) {
@@ -315,12 +318,14 @@ public class NetworkVehicleController : Interactable_Object {
                         tempRight = rightInput;
                         tempHonk = honkInput;
                     }
-
-                    ;
-
-
                     break;
-                default:
+                case VehicleOpperationMode.REPLAY:
+                    _csvReplayDriver.UpdateRow();
+                    SteeringInput = _csvReplayDriver.GetSteerInput();
+                    ThrottleInput = _csvReplayDriver.GetAccelInput();
+                    tempLeft = _csvReplayDriver.GetLeftIndicatorInput();
+                    tempRight = _csvReplayDriver.GetRightIndicatorInput();
+                    tempHonk = _csvReplayDriver.GetHornInput();
                     break;
             }
 
@@ -525,9 +530,9 @@ public class NetworkVehicleController : Interactable_Object {
     public bool LeftIsActuallyOn;
     public bool RightIsActuallyOn;
     public bool ActualLightOn;
-    private float indicaterTimer;
+    private float indicatorTimer;
     public float interval;
-    public int indicaterStage;
+    [FormerlySerializedAs("indicaterStage")] public int indicatorStage;
 
     public bool NewButtonPress;
     public bool LeftIndicatorDebounce;
@@ -535,8 +540,8 @@ public class NetworkVehicleController : Interactable_Object {
     public bool BothIndicatorDebounce;
 
     void toggleBlinking(bool left, bool right) {
-        if (indicaterStage == 0) {
-            indicaterStage = 1;
+        if (indicatorStage == 0) {
+            indicatorStage = 1;
         }
 
         if (left && right) {
@@ -547,7 +552,7 @@ public class NetworkVehicleController : Interactable_Object {
             else if (LeftIsActuallyOn == RightIsActuallyOn == true) {
                 RightIsActuallyOn = false;
                 LeftIsActuallyOn = false;
-                indicaterStage = 4;
+                indicatorStage = 4;
             }
         }
 
@@ -555,7 +560,7 @@ public class NetworkVehicleController : Interactable_Object {
             if (LeftIsActuallyOn && RightIsActuallyOn) {
                 LeftIsActuallyOn = false;
                 RightIsActuallyOn = false;
-                indicaterStage = 4;
+                indicatorStage = 4;
             }
 
             if (left) {
@@ -565,7 +570,7 @@ public class NetworkVehicleController : Interactable_Object {
                 }
                 else {
                     LeftIsActuallyOn = false;
-                    indicaterStage = 4;
+                    indicatorStage = 4;
                 }
             }
 
@@ -576,7 +581,7 @@ public class NetworkVehicleController : Interactable_Object {
                 }
                 else {
                     RightIsActuallyOn = false;
-                    indicaterStage = 4;
+                    indicatorStage = 4;
                 }
             }
         }
@@ -592,16 +597,16 @@ public class NetworkVehicleController : Interactable_Object {
     }
 
     void UpdateIndicator() {
-        if (indicaterStage == 1) {
-            indicaterStage = 2;
-            indicaterTimer = interval;
+        if (indicatorStage == 1) {
+            indicatorStage = 2;
+            indicatorTimer = interval;
             ActualLightOn = false;
         }
-        else if (indicaterStage == 2 || indicaterStage == 3) {
-            indicaterTimer += Time.deltaTime;
+        else if (indicatorStage == 2 || indicatorStage == 3) {
+            indicatorTimer += Time.deltaTime;
 
-            if (indicaterTimer > interval) {
-                indicaterTimer = 0;
+            if (indicatorTimer > interval) {
+                indicatorTimer = 0;
                 ActualLightOn = !ActualLightOn;
                 if (ActualLightOn) {
                     LeftIndicatorChanged(LeftIsActuallyOn);
@@ -613,7 +618,7 @@ public class NetworkVehicleController : Interactable_Object {
                 }
             }
 
-            if (indicaterStage == 2) {
+            if (indicatorStage == 2) {
                 switch (VehicleMode) {
                     case VehicleOpperationMode.KEYBOARD:
                         break;
@@ -621,7 +626,7 @@ public class NetworkVehicleController : Interactable_Object {
                         if (SteeringWheelManager.Singleton != null &&
                             Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder.Value) * -450f) >
                             90) {
-                            indicaterStage = 3;
+                            indicatorStage = 3;
                         }
 
                         break;
@@ -629,11 +634,13 @@ public class NetworkVehicleController : Interactable_Object {
                         break;
                     case VehicleOpperationMode.REMOTEKEYBOARD:
                         break;
+                    case VehicleOpperationMode.REPLAY:
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
-            else if (indicaterStage == 3) {
+            else if (indicatorStage == 3) {
                 switch (VehicleMode) {
                     case VehicleOpperationMode.KEYBOARD:
                         break;
@@ -641,19 +648,22 @@ public class NetworkVehicleController : Interactable_Object {
                         if (SteeringWheelManager.Singleton != null &&
                             Mathf.Abs(SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder.Value) * -450f) <
                             10) {
-                            indicaterStage = 4;
+                            indicatorStage = 4;
                         }
-
                         break;
                     case VehicleOpperationMode.AUTONOMOUS:
+                        break;
+                    case VehicleOpperationMode.REMOTEKEYBOARD:
+                        break;
+                    case VehicleOpperationMode.REPLAY:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
         }
-        else if (indicaterStage == 4) {
-            indicaterStage = 0;
+        else if (indicatorStage == 4) {
+            indicatorStage = 0;
             ActualLightOn = false;
             LeftIsActuallyOn = false;
             RightIsActuallyOn = false;
@@ -664,8 +674,8 @@ public class NetworkVehicleController : Interactable_Object {
     }
 
     private void _StopIndicating() {
-        if (indicaterStage > 1) {
-            indicaterStage = 4;
+        if (indicatorStage > 1) {
+            indicatorStage = 4;
         }
     }
 

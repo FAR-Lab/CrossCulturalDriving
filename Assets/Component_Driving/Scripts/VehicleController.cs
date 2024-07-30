@@ -9,6 +9,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Serialization;
 
 [System.Serializable]
 public class AxleInfo
@@ -97,7 +98,7 @@ public class VehicleController : MonoBehaviour
     public float RPMSmoothness = 2f;
 
     //combined throttle and brake input
-    public float accellInput = 0f;
+    [FormerlySerializedAs("accellInput")] public float accelInput = 0f;
 
     //steering input
     public float steerInput = 0f;
@@ -231,7 +232,7 @@ public class VehicleController : MonoBehaviour
         if (Time.time - lastShift > shiftDelay)
         {
             //shift up
-            if (currentRPM / maxRPM > shiftUpCurve.Evaluate(accellInput) &&
+            if (currentRPM / maxRPM > shiftUpCurve.Evaluate(accelInput) &&
                 Mathf.RoundToInt(currentGear) < gearRatios.Length)
             {
                 //don't shift up if we are just spinning in 1st
@@ -245,7 +246,7 @@ public class VehicleController : MonoBehaviour
             }
 
             //else down
-            if (currentRPM / maxRPM < shiftDownCurve.Evaluate(accellInput) && Mathf.RoundToInt(currentGear) > 1)
+            if (currentRPM / maxRPM < shiftDownCurve.Evaluate(accelInput) && Mathf.RoundToInt(currentGear) > 1)
             {
                 lastGear = Mathf.RoundToInt(currentGear);
                 targetGear = lastGear - 1;
@@ -396,10 +397,10 @@ public class VehicleController : MonoBehaviour
 
     private void ApplyTorque()
     {
-        if (accellInput >= 0)
+        if (accelInput >= 0)
         {
             //motor
-            float torquePerWheel = accellInput * (currentTorque / numberOfDrivingWheels);
+            float torquePerWheel = accelInput * (currentTorque / numberOfDrivingWheels);
             foreach (var axle in axles)
             {
                 if (axle.motor)
@@ -424,7 +425,7 @@ public class VehicleController : MonoBehaviour
             //brakes 
             foreach (var axle in axles)
             {
-                var brakeTorque = maxBrakeTorque * accellInput * -1 * axle.brakeBias;
+                var brakeTorque = maxBrakeTorque * accelInput * -1 * axle.brakeBias;
                 axle.left.brakeTorque = brakeTorque;
                 axle.right.brakeTorque = brakeTorque;
                 axle.left.motorTorque = 0f;
