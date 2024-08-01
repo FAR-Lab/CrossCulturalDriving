@@ -39,7 +39,7 @@ public class UdpSocket : MonoBehaviour
 
 
     static public int sendFloatArrayLength = 8;
-    static public int expectedFloatReturnLength = 1;
+    static public int expectedFloatReturnLength = 2;
     private ConcurrentQueue<float[]> recievedQueue = new ConcurrentQueue<float[]>();
     private ConcurrentQueue<float[]> sendQueue = new ConcurrentQueue<float[]>();
 

@@ -32,8 +32,7 @@ public class SplineCenterlineUtility : MonoBehaviour
     private SplineContainer splines;
 
     [Tooltip("The positions to visualize from the CL")]
-    [SerializeField]
-    private List<Vector3> points = new List<Vector3>();
+    public List<Vector3> points = new List<Vector3>();
 
 
     private void Awake()
@@ -90,12 +89,12 @@ public class SplineCenterlineUtility : MonoBehaviour
     /// </summary>
     /// <param name="point"></param>
     /// <returns></returns>
-    public float GetClosestDistanceToSpline(Vector3 point)
-    {
+    public float GetClosestDistanceToSpline(Vector3 point) {
+        point = transform.InverseTransformPoint(point);
         Spline spline = splines.Splines[0];
 
         float minDistance = float.MaxValue;
-        Vector3 indicatorPosition = closestPointIndicator.transform.position;
+        Vector3 indicatorPosition = closestPointIndicator.transform.localPosition;
 
         Vector3 closestLineSegment = Vector3.zero, lineToPoint= Vector3.zero;
         
@@ -119,7 +118,7 @@ public class SplineCenterlineUtility : MonoBehaviour
             }
         }
 
-        closestPointIndicator.transform.position = indicatorPosition;
+        closestPointIndicator.transform.localPosition = indicatorPosition;
         var rightSideOfSegment = new Vector2(closestLineSegment.z, -closestLineSegment.x);
         var sign = Mathf.Sign(Vector2.Dot(rightSideOfSegment, new Vector2(lineToPoint.x, lineToPoint.z)));
         return minDistance * sign;

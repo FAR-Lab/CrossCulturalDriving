@@ -35,7 +35,6 @@ public class CSVReplayDriver : MonoBehaviour {
         rb.MoveRotation(Quaternion.Euler(0, StartRot, 0) * intersectionCenter.rotation);
         rb.velocity = intersectionCenter.TransformDirection(new Vector3(StartVel.x, 0, StartVel.y));
         startTime = Time.time;
-        Debug.Log("Started car at time " + currentTime);
     }
 
     private void ReadingInFile(TextAsset theFile) {
@@ -98,7 +97,6 @@ public class CSVReplayDriver : MonoBehaviour {
                 StartRot = float.Parse(elements[rotYColumnId]);
                 replayStartTime = ScenarioTimeColumn[c - 1];
                 currentRow = c - 2;
-                Debug.Log("Found start vars " + StartPos);
             }
         }
     }
