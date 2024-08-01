@@ -17,10 +17,18 @@ public class AutonomousVehicleDriver : MonoBehaviour {
         CRASH
     }
 
+    public enum DrivingDirection {
+        LEFT = -1,
+        STRAIGHT = 0,
+        RIGHT = 1,
+    }
+
     private AVDrivingState _avDrivingState;
     public bool UsePythonBackend;
     public bool Running = false;
     public WayPoint StartingWayPoint;
+    [SerializeField]
+    private DrivingDirection _drivingDirection;
     private WayPoint NextWaypoint = null;
     private bool newWayPointFound;
 
@@ -160,12 +168,9 @@ public class AutonomousVehicleDriver : MonoBehaviour {
             outdata[3] = (m_rigidBody.position-IntersectionCenterPosition.position).magnitude; //"A_Head_Center_Distance",
             outdata[4] = (o_rigidBody.position-IntersectionCenterPosition.position).magnitude; // "B_Head_Center_Distance",
             outdata[5] = o_rigidBody.velocity.magnitude; // "Filtered_B_Head_Velocity_Total",
-            outdata[6] = _vehicleController.WheelFL.steerAngle; //    A Turn
-            //TODO: A Turn should be -1 if AI car is turning left, 0 if straight, 1 if right (constant for the whole run)
-            //get rid of the steer angle
+            outdata[6] = (int) _drivingDirection; // A Turn
             outdata[7] = b_indicator; //    B Indicator
-            outdata[8] = l_otherCar.SplineCLCreator.GetClosestDistanceToSpline(o_rigidBody.position); //    Centerline Offset_B
-            //TODO: make the centerline offset have a sign
+            outdata[8] = l_otherCar.SplineCLCreator.GetClosestDistanceToSpline(o_rigidBody.position); // Centerline Offset_B
             //TODO: make the scene have two centerline offset objects, one for A one for B
             outdata[9] = RelativeRotation; // "RelativeRotation"
             udpSocket.SendDataToPython(outdata);

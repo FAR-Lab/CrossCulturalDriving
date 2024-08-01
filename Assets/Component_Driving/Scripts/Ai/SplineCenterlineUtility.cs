@@ -97,6 +97,8 @@ public class SplineCenterlineUtility : MonoBehaviour
         float minDistance = float.MaxValue;
         Vector3 indicatorPosition = closestPointIndicator.transform.position;
 
+        Vector3 closestLineSegment = Vector3.zero, lineToPoint= Vector3.zero;
+        
         for (int i = 0; i < numPoints - 1; i++)
         {
             float t1 = i / (float)(numPoints - 1);
@@ -116,11 +118,17 @@ public class SplineCenterlineUtility : MonoBehaviour
             // Distance to the line segment between p1 and p2
             Vector3 closestPointOnLine = GetClosestPointOnLine(point, p1, p2);
             float distanceToLine = Vector3.Distance(point, closestPointOnLine);
+            if (minDistance > distanceToLine) {
+                closestLineSegment = p2 - p1;
+                lineToPoint = point - closestPointOnLine;
+            }
             minDistance = Mathf.Min(minDistance, distanceToLine);
         }
 
         closestPointIndicator.transform.position = indicatorPosition;
-        return minDistance;
+        var rightSideOfSegment = new Vector3(closestLineSegment.z, closestLineSegment.y, -closestLineSegment.x);
+        var sign = Vector3.Dot(rightSideOfSegment, lineToPoint);
+        return sign >= 0 ? minDistance : -minDistance;
     }
 
     /// <summary>
