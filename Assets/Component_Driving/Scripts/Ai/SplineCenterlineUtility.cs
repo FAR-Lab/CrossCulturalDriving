@@ -107,28 +107,22 @@ public class SplineCenterlineUtility : MonoBehaviour
             Vector3 p1 = spline.EvaluatePosition(t1);
             Vector3 p2 = spline.EvaluatePosition(t2);
 
-            // Distance to the point on the spline
-            float distanceToPoint = Vector3.Distance(point, p1);
-            if (minDistance >= distanceToPoint)
-            {
-                indicatorPosition = GetClosestPointOnLine(point, p1, p2);
-            }
-            minDistance = Mathf.Min(minDistance, distanceToPoint);
-
             // Distance to the line segment between p1 and p2
             Vector3 closestPointOnLine = GetClosestPointOnLine(point, p1, p2);
             float distanceToLine = Vector3.Distance(point, closestPointOnLine);
-            if (minDistance > distanceToLine) {
+            if (distanceToLine < minDistance)
+            {
+                indicatorPosition = closestPointOnLine;
                 closestLineSegment = p2 - p1;
                 lineToPoint = point - closestPointOnLine;
+                minDistance = distanceToLine;
             }
-            minDistance = Mathf.Min(minDistance, distanceToLine);
         }
 
         closestPointIndicator.transform.position = indicatorPosition;
-        var rightSideOfSegment = new Vector3(closestLineSegment.z, closestLineSegment.y, -closestLineSegment.x);
-        var sign = Vector3.Dot(rightSideOfSegment, lineToPoint);
-        return sign >= 0 ? minDistance : -minDistance;
+        var rightSideOfSegment = new Vector2(closestLineSegment.z, -closestLineSegment.x);
+        var sign = Mathf.Sign(Vector2.Dot(rightSideOfSegment, new Vector2(lineToPoint.x, lineToPoint.z)));
+        return minDistance * sign;
     }
 
     /// <summary>
