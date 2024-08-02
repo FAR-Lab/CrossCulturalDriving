@@ -316,6 +316,7 @@ namespace Mocopi.Receiver
             float[] positionsX, float[] positionsY, float[] positionsZ
         )
         {
+            Debug.Log("started mocopi");
             this.skeletonDefinitionData.BoneIds = boneIds;
             this.skeletonDefinitionData.ParentBoneIds = parentBoneIds;
             this.skeletonDefinitionData.RotationsX = rotationsX;
@@ -604,7 +605,7 @@ namespace Mocopi.Receiver
 
             foreach (MocopiBone bone in this.bones)
             {
-                MocopiBone parent = this.bones.Find(_ => _.Id == bone.ParentId);
+                MocopiBone parent = this.bones.Find(m => m.Id == bone.ParentId);
 
                 Vector3 position = bone.Transform.localPosition;
                 Quaternion rotation = bone.Transform.localRotation;

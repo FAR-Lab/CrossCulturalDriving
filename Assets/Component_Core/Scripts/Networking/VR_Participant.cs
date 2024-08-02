@@ -34,8 +34,8 @@ public class VR_Participant : Client_Object {
 
     private PedestrianNavigationAudioCues AudioCuePlayer;
 
-    // use "FinishedCalibrationServerRPC" to notify the server that the calibration is finished
-    private Action<bool> finishedCalibration_ServerSideReference;
+    // called after calibration finished
+    private Action<bool> calibrationCallback;
     private bool init;
     private bool isCalibrationRunning;
     private Quaternion LastRot = Quaternion.identity;
@@ -56,6 +56,113 @@ public class VR_Participant : Client_Object {
     //public NetworkVariable<NavigationScreen.Direction> CurrentDirection = new(); //ToDo shopuld be moved to the Navigation Screen
     public bool FinishedImageSending { get; private set; }
 
+    public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) {
+        qnmanager = Instantiate(QuestionairPrefab).GetComponentInChildren<QN_Display>();
+        qnmanager.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId, true);
+        var referenceTransformPath = ""; //TODO this is not Implemented
+        var tmp = QN_Display.FollowType.MainCamera;
+        var Offset = Vector3.zero;
+        var KeepUpdating = false;
+        switch (mySpawnType.Value) {
+            case SpawnType.CAR:
+                tmp = QN_Display.FollowType.Interactable;
+                Offset = new Vector3(-0.38f, 1.14f, 0.6f);
+                KeepUpdating = true;
+                break;
+            case SpawnType.NONE:
+                break;
+            case SpawnType.PEDESTRIAN:
+            case SpawnType.PASSENGER:
+                tmp = QN_Display.FollowType.MainCamera;
+                Offset = new Vector3(0f, 0f, 0.5f);
+                break;
+            case SpawnType.ROBOT:
+                break;
+        }
+
+
+        Debug.Log($"Spawning a questionnaire for Participant{m_participantOrder}");
+        qnmanager.StartQuestionair(m_QNDataStorageServer, m_participantOrder.Value, tmp, Offset, KeepUpdating,
+            referenceTransformPath, this);
+
+        foreach (var screenShot in FindObjectsOfType<QnCaptureScreenShot>())
+            if (screenShot.ContainsPO(ConnectionAndSpawning.Singleton.ParticipantOrder))
+                if (screenShot.triggered) {
+                    qnmanager.AddImage(screenShot.GetTexture());
+                    InitiateImageTransfer(screenShot.GetTexture().EncodeToJPG(50));
+                    break;
+                }
+
+        m_QNDataStorageServer.RegisterQNScreen(m_participantOrder.Value, qnmanager);
+    }
+
+    public bool ButtonPush() {
+        if (lastValue && ButtonPushed.Value == false) {
+            lastValue = ButtonPushed.Value;
+            return true;
+        }
+
+        lastValue = ButtonPushed.Value;
+        return false;
+    }
+
+
+    public void NewScenario() {
+        FinishedImageSending = true;
+    }
+
+    public void InitiateImageTransfer(byte[] Image) {
+        if (!IsLocalPlayer) return;
+        if (IsServer) return;
+        FinishedImageSending = false;
+        StartCoroutine(SendImageData(m_participantOrder.Value, Image));
+    }
+
+
+//https://answers.unity.com/questions/1113376/unet-send-big-amount-of-data-over-network-how-to-s.html
+    private IEnumerator SendImageData(ParticipantOrder po, byte[] ImageArray) {
+        var CurrentDataIndex = 0;
+        var TotalBufferSize = ImageArray.Length;
+        while (CurrentDataIndex < TotalBufferSize - 1) {
+            //determine the remaining amount of bytes, still need to be sent.
+            var bufferSize = QNDataStorageServer.ByteArraySize;
+            var remaining = TotalBufferSize - CurrentDataIndex;
+            if (remaining < bufferSize) bufferSize = remaining;
+
+            var buffer = new byte[bufferSize];
+            Array.Copy(ImageArray, CurrentDataIndex, buffer, 0, bufferSize);
+
+            var tmp = new BasicByteArraySender { DataSendArray = buffer };
+
+            var writer = new FastBufferWriter(bufferSize + 8, Allocator.TempJob);
+            writer.WriteNetworkSerializable(tmp);
+            NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
+                QNDataStorageServer.imageDataPrefix + po,
+                NetworkManager.ServerClientId,
+                writer);
+
+            CurrentDataIndex += bufferSize;
+
+
+            yield return null;
+            writer.Dispose();
+        }
+
+        Debug.Log("Finished Sending Picture!");
+        FinishedImageSending = true;
+        FinishPictureSendingServerRPC(po, TotalBufferSize);
+    }
+
+
+    [ServerRpc]
+    public void FinishPictureSendingServerRPC(ParticipantOrder po, int length) {
+        if (!IsServer) return;
+
+        ConnectionAndSpawning.Singleton.GetQnStorageServer().NewRemoteImage(po, length);
+        Debug.Log("Finished Picture storing");
+    }
+
+    #region Setup
 
     public void Start() {
         m_calibDisplay = GetComponentInChildren<CalibrationTimerDisplay>();
@@ -145,15 +252,29 @@ public class VR_Participant : Client_Object {
             m_participantOrder.Value = ConnectionAndSpawning.Singleton.GetParticipantOrderClientId(OwnerClientId);
             UpdateOffsetRemoteClientRPC(offsetPositon, offsetRotation, LastRot);
             GetComponentInChildren<ParticipantOrderReplayComponent>().SetParticipantOrder(m_participantOrder.Value);
-            //  var cam =  GetMainCamera();
-            // var boxCollider = cam.gameObject.AddComponent<BoxCollider>();
-            //  var rigidbody = cam.gameObject.AddComponent<Rigidbody>();
-            // rigidbody.isKinematic = true;
+            StartCoroutine(SetupButtonsAwait());
         }
         else {
             foreach (var a in
                      GetComponentsInChildren<ReplayTransform>())
                 a.enabled = false; // should happen twice to activate the hand
+        }
+    }
+
+    private IEnumerator SetupButtonsAwait() {
+        yield return new WaitUntil(() =>
+            mySpawnType.Value != SpawnType.NONE
+        );
+        var researcher_UI = FindObjectOfType<Researcher_UI>();
+
+        switch (mySpawnType.Value) {
+            case SpawnType.PEDESTRIAN:
+                researcher_UI.CreateButton("Calibrate Pos", CalibratePosition, OwnerClientId);
+                researcher_UI.CreateButton("Calibrate Rot", CalibrateRotation, OwnerClientId);
+                break;
+            case SpawnType.CAR:
+                researcher_UI.CreateButton("Calibrate Car", CalibrateCar, OwnerClientId);
+                break;
         }
     }
 
@@ -213,6 +334,10 @@ public class VR_Participant : Client_Object {
         var ZedSpaceReference = FindObjectOfType<ExperimentSpaceReference>();
         ZedSpaceReference.LoadSetup();
     }
+
+    #endregion
+
+    #region setters
 
     private void SetPedestrianOpenXRRepresentaion(bool val) {
         SetPedestrianOpenXRRepresentaionClientRPC(val);
@@ -304,6 +429,27 @@ public class VR_Participant : Client_Object {
         AssignInteractable_ClientRPC(reference, targetClient);
     }
 
+    [ClientRpc]
+    private void AssignInteractable_ClientRPC(NetworkObjectReference MyInteractable, ulong targetClient) {
+        if (OwnerClientId != targetClient) return;
+        StartCoroutine(ClientSideCalibrationAwait(MyInteractable, targetClient));
+    }
+
+    public override void De_AssignFollowTransform(ulong targetClient, NetworkObject netobj) {
+        if (IsServer) {
+            NetworkObject.TryRemoveParent(false);
+            NetworkedInteractableObject = null;
+            De_AssignFollowTransformClientRPC(targetClient);
+        }
+    }
+
+    [ClientRpc]
+    private void De_AssignFollowTransformClientRPC(ulong targetClient) {
+        NetworkedInteractableObject = null;
+        DontDestroyOnLoad(gameObject);
+        Debug.Log("De_assign Interactable ClientRPC");
+    }
+
     public override Interactable_Object GetFollowTransform() {
         return NetworkedInteractableObject;
     }
@@ -312,6 +458,11 @@ public class VR_Participant : Client_Object {
         if (MyCamera == null) MyCamera = GetComponentInChildren<Camera>().transform;
         return MyCamera;
     }
+
+    #endregion
+
+
+    #region calibration
 
     private IEnumerator ClientSideCalibrationAwait(NetworkObjectReference MyInteractable, ulong targetClient) {
         yield return new WaitUntil(() => mySpawnType.Value != SpawnType.NONE);
@@ -365,75 +516,49 @@ public class VR_Participant : Client_Object {
         }
     }
 
-    [ClientRpc]
-    private void AssignInteractable_ClientRPC(NetworkObjectReference MyInteractable, ulong targetClient) {
-        if (OwnerClientId != targetClient) return;
-        StartCoroutine(ClientSideCalibrationAwait(MyInteractable, targetClient));
-    }
-
-    public override void De_AssignFollowTransform(ulong targetClient, NetworkObject netobj) {
-        if (IsServer) {
-            NetworkObject.TryRemoveParent(false);
-            NetworkedInteractableObject = null;
-            De_AssignFollowTransformClientRPC(targetClient);
-        }
+    public void CalibrateCar(Action<bool> calibrationCallback) {
+        this.calibrationCallback = calibrationCallback;
+        CalibrateCarClientRPC();
     }
 
     [ClientRpc]
-    private void De_AssignFollowTransformClientRPC(ulong targetClient) {
-        NetworkedInteractableObject = null;
-        DontDestroyOnLoad(gameObject);
-        Debug.Log("De_assign Interactable ClientRPC");
+    private void CalibrateCarClientRPC() {
+        if (NetworkedInteractableObject == null) FindInteractable();
+
+        var steering = NetworkedInteractableObject.transform.Find("SteeringCenter");
+        var cam = GetMainCamera();
+        var calib = GetComponent<SeatCalibration>();
+        Debug.Log($"Calib{calib}, SteeringCenterObject:{steering.name}, and VrCamera{cam}");
+        calib.StartCalibration(
+            steering,
+            cam,
+            this,
+            m_calibDisplay);
     }
 
-    public override void CalibrateClient(Action<bool> finishedCalibration) {
-        if (mySpawnType.Value is SpawnType.PEDESTRIAN or SpawnType.CAR) {
-            finishedCalibration_ServerSideReference = finishedCalibration;
-            CalibrateClientRPC();
-        }
+    public void CalibratePosition(Action<bool> calibrationCallback) {
+        this.calibrationCallback = calibrationCallback;
+        CalibratePositionClientRPC();
     }
 
-    public override void StartQuestionair(QNDataStorageServer m_QNDataStorageServer) {
-        qnmanager = Instantiate(QuestionairPrefab).GetComponentInChildren<QN_Display>();
-        qnmanager.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId, true);
-        var referenceTransformPath = ""; //TODO this is not Implemented
-        var tmp = QN_Display.FollowType.MainCamera;
-        var Offset = Vector3.zero;
-        var KeepUpdating = false;
-        switch (mySpawnType.Value) {
-            case SpawnType.CAR:
-                tmp = QN_Display.FollowType.Interactable;
-                Offset = new Vector3(-0.38f, 1.14f, 0.6f);
-                KeepUpdating = true;
-                break;
-            case SpawnType.NONE:
-                break;
-            case SpawnType.PEDESTRIAN:
-            case SpawnType.PASSENGER:
-                tmp = QN_Display.FollowType.MainCamera;
-                Offset = new Vector3(0f, 0f, 0.5f);
-                break;
-            case SpawnType.ROBOT:
-                break;
-        }
+    [ClientRpc]
+    private void CalibratePositionClientRPC() {
+        if (!IsLocalPlayer) return;
+        var mainCamera = GetMainCamera();
+        Debug.Log($"VrCamera Local Position {mainCamera.localPosition}");
+        Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
 
-
-        Debug.Log($"Spawning a questionnaire for Participant{m_participantOrder}");
-        qnmanager.StartQuestionair(m_QNDataStorageServer, m_participantOrder.Value, tmp, Offset, KeepUpdating,
-            referenceTransformPath, this);
-
-        foreach (var screenShot in FindObjectsOfType<QnCaptureScreenShot>())
-            if (screenShot.ContainsPO(ConnectionAndSpawning.Singleton.ParticipantOrder))
-                if (screenShot.triggered) {
-                    qnmanager.AddImage(screenShot.GetTexture());
-                    InitiateImageTransfer(screenShot.GetTexture().EncodeToJPG(50));
-                    break;
-                }
-
-        m_QNDataStorageServer.RegisterQNScreen(m_participantOrder.Value, qnmanager);
+        var esr = FindObjectOfType<ExperimentSpaceReference>();
+        var calibs = esr.GetCalibrationPoints();
+        if (isCalibrationRunning == false)
+            StartCoroutine(OverTimePositionCalibration(calibs.Item1));
+        else
+            Debug.Log("Calibration already running!");
     }
 
-    private IEnumerator PositionCalibration(Transform originReference, float maxTime = 10) {
+    private IEnumerator OverTimePositionCalibration(Transform originReference, float maxTime = 10) {
+        isCalibrationRunning = true;
+        m_calibDisplay.StartDisplay();
         m_calibDisplay.UpdateMessage("Hold still!");
         yield return new WaitForSeconds(2);
 
@@ -465,9 +590,35 @@ public class VR_Participant : Client_Object {
             m_calibDisplay.UpdateMessage((MaxRuns - runs).ToString());
             yield return new WaitForEndOfFrame();
         }
+
+        m_calibDisplay.StopDisplay();
+        FinishedCalibration();
+        isCalibrationRunning = false;
     }
 
-    private IEnumerator RotationCalibration(Transform pivot, Transform originReference, float maxTime = 10) {
+    public void CalibrateRotation(Action<bool> calibrationCallback) {
+        this.calibrationCallback = calibrationCallback;
+        CalibrateRotationClientRPC();
+    }
+
+    [ClientRpc]
+    private void CalibrateRotationClientRPC() {
+        if (!IsLocalPlayer) return;
+        var mainCamera = GetMainCamera();
+        Debug.Log($"VrCamera Local Position {mainCamera.localPosition}");
+        Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
+
+        var esr = FindObjectOfType<ExperimentSpaceReference>();
+        var calibs = esr.GetCalibrationPoints();
+        if (isCalibrationRunning == false)
+            StartCoroutine(OverTimeRotationCalibration(calibs.Item1, calibs.Item2));
+        else
+            Debug.Log("Calibration already running!");
+    }
+
+    private IEnumerator OverTimeRotationCalibration(Transform pivot, Transform originReference, float maxTime = 10) {
+        isCalibrationRunning = true;
+        m_calibDisplay.StartDisplay();
         m_calibDisplay.UpdateMessage("Hold still!");
         yield return new WaitForSeconds(2);
 
@@ -502,6 +653,10 @@ public class VR_Participant : Client_Object {
             m_calibDisplay.UpdateMessage((MaxRuns - runs).ToString());
             yield return new WaitForEndOfFrame();
         }
+
+        m_calibDisplay.StopDisplay();
+        FinishedCalibration(originReference);
+        isCalibrationRunning = false;
     }
 
     private IEnumerator CountDown(string message, int seconds) {
@@ -509,26 +664,6 @@ public class VR_Participant : Client_Object {
             m_calibDisplay.UpdateMessage(message + i);
             yield return new WaitForSeconds(1);
         }
-    }
-
-    private IEnumerator OverTimeCalibration(Transform calibrationPoint1,
-        Transform calibrationPoint2, float maxTime) {
-        isCalibrationRunning = true;
-        m_calibDisplay.StartDisplay();
-
-        yield return StartCoroutine(CountDown("Position calibration starting in:", 20));
-        yield return StartCoroutine(PositionCalibration(calibrationPoint1, maxTime));
-
-        m_calibDisplay.UpdateMessage("Now walk to the second point");
-        yield return new WaitForSeconds(2);
-        yield return StartCoroutine(CountDown("Rotation calibration starting in:", 20));
-
-
-        yield return StartCoroutine(RotationCalibration(calibrationPoint1, calibrationPoint2, maxTime));
-
-        m_calibDisplay.StopDisplay();
-        FinishedCalibration(calibrationPoint2);
-        isCalibrationRunning = false;
     }
 
     private void FindInteractable() {
@@ -540,59 +675,16 @@ public class VR_Participant : Client_Object {
                 }
     }
 
-    [ClientRpc]
-    public void CalibrateClientRPC(ClientRpcParams clientRpcParams = default) {
-        if (!IsLocalPlayer) return;
-
-        switch (mySpawnType.Value) {
-            case SpawnType.CAR:
-                if (NetworkedInteractableObject == null) FindInteractable();
-
-                var steering = NetworkedInteractableObject.transform.Find("SteeringCenter");
-                var cam = GetMainCamera();
-                var calib = GetComponent<SeatCalibration>();
-                Debug.Log($"Calib{calib}, SteeringCenterObject:{steering.name}, and VrCamera{cam}");
-                calib.StartCalibration(
-                    steering,
-                    cam,
-                    this,
-                    m_calibDisplay);
-                Debug.Log("Calibrated ClientRPC");
-                break;
-            case SpawnType.PEDESTRIAN:
-                var mainCamera = GetMainCamera();
-                Debug.Log($"VrCamera Local Position {mainCamera.localPosition}");
-                Debug.Log($"trying to Get Calibrate :{m_participantOrder}");
-
-                var esr = FindObjectOfType<ExperimentSpaceReference>();
-                var calibs = esr.GetCalibrationPoints();
-                if (isCalibrationRunning == false)
-                    StartCoroutine(OverTimeCalibration(calibs.Item1, calibs.Item2, 10));
-                else
-                    Debug.Log("Calibration already running!");
-
-
-                break;
-        }
-    }
-
-    public bool ButtonPush() {
-        if (lastValue && ButtonPushed.Value == false) {
-            lastValue = ButtonPushed.Value;
-            return true;
-        }
-
-        lastValue = ButtonPushed.Value;
-        return false;
-    }
-
-
     public void SetNewRotationOffset(Quaternion offset) {
         transform.rotation *= offset;
     }
 
     public void SetNewPositionOffset(Vector3 positionOffset) {
         transform.position += positionOffset;
+    }
+
+    public void FinishedCalibration() {
+        FinishedCalibrationServerRPC(true);
     }
 
     public void FinishedCalibration(Transform relativeTransform) {
@@ -610,8 +702,8 @@ public class VR_Participant : Client_Object {
 
     [ServerRpc]
     private void FinishedCalibrationServerRPC(bool val) {
-        if (finishedCalibration_ServerSideReference != null)
-            finishedCalibration_ServerSideReference.Invoke(val);
+        if (calibrationCallback != null)
+            calibrationCallback.Invoke(val);
         else
             Debug.LogWarning("The Action to notify the server that calibration is finished was never defined");
     }
@@ -647,58 +739,5 @@ public class VR_Participant : Client_Object {
         return conf.DeleteFile();
     }
 
-    public void NewScenario() {
-        FinishedImageSending = true;
-    }
-
-    public void InitiateImageTransfer(byte[] Image) {
-        if (!IsLocalPlayer) return;
-        if (IsServer) return;
-        FinishedImageSending = false;
-        StartCoroutine(SendImageData(m_participantOrder.Value, Image));
-    }
-
-
-//https://answers.unity.com/questions/1113376/unet-send-big-amount-of-data-over-network-how-to-s.html
-    private IEnumerator SendImageData(ParticipantOrder po, byte[] ImageArray) {
-        var CurrentDataIndex = 0;
-        var TotalBufferSize = ImageArray.Length;
-        while (CurrentDataIndex < TotalBufferSize - 1) {
-            //determine the remaining amount of bytes, still need to be sent.
-            var bufferSize = QNDataStorageServer.ByteArraySize;
-            var remaining = TotalBufferSize - CurrentDataIndex;
-            if (remaining < bufferSize) bufferSize = remaining;
-
-            var buffer = new byte[bufferSize];
-            Array.Copy(ImageArray, CurrentDataIndex, buffer, 0, bufferSize);
-
-            var tmp = new BasicByteArraySender { DataSendArray = buffer };
-
-            var writer = new FastBufferWriter(bufferSize + 8, Allocator.TempJob);
-            writer.WriteNetworkSerializable(tmp);
-            NetworkManager.Singleton.CustomMessagingManager.SendNamedMessage(
-                QNDataStorageServer.imageDataPrefix + po,
-                NetworkManager.ServerClientId,
-                writer);
-
-            CurrentDataIndex += bufferSize;
-
-
-            yield return null;
-            writer.Dispose();
-        }
-
-        Debug.Log("Finished Sending Picture!");
-        FinishedImageSending = true;
-        FinishPictureSendingServerRPC(po, TotalBufferSize);
-    }
-
-
-    [ServerRpc]
-    public void FinishPictureSendingServerRPC(ParticipantOrder po, int length) {
-        if (!IsServer) return;
-
-        ConnectionAndSpawning.Singleton.GetQnStorageServer().NewRemoteImage(po, length);
-        Debug.Log("Finished Picture storing");
-    }
+    #endregion
 }

@@ -134,8 +134,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5028323925506166866}
   - component: {fileID: 6762353073723243286}
-  - component: {fileID: 8831994387091225962}
   - component: {fileID: 3747629660432998784}
+  - component: {fileID: 8831994387091225962}
   - component: {fileID: 7190965261648748045}
   - component: {fileID: 1945130235225799493}
   - component: {fileID: 146160178233549837}
@@ -189,22 +189,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8831994387091225962
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6644281220681012043}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea3cf6206002bf6478c692d5ae5d16f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  a_Language: 
-  QuestionairPrefab: {fileID: 1853806982428388, guid: bb398da6725f53c4283a5f88c90d86ed, type: 3}
-  walkingSpeed: 2
-  m_Camera: {fileID: 0}
 --- !u!114 &3747629660432998784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,7 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 951099334
+  GlobalObjectIdHash: 954128316
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -225,6 +209,21 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &8831994387091225962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6644281220681012043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea3cf6206002bf6478c692d5ae5d16f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  QuestionairPrefab: {fileID: 1853806982428388, guid: bb398da6725f53c4283a5f88c90d86ed, type: 3}
+  walkingSpeed: 2
+  m_Camera: {fileID: 0}
 --- !u!114 &7190965261648748045
 MonoBehaviour:
   m_ObjectHideFlags: 0

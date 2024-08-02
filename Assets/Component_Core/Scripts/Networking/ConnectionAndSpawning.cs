@@ -1,34 +1,23 @@
- using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
- using Rerun;
+using Newtonsoft.Json;
+using Rerun;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Newtonsoft.Json;
- using UnityEngine.InputSystem.UI;
 using UnityEngine.Rendering;
- using Pose = UnityEngine.Pose;
- using Rect = UnityEngine.Rect;
+using UnityEngine.SceneManagement;
+using Pose = UnityEngine.Pose;
+using Rect = UnityEngine.Rect;
 
 
- public class ConnectionAndSpawning : MonoBehaviour {
-    public struct JoinParameters {
-        public JoinType _jointype;
-        public SpawnType _spawnType;
-        public ParticipantOrder _participantOrder;
-        public string _Language;
-    }
+public class ConnectionAndSpawning : MonoBehaviour {
+    public delegate void ResponseDelegate(ClientConnectionResponse response);
 
-    public GameObject LocalServerCameraRig;
     public static string WaitingRoomSceneName = "WaitingRoom";
-    public SO_JoinTypeToClientObject JoinTypeConfig;
-    public Dictionary<JoinType, Client_Object> JoinType_To_Client_Object;
-    public SO_SpawnTypeToInteractableObject SpawnTypeConfig;
-    public Dictionary<SpawnType, Interactable_Object> SpawnType_To_InteractableObjects;
 
     private static readonly Dictionary<ParticipantOrder, NavigationScreen.Direction> StopDict =
         new() {
@@ -40,26 +29,24 @@ using UnityEngine.Rendering;
             { ParticipantOrder.F, NavigationScreen.Direction.Stop }
         };
 
-    
-    public SerializedDictionary<string, SerializedDictionary<ParticipantOrder, Pose>> WaitingRoomSpawnPositonData =
-        new SerializedDictionary<string, SerializedDictionary<ParticipantOrder, Pose>>();
+    public GameObject LocalServerCameraRig;
+    public SO_JoinTypeToClientObject JoinTypeConfig;
+    public Dictionary<JoinType, Client_Object> JoinType_To_Client_Object;
+    public SO_SpawnTypeToInteractableObject SpawnTypeConfig;
+    public Dictionary<SpawnType, Interactable_Object> SpawnType_To_InteractableObjects;
 
-  
+
+    public SerializedDictionary<string, SerializedDictionary<ParticipantOrder, Pose>> WaitingRoomSpawnPositonData =
+        new();
+
 
     public List<SceneField> IncludedScenes = new();
-    private string LastLoadedVisualScene;
-    public bool ServerisRunning { private set; get; }
-
-    public delegate void ReponseDelegate(ClienConnectionResponse response);
 
     [SerializeField] private GUIStyle style;
-
-    public ParticipantOrderMapping participants;
     private readonly bool ClientListInitDone = false;
 
-    public Dictionary<ParticipantOrder, Client_Object> Main_ParticipantObjects { private set; get; }
 
-    private Dictionary<ParticipantOrder, List<Interactable_Object>> Interactable_ParticipantObjects;
+    public readonly Dictionary<SceneField, bool> VisitedScenes = new();
 
     private ScenarioManager CurrentScenarioManager;
     private bool FinishedRunningAwaitCorutine = true;
@@ -68,6 +55,9 @@ using UnityEngine.Rendering;
     private Coroutine i_AwaitCarStopped;
 
     private bool initalSceneLoaded = false;
+
+    private Dictionary<ParticipantOrder, List<Interactable_Object>> Interactable_ParticipantObjects;
+    private string LastLoadedVisualScene;
 
     private string LoadedScene = "";
 
@@ -78,22 +68,24 @@ using UnityEngine.Rendering;
     //Internal StateTracking
     private bool ParticipantOrder_Set;
 
+    public ParticipantOrderMapping participants;
+
     private Dictionary<ParticipantOrder, bool> QNFinished;
 
-    private ReponseDelegate ReponseHandler;
+    private ResponseDelegate ResponseHandler;
 
     private bool retry = true;
     private bool SuccessFullyConnected;
+    public bool ServerisRunning { private set; get; }
 
-
-    public readonly Dictionary<SceneField, bool> VisitedScenes = new();
+    public Dictionary<ParticipantOrder, Client_Object> Main_ParticipantObjects { private set; get; }
 
 
     public ParticipantOrder ParticipantOrder { get; private set; } = ParticipantOrder.None;
 
 
     public ActionState ServerState { get; private set; }
-    public JoinParameters ThisClient { private set; get; } = new JoinParameters();
+    public JoinParameters ThisClient { private set; get; }
 
     private void Awake() {
         participants = new ParticipantOrderMapping();
@@ -204,22 +196,20 @@ using UnityEngine.Rendering;
             }
 
             if (ServerState == ActionState.DRIVE || ServerState == ActionState.READY ||
-                ServerState == ActionState.QUESTIONS || ServerState == ActionState.POSTQUESTIONS) {
+                ServerState == ActionState.QUESTIONS || ServerState == ActionState.POSTQUESTIONS)
                 if (ServerState == ActionState.QUESTIONS) {
                     GUI.Label(new Rect(10, Screen.height - 66, 150, 33),
                         "QN A: " + m_QNDataStorageServer.GetCurrentQuestionForParticipant(ParticipantOrder.A), style);
                     GUI.Label(new Rect(10, Screen.height - 33, 150, 33),
                         "QN B: " + m_QNDataStorageServer.GetCurrentQuestionForParticipant(ParticipantOrder.B), style);
                 }
-            }
         }
     }
 
     private void SetUpToServe(string pairName) {
         Application.targetFrameRate = 72;
 
-      
-        
+
         gameObject.AddComponent<SteeringWheelManager>();
         gameObject.AddComponent<farlab_logger>();
         m_QNDataStorageServer = gameObject.AddComponent<QNDataStorageServer>();
@@ -236,10 +226,9 @@ using UnityEngine.Rendering;
 
 
     public void StartAsServer(string pairName) {
-        if (pairName == String.Empty) {
+        if (pairName == string.Empty)
             pairName = $"UnNamed at{DateTime.Now.ToString(DataStoragePathSupervisor.DateTimeFormatFolder)}";
-        }
-        
+
         SetUpToServe(pairName);
 
         if (LocalServerCameraRig == null) {
@@ -255,7 +244,7 @@ using UnityEngine.Rendering;
         DontDestroyOnLoad(ServerCamera);
         m_ReRunManager.RerunInitialization(true, ServerCamera.GetComponent<RerunPlaybackCameraManager>(),
             RerunManager.StartUpMode.RECORDING);
-        
+
         DataStoragePathSupervisor.setStudyName(pairName);
 
 
@@ -263,30 +252,28 @@ using UnityEngine.Rendering;
         participants.AddParticipant(ParticipantOrder.None, NetworkManager.Singleton.LocalClientId, SpawnType.NONE,
             JoinType.SERVER);
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
-
     }
 
-    public void StartAsHost(string pairName,ParticipantOrder po, JoinType _jt,SpawnType _st) {
+    public void StartAsHost(string pairName, ParticipantOrder po, JoinType _jt, SpawnType _st) {
         SetUpToServe(pairName);
         m_ReRunManager.RerunInitialization(true, null, RerunManager.StartUpMode.RECORDING);
         DataStoragePathSupervisor.setStudyName(pairName);
-        JoinParameters connectionDataRequest = new JoinParameters() {
+        var connectionDataRequest = new JoinParameters {
             _participantOrder = po,
             _spawnType = _st,
             _jointype = _jt,
             _Language = "English"
         };
         ThisClient = connectionDataRequest;
-        
-        string jsonstring = JsonConvert.SerializeObject(connectionDataRequest);
+
+        var jsonstring = JsonConvert.SerializeObject(connectionDataRequest);
 
         NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(jsonstring); // assigning ID
         NetworkManager.Singleton.StartHost();
         NetworkManager.Singleton.SceneManager.OnSceneEvent += SceneEvent_Server;
-        
-      //  var t=  Instantiate(ZedManagerPrefab);
-    //    DontDestroyOnLoad(t);
-        
+
+        //  var t=  Instantiate(ZedManagerPrefab);
+        //    DontDestroyOnLoad(t);
     }
 
     private void ClientDisconnected_client(ulong ClientID) {
@@ -295,24 +282,24 @@ using UnityEngine.Rendering;
             Application.Quit();
         }
         else {
-            ReponseHandler.Invoke(ClienConnectionResponse.FAILED);
+            ResponseHandler.Invoke(ClientConnectionResponse.FAILED);
             Debug.Log("Retrying connection");
         }
     }
 
     private void ClientConnected_client(ulong ClientID) {
         Debug.Log("Debug: Client connected");
-        if (ClientID != NetworkManager.Singleton.LocalClient.ClientId) return; Debug.Log("Debug: Success!");
+        if (ClientID != NetworkManager.Singleton.LocalClient.ClientId) return;
+        Debug.Log("Debug: Success!");
         SuccessFullyConnected = true;
-        ReponseHandler.Invoke(ClienConnectionResponse.SUCCESS);
+        ResponseHandler.Invoke(ClientConnectionResponse.SUCCESS);
 
         NetworkManager.Singleton.SceneManager.OnLoadComplete += OnLoadCompleteCLient;
     }
 
     private void OnLoadCompleteCLient(ulong clientid, string scenename, LoadSceneMode loadscenemode) {
-        if (loadscenemode == LoadSceneMode.Additive && NetworkManager.Singleton.LocalClientId == clientid) {
+        if (loadscenemode == LoadSceneMode.Additive && NetworkManager.Singleton.LocalClientId == clientid)
             ActivateVisualScene();
-        }
     }
 
     private void SetupClientFunctionality() {
@@ -326,19 +313,18 @@ using UnityEngine.Rendering;
         ParticipantOrder_Set = true;
     }
 
-    
 
-    public void StartAsClient(string _langIN, ParticipantOrder po, string ip, int port, ReponseDelegate result,
+    public void StartAsClient(string _langIN, ParticipantOrder po, string ip, int port, ResponseDelegate result,
         SpawnType _spawnTypeIN = SpawnType.CAR, JoinType _joinTypeIN = JoinType.VR) {
         Debug.Log(
             $"Log: Starting as Client. IP: {ip} Port: {port} Language: {_langIN} ParticipantOrder: {po} SpawnType: {_spawnTypeIN} JoinType: {_joinTypeIN}");
 
-       
+
         SetupClientFunctionality();
-        ReponseHandler += result;
+        ResponseHandler += result;
         SetupTransport(ip, port);
         SetParticipantOrder(po);
-        JoinParameters connectionDataRequest = new JoinParameters() {
+        var connectionDataRequest = new JoinParameters {
             _participantOrder = po,
             _spawnType = _spawnTypeIN,
             _jointype = _joinTypeIN,
@@ -346,7 +332,7 @@ using UnityEngine.Rendering;
         };
 
         ThisClient = connectionDataRequest;
-        string jsonstring = JsonConvert.SerializeObject(connectionDataRequest);
+        var jsonstring = JsonConvert.SerializeObject(connectionDataRequest);
 
         NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(jsonstring); // assigning ID
 
@@ -420,9 +406,8 @@ using UnityEngine.Rendering;
                 }
         }
         else if (arg0.name == LastLoadedVisualScene) {
-            if (SceneManager.GetActiveScene().name != LastLoadedVisualScene) {
+            if (SceneManager.GetActiveScene().name != LastLoadedVisualScene)
                 SceneManager.SetActiveScene(SceneManager.GetSceneByName(LastLoadedVisualScene));
-            }
         }
     }
 
@@ -438,8 +423,6 @@ using UnityEngine.Rendering;
         SwitchToWaitingRoom();
     }
 
-    private void ResponseDelegate(ClienConnectionResponse response) { }
-
     public void FinishedQuestionair(ulong clientID) {
         participants.GetOrder(clientID, out var po);
         QNFinished[po] = true;
@@ -447,10 +430,8 @@ using UnityEngine.Rendering;
 
 
     public Transform GetMainClientObject(ulong senderClientId) {
-        bool success = participants.GetOrder(senderClientId, out ParticipantOrder po);
-        if (success) {
-            return GetMainClientObject(po);
-        }
+        var success = participants.GetOrder(senderClientId, out var po);
+        if (success) return GetMainClientObject(po);
 
         return null;
     }
@@ -462,10 +443,8 @@ using UnityEngine.Rendering;
 
 
     public List<Interactable_Object> GetInteractableObjects_For_Participants(ulong senderClientId) {
-        bool success = participants.GetOrder(senderClientId, out ParticipantOrder po);
-        if (success) {
-            return GetInteractableObjects_For_Participants(po);
-        }
+        var success = participants.GetOrder(senderClientId, out var po);
+        if (success) return GetInteractableObjects_For_Participants(po);
 
         return null;
     }
@@ -477,10 +456,8 @@ using UnityEngine.Rendering;
 
 
     public Transform GetClientMainCameraObject(ulong senderClientId) {
-        bool success = participants.GetOrder(senderClientId, out ParticipantOrder po);
-        if (success) {
-            return GetClientMainCameraObject(po);
-        }
+        var success = participants.GetOrder(senderClientId, out var po);
+        if (success) return GetClientMainCameraObject(po);
 
         return null;
     }
@@ -503,13 +480,13 @@ using UnityEngine.Rendering;
 
 
     public ParticipantOrder GetParticipantOrderClientId(ulong clientid) {
-        participants.GetOrder(clientid, out ParticipantOrder outval);
+        participants.GetOrder(clientid, out var outval);
         return outval;
     }
 
     public bool GetClientIdParticipantOrder(ParticipantOrder po, out ulong outValue) {
         outValue = 0;
-        bool var = participants.GetClientID(po, out outValue);
+        var var = participants.GetClientID(po, out outValue);
         return var;
     }
 
@@ -518,8 +495,8 @@ using UnityEngine.Rendering;
     }
 
 //    public void QNNewDataPoint(ParticipantOrder po, int id, int answerIndex, string lang) {
- //       if (m_QNDataStorageServer != null) m_QNDataStorageServer.NewDatapointfromClient(po, id, answerIndex, lang);
-  //  }
+    //       if (m_QNDataStorageServer != null) m_QNDataStorageServer.NewDatapointfromClient(po, id, answerIndex, lang);
+    //  }
 
 
     public RerunManager GetReRunManager() {
@@ -527,9 +504,9 @@ using UnityEngine.Rendering;
     }
 
     private void ResetInteractableObject(ParticipantOrder po) {
-        if (Interactable_ParticipantObjects.ContainsKey(po)) {
-            foreach (Interactable_Object io in Interactable_ParticipantObjects[po]) {
-                bool success = _GetCurrentSpawingData(po, out var tempPose);
+        if (Interactable_ParticipantObjects.ContainsKey(po))
+            foreach (var io in Interactable_ParticipantObjects[po]) {
+                var success = _GetCurrentSpawingData(po, out var tempPose);
                 if (!success) {
                     Debug.LogWarning("Did not find a position to reset the participant to." + po);
                     return;
@@ -537,7 +514,6 @@ using UnityEngine.Rendering;
 
                 io.SetStartingPose(tempPose);
             }
-        }
     }
 
     public void AwaitQN() {
@@ -550,7 +526,7 @@ using UnityEngine.Rendering;
     }
 
     private bool AllActionStopped() {
-        bool testValue = true;
+        var testValue = true;
         foreach (var po in participants.GetAllConnectedParticipants()) {
             if (po == ParticipantOrder.None) continue;
             foreach (var IO in Interactable_ParticipantObjects[po])
@@ -570,6 +546,13 @@ using UnityEngine.Rendering;
 
     public QNDataStorageServer GetQnStorageServer() {
         return m_QNDataStorageServer;
+    }
+
+    public struct JoinParameters {
+        public JoinType _jointype;
+        public SpawnType _spawnType;
+        public ParticipantOrder _participantOrder;
+        public string _Language;
     }
 
     #region SingeltonManagment
@@ -619,11 +602,10 @@ using UnityEngine.Rendering;
     }
 
     private void ActivateVisualScene() {
-        if (GetScenarioManager().HasVisualScene()) {
+        if (GetScenarioManager().HasVisualScene())
             SceneManager.SetActiveScene(
                 SceneManager.GetSceneByName(GetScenarioManager()
                     .VisualSceneToUse)); // This is icky needs to be verifyeid that its also the one we loaded!
-        }
     }
 
     private void SceneEvent_Server(SceneEvent sceneEvent) {
@@ -634,8 +616,9 @@ using UnityEngine.Rendering;
             case SceneEventType.ReSynchronize: break;
             case SceneEventType.LoadEventCompleted:
                 Debug.Log("Load event!" + sceneEvent.ClientId + ServerState);
-                if (ServerState == ActionState.LOADINGSCENARIO)
+                if (ServerState == ActionState.LOADINGSCENARIO) {
                     LoadSceneVisuals();
+                }
                 else if (ServerState == ActionState.LOADINGVISUALS) {
                     ActivateVisualScene();
 
@@ -650,19 +633,17 @@ using UnityEngine.Rendering;
 
                 if (ServerState is ActionState.READY or ActionState.LOADINGVISUALS or ActionState.WAITINGROOM) {
                     Debug.Log("Lets see if we should Spawn an interactable!");
-                    if (sceneEvent.LoadSceneMode == LoadSceneMode.Additive && GetScenarioManager().HasVisualScene() ||
-                        sceneEvent.LoadSceneMode == LoadSceneMode.Single &&
-                        !GetScenarioManager()
-                            .HasVisualScene()) //TODO: feels like a bad hack  but makes sure that late joining a scene we dont spawn a car twice (scenario and visual scene callback)
+                    if ((sceneEvent.LoadSceneMode == LoadSceneMode.Additive && GetScenarioManager().HasVisualScene()) ||
+                        (sceneEvent.LoadSceneMode == LoadSceneMode.Single &&
+                         !GetScenarioManager()
+                             .HasVisualScene())) //TODO: feels like a bad hack  but makes sure that late joining a scene we dont spawn a car twice (scenario and visual scene callback)
                     {
-                        bool success = participants.GetOrder(sceneEvent.ClientId, out ParticipantOrder po);
+                        var success = participants.GetOrder(sceneEvent.ClientId, out var po);
                         Debug.Log($"About to spawn an interactable for participant :{po}");
                         StartCoroutine(Spawn_Interactable_Await(po));
                     }
                 }
                 else {
-                    
-                    
                     Debug.Log("A client Finished loading But we are not gonna Spawn cause the visuals are missing!");
                 }
 
@@ -693,9 +674,8 @@ using UnityEngine.Rendering;
     private void DespawnMainClientObject(ParticipantOrder po) {
         if (po == ParticipantOrder.None) return;
         Debug.Log($"DespawnMainClientObject for po:{po}");
-        if (Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null) {
+        if (Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null)
             Main_ParticipantObjects[po].GetComponent<NetworkObject>().Despawn();
-        }
 
         Main_ParticipantObjects.Remove(po);
     }
@@ -703,17 +683,16 @@ using UnityEngine.Rendering;
     private void DespawnAllInteractableObject(ParticipantOrder po) {
         Debug.Log($"Despawning All interactables for po:{po}");
         if (Interactable_ParticipantObjects.TryGetValue(po, out var interactableObjects)) {
-            HashSet<Interactable_Object>
+            var
                 toRemove =
                     new HashSet<Interactable_Object>(); // based on 4. in https://www.techiedelight.com/remove-elements-from-list-while-iterating-csharp/#:~:text=An%20elegant%20solution%20is%20to,()%20method%20for%20removing%20elements.
             Debug.Log($"Found{interactableObjects.Count} interactable for po{po}.");
             foreach (var io in interactableObjects) {
                 if (Main_ParticipantObjects[po] != null) {
-                    bool success = participants.GetClientID(po, out ulong clientID);
-                    if (success) {
+                    var success = participants.GetClientID(po, out var clientID);
+                    if (success)
                         Main_ParticipantObjects[po]
                             .De_AssignFollowTransform(clientID, io.GetComponent<NetworkObject>());
-                    }
                 }
 
                 Debug.Log($"Despawin interact able {io.name}");
@@ -726,14 +705,14 @@ using UnityEngine.Rendering;
     }
 
 
-    public enum ClienConnectionResponse {
+    public enum ClientConnectionResponse {
         SUCCESS,
         FAILED
     }
 
 
     private void ClientDisconnected(ulong clientID) {
-        bool success = participants.GetOrder(clientID, out ParticipantOrder po);
+        var success = participants.GetOrder(clientID, out var po);
         Debug.Log($"Got a client Disconnect for client:{po}");
         if (success && Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null) {
             DespawnAllObjectsforParticipant(po);
@@ -751,7 +730,7 @@ using UnityEngine.Rendering;
 
 
     private bool _GetCurrentSpawingData(ulong clientID, out Pose tempPose) {
-        if (!participants.GetOrder(clientID, out ParticipantOrder clientParticipantOrder)) {
+        if (!participants.GetOrder(clientID, out var clientParticipantOrder)) {
             ErrFailToSpawn();
             tempPose = new Pose();
             return false;
@@ -781,44 +760,41 @@ using UnityEngine.Rendering;
     }
 
     private bool _VerifyPrefabAvalible(SpawnType st) {
-        bool tmp = (SpawnType_To_InteractableObjects.ContainsKey(st) && SpawnType_To_InteractableObjects[st] != null);
+        var tmp = SpawnType_To_InteractableObjects.ContainsKey(st) && SpawnType_To_InteractableObjects[st] != null;
 
         return tmp;
     }
 
     private bool _VerifyPrefabAvalible(JoinType jt) {
-        return (JoinType_To_Client_Object.ContainsKey(jt) && JoinType_To_Client_Object[jt] != null);
+        return JoinType_To_Client_Object.ContainsKey(jt) && JoinType_To_Client_Object[jt] != null;
     }
 
     private void Spawn_Interactable_Immediate(ParticipantOrder po) {
         if (_GetCurrentSpawingData(po, out var tempPose)) {
             Debug.Log("GOt a spawn Point lets get the object.");
-            Client_Object mainParticipantObject = Main_ParticipantObjects[po];
+            var mainParticipantObject = Main_ParticipantObjects[po];
             Debug.Log("Got the main Client Object lets go.");
-            bool success = participants.GetSpawnType(po, out SpawnType spawnType);
+            var success = participants.GetSpawnType(po, out var spawnType);
             if (_VerifyPrefabAvalible(spawnType) && success) {
                 var newInteractableObject =
                     Instantiate(SpawnType_To_InteractableObjects[spawnType],
                         tempPose.position, tempPose.rotation);
 
-                participants.GetClientID(po, out ulong clientID);
+                participants.GetClientID(po, out var clientID);
                 newInteractableObject.GetComponent<NetworkObject>().Spawn(true);
 
                 newInteractableObject.GetComponent<Interactable_Object>().AssignClient(clientID, po);
-                newInteractableObject.GetComponent<Interactable_Object>().m_participantOrder.Value = po; //ToDo unecessairy
+                newInteractableObject.GetComponent<Interactable_Object>().m_participantOrder.Value =
+                    po; //ToDo unecessairy
                 Debug.Log(
                     $"Is the Interactable Spawned here already: {newInteractableObject.GetComponent<Interactable_Object>().IsSpawned}");
                 Interactable_ParticipantObjects[po].Add(newInteractableObject.GetComponent<Interactable_Object>());
-                
-                if (Main_ParticipantObjects[po] != null) {
+
+                if (Main_ParticipantObjects[po] != null)
                     Main_ParticipantObjects[po]
                         .AssignFollowTransform(newInteractableObject.GetComponent<Interactable_Object>(), clientID);
-                }
-                else {
+                else
                     Debug.LogError("Could not find Client as I am spawning the Interactable. Broken please fix.");
-                }
-
-                
             }
         }
     }
@@ -837,21 +813,22 @@ using UnityEngine.Rendering;
     }
 
     private void _Spawn_Client_Internal(ulong clientID) {
-        var success = participants.GetOrder(clientID, out ParticipantOrder po);
+        var success = participants.GetOrder(clientID, out var po);
 
         if (po == ParticipantOrder.None || success == false) return;
 
-        if (_GetCurrentSpawingData(clientID, out Pose tempPose) &&
-            participants.GetJoinType(po, out JoinType joinType) &&
-            participants.GetSpawnType(po, out SpawnType spawnType)) {
+        if (_GetCurrentSpawingData(clientID, out var tempPose) &&
+            participants.GetJoinType(po, out var joinType) &&
+            participants.GetSpawnType(po, out var spawnType)) {
             if (_VerifyPrefabAvalible(joinType)) {
                 var mainParticipantObject =
                     Instantiate(JoinType_To_Client_Object[joinType],
                         tempPose.position, tempPose.rotation);
                 //   DontDestroyOnLoad(mainParticipantObject);
-                Debug.Log($"obj:{mainParticipantObject.name} n o:{mainParticipantObject.GetComponent<NetworkObject>()} spawn:{mainParticipantObject.IsSpawned}");
-               // mainParticipantObject.GetComponent<NetworkObject>().Spawn();
-                mainParticipantObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID, false);
+                Debug.Log(
+                    $"obj:{mainParticipantObject.name} n o:{mainParticipantObject.GetComponent<NetworkObject>()} spawn:{mainParticipantObject.IsSpawned}");
+                // mainParticipantObject.GetComponent<NetworkObject>().Spawn();
+                mainParticipantObject.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientID);
                 Debug.Log($"I just spawned:{mainParticipantObject.IsSpawned}");
 
                 Main_ParticipantObjects.Add(po, mainParticipantObject.GetComponent<Client_Object>());
@@ -874,17 +851,18 @@ using UnityEngine.Rendering;
         return CurrentScenarioManager;
     }
 
-  
+
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request,
         NetworkManager.ConnectionApprovalResponse response) {
         var approve = false;
 
 
-        JoinParameters cdr =
+        var cdr =
             JsonConvert.DeserializeObject<JoinParameters>(Encoding.ASCII.GetString(request.Payload));
 
 
-        approve = participants.AddParticipant(cdr._participantOrder, request.ClientNetworkId, cdr._spawnType, cdr._jointype);
+        approve = participants.AddParticipant(cdr._participantOrder, request.ClientNetworkId, cdr._spawnType,
+            cdr._jointype);
 
         if (!approve) {
             Debug.Log("Participant Order " + request.Payload[0] +
@@ -972,18 +950,12 @@ using UnityEngine.Rendering;
         foreach (var po in participants.GetAllConnectedParticipants()) QNFinished.Add(po, false);
 
 
-        foreach (var no in FindObjectsOfType<Interactable_Object>()) {
-            no.Stop_Action();
-        }
+        foreach (var no in FindObjectsOfType<Interactable_Object>()) no.Stop_Action();
 
 
-        foreach (var po in Main_ParticipantObjects.Keys) {
-            
-            
+        foreach (var po in Main_ParticipantObjects.Keys)
             Main_ParticipantObjects[po].GetComponent<Client_Object>()
                 .StartQuestionair(m_QNDataStorageServer);
-
-        }
 
         m_QNDataStorageServer.StartQn(GetScenarioManager(), m_ReRunManager);
         StartCoroutine(farlab_logger.Instance.StopRecording());
