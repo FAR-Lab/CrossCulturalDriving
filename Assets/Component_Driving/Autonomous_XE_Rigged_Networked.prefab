@@ -271,6 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 847c2b67554b89044a7596c841668e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SplineCLCreator: {fileID: 0}
   axles:
   - left: {fileID: 14670720}
     right: {fileID: 14698806}
@@ -412,7 +413,7 @@ MonoBehaviour:
   tractionControlSlipLimit: 0.8
   centerOfMass: {x: 0, y: 0.35, z: 0}
   RPMSmoothness: 20
-  accellInput: 0
+  accelInput: 0
   steerInput: 0
   traction: 0
   tractionR: 0
@@ -431,7 +432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3662851691
+  GlobalObjectIdHash: 554996312
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -495,7 +496,7 @@ MonoBehaviour:
   RightIsActuallyOn: 0
   ActualLightOn: 0
   interval: 0.5
-  indicaterStage: 0
+  indicatorStage: 0
   NewButtonPress: 0
   LeftIndicatorDebounce: 0
   RightIndicatorDebounce: 0
@@ -729,6 +730,10 @@ MonoBehaviour:
   UsePythonBackend: 0
   Running: 0
   StartingWayPoint: {fileID: 0}
+  _drivingDirection: 0
+  p1: 0.1
+  i1: 0.08
+  d1: 0
   IntersectionCenterPosition: {fileID: 0}
 --- !u!114 &-7767813943838450789
 MonoBehaviour:

@@ -83,6 +83,11 @@ public class SplineCenterlineUtility : MonoBehaviour
             }
         }
     }
+    public static float Cross(Vector2 value1, Vector2 value2)
+    {
+        return value1.x * value2.y 
+               - value1.y * value2.x;
+    }
 
     /// <summary>
     /// Function to get the closest distance from a position "point" to the attached spline
@@ -119,8 +124,7 @@ public class SplineCenterlineUtility : MonoBehaviour
         }
 
         closestPointIndicator.transform.localPosition = indicatorPosition;
-        var rightSideOfSegment = new Vector2(closestLineSegment.z, -closestLineSegment.x);
-        var sign = Mathf.Sign(Vector2.Dot(rightSideOfSegment, new Vector2(lineToPoint.x, lineToPoint.z)));
+        var sign = -Mathf.Sign(Cross(new Vector2(closestLineSegment.x, closestLineSegment.z), new Vector2(lineToPoint.x, lineToPoint.z)));
         return minDistance * sign;
     }
 

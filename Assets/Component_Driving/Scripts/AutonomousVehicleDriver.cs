@@ -46,9 +46,9 @@ public class AutonomousVehicleDriver : MonoBehaviour {
 
     private PID speedPID = new PID(0.2f, 0.005f, 0.005f);
     public float p1, i1, d1;
-    public float p2, i2, d2;
+    // public float p2, i2, d2;
     private PID centerLinePID; //angle in degrees (- is left, + is right)
-    private PID anglePID;
+    // private PID anglePID;
     private float YieldTimer;
 
     private TriggerPlayerTracker AvoidBox;
@@ -79,8 +79,8 @@ public class AutonomousVehicleDriver : MonoBehaviour {
             this.enabled = false;
         }
 
-        anglePID = new PID(p2, i2, d2);
-        centerLinePID = new PID(p1, i1, d1);
+        // anglePID = new PID(p2, i2, d2);
+        centerLinePID = new PID(p1, i1, d1, -.6f, .6f);
     }
 
     private bool AssignOtherCar(bool usingReplay) {
@@ -223,11 +223,9 @@ public class AutonomousVehicleDriver : MonoBehaviour {
     float ExternCenterlineOffset;
     
     private void NewPythonData(float[] data) {
-        Debug.Log("Getting Python Data");
         if (data.Length > 1) {
             ExternThrottle = data[0];
             ExternCenterlineOffset = data[1];
-            Debug.Log("Got Python Data");
         }
     }
 
@@ -343,9 +341,12 @@ public class AutonomousVehicleDriver : MonoBehaviour {
 
     private void DriveUsingAI() {
         Throttle = ExternThrottle * 0.9f + Throttle * 0.1f;
-        var targetAngle = centerLinePID.Update(ExternCenterlineOffset,
-            _vehicleController.SplineCLCreator.GetClosestDistanceToSpline(transform.position), Time.fixedDeltaTime);
-        Steering = anglePID.Update(targetAngle, 0, Time.fixedDeltaTime);
+        var currentCenterlineOffset = _vehicleController.SplineCLCreator.GetClosestDistanceToSpline(transform.position);
+        var steer = centerLinePID.Update(ExternCenterlineOffset,
+            currentCenterlineOffset, Time.deltaTime);
+        //Steering = anglePID.Update(targetAngle, 0, Time.deltaTime);
+        Steering = steer * 0.9f + Steering * 0.1f;
+        Debug.Log(currentCenterlineOffset);
     }
 
     private void DriveUsingWaypoints() {
