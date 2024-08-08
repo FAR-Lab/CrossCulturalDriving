@@ -62,6 +62,8 @@ public class AutonomousVehicleDriver : MonoBehaviour {
     public Transform IntersectionCenterPosition;
     private VehicleController otherCar;
     private NetworkVehicleController otherCarNet;
+    
+    private List<float[]> externData = new List<float[]>();
     void Start() {
         if (GetComponent<NetworkVehicleController>().IsServer) {
             _vehicleController = GetComponent<VehicleController>();
@@ -157,7 +159,7 @@ public class AutonomousVehicleDriver : MonoBehaviour {
 
     private float[] m_outdata = new float[7];
     private void OnGUI() {
-        string s = string.Concat(m_outdata.Select(x => x.ToString("F2")+" ,")) + $" throtle{ExternThrottle}";
+        string s = string.Concat(m_outdata.Select(x => x.ToString("F2")+" ,")) + $" throttle{externData.Last()[1]}";
         GUI.Label(new Rect(0,0,400,20),s );
         
     }
@@ -218,14 +220,9 @@ public class AutonomousVehicleDriver : MonoBehaviour {
             yield return new WaitForSeconds(1f / 18f);
         }
     }
-
-    float ExternThrottle;
-    float ExternCenterlineOffset;
-    
     private void NewPythonData(float[] data) {
         if (data.Length > 1) {
-            ExternThrottle = data[0];
-            ExternCenterlineOffset = data[1];
+            externData.Add(new []{Time.time, data[0], Mathf.Clamp(data[1], -2, 2)});
         }
     }
 
@@ -340,13 +337,18 @@ public class AutonomousVehicleDriver : MonoBehaviour {
     }
 
     private void DriveUsingAI() {
-        Throttle = ExternThrottle * 0.9f + Throttle * 0.1f;
+        Throttle = externData.Last()[1] * 0.9f + Throttle * 0.1f;
         var currentCenterlineOffset = _vehicleController.SplineCLCreator.GetClosestDistanceToSpline(transform.position);
-        var steer = centerLinePID.Update(ExternCenterlineOffset,
+        var steer = centerLinePID.Update(AverageLastSteer(1),
             currentCenterlineOffset, Time.deltaTime);
         //Steering = anglePID.Update(targetAngle, 0, Time.deltaTime);
         Steering = steer * 0.9f + Steering * 0.1f;
         Debug.Log(currentCenterlineOffset);
+    }
+
+    //average last steer inputs in externData for the past timeInPast seconds
+    private float AverageLastSteer(float timeInPast) {
+        return externData.Where(x => x[0] > Time.time - timeInPast).Select(x => x[2]).Average();
     }
 
     private void DriveUsingWaypoints() {
