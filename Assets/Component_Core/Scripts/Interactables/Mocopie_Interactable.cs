@@ -49,7 +49,6 @@ public class Mocopie_Interactable : Interactable_Object {
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
         m_mocopi = transform.GetComponent<MocopiSimpleReceiver>();
-        m_avatar = m_mocopi.transform.GetComponentInChildren<MocopiAvatar>();
         m_avatar = GetComponentInChildren<MocopiAvatar>();
         
         if (m_avatar == null) {
@@ -60,14 +59,7 @@ public class Mocopie_Interactable : Interactable_Object {
             m_avatarT = m_avatar.transform;
             Debug.Log($"Got a head{m_mocopiHead} and a main T:{m_avatarT}");
         }
-        if (IsServer) {
-            m_mocopi.StartReceiving();
-        }
-        else {
-            m_mocopi.enabled = false;
-            m_avatar.enabled = false;
-            m_avatar.Animator.enabled = false;
-        }
+        m_mocopi.StartReceiving();
     }
 
     public MocopiAvatar GetMocopiAvatar() {
@@ -77,8 +69,8 @@ public class Mocopie_Interactable : Interactable_Object {
     // Update is called once per frame
     void Update() {
         if (ready) {
-            Vector3 tmp = m_participantHead.position - (-m_participantHead.up * offsetUp) +
-                          (m_participantHead.forward * offsetFwd);
+            Vector3 tmp = m_participantHead.position + m_participantHead.up * offsetUp +
+                          m_participantHead.forward * offsetFwd;
             m_avatarT.position += tmp - m_mocopiHead.position;
             float angle = Vector2.SignedAngle(new Vector2(m_participantHead.forward.x, m_participantHead.forward.z),
                 new Vector2(m_mocopiHead.forward.x, m_mocopiHead.forward.z));
