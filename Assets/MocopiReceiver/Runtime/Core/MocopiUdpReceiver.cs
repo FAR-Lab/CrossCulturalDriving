@@ -164,7 +164,7 @@ namespace Mocopi.Receiver.Core
         /// <summary>
         /// Is it running
         /// </summary>
-        public bool IsRuning { get { return this.task != null && !this.task.IsCanceled && !this.task.IsCompleted; } }
+        public bool IsRunning { get { return this.task != null && !this.task.IsCanceled && !this.task.IsCompleted; } }
         #endregion --Properties--
 
         #region --Methods--
@@ -175,7 +175,7 @@ namespace Mocopi.Receiver.Core
         {
             this.UdpStop();
 
-            if (this.IsRuning)
+            if (this.IsRunning)
             {
                 return;
             }
@@ -260,7 +260,7 @@ namespace Mocopi.Receiver.Core
         /// <param name="cancellationToken">Cancellation token</param>
         private async void UdpTaskAsync(CancellationToken cancellationToken)
         {
-            //TODO: this probably should come back
+            //this is for single cast
             //this.udpClient = new UdpClient(this.Port);
 
             while (!cancellationToken.IsCancellationRequested && this.udpClient != null)

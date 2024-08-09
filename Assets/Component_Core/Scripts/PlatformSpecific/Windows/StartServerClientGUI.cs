@@ -10,6 +10,8 @@ public class StartServerClientGUI : MonoBehaviour {
 
     private Text SessionName;
     private Text TargetIP;
+    private Text MulticastIP;
+    public SO_IPAddress MulticastIPSaver;
 
     private void Start() {
 #if UNITY_EDITOR || UNITY_STANDALONE
@@ -23,6 +25,9 @@ public class StartServerClientGUI : MonoBehaviour {
 
         TargetIP = ServerGuiInstance.Find("ClientPanel/ClientOptions/TargetIPAddress").GetComponent<InputField>()
             ?.textComponent;
+        MulticastIP = ServerGuiInstance.Find("HostPanel/HostOptions/MulticastAddress").GetComponent<InputField>()
+            ?.textComponent;
+        
         ServerGuiInstance.Find("StartAsReRun").GetComponent<Button>().onClick
             .AddListener(() => StartAsReRuInterfaceCallback());
 
@@ -44,9 +49,11 @@ public class StartServerClientGUI : MonoBehaviour {
         JoinType _joinTypeIN) {
         switch (starttype) {
             case ComputerStartButtonConfiguration.StartType.Server:
+                MulticastIPSaver.ipAddress = MulticastIP.text;
                 ConnectionAndSpawning.Singleton.StartAsServer(SessionName.text);
                 break;
             case ComputerStartButtonConfiguration.StartType.Host:
+                MulticastIPSaver.ipAddress = MulticastIP.text;
                 ConnectionAndSpawning.Singleton.StartAsHost(SessionName.text, _po, _joinTypeIN, _spawnTypeIN);
                 break;
             case ComputerStartButtonConfiguration.StartType.Client:

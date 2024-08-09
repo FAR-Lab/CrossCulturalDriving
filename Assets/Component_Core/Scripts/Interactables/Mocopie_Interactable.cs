@@ -9,9 +9,6 @@ using UnityEngine.Serialization;
 
 
 public class Mocopie_Interactable : Interactable_Object {
-
-   
-  
     private ulong m_CLID;
     private Pose StartingPose;
 
@@ -30,9 +27,8 @@ public class Mocopie_Interactable : Interactable_Object {
     public float offsetFwd;
     private bool ready = false;
     
-    
-    // Start is called before the first frame update
-    
+    public SO_IPAddress m_multicastAddress;
+    private NetworkVariable<string> multicastAddress = new NetworkVariable<string>();
 
     private void AttemptToFindTheAppropriateHead() {
         Debug.Log($"newValue {m_participantOrder.Value}");
@@ -48,6 +44,8 @@ public class Mocopie_Interactable : Interactable_Object {
 
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
+        if (IsServer)
+            multicastAddress.Value = m_multicastAddress.ipAddress;
         m_mocopi = transform.GetComponent<MocopiSimpleReceiver>();
         m_avatar = GetComponentInChildren<MocopiAvatar>();
         
@@ -59,6 +57,8 @@ public class Mocopie_Interactable : Interactable_Object {
             m_avatarT = m_avatar.transform;
             Debug.Log($"Got a head{m_mocopiHead} and a main T:{m_avatarT}");
         }
+
+        m_mocopi.MulticastAddress = multicastAddress.Value;
         m_mocopi.StartReceiving();
     }
 

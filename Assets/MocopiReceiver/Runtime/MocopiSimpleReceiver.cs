@@ -112,9 +112,7 @@ namespace Mocopi.Receiver {
                 if (this.AvatarSettings[i].MocopiAvatar == null) {
                     continue;
                 }
-
-                //TODO: this is the part that was changed for multicast
-
+                
                 if (this.UdpReceivers[i] == null) {
                     this.UdpReceivers[i] = new MocopiUdpReceiver(
                         this.AvatarSettings[i].Port, 
