@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Mocopi.Receiver;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -28,7 +29,7 @@ public class Mocopie_Interactable : Interactable_Object {
     private bool ready = false;
     
     public SO_IPAddress m_multicastAddress;
-    private NetworkVariable<string> multicastAddress = new NetworkVariable<string>();
+    private NetworkVariable<FixedString64Bytes> multicastAddress = new();
 
     private void AttemptToFindTheAppropriateHead() {
         Debug.Log($"newValue {m_participantOrder.Value}");
@@ -44,10 +45,11 @@ public class Mocopie_Interactable : Interactable_Object {
 
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
-        if (IsServer)
-            multicastAddress.Value = m_multicastAddress.ipAddress;
         m_mocopi = transform.GetComponent<MocopiSimpleReceiver>();
         m_avatar = GetComponentInChildren<MocopiAvatar>();
+        
+        if (IsServer)
+            multicastAddress.Value = string.IsNullOrEmpty(m_multicastAddress.ipAddress) ? m_mocopi.MulticastAddress : m_multicastAddress.ipAddress;
         
         if (m_avatar == null) {
             Debug.LogError("Not good I need an avatar!");
@@ -58,7 +60,7 @@ public class Mocopie_Interactable : Interactable_Object {
             Debug.Log($"Got a head{m_mocopiHead} and a main T:{m_avatarT}");
         }
 
-        m_mocopi.MulticastAddress = multicastAddress.Value;
+        m_mocopi.MulticastAddress = multicastAddress.Value.ToString();
         m_mocopi.StartReceiving();
     }
 
