@@ -155,6 +155,8 @@ public class AutonomousVehicleDriver : MonoBehaviour {
         rb.MovePosition(intersectionCenter.TransformPoint(new Vector3(startPos.x, 0.1f, startPos.z)));
         rb.MoveRotation(Quaternion.Euler(0, Vector3.SignedAngle(startRot, Vector3.forward, Vector3.up), 0) * intersectionCenter.rotation);
         rb.velocity = intersectionCenter.TransformDirection(5 * startRot);
+        Throttle = 0;
+        Steering = 0;
     }
 
     private float[] m_outdata = new float[7];
