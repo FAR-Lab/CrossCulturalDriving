@@ -225,9 +225,7 @@ public class VR_Participant : Client_Object {
             MyLineRenderer = GetComponentsInChildren<XRRayInteractor>().ToArray();
         }
         else {
-            foreach (var a in
-                     GetComponentsInChildren<SkinnedMeshRenderer>())
-                a.enabled = true; // should happen twice to activate the hand
+            foreach (var a in GetComponentsInChildren<SkinnedMeshRenderer>()) a.enabled = true; // should happen twice to activate the hand
 
             foreach (var a in GetComponentsInChildren<XRHandTrackingEvents>()) a.enabled = false;
 
@@ -245,6 +243,8 @@ public class VR_Participant : Client_Object {
             foreach (var a in GetComponentsInChildren<XRRayInteractor>()) a.transform.gameObject.SetActive(false);
 
             foreach (var componentsInChild in GetComponentsInChildren<EventSystem>()) componentsInChild.enabled = false;
+
+
         }
 
         if (IsServer) {

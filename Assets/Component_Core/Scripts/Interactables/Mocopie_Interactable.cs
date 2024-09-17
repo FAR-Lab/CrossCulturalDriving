@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using Mocopi.Receiver;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 
 public class Mocopie_Interactable : Interactable_Object {
@@ -45,6 +43,7 @@ public class Mocopie_Interactable : Interactable_Object {
 
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
+
         m_mocopi = transform.GetComponent<MocopiSimpleReceiver>();
         m_avatar = GetComponentInChildren<MocopiAvatar>();
         
@@ -57,11 +56,28 @@ public class Mocopie_Interactable : Interactable_Object {
         else{
             m_mocopiHead = m_avatar.Animator.GetBoneTransform(HumanBodyBones.Head);
             m_avatarT = m_avatar.transform;
-            Debug.Log($"Got a head{m_mocopiHead} and a main T:{m_avatarT}");
         }
+
+        StartCoroutine(DisableMesh());
+
 
         m_mocopi.MulticastAddress = multicastAddress.Value.ToString();
         m_mocopi.StartReceiving();
+    }
+
+    // TODO: shuold really be an onchange call of the PO network variable
+    private IEnumerator DisableMesh() {
+        // Debug.Log($"Testt PO of this {m_participantOrder.Value}, SO {ConnectionAndSpawning.Singleton.ParticipantOrder}");
+
+        yield return new WaitForSeconds(0.5f);
+
+        // Debug.Log($"Testt PO of this {m_participantOrder.Value}, SO {ConnectionAndSpawning.Singleton.ParticipantOrder}");
+        if(m_participantOrder.Value == ConnectionAndSpawning.Singleton.ParticipantOrder) {
+            List<SkinnedMeshRenderer> skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>().ToList();
+            foreach (SkinnedMeshRenderer skinnedMeshRenderer in skinnedMeshRenderers) {
+                skinnedMeshRenderer.enabled = false;
+            }
+        }
     }
 
     public MocopiAvatar GetMocopiAvatar() {
@@ -77,6 +93,9 @@ public class Mocopie_Interactable : Interactable_Object {
             float angle = Vector2.SignedAngle(new Vector2(m_participantHead.forward.x, m_participantHead.forward.z),
                 new Vector2(m_mocopiHead.forward.x, m_mocopiHead.forward.z));
             m_avatarT.Rotate(Vector3.up, angle * 0.1f);
+
+                    // Debug.Log($"Testt PO of this {m_participantOrder.Value}, SO {ConnectionAndSpawning.Singleton.ParticipantOrder}");
+
         }
         else {
             AttemptToFindTheAppropriateHead();
@@ -88,9 +107,11 @@ public class Mocopie_Interactable : Interactable_Object {
     }
 
     public override void AssignClient(ulong CLID, ParticipantOrder participantOrder) {
+
         m_participantOrder.Value = participantOrder;
         m_CLID = CLID;
         m_participantHead = FindObjectsOfType<VR_Participant>().First(x => x.GetParticipantOrder()==participantOrder).GetMainCamera();
+
         ready = true;
     }
     

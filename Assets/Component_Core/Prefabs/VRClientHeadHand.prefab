@@ -3109,7 +3109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_XRHandTrackingEvents: {fileID: 5787734821228047987}
   m_HandMeshRenderer: {fileID: 3814106046533827031}
-  m_ShowMeshWhenTrackingIsAcquired: 0
+  m_ShowMeshWhenTrackingIsAcquired: 1
   m_HideMeshWhenTrackingIsLost: 0
 --- !u!114 &8160222202133510995
 MonoBehaviour:
@@ -5585,7 +5585,7 @@ SkinnedMeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4206723863693369208}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -6428,6 +6428,7 @@ MonoBehaviour:
     m_InternalValue: 0
   mySpawnType:
     m_InternalValue: 0
+  HeadModel: {fileID: 7923801964231277450}
   QuestionairPrefab: {fileID: 1853806982428388, guid: bb398da6725f53c4283a5f88c90d86ed, type: 3}
   m_calibDisplay: {fileID: 0}
   MyLineRenderer: []
@@ -6445,7 +6446,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 56365
+    id: 31860
   replayObject:
     reference: {fileID: 4995632068778713869}
   m_participantOrder: 0
@@ -6463,7 +6464,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isObservedComponentsExpanded: 0
   replayIdentity:
-    id: 7328
+    id: 11314
   prefabIdentity:
     id: 18724
   observedComponents:
@@ -6502,7 +6503,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noManagingObject: 0
   replayIdentity:
-    id: 12677
+    id: 42675
   replayObject:
     reference: {fileID: 4995632068778713869}
   positionFlags: 263
@@ -7159,7 +7160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_XRHandTrackingEvents: {fileID: 1441576945976138709}
   m_HandMeshRenderer: {fileID: 2565215673675954798}
-  m_ShowMeshWhenTrackingIsAcquired: 0
+  m_ShowMeshWhenTrackingIsAcquired: 1
   m_HideMeshWhenTrackingIsLost: 0
 --- !u!114 &8553093884634768456
 MonoBehaviour:
@@ -10248,7 +10249,7 @@ SkinnedMeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7858218153853134563}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -11936,5 +11937,10 @@ PrefabInstance:
 --- !u!4 &7403125362143289648 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1333881279000858748, guid: baed281bac5127644bec97a973d75241, type: 3}
+  m_PrefabInstance: {fileID: 8376636756327379276}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7923801964231277450 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1858074973975055046, guid: baed281bac5127644bec97a973d75241, type: 3}
   m_PrefabInstance: {fileID: 8376636756327379276}
   m_PrefabAsset: {fileID: 0}
