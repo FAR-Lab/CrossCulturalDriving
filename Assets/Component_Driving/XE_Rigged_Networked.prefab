@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 847c2b67554b89044a7596c841668e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SplineCLCreator: {fileID: 0}
   axles:
   - left: {fileID: 14670720}
     right: {fileID: 14698806}
@@ -247,7 +248,7 @@ MonoBehaviour:
   tractionControlSlipLimit: 0.8
   centerOfMass: {x: 0, y: 0.35, z: 0}
   RPMSmoothness: 20
-  accellInput: 0
+  accelInput: 0
   steerInput: 0
   traction: 0
   tractionR: 0
@@ -266,7 +267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 76018310
+  GlobalObjectIdHash: 2995667618
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -288,7 +289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_participantOrder:
     m_InternalValue: 0
-  VehicleMode: 1
+  VehicleMode: 0
   CameraPosition: {fileID: 4056613939988268}
   Left:
   - {fileID: 4234196572143992}
@@ -334,7 +335,7 @@ MonoBehaviour:
   RightIsActuallyOn: 0
   ActualLightOn: 0
   interval: 0.5
-  indicaterStage: 0
+  indicatorStage: 0
   NewButtonPress: 0
   LeftIndicatorDebounce: 0
   RightIndicatorDebounce: 0
