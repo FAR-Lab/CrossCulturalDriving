@@ -16,7 +16,8 @@ public abstract class SO_FSMNode : ScriptableObject
         {
             if (condition.IsConditionMet(context))
             {
-                return condition.targetNode;
+                SO_FSMNode targetNode = condition.targetNode;
+                return targetNode;
             }
         }
         return null; 

@@ -26,10 +26,8 @@ public class SO_AccelStrat : SO_FSMNode
 
         float newSpeed = currentSpeed + acceleration * Time.deltaTime;
 
-        newSpeed = Mathf.Clamp(newSpeed, 0, max_speed);
-
         context.SetSpeed(newSpeed);
 
-        // Debug.Log($"Current Speed: {currentSpeed}, New Speed: {newSpeed}, Acceleration: {acceleration}");
+        Debug.Log($"Current Speed: {currentSpeed}, New Speed: {newSpeed}, Acceleration: {acceleration}");
     }
 }

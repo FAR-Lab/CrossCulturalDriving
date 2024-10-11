@@ -65,6 +65,8 @@ public class SC_AVStateMachine : NetworkBehaviour {
         }
         
         DriveVehicle();
+
+        // Debug.Log("Speed: " + _context.GetSpeed());
     }
     
     private void DriveVehicle() {
