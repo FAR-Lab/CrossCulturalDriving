@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Rerun;
@@ -442,16 +443,16 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
 
-    public List<Interactable_Object> GetInteractableObjects_For_Participants(ulong senderClientId) {
+    public Interactable_Object GetInteractableObject_For_Participant(ulong senderClientId) {
         var success = participants.GetOrder(senderClientId, out var po);
-        if (success) return GetInteractableObjects_For_Participants(po);
+        if (success) return GetInteractableObject_For_Participant(po);
 
         return null;
     }
 
-    public List<Interactable_Object> GetInteractableObjects_For_Participants(ParticipantOrder po) {
+    public Interactable_Object GetInteractableObject_For_Participant(ParticipantOrder po) {
         if (!Interactable_ParticipantObjects.ContainsKey(po)) return null;
-        return Interactable_ParticipantObjects[po];
+        return Interactable_ParticipantObjects[po].First();
     }
 
 
@@ -967,7 +968,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     private void SwitchToPostQN() {
-        m_QNDataStorageServer.StopScenario(m_ReRunManager);
+        //m_QNDataStorageServer.StopScenario(m_ReRunManager);
         // if (farlab_logger.Instance.isRecording()) StartCoroutine(farlab_logger.Instance.StopRecording());
         ServerState = ActionState.POSTQUESTIONS;
         ServerStateChange.Invoke(ActionState.POSTQUESTIONS);

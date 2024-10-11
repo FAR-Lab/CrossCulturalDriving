@@ -99,13 +99,16 @@ public class AutonomousVehicleDriver : MonoBehaviour {
         
         if (ConnectionAndSpawning.Singleton != null
             && ConnectionAndSpawning.Singleton.ServerState is ActionState.READY or ActionState.DRIVE) {
-            var t = ConnectionAndSpawning.Singleton
-                .GetInteractableObjects_For_Participants(ParticipantOrder.A);
+            var t = ConnectionAndSpawning.Singleton.GetInteractableObject_For_Participant(ParticipantOrder.A);
 
-            if (t != null && t.Count>0) {
-                otherCar = t.First().GetComponent<VehicleController>();
-                otherCarNet = t.First().GetComponent<NetworkVehicleController>();
+            if (t == null) {
+                Debug.Log("No other car found");
+                return false;
             }
+            
+                otherCar = t.GetComponent<VehicleController>();
+                otherCarNet = t.GetComponent<NetworkVehicleController>();
+            
 
             if (otherCar != null) {
                 Debug.Log("Got the other car. Car A attempting to run NN!");

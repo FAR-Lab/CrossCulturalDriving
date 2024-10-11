@@ -31,6 +31,13 @@ public class LoadCenterline : MonoBehaviour
         SplineCreator.LoadPointsFromCL(centerline);
     }
 
+    [ContextMenu("Load Path")]
+    public void LoadPath()
+    {
+        centerline = ReadCenterLineCSV();
+        SplineCreator.LoadPointsFromCL(centerline);
+    }
+    
     private void Update()
     {
         if (LoadNewCLButton)
