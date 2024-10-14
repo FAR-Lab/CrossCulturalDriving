@@ -10,24 +10,26 @@ public class SO_AccelStrat : SO_FSMNode
 
     public override void OnEnter(SC_AVContext context)
     {
-        Debug.Log("FSM: Entering Acceleration Strategy Node");
+        // Debug.Log("FSM: Entering Acceleration Strategy Node");
     }
 
     public override void OnExit(SC_AVContext context)
     {
-        Debug.Log("FSM: Exiting Acceleration Strategy Node");
+        // Debug.Log("FSM: Exiting Acceleration Strategy Node");
     }
 
     public override void OnUpdate(SC_AVContext context)
     {
         float currentSpeed = context.GetSpeed();
 
+        // expose all
+        // Debug.Log($"Current Speed: {currentSpeed}, Max Accel: {max_accel}, Max Speed: {max_speed}, Delta: {delta}");
         float acceleration = max_accel * (1 - Mathf.Pow(currentSpeed / max_speed, delta));
 
         float newSpeed = currentSpeed + acceleration * Time.deltaTime;
 
         context.SetSpeed(newSpeed);
 
-        Debug.Log($"Current Speed: {currentSpeed}, New Speed: {newSpeed}, Acceleration: {acceleration}");
+        // Debug.Log($"Current Speed: {currentSpeed}, New Speed: {newSpeed}, Acceleration: {acceleration}");
     }
 }

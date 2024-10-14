@@ -61,6 +61,7 @@ public class SC_AVStateMachine : NetworkBehaviour {
         if (nextNode != null) {
             currentNode.OnExit(_context);
             currentNode = nextNode;
+            Debug.Log("FSM: Transitioning to " + currentNode.name);
             currentNode.OnEnter(_context);
         }
         

@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f38c7b967143bc4c8c8ac392fd98bcc, type: 3}
-  m_Name: 2c3 - C1C5NotMet
+  m_Script: {fileID: 11500000, guid: a14b823c9a72d0e4685769afb664269a, type: 3}
+  m_Name: 3 - Decel Til Bar
   m_EditorClassIdentifier: 
-  targetNode: {fileID: 11400000, guid: 32523671bca957a4c9f6e054beacbdd5, type: 2}
-  logicalOperator: 0
-  conditions:
-  - {fileID: 0}
+  transitionConditions:
+  - {fileID: 11400000, guid: ba3def1b283b35c4793acdb120cb5f05, type: 2}
+  barDistanceFromCenter: 10

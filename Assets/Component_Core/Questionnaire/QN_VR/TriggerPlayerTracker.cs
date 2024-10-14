@@ -28,7 +28,5 @@ public class TriggerPlayerTracker : MonoBehaviour {
     public bool GetPlayerPresent() {
         return test;
     }
-    private void LateUpdate() {
-     
-    }
+
 }

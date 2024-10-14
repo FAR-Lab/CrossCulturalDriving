@@ -14,8 +14,19 @@ public enum LogicalOperator
 
 public class SO_CompoundCondition : SO_TransitionCondition
 {
+    [Serializable]
+    public class Condition{
+        public SO_TransitionCondition condition;
+        public bool isNegated;
+
+        public bool IsConditionMet(SC_AVContext context)
+        {
+            return isNegated ? !condition.IsConditionMet(context) : condition.IsConditionMet(context);
+        }
+    }
+
     public LogicalOperator logicalOperator;
-    public SO_TransitionCondition[] conditions;
+    public Condition[] conditions;
 
     public override bool IsConditionMet(SC_AVContext context)
     {

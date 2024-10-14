@@ -10,9 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f38c7b967143bc4c8c8ac392fd98bcc, type: 3}
-  m_Name: 2c3 - C1C5NotMet
+  m_Name: 2c5 - C5 Satisfied
   m_EditorClassIdentifier: 
-  targetNode: {fileID: 11400000, guid: 32523671bca957a4c9f6e054beacbdd5, type: 2}
+  targetNode: {fileID: 11400000, guid: b709d557a297e5c41bbb5d20828bb5da, type: 2}
   logicalOperator: 0
   conditions:
-  - {fileID: 0}
+  - condition: {fileID: 11400000, guid: 348d58e9f6c62d44baa61e57792d1bea, type: 2}
+    isNegated: 0
+  - condition: {fileID: 11400000, guid: beffd914ecd3e22448e56b66775ad99a, type: 2}
+    isNegated: 0

@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class SO_DistanceToCenter : SO_TransitionCondition
 {
+    public bool UseSO = true;
+
     public float distanceThreshold = 30f;
+    public SO_Float distanceThresholdSO;
 
     public enum Party
     {
@@ -32,11 +35,13 @@ public class SO_DistanceToCenter : SO_TransitionCondition
             distance = context.GetDistanceToCenter(context.GetOtherNetworkVehicleController());
         }
 
+        var localDistanceThreshold = UseSO ? distanceThresholdSO.value : distanceThreshold;
+
         if (comparison == Comparison.LessThan) {
-            return distance < distanceThreshold;
+            return distance < localDistanceThreshold;
         }
         else {
-            return distance > distanceThreshold;
+            return distance > localDistanceThreshold;
         }
     }
 }
