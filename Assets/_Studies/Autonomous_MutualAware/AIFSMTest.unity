@@ -1461,7 +1461,7 @@ GameObject:
   - component: {fileID: 3083907052957643675}
   - component: {fileID: 1455558093252162436}
   - component: {fileID: 6654686891282165105}
-  - component: {fileID: 6654686891282165104}
+  - component: {fileID: 6654686891282165106}
   m_Layer: 0
   m_Name: Autonomous_XE_Rigged_Networked 1
   m_TagString: Player
@@ -30911,25 +30911,6 @@ MonoBehaviour:
   replayObject:
     reference: {fileID: 1455558093252162436}
   m_participantOrder: 0
---- !u!114 &6654686891282165104
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 370293071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec083da332e88fa499556edd292d96ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  centerPos: {x: 0, y: 0, z: 0}
-  conflictZone: {fileID: 797527401}
-  otherVehicleController: {fileID: 0}
-  otherNetworkVehicleController: {fileID: 0}
-  myVehicleController: {fileID: 0}
-  myNetworkVehicleController: {fileID: 0}
-  distanceToCenter: 0
 --- !u!114 &6654686891282165105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30939,15 +30920,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 370293071}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c5320313f292884d803397655046bc6, type: 3}
+  m_Script: {fileID: 11500000, guid: cecda5f995e7a1142a34b8ca9df57b30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   centerPos: {x: 0, y: 0, z: 0}
-  startNodeContainer: {fileID: 11400000, guid: 7a2d069bf0e1f6c49a24e5c5fc7b9699, type: 2}
+  startNodeContainer: {fileID: 0}
   currentNode: {fileID: 0}
   splineContainer: {fileID: 525941044}
   rotationSpeed: 5
-  startPointRatio: 0.65
+  startPointRatio: 0.5
+--- !u!114 &6654686891282165106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370293071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f08a588e129f120478ed4124304cb9a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  centerPos: {x: 0, y: 0, z: 0}
+  otherVehicleController: {fileID: 0}
+  otherNetworkVehicleController: {fileID: 0}
+  myVehicleController: {fileID: 0}
+  myNetworkVehicleController: {fileID: 0}
+  triggerPlayerTracker: {fileID: 0}
+  distanceToCenter: 0
 --- !u!23 &6694462555296217177
 MeshRenderer:
   m_ObjectHideFlags: 0
