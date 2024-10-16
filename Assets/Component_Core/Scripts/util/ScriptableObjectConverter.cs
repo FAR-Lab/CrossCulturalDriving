@@ -1,7 +1,10 @@
 using UnityEngine;
+# if UNITY_EDITOR
 using UnityEditor;
+# endif
 using System.IO;
 
+# if UNITY_EDITOR
 public static class ScriptableObjectConverter
 {
     [MenuItem("Tools/Convert ScriptableObject to Instance")]
@@ -37,3 +40,4 @@ public static class ScriptableObjectConverter
         Debug.Log($"ScriptableObject instance created at {instancePath}");
     }
 }
+# endif
