@@ -47,6 +47,9 @@ public class SC_AVContext : MonoBehaviour {
     }
     
     public float GetDistanceToCenter(NetworkVehicleController vehicleController) {
+        if (vehicleController == null) {
+            return 0;
+        }
         return Vector3.Distance(centerPos, vehicleController.transform.position);
     } 
     
@@ -62,8 +65,8 @@ public class SC_AVContext : MonoBehaviour {
         return _speed;
     }
     
-    public bool IsPlayerInTrigger() {
-        return triggerPlayerTracker.GetPlayerPresent();
+    public bool IsFrontClear() {
+        return triggerPlayerTracker.IsFrontClear();
     }
     
     

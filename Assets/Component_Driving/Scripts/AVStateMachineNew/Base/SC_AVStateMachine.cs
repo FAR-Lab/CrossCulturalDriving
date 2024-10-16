@@ -40,7 +40,7 @@ public class SC_AVStateMachine : NetworkBehaviour {
         _currentSplineLength = splineContainer.CalculateLength(_currentSplineIndex);
 
         currentNode = startNodeContainer.startNode;
-        currentNode.OnEnter(_context);
+        currentNode.Action.OnEnter(_context);
         
         StartCoroutine(PrepToStart());
     }
@@ -54,14 +54,14 @@ public class SC_AVStateMachine : NetworkBehaviour {
     private void Update() {
         if (!_ready) return;
         
-        currentNode.OnUpdate(_context);
+        currentNode.Action.OnUpdate(_context);
         SO_FSMNode nextNode = currentNode.CheckTransitions(_context);
         
         if (nextNode != null) {
-            currentNode.OnExit(_context);
+            currentNode.Action.OnExit(_context);
             currentNode = nextNode;
             Debug.Log("FSM: Transitioning to " + currentNode.name);
-            currentNode.OnEnter(_context);
+            currentNode.Action.OnEnter(_context);
         }
         
         DriveVehicle();
@@ -105,12 +105,15 @@ public class SC_AVStateMachine : NetworkBehaviour {
         float currentSpeed = _context.GetSpeed();
 
         string currentNodeName = currentNode != null ? currentNode.name : "No Current Node";
+        string isFrontClear = _context.IsFrontClear() ? "Yes" : "No";
 
         Vector3 labelPosition = vehiclePosition + Vector3.up * 2f;
 
         string labelText = $"Distance to Center: {distanceToCenter:F2}\n" +
+                           $"Other Distance: {_context.GetDistanceToCenter(_context.GetOtherNetworkVehicleController()):F2}\n" +
                            $"Speed: {currentSpeed:F2}\n" +
-                           $"Current Node: {currentNodeName}\n";
+                           $"Current Node: {currentNodeName}\n" +
+                            $" Is front clear: {isFrontClear}";
 
         GUIStyle style = new GUIStyle();
         style.fontSize = 20; 

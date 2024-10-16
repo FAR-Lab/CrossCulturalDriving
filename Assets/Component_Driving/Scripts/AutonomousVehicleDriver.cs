@@ -321,7 +321,7 @@ public class AutonomousVehicleDriver : MonoBehaviour {
                 break;
             case AVDrivingState.YIELD:
                 if (YieldTimer <= 0) {
-                    if (!YieldBox.GetPlayerPresent()) {
+                    if (!YieldBox.IsFrontClear()) {
                         Debug.Log("Going in Yield box");
                         _avDrivingState = AVDrivingState.DRIVING;
                     }
@@ -369,7 +369,7 @@ public class AutonomousVehicleDriver : MonoBehaviour {
                     Time.fixedDeltaTime);
                 break;
             case AVDrivingState.DRIVING:
-                if (!AvoidBox.GetPlayerPresent()) {
+                if (!AvoidBox.IsFrontClear()) {
                     Throttle = speedPID.Update(NextWaypoint.targetSpeed, _vehicleController.CurrentSpeed,
                         Time.fixedDeltaTime);
                 }

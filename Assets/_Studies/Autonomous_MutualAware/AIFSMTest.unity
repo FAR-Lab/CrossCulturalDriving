@@ -30206,7 +30206,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &2239973883337663628
 GameObject:
   m_ObjectHideFlags: 0
@@ -30923,12 +30923,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cecda5f995e7a1142a34b8ca9df57b30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerPos: {x: 0, y: 0, z: 0}
-  startNodeContainer: {fileID: 0}
+  startNodeContainer: {fileID: 11400000, guid: d0b25203c7ac9524a90bbd7f6d1ee2c5, type: 2}
   currentNode: {fileID: 0}
   splineContainer: {fileID: 525941044}
   rotationSpeed: 5
-  startPointRatio: 0.5
+  startPointRatio: 0.68
 --- !u!114 &6654686891282165106
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30946,7 +30945,7 @@ MonoBehaviour:
   otherNetworkVehicleController: {fileID: 0}
   myVehicleController: {fileID: 0}
   myNetworkVehicleController: {fileID: 0}
-  triggerPlayerTracker: {fileID: 0}
+  triggerPlayerTracker: {fileID: 1818288699251312803}
   distanceToCenter: 0
 --- !u!23 &6694462555296217177
 MeshRenderer:
@@ -31086,8 +31085,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 20.17, y: 1.1199118, z: 11.1}
-  m_Center: {x: -1.51, y: 0.13311082, z: 4.96}
+  m_Size: {x: 7.75, y: 1.1199118, z: 10}
+  m_Center: {x: 0, y: 0.13311082, z: 4.4}
 --- !u!1 &7568578846853543322
 GameObject:
   m_ObjectHideFlags: 0
