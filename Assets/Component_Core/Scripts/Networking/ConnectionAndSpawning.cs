@@ -211,7 +211,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
         gameObject.AddComponent<SteeringWheelManager>();
-        gameObject.AddComponent<farlab_logger>();
+        // gameObject.AddComponent<farlab_logger>();
         m_QNDataStorageServer = gameObject.AddComponent<QNDataStorageServer>();
 
         NetworkManager.Singleton.OnClientDisconnectCallback += ClientDisconnected;
@@ -924,18 +924,18 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     private void SwitchToDriving() {
-        if (!farlab_logger.Instance.ReadyToRecord()) {
-            Debug.LogWarning(
-                "I was trying to start recording while something else was still storring Data. Try again in a moment!");
-            return;
-        }
+        // if (!farlab_logger.Instance.ReadyToRecord()) {
+        //     Debug.LogWarning(
+        //         "I was trying to start recording while something else was still storring Data. Try again in a moment!");
+        //     return;
+        // }
 
         ServerState = ActionState.DRIVE;
         ServerStateChange.Invoke(ActionState.DRIVE);
 
         m_ReRunManager.BeginRecording(LastLoadedScene);
         m_QNDataStorageServer.StartScenario(LastLoadedScene, m_ReRunManager.GetRecordingFolder());
-        farlab_logger.Instance.StartRecording(m_ReRunManager, LastLoadedScene, m_ReRunManager.GetRecordingFolder());
+        // farlab_logger.Instance.StartRecording(m_ReRunManager, LastLoadedScene, m_ReRunManager.GetRecordingFolder());
     }
 
 
@@ -958,7 +958,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
                 .StartQuestionair(m_QNDataStorageServer);
 
         m_QNDataStorageServer.StartQn(GetScenarioManager(), m_ReRunManager);
-        StartCoroutine(farlab_logger.Instance.StopRecording());
+        // StartCoroutine(farlab_logger.Instance.StopRecording());
     }
 
     private void ForceBackToWaitingRoom() {
@@ -967,10 +967,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
     }
 
     private void SwitchToPostQN() {
-        m_QNDataStorageServer.StopScenario(m_ReRunManager);
-        if (farlab_logger.Instance.isRecording()) StartCoroutine(farlab_logger.Instance.StopRecording());
-        ServerState = ActionState.POSTQUESTIONS;
-        ServerStateChange.Invoke(ActionState.POSTQUESTIONS);
+        // m_QNDataStorageServer.StopScenario(m_ReRunManager);
+        // if (farlab_logger.Instance.isRecording()) StartCoroutine(farlab_logger.Instance.StopRecording());
+        // ServerState = ActionState.POSTQUESTIONS;
+        // ServerStateChange.Invoke(ActionState.POSTQUESTIONS);
 
         SwitchToWaitingRoom();
     }

@@ -203,23 +203,21 @@ public class ExperimentSpaceReference : MonoBehaviour {
             WorkingArea.Add(borderPoint);
         }
 
-        // if there are no linerenderers in this gameobject, create them
-        if (transform.GetComponent<LineRenderer>() == null) {
-            var lineRenderer = gameObject.AddComponent<LineRenderer>();
-            lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-            lineRenderer.startColor = Color.red;
-            lineRenderer.endColor = Color.red;
-            lineRenderer.startWidth = 0.1f;
-            lineRenderer.endWidth = 0.1f;
-            lineRenderer.positionCount = WorkingArea.Count + 1;
+        // if (!IsServer)
 
-            for (var i = 0; i < WorkingArea.Count; i++) {
-                lineRenderer.SetPosition(i, WorkingArea[i].position);
-            }
-
-            lineRenderer.SetPosition(WorkingArea.Count, WorkingArea[0].position);
-
-        }
+        // if (transform.GetComponent<LineRenderer>() == null) {
+        //     var lineRenderer = gameObject.AddComponent<LineRenderer>();
+        //     lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        //     lineRenderer.startColor = Color.red;
+        //     lineRenderer.endColor = Color.red;
+        //     lineRenderer.startWidth = 0.1f;
+        //     lineRenderer.endWidth = 0.1f;
+        //     lineRenderer.positionCount = WorkingArea.Count + 1;
+        //     for (var i = 0; i < WorkingArea.Count; i++) {
+        //         lineRenderer.SetPosition(i, WorkingArea[i].position);
+        //     }
+        //     lineRenderer.SetPosition(WorkingArea.Count, WorkingArea[0].position);
+        // }
        
     }
 
