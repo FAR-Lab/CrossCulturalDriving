@@ -30,6 +30,8 @@ public class SC_AVStateMachine : NetworkBehaviour
     
     [SerializeField] private float _lateralErrorWeight = 1.0f; 
     [SerializeField] private float _headingErrorWeight = 0.5f;
+
+    private Rigidbody _rb;
     
     private PID _speedPID;
     private PID _steeringPID;
@@ -46,6 +48,7 @@ public class SC_AVStateMachine : NetworkBehaviour
         _vehicleController = GetComponent<VehicleController>();
         _splineCLCreator = _vehicleController.SplineCLCreator;
         _context = GetComponent<SC_AVContext>();
+        _rb = GetComponent<Rigidbody>();
         
         _speedPID = new PID(_speedP, _speedI, _speedD);
         _steeringPID = new PID(_steeringP, _steeringI, _steeringD);
@@ -129,7 +132,7 @@ public class SC_AVStateMachine : NetworkBehaviour
         float distanceToCenter = Vector3.Distance(_context.IntersectionCenter.position, vehiclePosition);
         
         float desiredSpeed = _context.GetSpeed();
-        float currentSpeed = _vehicleController.CurrentSpeed;
+        float currentSpeed = _rb.velocity.magnitude;
 
         string currentNodeName = currentNode != null ? currentNode.name : "No Current Node";
         string isFrontClear = _context.IsFrontClear() ? "Yes" : "No";
