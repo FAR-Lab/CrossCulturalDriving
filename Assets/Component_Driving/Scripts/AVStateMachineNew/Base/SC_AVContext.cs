@@ -19,6 +19,11 @@ public class SC_AVContext : MonoBehaviour {
     public TriggerPlayerTracker triggerPlayerTracker;
     private UdpSocket _udpSocket;
     
+    // if data is greater than yield threshold, yield
+    [SerializeField] private float YieldThreshold = 0.2f;
+    private float _yieldPossibility;
+    public float YieldPossibility => _yieldPossibility;
+    
     public void Initialize() {
         _myCtrl = GetComponent<VehicleController>();
         
@@ -40,9 +45,14 @@ public class SC_AVContext : MonoBehaviour {
     
     private void HandleReceivedData(float[] data)
     {
-        Debug.Log("$Yield possility: " + data[1].ToString("f2"));
+        _yieldPossibility = data[1];
+        Debug.Log("YieldPossibility: " + _yieldPossibility);
     }
 
+    public bool ShouldYield() {
+        return _yieldPossibility > YieldThreshold;
+    }
+    
     private IEnumerator SendArtificialData(VehicleController otherCar) {
         Vector3 distance, relVelocity;
         float dot, rel_pos_magnitude, approachRate, relativeRotation;

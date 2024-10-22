@@ -30,7 +30,7 @@ public class NetworkVehicleController : Interactable_Object {
     public Transform CameraPosition;
 
     private VehicleController controller;
-    private AutonomousVehicleDriver _autonomousVehicleDriver;
+    private SC_AVStateMachine _autonomousVehicleDriver;
     private CSVReplayDriver _csvReplayDriver;
 
     public Transform[] Left;
@@ -144,7 +144,7 @@ public class NetworkVehicleController : Interactable_Object {
         }
 
         if (VehicleMode == VehicleOpperationMode.AUTONOMOUS) {
-            _autonomousVehicleDriver = GetComponent<AutonomousVehicleDriver>();
+            _autonomousVehicleDriver = GetComponent<SC_AVStateMachine>();
         }
 
         if (VehicleMode == VehicleOpperationMode.REPLAY) {
@@ -300,15 +300,12 @@ public class NetworkVehicleController : Interactable_Object {
                     break;
                 case VehicleOpperationMode.AUTONOMOUS:
 
-                    SteeringInput = _autonomousVehicleDriver.GetSteerInput();
-                    ThrottleInput = _autonomousVehicleDriver.GetAccelInput();
-                    tempLeft = _autonomousVehicleDriver.GetLeftIndicatorInput();
-                    tempRight = _autonomousVehicleDriver.GetRightIndicatorInput();
-                    tempHonk = _autonomousVehicleDriver.GetHornInput();
-
-                    if (_autonomousVehicleDriver.StopIndicating()) {
-                        _StopIndicating();
-                    }
+                    // SteeringInput = _autonomousVehicleDriver.Steering;
+                    // ThrottleInput = _autonomousVehicleDriver.Throttle;
+                    // tempLeft = _autonomousVehicleDriver.GetLeftIndicatorInput();
+                    // tempRight = _autonomousVehicleDriver.GetRightIndicatorInput();
+                    // tempHonk = _autonomousVehicleDriver.GetHornInput();
+                    
                     break;
                 case VehicleOpperationMode.REMOTEKEYBOARD:
                     if (REMOTEKEYBOARD_NewData) {

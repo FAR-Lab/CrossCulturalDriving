@@ -142,4 +142,17 @@ public class SplineCenterlineUtility : MonoBehaviour
         projection = Mathf.Clamp01(projection);
         return linePoint1 + lineDirection * projection;
     }
+    
+    public Vector3 GetClosestPointOnSpline(Vector3 position)
+    {
+        return  points.OrderBy(point => Vector3.Distance(point, position)).First();
+    }
+    
+    public Vector3 GetPointAtDistanceAlongSpline(Vector3 startPoint, float distance)
+    {
+        int startIndex = points.IndexOf(startPoint);
+        int targetIndex = Mathf.Clamp(startIndex + Mathf.RoundToInt(distance), 0, points.Count - 1);
+        return points[targetIndex];
+    }
+
 }
