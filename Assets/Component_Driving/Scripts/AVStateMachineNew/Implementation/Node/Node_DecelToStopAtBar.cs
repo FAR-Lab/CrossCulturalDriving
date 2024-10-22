@@ -17,7 +17,7 @@ public class Node_DecelToStopAtBar : SO_FSMNodeAction
     public override void OnUpdate(SC_AVContext context) {
         float currentSpeed = context.GetSpeed();
 
-        float distanceToBar = context.GetDistanceToCenter(context.GetMyNetworkVehicleController()) - barDistanceFromCenter;
+        float distanceToBar = context.GetDistanceToCenter(context.MyCtrl) - barDistanceFromCenter;
 
         if (distanceToBar <= 0) {
             Debug.Log("Reached or passed the bar, setting speed to 0.");

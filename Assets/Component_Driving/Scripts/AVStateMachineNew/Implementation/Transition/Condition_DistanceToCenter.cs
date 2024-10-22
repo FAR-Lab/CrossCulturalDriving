@@ -26,10 +26,10 @@ public class Condition_DistanceToCenter : SO_FSMTransitionCheck
         float distance;
         
         if (party == Party.Self) {
-            distance = context.GetDistanceToCenter(context.GetMyNetworkVehicleController());
+            distance = context.GetDistanceToCenter(context.MyCtrl);
         }
         else {
-            distance = context.GetDistanceToCenter(context.GetOtherNetworkVehicleController());
+            distance = context.GetDistanceToCenter(context.OtherCtrl);
         }
         
         if (comparison == Comparison.LessThan) {

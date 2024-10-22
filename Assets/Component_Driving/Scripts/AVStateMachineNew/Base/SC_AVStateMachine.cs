@@ -47,7 +47,7 @@ public class SC_AVStateMachine : NetworkBehaviour {
     
     private IEnumerator PrepToStart() {
         yield return new WaitUntil(() => ConnectionAndSpawning.Singleton.ServerState == ActionState.DRIVE);
-        _context.AssignVehicles();
+        _context.Initialize();
         _ready = true;
     }
     
@@ -101,7 +101,7 @@ public class SC_AVStateMachine : NetworkBehaviour {
         if (!_ready) return;
 
         Vector3 vehiclePosition = transform.position;
-        float distanceToCenter = Vector3.Distance(_context.centerPos, vehiclePosition);
+        float distanceToCenter = Vector3.Distance(_context.IntersectionCenter.position, vehiclePosition);
         float currentSpeed = _context.GetSpeed();
 
         string currentNodeName = currentNode != null ? currentNode.name : "No Current Node";
@@ -110,7 +110,7 @@ public class SC_AVStateMachine : NetworkBehaviour {
         Vector3 labelPosition = vehiclePosition + Vector3.up * 2f;
 
         string labelText = $"Distance to Center: {distanceToCenter:F2}\n" +
-                           $"Other Distance: {_context.GetDistanceToCenter(_context.GetOtherNetworkVehicleController()):F2}\n" +
+                           $"Other Distance: {_context.GetDistanceToCenter(_context.OtherCtrl):F2}\n" +
                            $"Speed: {currentSpeed:F2}\n" +
                            $"Current Node: {currentNodeName}\n" +
                             $" Is front clear: {isFrontClear}";
