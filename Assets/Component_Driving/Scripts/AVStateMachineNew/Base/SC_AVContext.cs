@@ -10,7 +10,9 @@ public class SC_AVContext : MonoBehaviour {
     public VehicleController MyCtrl => _myCtrl;
     
     private Rigidbody _myRb => _myCtrl.GetComponent<Rigidbody>();
+    public Rigidbody MyRb => _myRb;
     private Rigidbody _otherRb => _otherCtrl.GetComponent<Rigidbody>();
+    public Rigidbody OtherRb => _otherRb;
 
     private Transform _intersectionCenter;
     public Transform IntersectionCenter => _intersectionCenter;
