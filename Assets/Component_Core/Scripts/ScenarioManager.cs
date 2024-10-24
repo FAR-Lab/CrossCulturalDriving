@@ -75,7 +75,7 @@ public class ScenarioManager : MonoBehaviour {
                 return true;
             }
 
-            Debug.Log("Did not find an assigned spawn point");
+            Debug.Log($"Did not find an assigned spawn point of {participantOrder}");
             pose = new Pose();
             return false;
         }

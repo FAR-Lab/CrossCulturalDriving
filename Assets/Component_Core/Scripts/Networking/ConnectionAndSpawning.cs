@@ -87,6 +87,14 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     public ActionState ServerState { get; private set; }
     public JoinParameters ThisClient { private set; get; }
+    
+    [Serializable]
+    public class AdditionalInteractableObjectPair {
+        public GameObject InteractableObject;
+        public ParticipantOrder ParticipantOrder;
+    }
+    
+    public List<AdditionalInteractableObjectPair> AdditionalInteractableObjects = new List<AdditionalInteractableObjectPair>();
 
     private void Awake() {
         participants = new ParticipantOrderMapping();
@@ -799,6 +807,45 @@ public class ConnectionAndSpawning : MonoBehaviour {
             }
         }
     }
+    
+    public void SpawnArbitraryInteractableObject(GameObject prefab, ParticipantOrder po)
+    {
+        Debug.Log("Spawning arbitrary interactable object");
+        
+        if (_GetCurrentSpawingData(po, out var tempPose))
+        {
+            var newInteractableObject = Instantiate(prefab, tempPose.position, tempPose.rotation).GetComponent<Interactable_Object>();
+
+            newInteractableObject.m_participantOrder.Value = po;
+
+            newInteractableObject.GetComponent<NetworkObject>().Spawn(true);
+
+            if (!Interactable_ParticipantObjects.ContainsKey(po))
+            {
+                Interactable_ParticipantObjects[po] = new List<Interactable_Object>();
+            }
+
+            Interactable_ParticipantObjects[po].Add(newInteractableObject);
+
+            if (Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null)
+            {
+                if (participants.GetClientID(po, out var clientID))
+                {
+                    Main_ParticipantObjects[po].AssignFollowTransform(newInteractableObject, clientID);
+                }
+            }
+            else
+            {
+                Debug.Log($"No client connected for ParticipantOrder {po}, but interactable object spawned.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"No spawn position found for ParticipantOrder {po}");
+        }
+    }
+
+
 
     private void Spawn_Client(ulong clientID) {
         StartCoroutine(Spawn_Client_Await(clientID));
@@ -921,6 +968,15 @@ public class ConnectionAndSpawning : MonoBehaviour {
     private void SwitchToReady() {
         ServerState = ActionState.READY;
         ServerStateChange.Invoke(ActionState.READY);
+        
+        // lemme try spawning AV here
+        if (AdditionalInteractableObjects != null)
+        {
+            foreach (var io in AdditionalInteractableObjects)
+            {
+                SpawnArbitraryInteractableObject(io.InteractableObject, io.ParticipantOrder);
+            }
+        }
     }
 
 

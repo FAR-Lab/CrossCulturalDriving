@@ -14,7 +14,7 @@ public class SC_AVStateMachine : NetworkBehaviour
 
     private NetworkVehicleController _myVehicleController;
     private VehicleController _vehicleController;
-    private SplineCenterlineUtility _splineCLCreator;
+    public SplineCenterlineUtility _splineCLCreator;
 
     private float _steeringInput;
     private float _throttleInput;
@@ -46,7 +46,7 @@ public class SC_AVStateMachine : NetworkBehaviour
 
         _myVehicleController = GetComponent<NetworkVehicleController>();
         _vehicleController = GetComponent<VehicleController>();
-        _splineCLCreator = _vehicleController.SplineCLCreator;
+        _splineCLCreator = GameObject.Find("CenterLineA").GetComponent<SplineCenterlineUtility>();
         _context = GetComponent<SC_AVContext>();
         _rb = GetComponent<Rigidbody>();
         
@@ -87,7 +87,7 @@ public class SC_AVStateMachine : NetworkBehaviour
   private void DriveVehicle()
 {
     # region Throttle
-    float currentSpeed = _vehicleController.CurrentSpeed;
+    float currentSpeed = _rb.velocity.magnitude;
 
     float desiredSpeed = _context.GetSpeed();
 

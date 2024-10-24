@@ -24,7 +24,7 @@ public class SpawnPosition : MonoBehaviour {
        
 
         // Draw red line indicating spawn orientation
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.green;
         Gizmos.DrawLine(transform.position, transform.position + transform.forward * 3);
         Vector3 pos = transform.position;
         pos.y /= 2;

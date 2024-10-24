@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.ComTypes;
 using UnityEditor.Rendering;
 using UnityEngine;
 
+/*
 
 public class AutonomousVehicleDriver : MonoBehaviour {
     public enum AVDrivingState {
@@ -415,3 +416,4 @@ public class AutonomousVehicleDriver : MonoBehaviour {
         return NextWaypoint != null && NextWaypoint.Horn & newWayPointFound;
     }
 }
+*/

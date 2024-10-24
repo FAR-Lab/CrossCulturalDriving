@@ -11,8 +11,8 @@ public class SC_AVContext : MonoBehaviour {
     
     private Rigidbody _myRb => _myCtrl.GetComponent<Rigidbody>();
     private Rigidbody _otherRb => _otherCtrl.GetComponent<Rigidbody>();
-    
-    private Transform _intersectionCenter => FindObjectOfType<IntersectionCenter>().transform;
+
+    private Transform _intersectionCenter;
     public Transform IntersectionCenter => _intersectionCenter;
     
     private float _speed;
@@ -28,6 +28,7 @@ public class SC_AVContext : MonoBehaviour {
         _myCtrl = GetComponent<VehicleController>();
         
         Interactable_Object obj = ConnectionAndSpawning.Singleton.GetInteractableObject_For_Participant(ParticipantOrder.A);
+        _intersectionCenter = FindObjectOfType<IntersectionCenter>().transform;
 
         if (obj != null) {
             _otherCtrl = obj.GetComponent<VehicleController>();

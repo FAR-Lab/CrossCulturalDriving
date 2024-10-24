@@ -53,7 +53,7 @@ public class NetworkVehicleController : Interactable_Object {
     public AudioSource HonkSound;
     public float SteeringInput;
     public float ThrottleInput;
-
+    
 
     private ulong CLID;
 
@@ -107,7 +107,7 @@ public class NetworkVehicleController : Interactable_Object {
 
             foreach (var wc in GetComponentsInChildren<WheelCollider>()) wc.enabled = false;
             if (VehicleMode == VehicleOpperationMode.AUTONOMOUS) {
-                GetComponent<AutonomousVehicleDriver>().enabled = false;
+                // GetComponent<AutonomousVehicleDriver>().enabled = false;
             }
         }
     }
