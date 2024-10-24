@@ -43,6 +43,7 @@ public class SC_AVContext : MonoBehaviour {
     }
     
     private void OnDestroy() {
+        if (_udpSocket == null) return;
         _udpSocket.GotNewAiData -= HandleReceivedData;
     }
     

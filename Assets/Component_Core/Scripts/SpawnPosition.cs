@@ -25,7 +25,7 @@ public class SpawnPosition : MonoBehaviour {
 
         // Draw red line indicating spawn orientation
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, transform.position + transform.forward * 3);
+        Gizmos.DrawLine(transform.position, transform.position + transform.forward * 7);
         Vector3 pos = transform.position;
         pos.y /= 2;
         Vector3 size = Vector3.one;
@@ -34,7 +34,18 @@ public class SpawnPosition : MonoBehaviour {
         size.z *= 0.15f;
         Gizmos.DrawCube(pos,size);
         // Draw a yellow sphere at the transform's position
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(transform.position, .25f);
+        switch (StartingId)
+        {
+            case ParticipantOrder.A:
+                Gizmos.color = Color.red;
+                break;
+            case ParticipantOrder.B:
+                Gizmos.color = Color.blue;
+                break;
+            default:
+                Gizmos.color = Color.black;
+                break;
+        }
+        Gizmos.DrawSphere(transform.position, 2.5f);
     }
 }

@@ -275,11 +275,17 @@ MonoBehaviour:
     m_Values: []
   IncludedScenes:
   - m_SceneAsset: {fileID: 102900000, guid: a8c0acd1971116c4e9f67acc98779590, type: 3}
-    m_SceneName: FSMCP1
+    m_SceneName: FSMCP1 - Auto A
+  - m_SceneAsset: {fileID: 102900000, guid: aa3dde66e8d9d2142b155f5595794d0e, type: 3}
+    m_SceneName: FSMCP1 - Auto B
+  - m_SceneAsset: {fileID: 102900000, guid: e1e03b3f2b16846458ba383bc6e6ceb2, type: 3}
+    m_SceneName: FSMCP2 - Auto A
   - m_SceneAsset: {fileID: 102900000, guid: 49f78ad17d53b4e43af762d80eee7da2, type: 3}
-    m_SceneName: FSMCP2
+    m_SceneName: FSMCP2 - Auto B
   - m_SceneAsset: {fileID: 102900000, guid: 7e26e50b54ebac1438237ab6f745abf5, type: 3}
-    m_SceneName: FSMCP3
+    m_SceneName: FSMCP3 - Auto A
+  - m_SceneAsset: {fileID: 102900000, guid: 6f230f7c010cdb841b3399d958f9f76e, type: 3}
+    m_SceneName: FSMCP3 - Auto B
   style:
     m_Name: 
     m_Normal:
@@ -385,7 +391,7 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 192.168.0.103
+    Address: 127.0.0.1
     Port: 7777
     ServerListenAddress: 0.0.0.0
   DebugSimulator:

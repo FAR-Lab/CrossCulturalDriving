@@ -32,7 +32,6 @@ public class SC_AVStateMachine : NetworkBehaviour
     [SerializeField] private float _headingErrorWeight = 0.5f;
 
     private Rigidbody _rb;
-    
     private PID _speedPID;
     private PID _steeringPID;
     
@@ -46,7 +45,7 @@ public class SC_AVStateMachine : NetworkBehaviour
 
         _myVehicleController = GetComponent<NetworkVehicleController>();
         _vehicleController = GetComponent<VehicleController>();
-        _splineCLCreator = GameObject.Find("CenterLineA").GetComponent<SplineCenterlineUtility>();
+        _splineCLCreator = GameObject.Find("AV").GetComponent<SplineCenterlineUtility>();
         _context = GetComponent<SC_AVContext>();
         _rb = GetComponent<Rigidbody>();
         

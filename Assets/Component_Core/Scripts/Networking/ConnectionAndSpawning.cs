@@ -818,7 +818,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
             newInteractableObject.m_participantOrder.Value = po;
 
-            newInteractableObject.GetComponent<NetworkObject>().Spawn(true);
+            newInteractableObject.GetComponent<NetworkObject>().Spawn();
 
             if (!Interactable_ParticipantObjects.ContainsKey(po))
             {
@@ -826,18 +826,6 @@ public class ConnectionAndSpawning : MonoBehaviour {
             }
 
             Interactable_ParticipantObjects[po].Add(newInteractableObject);
-
-            if (Main_ParticipantObjects.ContainsKey(po) && Main_ParticipantObjects[po] != null)
-            {
-                if (participants.GetClientID(po, out var clientID))
-                {
-                    Main_ParticipantObjects[po].AssignFollowTransform(newInteractableObject, clientID);
-                }
-            }
-            else
-            {
-                Debug.Log($"No client connected for ParticipantOrder {po}, but interactable object spawned.");
-            }
         }
         else
         {
