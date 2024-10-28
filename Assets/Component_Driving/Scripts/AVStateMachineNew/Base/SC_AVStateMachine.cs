@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -19,17 +20,12 @@ public class SC_AVStateMachine : NetworkBehaviour
     private float _steeringInput;
     private float _throttleInput;
     
-    public SO_FSMNodeContainer startNodeContainer;
-    [SerializeField] private SO_FSMNode currentNode;
-
-    // PID Controllers for speed and steering
-    [SerializeField] private float _speedP = 0.2f, _speedI = 0.005f, _speedD = 0.05f;
-    [SerializeField] private float _steeringP = 0.2f, _steeringI = 0.005f, _steeringD = 0.05f;
-    [SerializeField] private float _throttleFeedforward = 0.1f;
-    [SerializeField] private float _lookaheadDistance = 5f;
+    public List<SO_FSMNodeContainer> nodeContainers;
     
-    [SerializeField] private float _lateralErrorWeight = 1.0f; 
-    [SerializeField] private float _headingErrorWeight = 0.5f;
+    [SerializeField] private SO_FSMNodeContainer startNodeContainer;
+    [SerializeField] private SO_FSMNode currentNode;
+    
+    public SO_AVConfig config;
 
     private Rigidbody _rb;
     
@@ -43,19 +39,21 @@ public class SC_AVStateMachine : NetworkBehaviour
             enabled = false;
             return;
         }
-
+        
+        nodeContainers = config.nodeContainers;
+        startNodeContainer = nodeContainers[0];
+        currentNode = startNodeContainer.startNode;
+        
         _myVehicleController = GetComponent<NetworkVehicleController>();
         _vehicleController = GetComponent<VehicleController>();
         _splineCLCreator = _vehicleController.SplineCLCreator;
         _context = GetComponent<SC_AVContext>();
+        _context.YieldThreshold = config.YieldThreshold;
         _rb = GetComponent<Rigidbody>();
         
-        _speedPID = new PID(_speedP, _speedI, _speedD);
-        _steeringPID = new PID(_steeringP, _steeringI, _steeringD);
-
-        currentNode = startNodeContainer.startNode;
-        currentNode.Action.OnEnter(_context);
-
+        _speedPID = new PID(config.SpeedP, config.SpeedI, config.SpeedD);
+        _steeringPID = new PID(config.SteeringP, config.SteeringI, config.SteeringD);
+        
         StartCoroutine(PrepToStart());
     }
 
@@ -93,7 +91,7 @@ public class SC_AVStateMachine : NetworkBehaviour
 
     float throttlePIDOutput = _speedPID.Update(desiredSpeed, currentSpeed, Time.deltaTime);
 
-    float throttleFeedforward = desiredSpeed * _throttleFeedforward;
+    float throttleFeedforward = desiredSpeed * config.ThrottleFeedforward;
 
     float throttleInput = throttlePIDOutput + throttleFeedforward;
 
@@ -105,7 +103,7 @@ public class SC_AVStateMachine : NetworkBehaviour
 
     Vector3 closestPoint = _splineCLCreator.GetClosestPointOnSpline(transform.position);
     
-    Vector3 lookaheadPoint = _splineCLCreator.GetPointAtDistanceAlongSpline(closestPoint, _lookaheadDistance);
+    Vector3 lookaheadPoint = _splineCLCreator.GetPointAtDistanceAlongSpline(closestPoint, config.LookaheadDistance);
 
     Vector3 desiredDirection = (lookaheadPoint - transform.position).normalized;
 
@@ -113,7 +111,7 @@ public class SC_AVStateMachine : NetworkBehaviour
 
     float currentCenterlineOffset = _splineCLCreator.GetClosestDistanceToSpline(transform.position);
 
-    float combinedSteeringError = (_lateralErrorWeight * currentCenterlineOffset) + (_headingErrorWeight * Mathf.Sin(headingError * Mathf.Deg2Rad));
+    float combinedSteeringError = (config.LateralErrorWeight * currentCenterlineOffset) + (config.HeadingErrorWeight * Mathf.Sin(headingError * Mathf.Deg2Rad));
 
     float steeringInput = _steeringPID.Update(0f, combinedSteeringError, Time.deltaTime);
 
@@ -144,7 +142,7 @@ public class SC_AVStateMachine : NetworkBehaviour
                            $"Desired speed: {desiredSpeed:F2}\n" +
                            $"Current speed: {currentSpeed:F2}\n" +
                            $"Current Node: {currentNodeName}\n" +
-                           $"Yield possibility: {_context.YieldPossibility:F2}\n" +
+                           $"Yield possibility: {_context._filteredYieldPossibility:F2}\n" +
                            $"Steering input: {_steeringInput:F2}\n" +
                             $"Throttle input: {_throttleInput:F2}\n" +
                            $"Is front clear: {isFrontClear}";
@@ -155,5 +153,37 @@ public class SC_AVStateMachine : NetworkBehaviour
 
         Handles.Label(labelPosition, labelText, style);
     }
+    
+    private void OnGUI()
+    {
+        if (nodeContainers == null || nodeContainers.Count == 0) return;
+        
+        GUIStyle labelStyle = new GUIStyle(GUI.skin.label)
+        {
+            fontSize = 14,
+            normal = { textColor = Color.white }
+        };
+
+        GUILayout.BeginArea(new Rect(30, 100, 300, 200), GUI.skin.box); 
+        GUILayout.Label("Current Node Container:", labelStyle);
+        string currentNodeContainerName = startNodeContainer != null ? startNodeContainer.name : "None";
+        GUILayout.Label(currentNodeContainerName, labelStyle);
+
+        GUILayout.Space(10); 
+
+        GUILayout.Label("Switch Node Container:", labelStyle);
+        foreach (var container in nodeContainers)
+        {
+            if (GUILayout.Button(container.name))
+            {
+                startNodeContainer = container;
+                currentNode = startNodeContainer.startNode;
+                currentNode.Action.OnEnter(_context);
+                Debug.Log("Node container switched to: " + container.name);
+            }
+        }
+        GUILayout.EndArea();
+    }
+
 #endif
 }

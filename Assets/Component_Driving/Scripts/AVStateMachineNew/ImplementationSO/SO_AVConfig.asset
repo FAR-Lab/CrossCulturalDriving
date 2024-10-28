@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd466778f20805d45ad6a78db2dad1bc, type: 3}
+  m_Name: SO_AVConfig
+  m_EditorClassIdentifier: 
+  SpeedP: 0.5
+  SpeedI: 0.005
+  SpeedD: 0.05
+  SteeringP: 0.95
+  SteeringI: 0.09
+  SteeringD: 0.1
+  ThrottleFeedforward: 0.85
+  LookaheadDistance: 5
+  LateralErrorWeight: 1
+  HeadingErrorWeight: 0.5
+  YieldThreshold: 0.5
+  nodeContainers:
+  - {fileID: 11400000, guid: d0b25203c7ac9524a90bbd7f6d1ee2c5, type: 2}
+  - {fileID: 11400000, guid: 66c945eadadcdfd4693e362b814c7d88, type: 2}
+  - {fileID: 11400000, guid: 322f71a39e6a94f4a906c797c9bfd5fd, type: 2}
+  - {fileID: 11400000, guid: a35e712a71886cc4ca1435bea8753717, type: 2}

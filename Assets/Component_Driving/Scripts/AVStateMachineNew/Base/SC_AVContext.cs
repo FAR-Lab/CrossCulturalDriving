@@ -10,7 +10,9 @@ public class SC_AVContext : MonoBehaviour {
     public VehicleController MyCtrl => _myCtrl;
     
     private Rigidbody _myRb => _myCtrl.GetComponent<Rigidbody>();
+    public Rigidbody MyRb => _myRb;
     private Rigidbody _otherRb => _otherCtrl.GetComponent<Rigidbody>();
+    public Rigidbody OtherRb => _otherRb;
     
     private Transform _intersectionCenter => FindObjectOfType<IntersectionCenter>().transform;
     public Transform IntersectionCenter => _intersectionCenter;
@@ -19,10 +21,20 @@ public class SC_AVContext : MonoBehaviour {
     public TriggerPlayerTracker triggerPlayerTracker;
     private UdpSocket _udpSocket;
     
-    // if data is greater than yield threshold, yield
-    [SerializeField] private float YieldThreshold = 0.2f;
+    [SerializeField] private float yieldThreshold = 0.5f;
+    public float YieldThreshold
+    {
+        get => yieldThreshold;
+        set => yieldThreshold = value;
+    }
+
+    
     private float _yieldPossibility;
     public float YieldPossibility => _yieldPossibility;
+    
+    public float _filteredYieldPossibility = 0f;
+    [SerializeField]
+    private float alpha = 0.1f;
     
     public void Initialize() {
         _myCtrl = GetComponent<VehicleController>();
@@ -40,22 +52,26 @@ public class SC_AVContext : MonoBehaviour {
     }
     
     private void OnDestroy() {
-        _udpSocket.GotNewAiData -= HandleReceivedData;
+        if (_udpSocket != null){
+            _udpSocket.GotNewAiData -= HandleReceivedData;
+        }
     }
     
     private void HandleReceivedData(float[] data)
     {
-        _yieldPossibility = data[1];
-        Debug.Log("YieldPossibility: " + _yieldPossibility);
+        float newYieldPossibility = data[1];
+        _filteredYieldPossibility = alpha * newYieldPossibility + (1 - alpha) * _filteredYieldPossibility;
+        Debug.Log("Filtered YieldPossibility: " + _filteredYieldPossibility);
     }
 
     public bool ShouldYield() {
-        return _yieldPossibility > YieldThreshold;
+        return _filteredYieldPossibility > yieldThreshold;
     }
+
     
     private IEnumerator SendArtificialData(VehicleController otherCar) {
         Vector3 distance, relVelocity;
-        float dot, rel_pos_magnitude, approachRate, relativeRotation;
+        float dot, rel_pos_magnitude, approachRate;
         
         yield return new WaitForSeconds(0.1f);
         float[] outdata = new float[7];
