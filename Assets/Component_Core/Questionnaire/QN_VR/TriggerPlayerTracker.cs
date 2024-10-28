@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class TriggerPlayerTracker : MonoBehaviour {
     private bool test = true;
-    private BoxCollider boxCollider;
+    private Collider boxCollider;
     
     private void Start() {
-        boxCollider = GetComponent<BoxCollider>();
+        boxCollider = GetComponent<Collider>();
     }
     
     private void OnTriggerEnter(Collider other) {
@@ -30,10 +30,10 @@ public class TriggerPlayerTracker : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
-        Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
-        Gizmos.color = Color.red;
-        if (boxCollider != null) {
-            Gizmos.DrawWireCube(boxCollider.center, boxCollider.size);
-        }
+        // Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
+        // Gizmos.color = Color.red;
+        // if (boxCollider != null) {
+        //     Gizmos.DrawWireCube(boxCollider.center, boxCollider.size);
+        // }
     }
 }

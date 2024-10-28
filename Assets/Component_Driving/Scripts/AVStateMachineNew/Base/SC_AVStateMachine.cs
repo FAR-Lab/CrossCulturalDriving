@@ -88,14 +88,14 @@ public class SC_AVStateMachine : NetworkBehaviour
         int totalPoints = _splineCLCreator.points.Count;
         float percentageAlongSpline = (float)closestPointIndex / (float)(totalPoints - 1);
 
-        if (percentageAlongSpline >= 0.95f)
-        {
-            _throttleInput = 0f;
-            _steeringInput = 0f;
-            _myVehicleController.ThrottleInput = 0f;
-            _myVehicleController.SteeringInput = 0f;
-        }
-        else
+        // if (percentageAlongSpline >= 0.95f)
+        // {
+        //     _throttleInput = 0f;
+        //     _steeringInput = 0f;
+        //     _myVehicleController.ThrottleInput = 0f;
+        //     _myVehicleController.SteeringInput = 0f;
+        // }
+        // else
         {
             #region Throttle
             float currentSpeed = _vehicleController.CurrentSpeed;

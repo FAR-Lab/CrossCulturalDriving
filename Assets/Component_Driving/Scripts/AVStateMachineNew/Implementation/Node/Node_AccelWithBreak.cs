@@ -7,7 +7,7 @@ public class Node_AccelWithBreak : SO_FSMNodeAction
     public float Max_accel = 0.7418f; 
     public float Max_speed = 6.3637f;
     public float Delta = 0.8403f;
-    public float BreakTime = 1f; // Time in seconds to fully stop
+    public float BreakTime = 0.25f; // Time in seconds to fully stop
 
     private bool _isStopping = false; 
     private float _decelRate; 
