@@ -127,6 +127,23 @@ public class SplineCenterlineUtility : MonoBehaviour
         var sign = -Mathf.Sign(Cross(new Vector2(closestLineSegment.x, closestLineSegment.z), new Vector2(lineToPoint.x, lineToPoint.z)));
         return minDistance * sign;
     }
+    
+    public int GetClosestPointIndex(Vector3 position)
+    {
+        int closestIndex = -1;
+        float minDistance = float.MaxValue;
+        for (int i = 0; i < points.Count; i++)
+        {
+            float distance = Vector3.Distance(points[i], position);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestIndex = i;
+            }
+        }
+        return closestIndex;
+    }
+
 
     /// <summary>
     /// Utility function - get the closest point on a line that is between 2 points

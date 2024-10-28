@@ -82,43 +82,57 @@ public class SC_AVStateMachine : NetworkBehaviour
         DriveVehicle();
     }
 
-  private void DriveVehicle()
-{
-    # region Throttle
-    float currentSpeed = _vehicleController.CurrentSpeed;
+    private void DriveVehicle()
+    {
+        int closestPointIndex = _splineCLCreator.GetClosestPointIndex(transform.position);
+        int totalPoints = _splineCLCreator.points.Count;
+        float percentageAlongSpline = (float)closestPointIndex / (float)(totalPoints - 1);
 
-    float desiredSpeed = _context.GetSpeed();
+        if (percentageAlongSpline >= 0.95f)
+        {
+            _throttleInput = 0f;
+            _steeringInput = 0f;
+            _myVehicleController.ThrottleInput = 0f;
+            _myVehicleController.SteeringInput = 0f;
+        }
+        else
+        {
+            #region Throttle
+            float currentSpeed = _vehicleController.CurrentSpeed;
 
-    float throttlePIDOutput = _speedPID.Update(desiredSpeed, currentSpeed, Time.deltaTime);
+            float desiredSpeed = _context.GetSpeed();
 
-    float throttleFeedforward = desiredSpeed * config.ThrottleFeedforward;
+            float throttlePIDOutput = _speedPID.Update(desiredSpeed, currentSpeed, Time.deltaTime);
 
-    float throttleInput = throttlePIDOutput + throttleFeedforward;
+            float throttleFeedforward = desiredSpeed * config.ThrottleFeedforward;
 
-    _throttleInput = Mathf.Clamp(throttleInput, -1f, 1f);
-    
-    _myVehicleController.ThrottleInput = _throttleInput;
-    #endregion
+            float throttleInput = throttlePIDOutput + throttleFeedforward;
 
+            _throttleInput = Mathf.Clamp(throttleInput, -1f, 1f);
 
-    Vector3 closestPoint = _splineCLCreator.GetClosestPointOnSpline(transform.position);
-    
-    Vector3 lookaheadPoint = _splineCLCreator.GetPointAtDistanceAlongSpline(closestPoint, config.LookaheadDistance);
+            _myVehicleController.ThrottleInput = _throttleInput;
+            #endregion
 
-    Vector3 desiredDirection = (lookaheadPoint - transform.position).normalized;
+            Vector3 closestPoint = _splineCLCreator.GetClosestPointOnSpline(transform.position);
 
-    float headingError = Vector3.SignedAngle(transform.forward, desiredDirection, Vector3.up);
+            Vector3 lookaheadPoint = _splineCLCreator.GetPointAtDistanceAlongSpline(closestPoint, config.LookaheadDistance);
 
-    float currentCenterlineOffset = _splineCLCreator.GetClosestDistanceToSpline(transform.position);
+            Vector3 desiredDirection = (lookaheadPoint - transform.position).normalized;
 
-    float combinedSteeringError = (config.LateralErrorWeight * currentCenterlineOffset) + (config.HeadingErrorWeight * Mathf.Sin(headingError * Mathf.Deg2Rad));
+            float headingError = Vector3.SignedAngle(transform.forward, desiredDirection, Vector3.up);
 
-    float steeringInput = _steeringPID.Update(0f, combinedSteeringError, Time.deltaTime);
+            float currentCenterlineOffset = _splineCLCreator.GetClosestDistanceToSpline(transform.position);
 
-    _steeringInput = Mathf.Clamp(steeringInput, -1f, 1f);
-    
-    _myVehicleController.SteeringInput = _steeringInput;
-}
+            float combinedSteeringError = (config.LateralErrorWeight * currentCenterlineOffset) + (config.HeadingErrorWeight * Mathf.Sin(headingError * Mathf.Deg2Rad));
+
+            float steeringInput = _steeringPID.Update(0f, combinedSteeringError, Time.deltaTime);
+
+            _steeringInput = Mathf.Clamp(steeringInput, -1f, 1f);
+
+            _myVehicleController.SteeringInput = _steeringInput;
+        }
+    }
+
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
