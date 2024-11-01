@@ -50,7 +50,8 @@ public class SC_AVContext : MonoBehaviour {
         
         StartCoroutine(SendArtificialData(_otherCtrl));
     }
-    
+
+
     private void OnDestroy() {
         if (_udpSocket != null){
             _udpSocket.GotNewAiData -= HandleReceivedData;
@@ -61,7 +62,7 @@ public class SC_AVContext : MonoBehaviour {
     {
         float newYieldPossibility = data[1];
         _filteredYieldPossibility = alpha * newYieldPossibility + (1 - alpha) * _filteredYieldPossibility;
-        Debug.Log("Filtered YieldPossibility: " + _filteredYieldPossibility);
+        Debug.Log("Original: " + newYieldPossibility + " Filtered: " + _filteredYieldPossibility);
     }
 
     public bool ShouldYield() {

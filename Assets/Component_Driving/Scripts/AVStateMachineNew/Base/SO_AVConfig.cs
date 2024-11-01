@@ -15,4 +15,6 @@ public class SO_AVConfig : ScriptableObject
     public float YieldThreshold = 0.5f;
     
     public List<SO_FSMNodeContainer> nodeContainers;
+
+    public float DistanceToShrinkCollider = 5f;
 }

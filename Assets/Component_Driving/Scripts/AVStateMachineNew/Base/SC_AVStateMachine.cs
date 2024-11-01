@@ -36,7 +36,7 @@ public class SC_AVStateMachine : NetworkBehaviour
     {
         if (!IsServer)
         {
-            enabled = false;
+            Destroy(this);
             return;
         }
         
@@ -67,6 +67,10 @@ public class SC_AVStateMachine : NetworkBehaviour
     private void Update()
     {
         if (!_ready) return;
+
+        if(_context.GetDistanceToCenter(_vehicleController) < config.DistanceToShrinkCollider){
+            _context.triggerPlayerTracker.ShrinkCollider();
+        }
 
         currentNode.Action.OnUpdate(_context);
         SO_FSMNode nextNode = currentNode.CheckTransitions(_context);
@@ -130,6 +134,7 @@ public class SC_AVStateMachine : NetworkBehaviour
             _steeringInput = Mathf.Clamp(steeringInput, -1f, 1f);
 
             _myVehicleController.SteeringInput = _steeringInput;
+            _context.triggerPlayerTracker.RotateCollider(_steeringInput);
         }
     }
 
