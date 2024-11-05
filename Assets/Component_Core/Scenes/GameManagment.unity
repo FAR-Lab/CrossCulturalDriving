@@ -183,6 +183,7 @@ GameObject:
   - component: {fileID: 476093110}
   - component: {fileID: 476093111}
   - component: {fileID: 476093116}
+  - component: {fileID: 476093117}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -261,6 +262,12 @@ MonoBehaviour:
     m_Keys: []
     m_Values: []
   IncludedScenes:
+  - m_SceneAsset: {fileID: 102900000, guid: c74bd8041bc130b419fbe6592a1277e7, type: 3}
+    m_SceneName: Ped-103
+  - m_SceneAsset: {fileID: 102900000, guid: 33bd7b2d440b43b44804d7662d99f8c8, type: 3}
+    m_SceneName: Ped-104
+  - m_SceneAsset: {fileID: 102900000, guid: edb7628840d612f44aa3bed7803f4096, type: 3}
+    m_SceneName: Ped-105
   - m_SceneAsset: {fileID: 102900000, guid: 203920317bd9d014291d7cd67df2c8a4, type: 3}
     m_SceneName: FSM CP1 - A
   - m_SceneAsset: {fileID: 102900000, guid: 668987bac624e5b4bb2ac5c42fa5a24c, type: 3}
@@ -285,8 +292,6 @@ MonoBehaviour:
     m_SceneName: FSM CP7 - B
   - m_SceneAsset: {fileID: 102900000, guid: 130f8e90e40f84647930147030f90100, type: 3}
     m_SceneName: FSM CP8
-  - m_SceneAsset: {fileID: 102900000, guid: c74bd8041bc130b419fbe6592a1277e7, type: 3}
-    m_SceneName: Ped-103
   style:
     m_Name: 
     m_Normal:
@@ -396,6 +401,19 @@ MonoBehaviour:
     PacketDelayMS: 0
     PacketJitterMS: 0
     PacketDropRate: 0
+--- !u!114 &476093117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 476093106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1282c5d83ba004e41a2452c633d09ec9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpdatedFreqeuncy: 0.04
 --- !u!1001 &1950260990
 PrefabInstance:
   m_ObjectHideFlags: 0

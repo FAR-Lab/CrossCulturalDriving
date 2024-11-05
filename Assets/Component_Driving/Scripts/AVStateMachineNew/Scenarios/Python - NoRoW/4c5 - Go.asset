@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b93cdc3b62e93ba43adf0df5a094c8f8, type: 3}
-  m_Name: Node_AccelWithBreak
+  m_Script: {fileID: 11500000, guid: fe6f71b643f3e45418aba9d86713b209, type: 3}
+  m_Name: 4c5 - Go
   m_EditorClassIdentifier: 
-  Max_accel: 0.7418
-  Max_speed: 6.3637
-  Delta: 0.8403
-  BreakTime: 0.2
+  condition: {fileID: 11400000, guid: 2050b74dd15abab4a9f486292c1a72b4, type: 2}
+  targetNode: {fileID: 11400000, guid: e9ddf95dd5e71f04783b30e5a985dc1d, type: 2}
+  InverseCondition: 1

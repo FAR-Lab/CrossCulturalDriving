@@ -690,5 +690,40 @@ public class NetworkVehicleController : Interactable_Object {
         TurnOnLeftClientRpc(newvalue);
     }
 
+    public void SetBlinkLight(BlinklightTrigger.Direction dir) {
+        if (!IsServer) return;
+        switch (dir) {
+            case BlinklightTrigger.Direction.Left:
+                StartIndicatingLeft();
+                break;
+            case BlinklightTrigger.Direction.Right:
+                StartIndicatingRight();
+                break;
+            case BlinklightTrigger.Direction.Stop:
+                StopIndicating();
+                break;
+        }
+    }
+
+    private void StartIndicatingLeft() {
+        if (!IsServer) return;
+        LeftIsActuallyOn = true;
+        RightIsActuallyOn = false;
+        indicatorStage = 1;
+    }
+
+    private void StartIndicatingRight() {
+        if (!IsServer) return;
+        LeftIsActuallyOn = false;
+        RightIsActuallyOn = true;
+        indicatorStage = 1;
+    }
+
+    private void StopIndicating() {
+        if (!IsServer) return;
+        _StopIndicating();
+    }
+
+
     #endregion
 }

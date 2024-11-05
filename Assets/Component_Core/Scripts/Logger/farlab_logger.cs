@@ -206,7 +206,6 @@ public class farlab_logger : MonoBehaviour {
                +$"Session-{sessionName}_"
                +$"{DateTime.Now.ToString(DataStoragePathSupervisor.DateTimeFormatFolder)}.csv");
 
-
         InitLogs();
         logItems = new List<LogItem>();
 

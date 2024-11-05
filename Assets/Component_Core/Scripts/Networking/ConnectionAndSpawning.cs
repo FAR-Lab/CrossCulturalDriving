@@ -938,8 +938,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         m_QNDataStorageServer.StartScenario(LastLoadedScene, m_ReRunManager.GetRecordingFolder());
         // farlab_logger.Instance.StartRecording(m_ReRunManager, LastLoadedScene, m_ReRunManager.GetRecordingFolder());
     }
-
-
+    
     public void SwitchToQN() {
         Debug.Log("Stopping Driving and Stopping the recording.");
         m_ReRunManager.StopRecording();

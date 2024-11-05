@@ -8,6 +8,8 @@ public class SC_AVContext : MonoBehaviour {
     
     [SerializeField]private VehicleController _myCtrl;
     public VehicleController MyCtrl => _myCtrl;
+    [SerializeField] private NetworkVehicleController _myNetCtrl;
+    public NetworkVehicleController MyNetCtrl => _myNetCtrl;
     
     private Rigidbody _myRb => _myCtrl.GetComponent<Rigidbody>();
     public Rigidbody MyRb => _myRb;
@@ -38,6 +40,7 @@ public class SC_AVContext : MonoBehaviour {
     
     public void Initialize() {
         _myCtrl = GetComponent<VehicleController>();
+        _myNetCtrl = GetComponent<NetworkVehicleController>();
         
         Interactable_Object obj = ConnectionAndSpawning.Singleton.GetInteractableObject_For_Participant(ParticipantOrder.A);
 
@@ -127,6 +130,10 @@ public class SC_AVContext : MonoBehaviour {
     
     public void SetSpeed(float speed) {
         _speed = speed;
+    }
+    
+    public void SetSteering(float steering) {
+        _myNetCtrl.SteeringInput = steering;
     }
     
     public float GetSpeed() {
