@@ -182,8 +182,12 @@ public class SC_AVStateMachine : NetworkBehaviour
             fontSize = 14,
             normal = { textColor = Color.white }
         };
-
-        GUILayout.BeginArea(new Rect(30, 100, 300, 200), GUI.skin.box); 
+        
+        GUIStyle buttonStyle = new GUIStyle(GUI.skin.button)
+        {
+            fontSize = 24
+        };
+        GUILayout.BeginArea(new Rect(30, 100, 300, 250), GUI.skin.box); 
         GUILayout.Label("Current Node Container:", labelStyle);
         string currentNodeContainerName = startNodeContainer != null ? startNodeContainer.name : "None";
         GUILayout.Label(currentNodeContainerName, labelStyle);
@@ -193,7 +197,7 @@ public class SC_AVStateMachine : NetworkBehaviour
         GUILayout.Label("Switch Node Container:", labelStyle);
         foreach (var container in nodeContainers)
         {
-            if (GUILayout.Button(container.name))
+            if (GUILayout.Button(container.name, buttonStyle))
             {
                 startNodeContainer = container;
                 currentNode = startNodeContainer.startNode;
