@@ -699,9 +699,6 @@ public class NetworkVehicleController : Interactable_Object {
             case BlinklightTrigger.Direction.Right:
                 StartIndicatingRight();
                 break;
-            case BlinklightTrigger.Direction.Stop:
-                StopIndicating();
-                break;
         }
     }
 
@@ -719,7 +716,7 @@ public class NetworkVehicleController : Interactable_Object {
         indicatorStage = 1;
     }
 
-    private void StopIndicating() {
+    public void StopIndicating() {
         if (!IsServer) return;
         _StopIndicating();
     }

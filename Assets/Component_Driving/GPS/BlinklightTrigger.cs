@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode; 
 using UnityEngine;
 
@@ -8,7 +9,6 @@ public class BlinklightTrigger : MonoBehaviour
     public enum Direction {
         Left,
         Right,
-        Stop
     }
 
     public Direction BlinkDirection;
@@ -30,6 +30,16 @@ public class BlinklightTrigger : MonoBehaviour
         if (vehicleController != null) {
             if (vehicleController.VehicleMode == NetworkVehicleController.VehicleOpperationMode.AUTONOMOUS) {
                 vehicleController.SetBlinkLight(BlinkDirection);
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other) {
+        if (!NetworkManager.Singleton.IsServer) return; 
+        NetworkVehicleController vehicleController = other.GetComponentInParent<NetworkVehicleController>();
+        if (vehicleController != null) {
+            if (vehicleController.VehicleMode == NetworkVehicleController.VehicleOpperationMode.AUTONOMOUS) {
+                vehicleController.StopIndicating();
             }
         }
     }
