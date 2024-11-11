@@ -167,7 +167,7 @@ public class SC_AVStateMachine : NetworkBehaviour
                            $"Is front clear: {isFrontClear}";
 
         GUIStyle style = new GUIStyle();
-        style.fontSize = 20;
+        style.fontSize = 16;
         style.normal.textColor = Color.red;
 
         Handles.Label(labelPosition, labelText, style);

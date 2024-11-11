@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3bc3c21117a6414d9c0c69ef015ac50, type: 3}
-  m_Name: SelfGreaterThan35
+  m_Script: {fileID: 11500000, guid: fe6f71b643f3e45418aba9d86713b209, type: 3}
+  m_Name: 3c4 - Wait4Sec
   m_EditorClassIdentifier: 
-  distanceThreshold: 35
-  party: 0
-  comparison: 1
+  condition: {fileID: 11400000, guid: 2e449982651292247ad6717d83a2f0aa, type: 2}
+  targetNode: {fileID: 11400000, guid: cc17c5085da47ee4686007f09840c2e6, type: 2}
+  InverseCondition: 0

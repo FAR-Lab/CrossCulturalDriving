@@ -92,14 +92,19 @@ public class SC_AVContext : MonoBehaviour {
             // 0 : "ApproachRateOther" 
             approachRate = dot / rel_pos_magnitude;
             outdata[0] = - approachRate;
+            Debug.Log("ApproachRate: " + approachRate);
             // 1 : "Rel_Pos_Magnitude"
             outdata[1] = rel_pos_magnitude;
+            Debug.Log("Rel_Pos_Magnitude: " + rel_pos_magnitude);
             // "1_Head_Center_Distance", 
             outdata[2] = (_myRb.position-IntersectionCenter.position).magnitude; 
+            Debug.Log("1_Head_Center_Distance: " + outdata[2]);
             // "2_Head_Center_Distance", 
             outdata[3] = (_otherRb.position-IntersectionCenter.position).magnitude;
+            Debug.Log("2_Head_Center_Distance: " + outdata[3]);
             // "Filtered_2_Head_Velocity_Total"
             outdata[4] = _otherRb.velocity.magnitude;
+            Debug.Log("Filtered_2_Head_Velocity_Total: " + outdata[4]);
             
             // debug log all the data in one line
             string debugString = "";
@@ -109,6 +114,7 @@ public class SC_AVContext : MonoBehaviour {
             // Debug.Log(debugString);
             
             // fillers cuz python expects 7 values
+            // radian of approach angle
             outdata[5] = 0;
             outdata[6] = 0;
             
