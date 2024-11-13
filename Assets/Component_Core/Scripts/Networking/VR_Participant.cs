@@ -560,7 +560,7 @@ public class VR_Participant : Client_Object {
         isCalibrationRunning = true;
         m_calibDisplay.StartDisplay();
         m_calibDisplay.UpdateMessage("Hold still!");
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1);
 
         var HandModelL = transform.GetComponent<SeatCalibration>().HandModelL;
         var HandModelR = transform.GetComponent<SeatCalibration>().HandModelR;
@@ -571,7 +571,7 @@ public class VR_Participant : Client_Object {
         Debug.DrawRay(HandModelL.position, Vector3.up, Color.cyan, 60);
         Debug.DrawRay(HandModelR.position, Vector3.up, Color.cyan, 60);
 
-        const int MaxRuns = 250;
+        const int MaxRuns = 50;
         for (var runs = 0; runs < MaxRuns; runs++) {
             var A = HandModelL.position;
             var B = HandModelR.position;

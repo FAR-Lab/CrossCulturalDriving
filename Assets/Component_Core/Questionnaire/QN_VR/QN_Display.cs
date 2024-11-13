@@ -179,7 +179,7 @@ public class QN_Display : NetworkBehaviour {
 
     private void Update() {
         if (IsServer) {
-            if (Input.GetKeyUp(KeyCode.Q) && !Input.GetKey(KeyCode.LeftShift)) m_interalState = QNStates.FINISH;
+            // if (Input.GetKeyUp(KeyCode.Q) && !Input.GetKey(KeyCode.LeftShift)) m_interalState = QNStates.FINISH;
         }
 
         if (IsServer && !IsHost) return;

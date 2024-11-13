@@ -36,7 +36,7 @@ public class SC_AVContext : MonoBehaviour {
     
     public float _filteredYieldPossibility = 0f;
     [SerializeField]
-    private float alpha = 0.1f;
+    private float alpha = 0.5f;
     
     public void Initialize() {
         _myCtrl = GetComponent<VehicleController>();
@@ -61,11 +61,18 @@ public class SC_AVContext : MonoBehaviour {
         }
     }
     
-    private void HandleReceivedData(float[] data)
-    {
-        float newYieldPossibility = data[1];
-        _filteredYieldPossibility = alpha * newYieldPossibility + (1 - alpha) * _filteredYieldPossibility;
-        Debug.Log("Original: " + newYieldPossibility + " Filtered: " + _filteredYieldPossibility);
+    // yield & accel
+    private void HandleReceivedData(float[] data) {
+        // float newGoPossibility = data[0];
+        // Debug.Log($"Go: {newGoPossibility}");
+
+        _yieldPossibility = data[0];
+        var data1 = data[1];
+        Debug.Log($"Yield: {_yieldPossibility}, accel: {data1}");
+
+        // float newYieldPossibility = data[1];
+        _filteredYieldPossibility = alpha * _yieldPossibility + (1 - alpha) * _filteredYieldPossibility;
+        // Debug.Log($"Go: {newGoPossibility} Original: {newYieldPossibility} Filtered: {_filteredYieldPossibility} Sum: {newGoPossibility+newYieldPossibility}");
     }
 
     public bool ShouldYield() {
@@ -78,7 +85,7 @@ public class SC_AVContext : MonoBehaviour {
         float dot, rel_pos_magnitude, approachRate;
         
         yield return new WaitForSeconds(0.1f);
-        float[] outdata = new float[7];
+        float[] outdata = new float[5];
 
         while (true) {
             distance = _myRb.position - _otherRb.position;
@@ -92,19 +99,19 @@ public class SC_AVContext : MonoBehaviour {
             // 0 : "ApproachRateOther" 
             approachRate = dot / rel_pos_magnitude;
             outdata[0] = - approachRate;
-            Debug.Log("ApproachRate: " + approachRate);
+            // Debug.Log("ApproachRate: " + approachRate);
             // 1 : "Rel_Pos_Magnitude"
             outdata[1] = rel_pos_magnitude;
-            Debug.Log("Rel_Pos_Magnitude: " + rel_pos_magnitude);
+            // Debug.Log("Rel_Pos_Magnitude: " + rel_pos_magnitude);
             // "1_Head_Center_Distance", 
             outdata[2] = (_myRb.position-IntersectionCenter.position).magnitude; 
-            Debug.Log("1_Head_Center_Distance: " + outdata[2]);
+            // Debug.Log("1_Head_Center_Distance: " + outdata[2]);
             // "2_Head_Center_Distance", 
             outdata[3] = (_otherRb.position-IntersectionCenter.position).magnitude;
-            Debug.Log("2_Head_Center_Distance: " + outdata[3]);
+            // Debug.Log("2_Head_Center_Distance: " + outdata[3]);
             // "Filtered_2_Head_Velocity_Total"
             outdata[4] = _otherRb.velocity.magnitude;
-            Debug.Log("Filtered_2_Head_Velocity_Total: " + outdata[4]);
+            // Debug.Log("Filtered_2_Head_Velocity_Total: " + outdata[4]);
             
             // debug log all the data in one line
             string debugString = "";
@@ -115,8 +122,7 @@ public class SC_AVContext : MonoBehaviour {
             
             // fillers cuz python expects 7 values
             // radian of approach angle
-            outdata[5] = 0;
-            outdata[6] = 0;
+            // outdata[5] = _myRb.rotation.eulerAngles.y - _otherRb.rotation.eulerAngles.y;
             
             _udpSocket.SendDataToPython(outdata);
             yield return new WaitForSeconds(1f / 18f);

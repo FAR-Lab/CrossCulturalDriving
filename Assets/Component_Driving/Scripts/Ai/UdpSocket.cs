@@ -38,12 +38,11 @@ public class UdpSocket : MonoBehaviour
     Thread receiveThread; // Receiving Thread
 
 
-    static public int sendFloatArrayLength = 8;
+    static public int sendFloatArrayLength = 5;
     static public int expectedFloatReturnLength = 2;
     private ConcurrentQueue<float[]> recievedQueue = new ConcurrentQueue<float[]>();
     private ConcurrentQueue<float[]> sendQueue = new ConcurrentQueue<float[]>();
-
-
+    
     private void SendData() // Use to send data to Python
     {
         IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Parse(IP), txPort);

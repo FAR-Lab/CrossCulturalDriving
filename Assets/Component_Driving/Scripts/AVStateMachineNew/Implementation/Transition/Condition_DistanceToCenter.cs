@@ -33,6 +33,7 @@ public class Condition_DistanceToCenter : SO_FSMTransitionCheck
         }
         
         if (comparison == Comparison.LessThan) {
+            Debug.Log($"Distance: {distance}, Threshold: {distanceThreshold}");
             return distance < distanceThreshold;
         }
         else {

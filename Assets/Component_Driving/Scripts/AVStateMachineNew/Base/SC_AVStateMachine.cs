@@ -161,7 +161,8 @@ public class SC_AVStateMachine : NetworkBehaviour
                            $"Desired speed: {desiredSpeed:F2}\n" +
                            $"Current speed: {currentSpeed:F2}\n" +
                            $"Current Node: {currentNodeName}\n" +
-                           $"Yield possibility: {_context._filteredYieldPossibility:F2}\n" +
+                           $"Yield possibility: {_context.YieldPossibility:F2}\n" +
+                           $"FYield possibility: {_context._filteredYieldPossibility:F2}\n" +
                            $"Steering input: {_steeringInput:F2}\n" +
                             $"Throttle input: {_throttleInput:F2}\n" +
                            $"Is front clear: {isFrontClear}";
