@@ -54,6 +54,8 @@ public class SC_AVStateMachine : NetworkBehaviour
         _speedPID = new PID(config.SpeedP, config.SpeedI, config.SpeedD);
         _steeringPID = new PID(config.SteeringP, config.SteeringI, config.SteeringD);
         
+        UpdateBehaviorParameter(startNodeContainer.name);
+        
         StartCoroutine(PrepToStart());
     }
 
@@ -137,7 +139,11 @@ public class SC_AVStateMachine : NetworkBehaviour
             _context.triggerPlayerTracker.RotateCollider(_steeringInput);
         }
     }
-
+    private void UpdateBehaviorParameter(string behavior) {
+        NetworkQNManager networkQNManager = FindObjectOfType<NetworkQNManager>();
+        networkQNManager.SetParameters(behavior: behavior);
+        
+    }
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
@@ -203,6 +209,7 @@ public class SC_AVStateMachine : NetworkBehaviour
                 startNodeContainer = container;
                 currentNode = startNodeContainer.startNode;
                 currentNode.Action.OnEnter(_context);
+                UpdateBehaviorParameter(container.name);
                 Debug.Log("Node container switched to: " + container.name);
             }
         }

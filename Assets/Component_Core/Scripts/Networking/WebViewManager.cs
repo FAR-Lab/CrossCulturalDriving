@@ -6,9 +6,7 @@ using UnityEngine.UI;
 public class WebViewManager : NetworkBehaviour
 {
     [SerializeField] private TLabWebView m_webView;
-    [SerializeField] private NetworkVariable<bool> isWebViewEnabled = new NetworkVariable<bool>(true);
-
-    [SerializeField] private string url = "";
+    [SerializeField] private bool isWebViewEnabled = false;
     
     private GameObject m_webViewObject;
     
@@ -16,10 +14,13 @@ public class WebViewManager : NetworkBehaviour
     {
         m_webViewObject = m_webView.gameObject;
         
-        if (IsServer) {
+        if (!IsServer) {
             StartWebView();
         }
-        SetWebViewEnabled();
+
+        if (IsServer) {
+            SetWebViewEnabled(isWebViewEnabled);
+        }
     }
     
     public void StartWebView()
@@ -41,34 +42,31 @@ public class WebViewManager : NetworkBehaviour
 
     private void HandleServerActions() {
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q)) {
-            isWebViewEnabled.Value = !isWebViewEnabled.Value;
-            SetWebViewEnabled();
+            isWebViewEnabled = !isWebViewEnabled;
+            SetWebViewEnabled(isWebViewEnabled);
         }
         
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.L)) {
-            LoadURLClientRPC(url);
-        }
     }
 
-    private void SetWebViewEnabled() {
+    private void SetWebViewEnabled(bool enable) {
         if (!IsServer) return;
         
-        SetWebViewEnabledInternal();
-        SetWebViewEnabledClientRPC();
+        SetWebViewEnabledInternal(enable);
+        SetWebViewEnabledClientRPC(enable);
     }
 
-    private void SetWebViewEnabledInternal() {
+    private void SetWebViewEnabledInternal(bool enable) {
         RawImage rawImage = m_webView.GetComponent<RawImage>();
-        rawImage.enabled = isWebViewEnabled.Value;
+        rawImage.enabled = enable;
     }
     
     [ClientRpc]
-    private void SetWebViewEnabledClientRPC() {
-        SetWebViewEnabledInternal();
+    private void SetWebViewEnabledClientRPC(bool enable) {
+        SetWebViewEnabledInternal(enable);
     }
     
     [ClientRpc]
-    private void LoadURLClientRPC(string url) {
+    public void LoadURLClientRPC(string url) {
         m_webView.LoadUrl(url);
     }
 }

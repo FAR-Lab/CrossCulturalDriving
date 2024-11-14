@@ -34,32 +34,32 @@ public class QNTrigger : MonoBehaviour
     private void OnTriggerEnter(Collider other){
         if (NetworkManager.Singleton.IsServer) {
             return; //TODO: THIS IS BAD DAVID!!
-            if (StartingId == ParticipantOrder.None){
-                if (other.transform.GetComponentInParent<NetworkVehicleController>() != null){
-                    Debug.Log("Found a car so I am telling the server to switch to QNs");
-
-                    if (UseParticipantStopSign){
-                       
-                        ConnectionAndSpawning.Singleton.AwaitQN();
-                    }
-                    else{
-                        ConnectionAndSpawning.Singleton.SwitchToQN();
-                    }
-                }
-            }
-            else if (other.transform.GetComponentInParent<NetworkVehicleController>().getParticipantOrder() ==
-                     StartingId){
-                Debug.Log("Found the matching car so I am telling the server to switch to QNs");
-
-
-                if (UseParticipantStopSign){
-                    ConnectionAndSpawning.Singleton.AwaitQN();
-                   
-                }
-                else{
-                    ConnectionAndSpawning.Singleton.SwitchToQN();
-                }
-            }
+            // if (StartingId == ParticipantOrder.None){
+            //     if (other.transform.GetComponentInParent<NetworkVehicleController>() != null){
+            //         Debug.Log("Found a car so I am telling the server to switch to QNs");
+            //
+            //         if (UseParticipantStopSign){
+            //            
+            //             ConnectionAndSpawning.Singleton.AwaitQN();
+            //         }
+            //         else{
+            //             ConnectionAndSpawning.Singleton.SwitchToQN();
+            //         }
+            //     }
+            // }
+            // else if (other.transform.GetComponentInParent<NetworkVehicleController>().getParticipantOrder() ==
+            //          StartingId){
+            //     Debug.Log("Found the matching car so I am telling the server to switch to QNs");
+            //
+            //
+            //     if (UseParticipantStopSign){
+            //         ConnectionAndSpawning.Singleton.AwaitQN();
+            //        
+            //     }
+            //     else{
+            //         ConnectionAndSpawning.Singleton.SwitchToQN();
+            //     }
+            // }
         }
     }
 }

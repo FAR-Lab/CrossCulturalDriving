@@ -51,7 +51,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private ScenarioManager CurrentScenarioManager;
     private bool FinishedRunningAwaitCorutine = true;
-
+    private NetworkQNManager _networkQnManager;
 
     private Coroutine i_AwaitCarStopped;
 
@@ -92,7 +92,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         participants = new ParticipantOrderMapping();
         Main_ParticipantObjects = new Dictionary<ParticipantOrder, Client_Object>();
         Interactable_ParticipantObjects = new Dictionary<ParticipantOrder, List<Interactable_Object>>();
-
+        
         // populate the dictionaries
         JoinType_To_Client_Object = JoinTypeConfig.EnumToValueDictionary;
         SpawnType_To_InteractableObjects = SpawnTypeConfig.EnumToValueDictionary;
@@ -100,6 +100,9 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
     private void Start() {
 //        DontDestroyOnLoad(FindObjectOfType<InputSystemUIInputModule>());
+
+        _networkQnManager = GetComponent<NetworkQNManager>();
+
         LastLoadedVisualScene = "";
         if (FindObjectsOfType<RerunManager>().Length > 1) {
             Debug.LogError("We found more than 1 RerunManager. This is not support. Check your Hiracy");
@@ -227,8 +230,10 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
 
     public void StartAsServer(string pairName) {
-        if (pairName == string.Empty)
+        if (pairName == string.Empty) {
             pairName = $"UnNamed at{DateTime.Now.ToString(DataStoragePathSupervisor.DateTimeFormatFolder)}";
+        }
+        _networkQnManager.SetParameters(pairName: pairName);
 
         SetUpToServe(pairName);
 
@@ -834,7 +839,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
 
                 Main_ParticipantObjects.Add(po, mainParticipantObject.GetComponent<Client_Object>());
                 Main_ParticipantObjects[po].SetParticipantOrder(po);
-                m_QNDataStorageServer.SetupForNewRemoteImage(po);
+                // m_QNDataStorageServer.SetupForNewRemoteImage(po);
                 mainParticipantObject.SetSpawnType(spawnType);
             }
             else {
@@ -899,12 +904,14 @@ public class ConnectionAndSpawning : MonoBehaviour {
         ServerLoadScene(WaitingRoomSceneName);
     }
 
-    public void SwitchToLoading(string name) {
+    public void SwitchToLoading(string CPName) {
+        _networkQnManager.SetParameters(cp: CPName);
+        
         ServerState = ActionState.LOADINGSCENARIO;
         ServerStateChange.Invoke(ActionState.LOADINGSCENARIO);
 
-        ServerLoadScene(name);
-        LastLoadedScene = name;
+        ServerLoadScene(CPName);
+        LastLoadedScene = CPName;
     }
 
     public string GetLoadedScene() {
@@ -935,31 +942,31 @@ public class ConnectionAndSpawning : MonoBehaviour {
         ServerStateChange.Invoke(ActionState.DRIVE);
 
         m_ReRunManager.BeginRecording(LastLoadedScene);
-        m_QNDataStorageServer.StartScenario(LastLoadedScene, m_ReRunManager.GetRecordingFolder());
+        // m_QNDataStorageServer.StartScenario(LastLoadedScene, m_ReRunManager.GetRecordingFolder());
         farlab_logger.Instance.StartRecording(m_ReRunManager, LastLoadedScene, m_ReRunManager.GetRecordingFolder());
     }
     
-    public void SwitchToQN() {
-        Debug.Log("Stopping Driving and Stopping the recording.");
-        m_ReRunManager.StopRecording();
-
-        ServerState = ActionState.QUESTIONS;
-        ServerStateChange.Invoke(ActionState.QUESTIONS);
-
-        QNFinished = new Dictionary<ParticipantOrder, bool>();
-        foreach (var po in participants.GetAllConnectedParticipants()) QNFinished.Add(po, false);
-
-
-        foreach (var no in FindObjectsOfType<Interactable_Object>()) no.Stop_Action();
-
-
-        foreach (var po in Main_ParticipantObjects.Keys)
-            Main_ParticipantObjects[po].GetComponent<Client_Object>()
-                .StartQuestionair(m_QNDataStorageServer);
-
-        m_QNDataStorageServer.StartQn(GetScenarioManager(), m_ReRunManager);
-        StartCoroutine(farlab_logger.Instance.StopRecording());
-    }
+    // public void SwitchToQN() {
+    //     Debug.Log("Stopping Driving and Stopping the recording.");
+    //     m_ReRunManager.StopRecording();
+    //
+    //     ServerState = ActionState.QUESTIONS;
+    //     ServerStateChange.Invoke(ActionState.QUESTIONS);
+    //
+    //     QNFinished = new Dictionary<ParticipantOrder, bool>();
+    //     foreach (var po in participants.GetAllConnectedParticipants()) QNFinished.Add(po, false);
+    //
+    //
+    //     foreach (var no in FindObjectsOfType<Interactable_Object>()) no.Stop_Action();
+    //
+    //
+    //     foreach (var po in Main_ParticipantObjects.Keys)
+    //         Main_ParticipantObjects[po].GetComponent<Client_Object>()
+    //             .StartQuestionair(m_QNDataStorageServer);
+    //
+    //     m_QNDataStorageServer.StartQn(GetScenarioManager(), m_ReRunManager);
+    //     StartCoroutine(farlab_logger.Instance.StopRecording());
+    // }
 
     private void ForceBackToWaitingRoom() {
         Debug.Log("Forced back to the waiting Room. When running studies please try to avoid this!");
@@ -971,7 +978,7 @@ public class ConnectionAndSpawning : MonoBehaviour {
         if (farlab_logger.Instance.isRecording()) StartCoroutine(farlab_logger.Instance.StopRecording());
         ServerState = ActionState.POSTQUESTIONS;
         ServerStateChange.Invoke(ActionState.POSTQUESTIONS);
-
+    
         SwitchToWaitingRoom();
     }
 
