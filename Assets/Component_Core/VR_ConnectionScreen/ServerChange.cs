@@ -1,14 +1,11 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
 using System.IO;
 using System.Linq;
-using System;
-using UnityEngine.SceneManagement;
+using TMPro;
+using UnityEngine;
 
-public class ServerChange : MonoBehaviour
-{
+public class ServerChange : MonoBehaviour {
     public TMP_Dropdown ParticipantDropdown;
     public TMP_Text ParticipantTextBox;
     public TMP_Dropdown LanguageDropdown;
@@ -20,32 +17,28 @@ public class ServerChange : MonoBehaviour
     public GameObject OVRCamera;
     public GameObject NetworkManager;
 
-    private string ServerIPString;
-    private string ParticipantIDString;
+    public string FileName = "Participant.conf";
     private string LanguageString;
 
-    public string FileName = "Participant.conf";
-
     private string m_path;
-    private char m_seperator = '\t';
+    private readonly char m_seperator = '\t';
+    private string ParticipantIDString;
 
-    private bool ready;
+    private string ServerIPString;
 
 
-    public bool ReadyToLoad{
-        get { return ready; }
-    }
+    public bool ReadyToLoad { get; private set; }
 
     // This script renders UI compnjents with textmesh pro for changing participant setup configuration on the oculus headset
     // Setup the scene as described in https://www.youtube.com/watch?v=1zJw0F_3UZ0
 
-    private void Start(){
+    private void Start() {
         m_path = Application.persistentDataPath + "/" + FileName;
-        ready = true;
+        ReadyToLoad = true;
 
         ParticipantDropdown.options.Clear();
 
-        List<string> ParticipantItems = new List<string>();
+        var ParticipantItems = new List<string>();
         ParticipantItems.Add("A");
         ParticipantItems.Add("B");
         ParticipantItems.Add("C");
@@ -53,68 +46,63 @@ public class ServerChange : MonoBehaviour
         ParticipantItems.Add("E");
         ParticipantItems.Add("F");
 
-        foreach (var item in ParticipantItems){
-            ParticipantDropdown.options.Add(new TMP_Dropdown.OptionData(){text = item});
-        }
+        foreach (var item in ParticipantItems)
+            ParticipantDropdown.options.Add(new TMP_Dropdown.OptionData { text = item });
 
         LanguageDropdown.options.Clear();
 
-        List<string> LanguageItems = new List<string>();
+        var LanguageItems = new List<string>();
         LanguageItems.Add("English");
         LanguageItems.Add("Hebrew");
         LanguageItems.Add("Chinese");
         LanguageItems.Add("German");
 
-        foreach (var item in LanguageItems){
-            LanguageDropdown.options.Add(new TMP_Dropdown.OptionData(){text = item});
-        }
+        foreach (var item in LanguageItems) LanguageDropdown.options.Add(new TMP_Dropdown.OptionData { text = item });
 
-        if (LoadConf()){
-            AutoStartStudy();
-        }
+        if (LoadConf()) AutoStartStudy();
 
         ParticipantDropdown.onValueChanged.AddListener(
-            delegate{ ParticipantDropdownItemSelected(ParticipantDropdown); });
+            delegate { ParticipantDropdownItemSelected(ParticipantDropdown); });
 
 
-        LanguageDropdown.onValueChanged.AddListener(delegate{ LanguageDropdownItemSelected(ParticipantDropdown); });
+        LanguageDropdown.onValueChanged.AddListener(delegate { LanguageDropdownItemSelected(ParticipantDropdown); });
 
-        serverIPField.onValueChanged.AddListener(delegate{ IPCHanged(); });
+        serverIPField.onValueChanged.AddListener(delegate { IPCHanged(); });
     }
 
 
-    public void IPCHanged(){
+    public void IPCHanged() {
         ServerIPString = serverIPField.text;
         ServerIPTextBox.text = "IP: " + ServerIPString;
     }
 
-    public void StoreConfiguration(){
+    public void StoreConfiguration() {
         StoreConf(ParticipantIDString, ServerIPString, LanguageString);
         Debug.Log("Store configuration file and shut down.");
         Application.Quit();
     }
 
-    private void AutoStartStudy(){
+    private void AutoStartStudy() {
         ServerConnectionStatusTextBox.text = "Trying to establish a connection";
-        if (Enum.TryParse<ParticipantOrder>(ParticipantIDString, out ParticipantOrder myParticipant)){
+        if (Enum.TryParse(ParticipantIDString, out ParticipantOrder myParticipant)) {
             ConnectionAndSpawning.Singleton.StartAsClient(LanguageString, myParticipant, ServerIPString, 7777,
                 ResponseDelegate);
             ServerConnectionStatusTextBox.text = "Waiting for Connection Response";
         }
 
-        else{
+        else {
             Debug.LogError("ServerChange could not find a matching particpant ID");
             ServerConnectionStatusTextBox.text = "No Matching Participant ID Enum";
         }
     }
 
-    private void ResponseDelegate(ConnectionAndSpawning.ClienConnectionResponse response){
-        switch (response){
-            case ConnectionAndSpawning.ClienConnectionResponse.FAILED:
+    private void ResponseDelegate(ConnectionAndSpawning.ClientConnectionResponse response) {
+        switch (response) {
+            case ConnectionAndSpawning.ClientConnectionResponse.FAILED:
                 Debug.Log("Connection Failed maybe change IP address, participant order (A,b,C, etc.) or the port");
                 ServerConnectionStatusTextBox.text = "Connection failed";
                 break;
-            case ConnectionAndSpawning.ClienConnectionResponse.SUCCESS:
+            case ConnectionAndSpawning.ClientConnectionResponse.SUCCESS:
                 Debug.Log("We are connected you can stop showing the UI now!");
                 ServerConnectionStatusTextBox.text = "CONNECTED!";
 
@@ -123,30 +111,30 @@ public class ServerChange : MonoBehaviour
         }
     }
 
-    void ParticipantDropdownItemSelected(TMP_Dropdown dropdown){
-        int index = dropdown.value;
+    private void ParticipantDropdownItemSelected(TMP_Dropdown dropdown) {
+        var index = dropdown.value;
         ParticipantIDString = dropdown.options[index].text;
         ParticipantTextBox.text = "ID: " + ParticipantIDString;
     }
 
-    void LanguageDropdownItemSelected(TMP_Dropdown dropdown){
-        int index = LanguageDropdown.value;
+    private void LanguageDropdownItemSelected(TMP_Dropdown dropdown) {
+        var index = LanguageDropdown.value;
         LanguageString = LanguageDropdown.options[index].text;
         LanguageTextBox.text = "Lang: " + LanguageString;
     }
     // All for writing and storing data from down here
 
 
-    private bool LoadConf(){
-        if (File.Exists(m_path)){
-            Dictionary<string, string> dict = LoadDict();
+    private bool LoadConf() {
+        if (File.Exists(m_path)) {
+            var dict = LoadDict();
 
-            if (dict.ContainsKey("participant") && dict.ContainsKey("server") && dict.ContainsKey("language")){
+            if (dict.ContainsKey("participant") && dict.ContainsKey("server") && dict.ContainsKey("language")) {
                 ParticipantIDString = dict["participant"];
                 ServerIPString = dict["server"];
                 LanguageString = dict["language"];
 
-                switch (ParticipantIDString){
+                switch (ParticipantIDString) {
                     case "A":
                         ParticipantDropdown.value = 0;
                         break;
@@ -177,7 +165,7 @@ public class ServerChange : MonoBehaviour
                         break;
                 }
 
-                switch (LanguageString){
+                switch (LanguageString) {
                     case "English":
                         LanguageDropdown.value =
                             0; //TODO This is bad form. We should not directly reference the index but rather dynamically find the index. 
@@ -204,27 +192,22 @@ public class ServerChange : MonoBehaviour
 
                 return true;
             }
-            else{
-                Debug.LogError("Participant configuration file corrupted");
-                return false;
-            }
-        }
 
-        else{
-            ParticipantIDString = "A";
-            ServerIPString = "192.168.1.1";
-            LanguageString = "English";
-
-            ParticipantDropdown.value = 0;
-            LanguageDropdown.value = 0;
+            Debug.LogError("Participant configuration file corrupted");
             return false;
         }
 
-     
+        ParticipantIDString = "A";
+        ServerIPString = "192.168.1.1";
+        LanguageString = "English";
+
+        ParticipantDropdown.value = 0;
+        LanguageDropdown.value = 0;
+        return false;
     }
 
-    public void StoreConf(string participantID, string serverIP, string language){
-        Dictionary<string, string> dict = new Dictionary<string, string>();
+    public void StoreConf(string participantID, string serverIP, string language) {
+        var dict = new Dictionary<string, string>();
         dict["participant"] = participantID;
         dict["server"] = serverIP;
         dict["language"] = language;
@@ -235,10 +218,10 @@ public class ServerChange : MonoBehaviour
 
     // https://stackoverflow.com/questions/59288414/how-do-i-use-streamreader-to-add-split-lines-to-a-dictionary?rq=1
 
-    private Dictionary<string, string> LoadDict(){
+    private Dictionary<string, string> LoadDict() {
         Debug.Log("Trying to load from: " + m_path);
-        Dictionary<string, string> dict = File
-            .ReadLines(@m_path)
+        var dict = File
+            .ReadLines(m_path)
             .Where(line => !string.IsNullOrEmpty(line)) // to be on the safe side
             .Select(line => line.Split(m_seperator))
             .ToDictionary(items => items[0], items => items[1]);
@@ -246,12 +229,10 @@ public class ServerChange : MonoBehaviour
         return dict;
     }
 
-    private void WriteDict(Dictionary<string, string> dict){
+    private void WriteDict(Dictionary<string, string> dict) {
         Debug.Log("Trying to write to: " + m_path);
-        StreamWriter writer = new StreamWriter(m_path, false);
-        foreach (KeyValuePair<string, string> entry in dict){
-            writer.WriteLine(entry.Key + m_seperator + entry.Value.ToString());
-        }
+        var writer = new StreamWriter(m_path, false);
+        foreach (var entry in dict) writer.WriteLine(entry.Key + m_seperator + entry.Value);
 
         writer.Close();
     }

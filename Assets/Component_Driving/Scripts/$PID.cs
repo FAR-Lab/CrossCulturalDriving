@@ -1,23 +1,30 @@
+using UnityEngine;
+
 [System.Serializable]
 public class PID {
 	public float pFactor, iFactor, dFactor;
 		
 	float integral;
 	float lastError;
-	
-	
-	public PID(float pFactor, float iFactor, float dFactor) {
+	float minOutput;
+	float maxOutput;
+
+
+	public PID(float pFactor, float iFactor, float dFactor, float minOutput = float.MinValue, float maxOutput = float.MaxValue) {
 		this.pFactor = pFactor;
 		this.iFactor = iFactor;
 		this.dFactor = dFactor;
+		this.minOutput = minOutput;
+		this.maxOutput = maxOutput;
 	}
 	
 	
 	public float Update(float setpoint, float actual, float timeFrame) {
-		float present = setpoint - actual;
+		var present = setpoint - actual;
 		integral += present * timeFrame;
-		float deriv = (present - lastError) / timeFrame;
+		integral = Mathf.Clamp(integral, minOutput, maxOutput);
+		var deriv = (present - lastError) / timeFrame;
 		lastError = present;
-		return present * pFactor + integral * iFactor + deriv * dFactor;
+		return Mathf.Clamp(present * pFactor + integral * iFactor + deriv * dFactor, minOutput, maxOutput);
 	}
 }
