@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -29,8 +30,28 @@ public class SC_AVContext : MonoBehaviour {
         get => yieldThreshold;
         set => yieldThreshold = value;
     }
-
     
+    bool recordYieldPossibility = false;
+    float yieldPossibilitySum = 0;
+    int recordCount = 0;
+    float averageYieldPossibility = 0;
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Y)) {
+            recordYieldPossibility = !recordYieldPossibility;
+        }
+        
+        if (recordYieldPossibility) {
+            yieldPossibilitySum += _yieldPossibility;
+            recordCount++;
+            
+            averageYieldPossibility = yieldPossibilitySum / recordCount;
+            Debug.Log($"Average Yield Possibility: {averageYieldPossibility}");
+        }
+        
+    }
+
+
     private float _yieldPossibility;
     public float YieldPossibility => _yieldPossibility;
     
