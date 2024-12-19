@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e4de25e38323b949bef2ee28e2f733e, type: 3}
+  m_Name: AVFollowSplineConfig
+  m_EditorClassIdentifier: 
+  lookAheadDistance: 6
+  desiredSpeed: 10
+  Kp_steering: 10
+  Ki_steering: 0.2
+  Kd_steering: 0.01
+  Kp_speed: 0.5
+  Ki_speed: 0
+  Kd_speed: 0
