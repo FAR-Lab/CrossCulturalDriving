@@ -64,7 +64,6 @@ public class ParticipantOrderMapping {
         {
             Debug.LogError("This should never happend the internal tracking of participants desyrnozied Fix this class. write test cases But this should never happen (PARTICIPANTORDERMAPPING.CS)!!!");
         }
-        
     }
     
     public void RemoveParticipant(ulong id) {
@@ -97,8 +96,6 @@ public class ParticipantOrderMapping {
             st = SpawnType.NONE;
             return false;
         }
-
-       
         return GetSpawnType(po, out st);
     }
     public bool GetSpawnType(ParticipantOrder or,out SpawnType st) {
