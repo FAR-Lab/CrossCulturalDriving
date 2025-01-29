@@ -23,7 +23,7 @@ public class NPCStateMachine : MonoBehaviour
     private int bornBlockIndex;
     private int destBlockIndex;
 
-    private List<BoxCollider> destinationAreas;
+    [SerializeField] private List<BoxCollider> destinationAreas;
     public float minDistanceDiff = 50f;
     private bool isPaused = false;
     private bool finishedRegularPause = false;
@@ -102,7 +102,7 @@ public class NPCStateMachine : MonoBehaviour
     //Set as the NPC's targetDestination
     Vector3 SelectRandomDestination() {
         if (destinationAreas != null) {
-            int index = Random.Range(0, destinationAreas.Count);
+            int index = 0;
             
             //TODO:Do we want dest and start locations to be in different blocks; now only checks the distance between the two position
 
@@ -113,18 +113,20 @@ public class NPCStateMachine : MonoBehaviour
                 Random.Range(destBox.bounds.min.z,destBox.bounds.max.z)
             );
             
-            NavMeshHit hit;
-            int walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
-            NavMeshPath path = new NavMeshPath();
-            while (! NavMesh.SamplePosition(randomDest, out hit, 5f, walkableMask) || Vector3.Distance(
-                       hit.position,_transform.position)<=minDistanceDiff ) {
-                randomDest = new Vector3(
-                    Random.Range(destBox.bounds.min.x,destBox.bounds.max.x),
-                    _transform.position.y,
-                    Random.Range(destBox.bounds.min.z,destBox.bounds.max.z)
-                );
-            }
-            
+        NavMeshHit hit;
+        int walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
+        NavMeshPath path = new NavMeshPath();
+        int maxAttempts = 100; // Set a maximum number of attempts
+        int attempts = 0;
+
+        while ((!NavMesh.SamplePosition(randomDest, out hit, 5f, walkableMask) || Vector3.Distance(hit.position, _transform.position) <= minDistanceDiff) && attempts < maxAttempts) {
+            randomDest = new Vector3(
+                Random.Range(destBox.bounds.min.x, destBox.bounds.max.x),
+                _transform.position.y,
+                Random.Range(destBox.bounds.min.z, destBox.bounds.max.z)
+            );
+            attempts++;
+        }
             //Still can spawn agents on illegal places such as benches, need to update the prefabs
             //Comment out this codes to remove "SetDestination" and "CalculatePath" errors
 
