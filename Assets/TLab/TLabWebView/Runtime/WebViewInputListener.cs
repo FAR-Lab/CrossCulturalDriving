@@ -72,6 +72,12 @@ namespace TLab.Android.WebView
                 m_webview.TouchEvent(m_inputPosition.x, m_inputPosition.y, (int)WebTouchEvent.DOWN);
 
                 m_pointerDown = true;
+                
+                m_webview.TouchEvent(m_inputPosition.x, m_inputPosition.y, (int)WebTouchEvent.UP);
+
+                m_pointerId = null;
+
+                m_pointerDown = false;
             }
         }
 

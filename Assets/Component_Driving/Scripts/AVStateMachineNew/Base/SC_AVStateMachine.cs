@@ -171,6 +171,7 @@ public class SC_AVStateMachine : NetworkBehaviour
                            $"FYield possibility: {_context._filteredYieldPossibility:F2}\n" +
                            $"Steering input: {_steeringInput:F2}\n" +
                             $"Throttle input: {_throttleInput:F2}\n" +
+                           $"S: {_context.ShouldYield()}\n" +
                            $"Is front clear: {isFrontClear}";
 
         GUIStyle style = new GUIStyle();

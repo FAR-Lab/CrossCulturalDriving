@@ -38,7 +38,11 @@ public class WindShieldToggle : NetworkBehaviour
         {
             WindShieldMeshRenderer.material = TransparentMaterial;
         }
-     
+
+        string appearanceString = newValue ? "Opaque" : "Transparent";
+
+        NetworkQNManager networkQNManager = FindObjectOfType<NetworkQNManager>();
+        networkQNManager.SetParameters(appearance:appearanceString);
     }
 
     private void OnGUI() {

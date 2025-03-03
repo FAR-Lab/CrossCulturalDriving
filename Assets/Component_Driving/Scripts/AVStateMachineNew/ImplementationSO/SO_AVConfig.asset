@@ -15,14 +15,14 @@ MonoBehaviour:
   SpeedP: 0.5
   SpeedI: 0.005
   SpeedD: 0.05
-  SteeringP: 0.95
-  SteeringI: 0.09
-  SteeringD: 0.1
+  SteeringP: 1
+  SteeringI: 0.05
+  SteeringD: 0.05
   ThrottleFeedforward: 0.85
   LookaheadDistance: 5
   LateralErrorWeight: 1
   HeadingErrorWeight: 0.5
-  YieldThreshold: 0.8
+  YieldThreshold: 0.5
   nodeContainers:
   - {fileID: 11400000, guid: d0b25203c7ac9524a90bbd7f6d1ee2c5, type: 2}
   - {fileID: 11400000, guid: 8dace2c861fc4a8448ba09e95cce05f3, type: 2}

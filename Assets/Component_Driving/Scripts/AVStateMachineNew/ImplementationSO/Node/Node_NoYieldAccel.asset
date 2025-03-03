@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe6f71b643f3e45418aba9d86713b209, type: 3}
-  m_Name: 3c4 - Wait4Sec
+  m_Script: {fileID: 11500000, guid: b93cdc3b62e93ba43adf0df5a094c8f8, type: 3}
+  m_Name: Node_NoYieldAccel
   m_EditorClassIdentifier: 
-  condition: {fileID: 11400000, guid: 2e449982651292247ad6717d83a2f0aa, type: 2}
-  targetNode: {fileID: 11400000, guid: cc17c5085da47ee4686007f09840c2e6, type: 2}
-  InverseCondition: 0
+  Max_accel: 1.1
+  Max_speed: 9
+  Delta: 0.8403
+  BreakTime: 0.2

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5f913c49c9a8e42aef803506f77b33, type: 3}
-  m_Name: 2 - Decel
+  m_Script: {fileID: 11500000, guid: fe6f71b643f3e45418aba9d86713b209, type: 3}
+  m_Name: 3c4 - Wait4Sec
   m_EditorClassIdentifier: 
-  Action: {fileID: 11400000, guid: 1d582e7fa059f134f9840f8b57b8ec3a, type: 2}
-  Transitions:
-  - {fileID: 11400000, guid: 7630379e531699b45a8189903a9e4cb8, type: 2}
+  condition: {fileID: 11400000, guid: 8debba57c8c7524418b97973d7512289, type: 2}
+  targetNode: {fileID: 11400000, guid: cc17c5085da47ee4686007f09840c2e6, type: 2}
+  InverseCondition: 0

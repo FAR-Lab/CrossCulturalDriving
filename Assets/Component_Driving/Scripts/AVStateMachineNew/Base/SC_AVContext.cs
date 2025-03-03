@@ -37,9 +37,9 @@ public class SC_AVContext : MonoBehaviour {
     float averageYieldPossibility = 0;
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.Y)) {
-            recordYieldPossibility = !recordYieldPossibility;
-        }
+        // if (Input.GetKeyDown(KeyCode.Y)) {
+        //     recordYieldPossibility = !recordYieldPossibility;
+        // }
         
         if (recordYieldPossibility) {
             yieldPossibilitySum += _yieldPossibility;
@@ -97,6 +97,14 @@ public class SC_AVContext : MonoBehaviour {
     }
 
     public bool ShouldYield() {
+        if (Input.GetKey(KeyCode.Y)) {
+            return true;
+        }
+        
+        if (Input.GetKey(KeyCode.N)) {
+            return false;
+        }
+        
         return _filteredYieldPossibility > yieldThreshold;
     }
 
@@ -106,7 +114,7 @@ public class SC_AVContext : MonoBehaviour {
         float dot, rel_pos_magnitude, approachRate;
         
         yield return new WaitForSeconds(0.1f);
-        float[] outdata = new float[5];
+        float[] outdata = new float[6];
 
         while (true) {
             distance = _myRb.position - _otherRb.position;
@@ -143,10 +151,10 @@ public class SC_AVContext : MonoBehaviour {
             
             // fillers cuz python expects 7 values
             // radian of approach angle
-            // outdata[5] = _myRb.rotation.eulerAngles.y - _otherRb.rotation.eulerAngles.y;
+            outdata[5] = _myRb.rotation.eulerAngles.y - _otherRb.rotation.eulerAngles.y;
             
             _udpSocket.SendDataToPython(outdata);
-            yield return new WaitForSeconds(1f / 18f);
+            yield return new WaitForSeconds(1f / 19f);
         }
     }
     

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a5f913c49c9a8e42aef803506f77b33, type: 3}
-  m_Name: 3 - AccelWithBreak
+  m_Script: {fileID: 11500000, guid: d3bc3c21117a6414d9c0c69ef015ac50, type: 3}
+  m_Name: SelfLessThan8
   m_EditorClassIdentifier: 
-  Action: {fileID: 11400000, guid: 7c6e2be0f7249484e8acc8f87667ba56, type: 2}
-  Transitions:
-  - {fileID: 11400000, guid: bac12002956c7d7439746c4063513c42, type: 2}
+  distanceThreshold: 8.1
+  party: 0
+  comparison: 0
