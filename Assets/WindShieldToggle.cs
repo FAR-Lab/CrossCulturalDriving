@@ -47,9 +47,11 @@ public class WindShieldToggle : NetworkBehaviour
 
     private void OnGUI() {
         if (IsServer) {
-            if (GUI.Button(new Rect(200, 30, 150, 40), "Toggle WindShield")) {
+            GUI.skin.button.fontSize = 20;
+            if (GUI.Button(new Rect(200, 30, 150, 70), $"Opaque: {IsOpaque.Value}")) {
                 ToggleWindShield();
             }
+
         }
     }
 }

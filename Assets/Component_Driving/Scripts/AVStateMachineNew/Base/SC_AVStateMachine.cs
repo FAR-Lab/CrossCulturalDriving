@@ -187,7 +187,7 @@ public class SC_AVStateMachine : NetworkBehaviour
         
         GUIStyle labelStyle = new GUIStyle(GUI.skin.label)
         {
-            fontSize = 14,
+            fontSize = 24,
             normal = { textColor = Color.white }
         };
         

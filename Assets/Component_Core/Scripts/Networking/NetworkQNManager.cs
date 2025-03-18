@@ -14,7 +14,7 @@ public class NetworkQNManager : MonoBehaviour
         public string Appearance;
     }
 
-    [SerializeField] private QualtricsParameters parameters;
+    [SerializeField] public QualtricsParameters parameters;
     
     [SerializeField] private string baseUrl = "";
     
