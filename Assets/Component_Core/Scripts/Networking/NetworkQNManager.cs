@@ -13,18 +13,20 @@ public class NetworkQNManager : MonoBehaviour
         public string Behavior;
     }
 
-    [SerializeField] private QualtricsParameters parameters;
+    [SerializeField] public QualtricsParameters parameters;
     
     [SerializeField] private string baseUrl = "";
     
     [SerializeField] private string finalUrl = "";
     
     private void Update() {
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.L)) {
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q)) {
             WebViewManager webViewManager = FindObjectOfType<WebViewManager>();
             if (webViewManager != null) {
                 finalUrl = GetFinalUrl();
                 webViewManager.LoadURLClientRPC(finalUrl);
+                
+                webViewManager.ToggleWebViewVisibility();
             }
         }
     }

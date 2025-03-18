@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe6f71b643f3e45418aba9d86713b209, type: 3}
-  m_Name: 2c - Wait1s
+  m_Script: {fileID: 11500000, guid: 5ea89e283f3cc3e4e887066535712421, type: 3}
+  m_Name: Node_DecelToSlow
   m_EditorClassIdentifier: 
-  condition: {fileID: 11400000, guid: 0e13dc977af65c940aa2b2a15637af9f, type: 2}
-  targetNode: {fileID: 11400000, guid: f85a49e4a65bd59418375a1fe0a29031, type: 2}
-  InverseCondition: 0
+  barDistanceFromCenter: 10
+  TargetSpeed: 1

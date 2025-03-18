@@ -7,6 +7,7 @@ using UnityEngine;
 public class WindShieldToggle : NetworkBehaviour
 {
     public NetworkVariable<bool> IsOpaque = new NetworkVariable<bool>(false);
+    public bool InitIsOpaque = false;
     
     public MeshRenderer WindShieldMeshRenderer;
     
@@ -19,6 +20,7 @@ public class WindShieldToggle : NetworkBehaviour
         IsOpaque.OnValueChanged += OnIsOpaqueChanged;
         
         // set initial value
+        IsOpaque.Value = InitIsOpaque;
         OnIsOpaqueChanged(IsOpaque.Value, IsOpaque.Value);
     }
 

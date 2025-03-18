@@ -171,6 +171,7 @@ public class SC_AVStateMachine : NetworkBehaviour
                            $"FYield possibility: {_context._filteredYieldPossibility:F2}\n" +
                            $"Steering input: {_steeringInput:F2}\n" +
                             $"Throttle input: {_throttleInput:F2}\n" +
+                           $"S: {_context.ShouldYield()}\n" +
                            $"Is front clear: {isFrontClear}";
 
         GUIStyle style = new GUIStyle();
@@ -186,7 +187,7 @@ public class SC_AVStateMachine : NetworkBehaviour
         
         GUIStyle labelStyle = new GUIStyle(GUI.skin.label)
         {
-            fontSize = 14,
+            fontSize = 28,
             normal = { textColor = Color.white }
         };
         
@@ -195,13 +196,12 @@ public class SC_AVStateMachine : NetworkBehaviour
             fontSize = 24
         };
         GUILayout.BeginArea(new Rect(30, 100, 300, 250), GUI.skin.box); 
-        GUILayout.Label("Current Node Container:", labelStyle);
+        GUILayout.Label("Current:", labelStyle);
         string currentNodeContainerName = startNodeContainer != null ? startNodeContainer.name : "None";
         GUILayout.Label(currentNodeContainerName, labelStyle);
 
         GUILayout.Space(10); 
 
-        GUILayout.Label("Switch Node Container:", labelStyle);
         foreach (var container in nodeContainers)
         {
             if (GUILayout.Button(container.name, buttonStyle))

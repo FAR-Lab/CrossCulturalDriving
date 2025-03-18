@@ -203,6 +203,7 @@ public class farlab_logger : MonoBehaviour {
         Directory.CreateDirectory(folderpath);
         path = Path.Join(folderpath,
                $"CSV_Scenario-{ScenarioName}_"
+               +$"{FindObjectOfType<NetworkQNManager>().parameters.Behavior}_"
                +$"Session-{sessionName}_"
                +$"{DateTime.Now.ToString(DataStoragePathSupervisor.DateTimeFormatFolder)}.csv");
 

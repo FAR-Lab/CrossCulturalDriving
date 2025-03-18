@@ -8,12 +8,8 @@ public class WebViewManager : NetworkBehaviour
     [SerializeField] private TLabWebView m_webView;
     [SerializeField] private bool isWebViewEnabled = false;
     
-    private GameObject m_webViewObject;
-    
     void Start()
     {
-        m_webViewObject = m_webView.gameObject;
-        
         if (!IsServer) {
             StartWebView();
         }
@@ -30,22 +26,24 @@ public class WebViewManager : NetworkBehaviour
 
     void Update()
     {
-        if (IsServer) {
-            HandleServerActions();
-        }
-        
-        
+        // if (IsServer) {
+        //     HandleServerActions();
+        // }
 #if UNITY_ANDROID
         m_webView.UpdateFrame();
 #endif
     }
 
-    private void HandleServerActions() {
-        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q)) {
-            isWebViewEnabled = !isWebViewEnabled;
-            SetWebViewEnabled(isWebViewEnabled);
-        }
-        
+    // private void HandleServerActions() {
+    //     if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Q)) {
+    //
+    //     }
+    //     
+    // }
+
+    public void ToggleWebViewVisibility() {
+        isWebViewEnabled = !isWebViewEnabled;
+        SetWebViewEnabled(isWebViewEnabled);
     }
 
     private void SetWebViewEnabled(bool enable) {
