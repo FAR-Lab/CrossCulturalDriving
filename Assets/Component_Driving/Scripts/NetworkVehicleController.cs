@@ -13,6 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UltimateReplay;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using Debug = UnityEngine.Debug;
 
@@ -106,9 +107,9 @@ public class NetworkVehicleController : Interactable_Object {
             }
 
             foreach (var wc in GetComponentsInChildren<WheelCollider>()) wc.enabled = false;
-            if (VehicleMode == VehicleOpperationMode.AUTONOMOUS) {
-                GetComponent<AutonomousVehicleDriver>().enabled = false;
-            }
+            // if (VehicleMode == VehicleOpperationMode.AUTONOMOUS) {
+            //     GetComponent<AutonomousVehicleDriver>().enabled = false;
+            // }
         }
     }
 
@@ -116,7 +117,21 @@ public class NetworkVehicleController : Interactable_Object {
         if (m_Speedometer != null) m_Speedometer.UpdateSpeed(newvalue);
     }
 
+    [ContextMenu("rpc")]
+    public void TestRPC() {
+        TestClientRPC();
+    }
+
+    [ClientRpc]
+    private void TestClientRPC() {
+        Debug.Log("!!!!");
+    }
+    
     private void Start() {
+        if (VehicleMode == VehicleOpperationMode.AUTONOMOUS) {
+            UpdateMaterial(isOpaque);
+        }
+        
         indicatorStage = 0;
 
         foreach (Renderer tmpRenderer in beamLights) {
@@ -276,6 +291,10 @@ public class NetworkVehicleController : Interactable_Object {
 
     void Update() {
         if (!IsServer) return;
+
+        if (Input.GetKeyDown(KeyCode.Alpha0)) {
+            TestRPC();
+        }
 
         if (ConnectionAndSpawning.Singleton.ServerState == ActionState.DRIVE) {
             bool tempLeft = false, tempRight = false, tempHonk = false, tempHighBeam = false;
@@ -723,4 +742,48 @@ public class NetworkVehicleController : Interactable_Object {
 
 
     #endregion
+    public bool isOpaque = false;
+   
+    public MeshRenderer WindShieldMeshRenderer;
+   
+    public Material OpaqueMaterial;
+    public Material TransparentMaterial;
+    
+    [ContextMenu("Toggle WindShield")]
+    public void ToggleWindShield()
+    {
+        if (!IsServer && !(VehicleMode==VehicleOpperationMode.AUTONOMOUS)) return;
+       
+        isOpaque = !isOpaque;
+        UpdateMaterial(isOpaque);
+        UpdateWindshieldClientRpc(isOpaque);
+        
+        Debug.Log("server pressed");
+    }
+   
+    [ClientRpc]
+    private void UpdateWindshieldClientRpc(bool opaque)
+    {
+        if (IsServer) return;
+        
+        Debug.Log("Client received");
+       
+        UpdateMaterial(opaque);
+    }
+   
+    private void UpdateMaterial(bool opaque)
+    {
+        Debug.Log("update mat");
+        WindShieldMeshRenderer.material = opaque ? OpaqueMaterial : TransparentMaterial;
+    }
+
+    private void OnGUI() {
+        if (IsServer && VehicleMode == VehicleOpperationMode.AUTONOMOUS) {
+            GUI.skin.button.fontSize = 20;
+            if (GUI.Button(new Rect(200, 30, 150, 70), $"Opaque: {isOpaque}")) {
+                ToggleWindShield();
+            }
+        }
+    }
+    
 }
