@@ -162,14 +162,82 @@ public class SplineCenterlineUtility : MonoBehaviour
     
     public Vector3 GetClosestPointOnSpline(Vector3 position)
     {
-        return  points.OrderBy(point => Vector3.Distance(point, position)).First();
+        position = transform.InverseTransformPoint(position);
+        Spline spline = splines.Splines[0];
+
+        float minDistance = float.MaxValue;
+        Vector3 closestPoint = Vector3.zero;
+
+        for (int i = 0; i < numPoints - 1; i++)
+        {
+            float t1 = i / (float)(numPoints - 1);
+            float t2 = (i + 1) / (float)(numPoints - 1);
+
+            Vector3 p1 = spline.EvaluatePosition(t1);
+            Vector3 p2 = spline.EvaluatePosition(t2);
+
+            Vector3 closestPointOnLine = GetClosestPointOnLine(position, p1, p2);
+            float distanceToLine = Vector2.Distance(
+                new Vector2(position.x, position.z), 
+                new Vector2(closestPointOnLine.x, closestPointOnLine.z));
+
+            if (distanceToLine < minDistance)
+            {
+                closestPoint = closestPointOnLine;
+                minDistance = distanceToLine;
+            }
+        }
+
+        closestPoint.y = position.y;
+        return transform.TransformPoint(closestPoint);
     }
-    
-    public Vector3 GetPointAtDistanceAlongSpline(Vector3 startPoint, float distance)
+    public Vector3 GetPointAtDistanceAlongSpline(Vector3 startPoint, float distance, float yCoordinate = 0f)
     {
-        int startIndex = points.IndexOf(startPoint);
-        int targetIndex = Mathf.Clamp(startIndex + Mathf.RoundToInt(distance), 0, points.Count - 1);
-        return points[targetIndex];
+        Vector3 localStartPoint = transform.InverseTransformPoint(startPoint);
+        Spline spline = splines.Splines[0];
+    
+        float closestT = 0f;
+        float minDistance = float.MaxValue;
+    
+        for (int i = 0; i < numPoints; i++)
+        {
+            float t = i / (float)(numPoints - 1);
+            Vector3 point = spline.EvaluatePosition(t);
+            float dist = Vector2.Distance(
+                new Vector2(localStartPoint.x, localStartPoint.z),
+                new Vector2(point.x, point.z));
+            
+            if (dist < minDistance)
+            {
+                minDistance = dist;
+                closestT = t;
+            }
+        }
+    
+        float splineLength = EstimateSplineLength(spline);
+        float tIncrement = distance / splineLength;
+        float newT = Mathf.Clamp01(closestT + tIncrement);
+    
+        Vector3 newPosition = spline.EvaluatePosition(newT);
+        newPosition.y = yCoordinate;
+    
+        return transform.TransformPoint(newPosition);
+    }
+
+    private float EstimateSplineLength(Spline spline)
+    {
+        float length = 0f;
+        Vector3 previousPoint = spline.EvaluatePosition(0f);
+    
+        for (int i = 1; i <= numPoints; i++)
+        {
+            float t = i / (float)numPoints;
+            Vector3 currentPoint = spline.EvaluatePosition(t);
+            length += Vector3.Distance(previousPoint, currentPoint);
+            previousPoint = currentPoint;
+        }
+    
+        return length;
     }
 
 }

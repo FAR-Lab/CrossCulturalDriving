@@ -1,4 +1,4 @@
-using System;
+ using System;
 using System.Collections;
 using UnityEngine;
 
@@ -140,7 +140,7 @@ public class SC_AVContext : MonoBehaviour {
             // Debug.Log("2_Head_Center_Distance: " + outdata[3]);
             // "Filtered_2_Head_Velocity_Total"
             outdata[4] = _otherRb.velocity.magnitude;
-            // Debug.Log("Filtered_2_Head_Velocity_Total: " + outdata[4]);
+            Debug.Log("Filtered_2_Head_Velocity_Total: " + outdata[4]);
             
             // debug log all the data in one line
             string debugString = "";
@@ -151,7 +151,15 @@ public class SC_AVContext : MonoBehaviour {
             
             // fillers cuz python expects 7 values
             // radian of approach angle
-            outdata[5] = _myRb.rotation.eulerAngles.y - _otherRb.rotation.eulerAngles.y;
+            float relativeRot = _myRb.rotation.eulerAngles.y - _otherRb.rotation.eulerAngles.y;
+            
+            // normalize rotation from -180 to 180
+            if (relativeRot > 180) {
+                relativeRot -= 360;
+            }
+            
+            
+            outdata[5] = relativeRot;
             
             _udpSocket.SendDataToPython(outdata);
             yield return new WaitForSeconds(1f / 19f);

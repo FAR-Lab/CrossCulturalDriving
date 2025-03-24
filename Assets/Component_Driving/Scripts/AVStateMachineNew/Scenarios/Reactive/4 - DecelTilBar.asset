@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ea89e283f3cc3e4e887066535712421, type: 3}
-  m_Name: Node_DecelToSlow
+  m_Script: {fileID: 11500000, guid: 7a5f913c49c9a8e42aef803506f77b33, type: 3}
+  m_Name: 4 - DecelTilBar
   m_EditorClassIdentifier: 
-  barDistanceFromCenter: 10
-  TargetSpeed: 1
+  Action: {fileID: 11400000, guid: 0090cb329540d27459a18c9eeec11880, type: 2}
+  Transitions:
+  - {fileID: 11400000, guid: d11c836929ca4d84f9340c0e73e590cb, type: 2}
