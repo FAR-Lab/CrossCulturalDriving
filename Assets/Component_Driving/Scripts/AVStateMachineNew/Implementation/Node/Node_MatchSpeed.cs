@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Node_MatchSpeed : SO_FSMNodeAction {
-    public float Multiplier = 1;
+    public float M = 1;
+
+    public float C = 8;
     
     public override void OnEnter(SC_AVContext context) {
     }
@@ -13,7 +16,14 @@ public class Node_MatchSpeed : SO_FSMNodeAction {
 
     public override void OnUpdate(SC_AVContext context) {
         float otherSpeed = context.OtherRb.velocity.magnitude;
+
+        float F = otherSpeed * M;
         
-        context.SetSpeed(otherSpeed * Multiplier);
+        if (F > C)
+        {
+            F = C;
+        }
+        
+        context.SetSpeed(F);
     }
 }
