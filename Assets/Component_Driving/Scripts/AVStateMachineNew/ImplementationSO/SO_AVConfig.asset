@@ -15,9 +15,9 @@ MonoBehaviour:
   SpeedP: 0.85
   SpeedI: 0.01
   SpeedD: 0
-  SteeringP: 1.5
-  SteeringI: 0.08
-  SteeringD: 0.06
+  SteeringP: 0.8
+  SteeringI: 0.06
+  SteeringD: 0.2
   ThrottleFeedforward: 1
   LookaheadDistance: 5
   LateralErrorWeight: 1
@@ -28,6 +28,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8dace2c861fc4a8448ba09e95cce05f3, type: 2}
   - {fileID: 11400000, guid: 7ac452be60719404a9d803d97acba7de, type: 2}
   DistanceToShrinkCollider: 0
-  StraightPathThreshold: 5.5
-  ReducedSteeringFactor: 0.2
-  SmoothFactor: 0.1
+  StraightPathThreshold: 7
+  TransitionPoint: 999
+  TransitionRange: 3
+  SmoothFactor: 1
