@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd466778f20805d45ad6a78db2dad1bc, type: 3}
   m_Name: SO_AVConfig
   m_EditorClassIdentifier: 
-  SpeedP: 0.5
-  SpeedI: 0.005
-  SpeedD: 0.05
+  SpeedP: 0.85
+  SpeedI: 0.01
+  SpeedD: 0
   SteeringP: 1.5
   SteeringI: 0.08
-  SteeringD: 0.01
-  ThrottleFeedforward: 0.5
+  SteeringD: 0.06
+  ThrottleFeedforward: 1
   LookaheadDistance: 5
   LateralErrorWeight: 1
   HeadingErrorWeight: 0.5
@@ -30,3 +30,4 @@ MonoBehaviour:
   DistanceToShrinkCollider: 0
   StraightPathThreshold: 5.5
   ReducedSteeringFactor: 0.2
+  SmoothFactor: 0.1

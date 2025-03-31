@@ -26,6 +26,7 @@ public class SC_AVStateMachine : NetworkBehaviour
     [SerializeField] private SO_FSMNode currentNode;
     
     public SO_AVConfig config;
+    private float _previousSteeringInput = 0f;
 
     private Rigidbody _rb;
     
@@ -97,6 +98,8 @@ public class SC_AVStateMachine : NetworkBehaviour
         float angle = Vector3.Angle(forwardDirection, directionToLookahead);
         return angle < config.StraightPathThreshold;
     }
+    
+    private bool offAdjustment = false;
 
     private void DriveVehicle()
     {
@@ -118,8 +121,7 @@ public class SC_AVStateMachine : NetworkBehaviour
 
         Vector3 closestPoint = _splineCLCreator.GetClosestPointOnSpline(transform.position);
 
-        Vector3 lookaheadPoint = _splineCLCreator.GetPointAtDistanceAlongSpline(closestPoint, config.LookaheadDistance, transform.position.y);
-
+        Vector3 lookaheadPoint = GetSmoothedLookaheadPoint(closestPoint, config.LookaheadDistance, transform.position.y);
         Vector3 desiredDirection = (lookaheadPoint - transform.position).normalized;
 
         float headingError = Vector3.SignedAngle(transform.forward, desiredDirection, Vector3.up);
@@ -129,18 +131,31 @@ public class SC_AVStateMachine : NetworkBehaviour
         float combinedSteeringError = (config.LateralErrorWeight * currentCenterlineOffset) + (config.HeadingErrorWeight * Mathf.Sin(headingError * Mathf.Deg2Rad));
 
         float steeringInput = _steeringPID.Update(0f, combinedSteeringError, Time.deltaTime);
+        _steeringInput = Mathf.Lerp(_previousSteeringInput, Mathf.Clamp(steeringInput, -1f, 1f), config.SmoothFactor);
+        _previousSteeringInput = _steeringInput;
 
-        bool isStraightPath = IsPathRelativelyStraight(transform.position, lookaheadPoint);
-        if (isStraightPath && Mathf.Abs(currentCenterlineOffset) < 0.5f)
-        {
-            steeringInput *= config.ReducedSteeringFactor;
+        if (IsPathRelativelyStraight(transform.position, lookaheadPoint) && offAdjustment) {
+            _steeringInput *= config.ReducedSteeringFactor;
         }
+        
+        if (_context.GetDistanceToCenter(_vehicleController) < 5f) {
+            offAdjustment = true;
+        } 
 
         _steeringInput = Mathf.Clamp(steeringInput, -1f, 1f);
 
         _myVehicleController.SteeringInput = _steeringInput;
         _context.triggerPlayerTracker.RotateCollider(_steeringInput);
+    }
     
+    Vector3 GetSmoothedLookaheadPoint(Vector3 currentPosition, float lookaheadDistance, float height)
+    {
+        Vector3 closestPoint = _splineCLCreator.GetClosestPointOnSpline(currentPosition);
+    
+        Vector3 point1 = _splineCLCreator.GetPointAtDistanceAlongSpline(closestPoint, lookaheadDistance * 0.8f, height);
+        Vector3 point2 = _splineCLCreator.GetPointAtDistanceAlongSpline(closestPoint, lookaheadDistance, height);
+        Vector3 point3 = _splineCLCreator.GetPointAtDistanceAlongSpline(closestPoint, lookaheadDistance * 1.2f, height);
+        return (point1 + point2 + point3) / 3f;
     }
 
     private void UpdateBehaviorParameter(string behavior) {
