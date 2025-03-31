@@ -41,13 +41,13 @@ public class SC_AVContext : MonoBehaviour {
         //     recordYieldPossibility = !recordYieldPossibility;
         // }
         
-        if (recordYieldPossibility) {
-            yieldPossibilitySum += _yieldPossibility;
-            recordCount++;
-            
-            averageYieldPossibility = yieldPossibilitySum / recordCount;
-            Debug.Log($"Average Yield Possibility: {averageYieldPossibility}");
-        }
+        // if (recordYieldPossibility) {
+        //     yieldPossibilitySum += _yieldPossibility;
+        //     recordCount++;
+        //     
+        //     averageYieldPossibility = yieldPossibilitySum / recordCount;
+        //     Debug.Log($"Average Yield Possibility: {averageYieldPossibility}");
+        // }
         
     }
 

@@ -83,7 +83,7 @@ public class UdpSocket : MonoBehaviour
                     recievedQueue.Enqueue(floatArray2);
                 }
             }
-            Thread.Sleep(100);
+            Thread.Sleep(50);
         }
 
         rxClient.Close();
