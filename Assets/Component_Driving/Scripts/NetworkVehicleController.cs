@@ -291,7 +291,9 @@ public class NetworkVehicleController : Interactable_Object {
 
     void Update() {
         if (!IsServer) return;
-
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.K) && VehicleMode == VehicleOpperationMode.STEERINGWHEEL) {
+            VehicleMode = VehicleOpperationMode.KEYBOARD;
+        }
         if (Input.GetKeyDown(KeyCode.Alpha0)) {
             TestRPC();
         }
