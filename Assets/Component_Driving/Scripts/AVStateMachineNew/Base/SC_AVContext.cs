@@ -89,7 +89,7 @@ public class SC_AVContext : MonoBehaviour {
 
         _yieldPossibility = data[0];
         var data1 = data[1];
-        Debug.Log($"Yield: {_yieldPossibility}, accel: {data1}");
+        // Debug.Log($"Yield: {_yieldPossibility}, accel: {data1}");
 
         // float newYieldPossibility = data[1];
         _filteredYieldPossibility = alpha * _yieldPossibility + (1 - alpha) * _filteredYieldPossibility;
@@ -97,6 +97,7 @@ public class SC_AVContext : MonoBehaviour {
     }
 
     public bool ShouldYield() {
+        // debug
         if (Input.GetKey(KeyCode.Y)) {
             return true;
         }
@@ -151,7 +152,19 @@ public class SC_AVContext : MonoBehaviour {
             
             // fillers cuz python expects 7 values
             // radian of approach angle
-            outdata[5] = _myRb.rotation.eulerAngles.y - _otherRb.rotation.eulerAngles.y;
+            float relativeRot = _myRb.rotation.eulerAngles.y - _otherRb.rotation.eulerAngles.y;
+            
+            // normalize rotation from -180 to 180
+            if (relativeRot > 180) {
+                relativeRot -= 360;
+            }
+            
+            if (relativeRot < -180) {
+                relativeRot += 360;
+            }
+            
+            
+            outdata[5] = relativeRot;
             
             _udpSocket.SendDataToPython(outdata);
             yield return new WaitForSeconds(1f / 19f);

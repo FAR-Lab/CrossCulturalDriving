@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class Node_DecelToStopAtBar : SO_FSMNodeAction 
@@ -8,6 +9,8 @@ public class Node_DecelToStopAtBar : SO_FSMNodeAction
     public float TargetSpeed = 0f; 
 
     private float decel;
+    
+    
 
     public override void OnEnter(SC_AVContext context) {
     }

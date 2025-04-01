@@ -277,6 +277,11 @@ public class NetworkVehicleController : Interactable_Object {
     void Update() {
         if (!IsServer) return;
 
+        // if shift + K
+        if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.K) && VehicleMode == VehicleOpperationMode.STEERINGWHEEL) {
+            VehicleMode = VehicleOpperationMode.KEYBOARD;
+        }
+        
         if (ConnectionAndSpawning.Singleton.ServerState == ActionState.DRIVE) {
             bool tempLeft = false, tempRight = false, tempHonk = false, tempHighBeam = false;
 

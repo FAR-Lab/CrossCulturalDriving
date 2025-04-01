@@ -17,4 +17,12 @@ public class SO_AVConfig : ScriptableObject
     public List<SO_FSMNodeContainer> nodeContainers;
 
     public float DistanceToShrinkCollider = 5f;
+    
+    public float StraightPathThreshold = 7f;
+    public float ReducedSteeringFactor = 0.2f;
+
+    public float TransitionPoint = 15;
+    public float TransitionRange = 5;
+    
+    public float SmoothFactor = 0.5f;
 }
