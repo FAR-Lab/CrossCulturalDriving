@@ -186,53 +186,53 @@ public class SC_AVStateMachine : NetworkBehaviour
         if (_context == null) return;
         if (!_ready) return;
 
-        Vector3 vehiclePosition = transform.position;
-        float distanceToCenter = Vector3.Distance(_context.IntersectionCenter.position, vehiclePosition);
-        
-        float desiredSpeed = _context.GetSpeed();
-        float currentSpeed = _rb.velocity.magnitude;
-
-        string currentNodeName = currentNode != null ? currentNode.name : "No Current Node";
-        string isFrontClear = _context.IsFrontClear() ? "Yes" : "No";
-        
+        // Vector3 vehiclePosition = transform.position;
+        // float distanceToCenter = Vector3.Distance(_context.IntersectionCenter.position, vehiclePosition);
+        //
+        // float desiredSpeed = _context.GetSpeed();
+        // float currentSpeed = _rb.velocity.magnitude;
+        //
+        // string currentNodeName = currentNode != null ? currentNode.name : "No Current Node";
+        // string isFrontClear = _context.IsFrontClear() ? "Yes" : "No";
+        //
         Vector3 closestPoint = _splineCLCreator.GetClosestPointOnSpline(transform.position);
         Vector3 lookaheadPoint = GetSmoothedLookaheadPoint(closestPoint, config.LookaheadDistance, transform.position.y);
-        bool isStraight = IsPathRelativelyStraight(transform.position, lookaheadPoint);
-
-        Vector3 labelPosition = vehiclePosition + Vector3.up * 2f;
-
-        float relativeRotation = _context.MyCtrl.transform.rotation.eulerAngles.y - _context.OtherCtrl.transform.rotation.eulerAngles.y;
-
-        if (relativeRotation > 180) {
-            relativeRotation -= 360;
-        }
-        
-        if (relativeRotation < -180) {
-            relativeRotation += 360;
-        }
-        
-        string labelText = $"Distance to Center: {distanceToCenter:F2}\n" +
-                           $"Other Distance: {_context.GetDistanceToCenter(_context.OtherCtrl):F2}\n" +
-                           $"Desired speed: {desiredSpeed:F2}\n" +
-                           $"Current speed: {currentSpeed:F2}\n" +
-                           $"Current Node: {currentNodeName}\n" +
-                           $"Yield possibility: {_context.YieldPossibility:F2}\n" +
-                           $"FYield possibility: {_context._filteredYieldPossibility:F2}\n" +
-                           $"Steering input: {_steeringInput:F2}\n" +
-                           $"Throttle input: {_throttleInput:F2}\n" +
-                           $"S: {_context.ShouldYield()}\n" +
-                           $"Is front clear: {isFrontClear}\n" +
-                           $"Is straight: {isStraight}\n" +
-                           $"Relative Rotation: {relativeRotation:F2}\n"; 
-
-                            
-
-        GUIStyle style = new GUIStyle();
-        style.fontSize = 16;
-        style.normal.textColor = Color.red;
-
-        Handles.Label(labelPosition, labelText, style);
-        
+        // bool isStraight = IsPathRelativelyStraight(transform.position, lookaheadPoint);
+        //
+        // Vector3 labelPosition = vehiclePosition + Vector3.up * 2f;
+        //
+        // float relativeRotation = _context.MyCtrl.transform.rotation.eulerAngles.y - _context.OtherCtrl.transform.rotation.eulerAngles.y;
+        //
+        // if (relativeRotation > 180) {
+        //     relativeRotation -= 360;
+        // }
+        //
+        // if (relativeRotation < -180) {
+        //     relativeRotation += 360;
+        // }
+        //
+        // string labelText = $"Distance to Center: {distanceToCenter:F2}\n" +
+        //                    $"Other Distance: {_context.GetDistanceToCenter(_context.OtherCtrl):F2}\n" +
+        //                    $"Desired speed: {desiredSpeed:F2}\n" +
+        //                    $"Current speed: {currentSpeed:F2}\n" +
+        //                    $"Current Node: {currentNodeName}\n" +
+        //                    $"Yield possibility: {_context.YieldPossibility:F2}\n" +
+        //                    $"FYield possibility: {_context._filteredYieldPossibility:F2}\n" +
+        //                    $"Steering input: {_steeringInput:F2}\n" +
+        //                    $"Throttle input: {_throttleInput:F2}\n" +
+        //                    $"S: {_context.ShouldYield()}\n" +
+        //                    $"Is front clear: {isFrontClear}\n" +
+        //                    $"Is straight: {isStraight}\n" +
+        //                    $"Relative Rotation: {relativeRotation:F2}\n"; 
+        //
+        //                     
+        //
+        // GUIStyle style = new GUIStyle();
+        // style.fontSize = 16;
+        // style.normal.textColor = Color.red;
+        //
+        // Handles.Label(labelPosition, labelText, style);
+        //
         Vector3 closestPointOnSpline = _splineCLCreator.GetClosestPointOnSpline(transform.position);
         Gizmos.DrawSphere(closestPointOnSpline, 1f);
         

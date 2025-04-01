@@ -40,12 +40,12 @@ public class WayPoint : MonoBehaviour {
     }
 
 
-    public void OnDrawGizmos() {
-        Gizmos.DrawSphere(transform.position, 0.25f);
-        if (nextWayPoint != null) {
-            Gizmos.DrawLine(transform.position, nextWayPoint.transform.position);
-        }
-
-        Gizmos.DrawWireSphere(transform.position, ArrivalRange);
-    }
+    // public void OnDrawGizmos() {
+    //     Gizmos.DrawSphere(transform.position, 0.25f);
+    //     if (nextWayPoint != null) {
+    //         Gizmos.DrawLine(transform.position, nextWayPoint.transform.position);
+    //     }
+    //
+    //     Gizmos.DrawWireSphere(transform.position, ArrivalRange);
+    // }
 }

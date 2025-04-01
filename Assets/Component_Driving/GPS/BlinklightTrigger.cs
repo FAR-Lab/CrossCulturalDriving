@@ -20,7 +20,7 @@ public class BlinklightTrigger : MonoBehaviour
     private void OnDrawGizmos() {
         if (collider != null) {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(collider.bounds.center, collider.bounds.size);
+            // Gizmos.DrawWireCube(collider.bounds.center, collider.bounds.size);
         }
     }
 
