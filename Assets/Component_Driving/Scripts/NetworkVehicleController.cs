@@ -303,8 +303,47 @@ public class NetworkVehicleController : Interactable_Object {
 
             switch (VehicleMode) {
                 case VehicleOpperationMode.KEYBOARD:
-                    SteeringInput = Input.GetAxis("Horizontal");
-                    ThrottleInput = Input.GetAxis("Vertical");
+                    float s = Input.GetAxis("Horizontal");
+                    float t = Input.GetAxis("Vertical");
+                    
+                    if (Input.GetKey(KeyCode.Alpha1)) {
+                        s *= 0.1f;
+                        t *= 0.1f;
+                    }
+                    
+                    if (Input.GetKey(KeyCode.Alpha2)) {
+                        s *= 0.2f;
+                        t *= 0.2f;
+                    }
+                    
+                    if (Input.GetKey(KeyCode.Alpha3)) {
+                        s *= 0.3f;
+                        t *= 0.3f;
+                    }
+                    
+                    if (Input.GetKey(KeyCode.Alpha4)) {
+                        s *= 0.4f;
+                        t *= 0.4f;
+                    }
+                    
+                    if (Input.GetKey(KeyCode.Alpha5)) {
+                        s *= 0.5f;
+                        t *= 0.5f;
+                    }
+                    
+                    if (Input.GetKey(KeyCode.Alpha6)) {
+                        s *= 0.6f;
+                        t *= 0.6f;
+                    }
+                    
+                    if (Input.GetKey(KeyCode.Alpha7)) {
+                        s *= 0.7f;
+                        t *= 0.7f;
+                    }
+                
+                    SteeringInput = s;
+                    ThrottleInput = t;
+                    
                     break;
                 case VehicleOpperationMode.STEERINGWHEEL:
                     SteeringInput = SteeringWheelManager.Singleton.GetSteerInput(m_participantOrder.Value);
