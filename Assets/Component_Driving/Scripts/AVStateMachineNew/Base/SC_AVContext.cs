@@ -41,13 +41,13 @@ public class SC_AVContext : MonoBehaviour {
         //     recordYieldPossibility = !recordYieldPossibility;
         // }
         
-        // if (recordYieldPossibility) {
-        //     yieldPossibilitySum += _yieldPossibility;
-        //     recordCount++;
-        //     
-        //     averageYieldPossibility = yieldPossibilitySum / recordCount;
-        //     Debug.Log($"Average Yield Possibility: {averageYieldPossibility}");
-        // }
+        if (recordYieldPossibility) {
+            yieldPossibilitySum += _yieldPossibility;
+            recordCount++;
+            
+            averageYieldPossibility = yieldPossibilitySum / recordCount;
+            Debug.Log($"Average Yield Possibility: {averageYieldPossibility}");
+        }
         
     }
 
@@ -89,7 +89,7 @@ public class SC_AVContext : MonoBehaviour {
 
         _yieldPossibility = data[0];
         var data1 = data[1];
-        Debug.Log($"Yield: {_yieldPossibility}, accel: {data1}");
+        // Debug.Log($"Yield: {_yieldPossibility}, accel: {data1}");
 
         // float newYieldPossibility = data[1];
         _filteredYieldPossibility = alpha * _yieldPossibility + (1 - alpha) * _filteredYieldPossibility;
@@ -97,6 +97,7 @@ public class SC_AVContext : MonoBehaviour {
     }
 
     public bool ShouldYield() {
+        // debug
         if (Input.GetKey(KeyCode.Y)) {
             return true;
         }
@@ -140,7 +141,7 @@ public class SC_AVContext : MonoBehaviour {
             // Debug.Log("2_Head_Center_Distance: " + outdata[3]);
             // "Filtered_2_Head_Velocity_Total"
             outdata[4] = _otherRb.velocity.magnitude;
-            Debug.Log("Filtered_2_Head_Velocity_Total: " + outdata[4]);
+            // Debug.Log("Filtered_2_Head_Velocity_Total: " + outdata[4]);
             
             // debug log all the data in one line
             string debugString = "";
@@ -156,6 +157,10 @@ public class SC_AVContext : MonoBehaviour {
             // normalize rotation from -180 to 180
             if (relativeRot > 180) {
                 relativeRot -= 360;
+            }
+            
+            if (relativeRot < -180) {
+                relativeRot += 360;
             }
             
             

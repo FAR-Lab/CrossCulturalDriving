@@ -26,12 +26,13 @@ public class SC_AVStateMachine : NetworkBehaviour
     [SerializeField] private SO_FSMNode currentNode;
     
     public SO_AVConfig config;
-    private float _previousSteeringInput = 0f;
 
     private Rigidbody _rb;
     
     private PID _speedPID;
     private PID _steeringPID;
+    
+    private float _previousSteeringInput = 0f;
     
     private void Start()
     {
@@ -74,7 +75,6 @@ public class SC_AVStateMachine : NetworkBehaviour
         if(_context.GetDistanceToCenter(_vehicleController) < config.DistanceToShrinkCollider){
             _context.triggerPlayerTracker.ShrinkCollider();
         }
-
         currentNode.Action.OnUpdate(_context);
         SO_FSMNode nextNode = currentNode.CheckTransitions(_context);
 
@@ -99,8 +99,10 @@ public class SC_AVStateMachine : NetworkBehaviour
         return angle < config.StraightPathThreshold;
     }
     
-    private bool offAdjustment = false;
-
+    private bool turnOffAdjustment = false;
+    private float _straightLineFactor = 0.0f;
+    private float _straightLineBlendSpeed = 0.3f;
+    
     private void DriveVehicle()
     {
         #region Throttle
@@ -130,19 +132,31 @@ public class SC_AVStateMachine : NetworkBehaviour
 
         float combinedSteeringError = (config.LateralErrorWeight * currentCenterlineOffset) + (config.HeadingErrorWeight * Mathf.Sin(headingError * Mathf.Deg2Rad));
 
-        float steeringInput = _steeringPID.Update(0f, combinedSteeringError, Time.deltaTime);
-        _steeringInput = Mathf.Lerp(_previousSteeringInput, Mathf.Clamp(steeringInput, -1f, 1f), config.SmoothFactor);
+        _steeringInput = _steeringPID.Update(0f, combinedSteeringError, Time.deltaTime);
         _previousSteeringInput = _steeringInput;
 
-        if (IsPathRelativelyStraight(transform.position, lookaheadPoint) && offAdjustment) {
-            _steeringInput *= config.ReducedSteeringFactor;
+        if (_context.GetDistanceToCenter(_context.OtherCtrl) < config.DistanceToShrinkCollider)
+        {
+            turnOffAdjustment = true;
+        }
+
+        bool isPathStraight = IsPathRelativelyStraight(transform.position, lookaheadPoint) && !turnOffAdjustment;
+        
+        // Gradually transition between straight line mode and normal mode
+        if (isPathStraight)
+        {
+            _straightLineFactor = Mathf.Lerp(_straightLineFactor, 1.0f, _straightLineBlendSpeed * Time.deltaTime);
+        }
+        else
+        {
+            _straightLineFactor = Mathf.Lerp(_straightLineFactor, 0.0f, _straightLineBlendSpeed * Time.deltaTime);
         }
         
-        if (_context.GetDistanceToCenter(_vehicleController) < 5f) {
-            offAdjustment = true;
-        } 
+        // Apply the blended straight line factor
+        float steeringMultiplier = Mathf.Lerp(1.0f, config.ReducedSteeringFactor, _straightLineFactor);
+        _steeringInput *= steeringMultiplier;
 
-        _steeringInput = Mathf.Clamp(steeringInput, -1f, 1f);
+        _steeringInput = Mathf.Clamp(_steeringInput, -1f, 1f);
 
         _myVehicleController.SteeringInput = _steeringInput;
         _context.triggerPlayerTracker.RotateCollider(_steeringInput);
@@ -157,6 +171,8 @@ public class SC_AVStateMachine : NetworkBehaviour
         Vector3 point3 = _splineCLCreator.GetPointAtDistanceAlongSpline(closestPoint, lookaheadDistance * 1.2f, height);
         return (point1 + point2 + point3) / 3f;
     }
+    
+    
 
     private void UpdateBehaviorParameter(string behavior) {
         NetworkQNManager networkQNManager = FindObjectOfType<NetworkQNManager>();
@@ -180,39 +196,42 @@ public class SC_AVStateMachine : NetworkBehaviour
         string isFrontClear = _context.IsFrontClear() ? "Yes" : "No";
         
         Vector3 closestPoint = _splineCLCreator.GetClosestPointOnSpline(transform.position);
-        Vector3 lookaheadPoint = _splineCLCreator.GetPointAtDistanceAlongSpline(closestPoint, config.LookaheadDistance, transform.position.y);
+        Vector3 lookaheadPoint = GetSmoothedLookaheadPoint(closestPoint, config.LookaheadDistance, transform.position.y);
         bool isStraight = IsPathRelativelyStraight(transform.position, lookaheadPoint);
 
         Vector3 labelPosition = vehiclePosition + Vector3.up * 2f;
 
-        // _myRb.rotation.eulerAngles.y - _otherRb.rotation.eulerAngles.y;
         float relativeRotation = _context.MyCtrl.transform.rotation.eulerAngles.y - _context.OtherCtrl.transform.rotation.eulerAngles.y;
 
         if (relativeRotation > 180) {
             relativeRotation -= 360;
         }
-
-        /*
+        
+        if (relativeRotation < -180) {
+            relativeRotation += 360;
+        }
+        
         string labelText = $"Distance to Center: {distanceToCenter:F2}\n" +
                            $"Other Distance: {_context.GetDistanceToCenter(_context.OtherCtrl):F2}\n" +
-                           // $"Desired speed: {desiredSpeed:F2}\n" +
+                           $"Desired speed: {desiredSpeed:F2}\n" +
                            $"Current speed: {currentSpeed:F2}\n" +
-                           // $"Current Node: {currentNodeName}\n" +
-                           // $"Yield possibility: {_context.YieldPossibility:F2}\n" +
-                           // $"Yield possibility: {_context._filteredYieldPossibility:F2}\n" +
+                           $"Current Node: {currentNodeName}\n" +
+                           $"Yield possibility: {_context.YieldPossibility:F2}\n" +
+                           $"FYield possibility: {_context._filteredYieldPossibility:F2}\n" +
                            $"Steering input: {_steeringInput:F2}\n" +
                            $"Throttle input: {_throttleInput:F2}\n" +
-                           // $"S: {_context.ShouldYield()}\n" +
-                           $"Is front clear: {isFrontClear}\n";
-                           // $"Relative Rotation: {relativeRotation:F2}\n"; 
-        */
+                           $"S: {_context.ShouldYield()}\n" +
+                           $"Is front clear: {isFrontClear}\n" +
+                           $"Is straight: {isStraight}\n" +
+                           $"Relative Rotation: {relativeRotation:F2}\n"; 
+
                             
 
         GUIStyle style = new GUIStyle();
         style.fontSize = 16;
         style.normal.textColor = Color.red;
 
-        // Handles.Label(labelPosition, labelText, style);
+        Handles.Label(labelPosition, labelText, style);
         
         Vector3 closestPointOnSpline = _splineCLCreator.GetClosestPointOnSpline(transform.position);
         Gizmos.DrawSphere(closestPointOnSpline, 1f);

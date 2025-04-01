@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd466778f20805d45ad6a78db2dad1bc, type: 3}
   m_Name: SO_AVConfig
   m_EditorClassIdentifier: 
-  SpeedP: 0.85
+  SpeedP: 0.9
   SpeedI: 0.01
   SpeedD: 0
   SteeringP: 0.8
   SteeringI: 0.06
-  SteeringD: 0.2
+  SteeringD: 0.1
   ThrottleFeedforward: 1
   LookaheadDistance: 5
   LateralErrorWeight: 1
@@ -27,8 +27,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d0b25203c7ac9524a90bbd7f6d1ee2c5, type: 2}
   - {fileID: 11400000, guid: 8dace2c861fc4a8448ba09e95cce05f3, type: 2}
   - {fileID: 11400000, guid: 7ac452be60719404a9d803d97acba7de, type: 2}
-  DistanceToShrinkCollider: 0
+  DistanceToShrinkCollider: 3
   StraightPathThreshold: 7
+  ReducedSteeringFactor: 0.1
   TransitionPoint: 999
   TransitionRange: 3
-  SmoothFactor: 1
+  SmoothFactor: 0.05

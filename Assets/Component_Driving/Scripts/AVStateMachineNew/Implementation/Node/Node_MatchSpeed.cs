@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 public class Node_MatchSpeed : SO_FSMNodeAction {
+    // compensate PID
     public float M = 1;
 
     public float C = 8;
