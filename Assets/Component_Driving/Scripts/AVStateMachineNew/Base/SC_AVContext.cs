@@ -98,12 +98,16 @@ public class SC_AVContext : MonoBehaviour {
 
     public bool ShouldYield() {
         // debug
-        if (Input.GetKey(KeyCode.Y)) {
-            return true;
-        }
+        // if (Input.GetKey(KeyCode.Y)) {
+        //     return true;
+        // }
+        //
+        // if (Input.GetKey(KeyCode.N)) {
+        //     return false;
+        // }
         
-        if (Input.GetKey(KeyCode.N)) {
-            return false;
+        if (_otherCtrl.CurrentSpeed > 8) {
+            return true;
         }
         
         return _filteredYieldPossibility > yieldThreshold;
