@@ -48,6 +48,22 @@ public class SC_AVContext : MonoBehaviour {
             averageYieldPossibility = yieldPossibilitySum / recordCount;
             Debug.Log($"Average Yield Possibility: {averageYieldPossibility}");
         }
+
+        switch (_est) {
+            case EST.I: {
+                if (GetDistanceToCenter(_otherCtrl) < 6f) {
+                    _est = EST.C;
+                }
+                break;
+            }
+            
+            case EST.C: {
+                if (GetDistanceToCenter(_otherCtrl) > 6f) {
+                    _est = EST.A;
+                }
+                break;
+            }
+        }
         
     }
 
@@ -96,6 +112,14 @@ public class SC_AVContext : MonoBehaviour {
         // Debug.Log($"Go: {newGoPossibility} Original: {newYieldPossibility} Filtered: {_filteredYieldPossibility} Sum: {newGoPossibility+newYieldPossibility}");
     }
 
+    private enum EST {
+        I,
+        C,
+        A
+    }
+    
+    private EST _est = EST.I;
+
     public bool ShouldYield() {
         // debug
         // if (Input.GetKey(KeyCode.Y)) {
@@ -106,7 +130,11 @@ public class SC_AVContext : MonoBehaviour {
         //     return false;
         // }
         
-        if (_otherCtrl.CurrentSpeed > 8) {
+        if (_est == EST.A) {
+            return false;
+        }
+        
+        if (_otherCtrl.CurrentSpeed > 10) {
             return true;
         }
         

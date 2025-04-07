@@ -135,7 +135,7 @@ public class SC_AVStateMachine : NetworkBehaviour
         _steeringInput = _steeringPID.Update(0f, combinedSteeringError, Time.deltaTime);
         _previousSteeringInput = _steeringInput;
 
-        if (_context.GetDistanceToCenter(_context.OtherCtrl) < config.DistanceToShrinkCollider)
+        if (_context.GetDistanceToCenter(_vehicleController) < config.DistanceToShrinkCollider)
         {
             turnOffAdjustment = true;
         }
@@ -185,7 +185,11 @@ public class SC_AVStateMachine : NetworkBehaviour
     {
         if (_context == null) return;
         if (!_ready) return;
-
+        
+        Vector3 closestPoint = _splineCLCreator.GetClosestPointOnSpline(transform.position);
+        Vector3 lookaheadPoint = GetSmoothedLookaheadPoint(closestPoint, config.LookaheadDistance, transform.position.y);
+        bool isStraight = IsPathRelativelyStraight(transform.position, lookaheadPoint);
+        
         // Vector3 vehiclePosition = transform.position;
         // float distanceToCenter = Vector3.Distance(_context.IntersectionCenter.position, vehiclePosition);
         //
@@ -194,10 +198,6 @@ public class SC_AVStateMachine : NetworkBehaviour
         //
         // string currentNodeName = currentNode != null ? currentNode.name : "No Current Node";
         // string isFrontClear = _context.IsFrontClear() ? "Yes" : "No";
-        //
-        Vector3 closestPoint = _splineCLCreator.GetClosestPointOnSpline(transform.position);
-        Vector3 lookaheadPoint = GetSmoothedLookaheadPoint(closestPoint, config.LookaheadDistance, transform.position.y);
-        // bool isStraight = IsPathRelativelyStraight(transform.position, lookaheadPoint);
         //
         // Vector3 labelPosition = vehiclePosition + Vector3.up * 2f;
         //
