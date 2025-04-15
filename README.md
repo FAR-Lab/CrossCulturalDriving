@@ -55,7 +55,3 @@ The traffic lights are controlled through the interface on the server.
 
 ### Analysis
 Rerun .replay files are automatically stored on the server path: `C:\Users\<USERNAME>\AppData\LocalLow\<USERNAME>\XCDriving\test`
-
-
-# License
-Currently the project is not licensed for use. The scenes use assets from the Unity Asset Store under the [standard license](https://unity.com/legal/as-terms). 
