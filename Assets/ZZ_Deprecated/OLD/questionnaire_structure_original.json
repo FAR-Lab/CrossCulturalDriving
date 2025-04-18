@@ -1,0 +1,282 @@
+{
+  "SAQuestionnaireQuestionSet": [
+    {
+      "SAQuestionnaireQuestion": {
+        "id": "1",
+        "question": {
+          "biLanguageQuestion": [
+            {
+              "textLanguage": "English",
+              "text": "Which turn signals, if any, did you use?"
+            },
+            {
+              "textLanguage": "Hebrew",
+              "text": "באילו סימני איתות, אם בכלל, השתמשת?"
+            }
+          ],
+          "biLanguageAnswers": [
+            {
+              "index": "1",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "No turn signals"
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "שום סימני איתות"
+                }
+              ],
+              "nextQuestionIndexQueue": [
+                "2"
+              ]
+            },
+            {
+              "index": "2",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "Left turn signal"
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "סימני איתות שמאלהֿ"
+                }
+              ],
+              "nextQuestionIndexQueue": [
+                "2",
+                "3"
+              ]
+            },
+            {
+              "index": "3",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "Right turn signal"
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "סימני איתות ימינה"
+                }
+              ],
+              "nextQuestionIndexQueue": [
+                "3",
+                "2"
+              ]
+            }
+          ]
+        },
+        "category": "TurnSignals",
+        "sa_level": "perception"
+      }
+    },
+    {
+      "SAQuestionnaireQuestion": {
+        "id": "2",
+        "question": {
+          "biLanguageQuestion": [
+            {
+              "textLanguage": "English",
+              "text": "Which turn signals, if any, did the other car use?"
+            },
+            {
+              "textLanguage": "Hebrew",
+              "text": "באילו סימני איתות,אם בכלל, הנהג השני השתמש?"
+            }
+          ],
+          "biLanguageAnswers": [
+            {
+              "index": "1",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "No turn signals"
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "שום סימני איתות"
+                }
+              ]
+            },
+            {
+              "index": "2",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "Left turn signal"
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "סימני איתות שמאלהֿ"
+                }
+              ],
+              "nextQuestionIndexQueue": [
+                "5"
+              ]
+            },
+            {
+              "index": "3",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "Right turn signal"
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "סימני איתות ימינה"
+                }
+              ],
+              "nextQuestionIndexQueue": [
+                "5"
+              ]
+            },
+            {
+              "index": "4",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "There was no other driver"
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "לא היה שום נהג אחר"
+                }
+              ]
+            }
+          ]
+        },
+        "category": "TurnSignals",
+        "sa_level": "perception"
+      }
+    },
+    {
+      "SAQuestionnaireQuestion": {
+        "id": "3",
+        "question": {
+          "biLanguageQuestion": [
+            {
+              "textLanguage": "English",
+              "text": "Did you intend for that signal to be seen by another driver?"
+            },
+            {
+              "textLanguage": "Hebrew",
+              "text": "האם התכוונת שסימני האיתות יראו על ידי הנהג השני?"
+            }
+          ],
+          "biLanguageAnswers": [
+            {
+              "index": "1",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "No"
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "לא"
+                }
+              ]
+            },
+            {
+              "index": "2",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "Yel"
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "כן"
+                }
+              ]
+            },
+            {
+              "index": "3",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "Unsure "
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "לא בטוח"
+                }
+              ]
+            }
+          ]
+        },
+        "category": "TurnSignals",
+        "sa_level": "comprehension"
+      }
+    },
+    {
+      "SAQuestionnaireQuestion": {
+        "id": "4",
+        "question": {
+          "biLanguageQuestion": [
+            {
+              "textLanguage": "English",
+              "text": "Did you interpret the signal as meant for you?"
+            },
+            {
+              "textLanguage": "Hebrew",
+              "text": "האם פירשת את האות במכוון לך במיוחד?"
+            }
+          ],
+          "biLanguageAnswers": [
+            {
+              "index": "1",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "No"
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "לא"
+                }
+              ]
+            },
+            {
+              "index": "2",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "Yel"
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "כן"
+                }
+              ]
+            },
+            {
+              "index": "3",
+              "answer": [
+                {
+                  "textLanguage": "English",
+                  "text": "Unsure "
+                },
+                {
+                  "textLanguage": "Hebrew",
+                  "text": "לא בטוח"
+                }
+              ]
+            }
+          ]
+        },
+        "category": "TurnSignals",
+        "sa_level": "comprehension"
+      }
+    }
+  ]
+}
+    
+    
+    
+    
+    
+    
+    
+       
