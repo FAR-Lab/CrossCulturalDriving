@@ -125,8 +125,18 @@ private void DriveVehicle()
 
     float rawSteeringInput = _steeringPID.Update(0f, combinedSteeringError, Time.deltaTime);
 
+    float distanceToCenter = _context.GetDistanceToCenter(_context.MyCtrl);
+    if (distanceToCenter < 4f) {
+        turnOffAdjustment = true;
+    }
+    
     if (IsPathRelativelyStraight(transform.position, lookaheadPoint)) {
-        rawSteeringInput *= config.ReducedSteeringFactor;
+        if (!turnOffAdjustment) {
+            rawSteeringInput *= config.ReducedSteeringFactor;
+        }
+        else {
+            rawSteeringInput *= 0.5f;
+        }
     }
 
     _steeringInput = Mathf.Clamp(rawSteeringInput, -1f, 1f);
