@@ -120,24 +120,18 @@ public class SC_AVContext : MonoBehaviour {
     
     private EST _est = EST.I;
 
+    private float lt = -10f;
+
     public bool ShouldYield() {
-        // debug
-        // if (Input.GetKey(KeyCode.Y)) {
-        //     return true;
-        // }
-        //
-        // if (Input.GetKey(KeyCode.N)) {
-        //     return false;
-        // }
-        
-        if (_est == EST.A) {
-            return false;
-        }
-        
         if (_otherCtrl.CurrentSpeed > 10) {
+            lt = Time.time;
             return true;
         }
-        
+    
+        if (Time.time - lt < 1f) {
+            return true;
+        }
+    
         return _filteredYieldPossibility > yieldThreshold;
     }
 

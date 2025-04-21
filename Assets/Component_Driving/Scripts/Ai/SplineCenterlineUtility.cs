@@ -89,6 +89,8 @@ public class SplineCenterlineUtility : MonoBehaviour
                - value1.y * value2.x;
     }
 
+    
+    
     /// <summary>
     /// Function to get the closest distance from a position "point" to the attached spline
     /// </summary>
