@@ -136,7 +136,7 @@ public class SC_AVContext : MonoBehaviour {
             return false;
         }
     
-        if (_otherCtrl.CurrentSpeed > 10.5) {
+        if (_otherCtrl.CurrentSpeed > 12.5) {
             lhs = Time.time;
             return true;
         }
