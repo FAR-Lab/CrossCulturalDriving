@@ -120,15 +120,28 @@ public class SC_AVContext : MonoBehaviour {
     
     private EST _est = EST.I;
 
-    private float lt = -10f;
+    private float lhs = -10f;
+    private float lc = 0f;
+    private float ps = 0f;
 
     public bool ShouldYield() {
-        if (_otherCtrl.CurrentSpeed > 10) {
-            lt = Time.time;
+        float currentSpeed = Mathf.Round(_otherCtrl.CurrentSpeed * 10) / 10;
+    
+        if (Mathf.Abs(currentSpeed - ps) > 0.05f) {
+            ps = currentSpeed;
+            lc = Time.time;
+        }
+    
+        if (Time.time - lc > 3.5f) {
+            return false;
+        }
+    
+        if (_otherCtrl.CurrentSpeed > 10.5) {
+            lhs = Time.time;
             return true;
         }
     
-        if (Time.time - lt < 1f) {
+        if (Time.time - lhs < 1.5f) {
             return true;
         }
     
