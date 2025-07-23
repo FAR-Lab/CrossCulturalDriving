@@ -180,7 +180,6 @@ GameObject:
   m_Component:
   - component: {fileID: 476093107}
   - component: {fileID: 476093109}
-  - component: {fileID: 476093108}
   - component: {fileID: 476093110}
   - component: {fileID: 476093111}
   - component: {fileID: 476093116}
@@ -206,18 +205,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &476093108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 476093106}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b84c2d8dfe509a34fb59e2b81f8e1319, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &476093109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -396,8 +383,8 @@ MonoBehaviour:
   m_ProtocolType: 0
   m_UseWebSockets: 0
   m_UseEncryption: 0
-  m_MaxPacketQueueSize: 128
-  m_MaxPayloadSize: 6144
+  m_MaxPacketQueueSize: 512
+  m_MaxPayloadSize: 12288
   m_HeartbeatTimeoutMS: 500
   m_ConnectTimeoutMS: 1000
   m_MaxConnectAttempts: 60
@@ -475,6 +462,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1538649541011962023, guid: 13cbc794b612d664090e70499630464c, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -2124705421725058983, guid: 03646728325f88c4b8cbbb480e36624d, type: 3}
     - target: {fileID: 3191257374648030949, guid: 13cbc794b612d664090e70499630464c, type: 3}
       propertyPath: m_Name
       value: PedestrianWalkingTargetPrefab
@@ -522,6 +513,22 @@ PrefabInstance:
     - target: {fileID: 7617692140013454217, guid: 13cbc794b612d664090e70499630464c, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 420981820
+      objectReference: {fileID: 0}
+    - target: {fileID: 8908857870071080462, guid: 13cbc794b612d664090e70499630464c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 8908857870071080462, guid: 13cbc794b612d664090e70499630464c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 8908857870071080462, guid: 13cbc794b612d664090e70499630464c, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 8908857870071080462, guid: 13cbc794b612d664090e70499630464c, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
