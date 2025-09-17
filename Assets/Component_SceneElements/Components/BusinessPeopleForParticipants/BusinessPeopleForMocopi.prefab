@@ -133,7 +133,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7062058286310493758}
-  - component: {fileID: 7590057646647192336}
+  - component: {fileID: 5736594295930530795}
+  - component: {fileID: 1189049115585216409}
+  - component: {fileID: 3777915034193953086}
   m_Layer: 0
   m_Name: mixamorig:LeftHandThumb2
   m_TagString: Untagged
@@ -157,7 +159,7 @@ Transform:
   - {fileID: 7632004235869906327}
   m_Father: {fileID: 4813494011797551001}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7590057646647192336
+--- !u!114 &5736594295930530795
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -169,9 +171,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -187,6 +189,50 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1189049115585216409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117122146598289833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 29961
+  replayObject:
+    reference: {fileID: 3777915034193953086}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &3777915034193953086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117122146598289833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 8362
+  prefabIdentity:
+    id: 3906
+  observedComponents:
+  - {fileID: 1189049115585216409}
+  - {fileID: 459900283314687420}
+  - {fileID: 2407177414743442168}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &286577213820794574
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,7 +242,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7308710008103406034}
-  - component: {fileID: 7273747743086597951}
+  - component: {fileID: 679526701792746602}
+  - component: {fileID: 6760339831865188021}
+  - component: {fileID: 6549010981815921146}
   m_Layer: 0
   m_Name: mixamorig:LeftHand
   m_TagString: Untagged
@@ -224,7 +272,7 @@ Transform:
   - {fileID: 4813494011797551001}
   m_Father: {fileID: 7121368617622420251}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7273747743086597951
+--- !u!114 &679526701792746602
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -236,9 +284,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -254,6 +302,65 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6760339831865188021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 286577213820794574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 41920
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &6549010981815921146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 286577213820794574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 45525
+  prefabIdentity:
+    id: 16070
+  observedComponents:
+  - {fileID: 6760339831865188021}
+  - {fileID: 6966797103289268635}
+  - {fileID: 1152507792283432263}
+  - {fileID: 1086477840778386318}
+  - {fileID: 60051027808178951}
+  - {fileID: 7271766438783616948}
+  - {fileID: 6625354061547893624}
+  - {fileID: 2707475009523167884}
+  - {fileID: 8117325834885262985}
+  - {fileID: 5791342575429343158}
+  - {fileID: 3578956500723153635}
+  - {fileID: 797077648759463254}
+  - {fileID: 7600792425279268126}
+  - {fileID: 6734439491388924764}
+  - {fileID: 6904975282597445726}
+  - {fileID: 530917145144144480}
+  - {fileID: 7340823678523794667}
+  - {fileID: 8292739384491736760}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &340908546458749966
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,7 +370,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6520492575112881778}
-  - component: {fileID: 5292350605219443261}
+  - component: {fileID: 7339447814087802141}
+  - component: {fileID: 8117325834885262985}
   m_Layer: 0
   m_Name: mixamorig:LeftHandMiddle4
   m_TagString: Untagged
@@ -286,7 +394,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9136966784193186797}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5292350605219443261
+--- !u!114 &7339447814087802141
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -298,9 +406,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -316,6 +424,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &8117325834885262985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340908546458749966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 63181
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &346931285497767215
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,7 +586,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4925223040207953703}
-  - component: {fileID: 8287902056310402976}
+  - component: {fileID: 2978569686540957958}
+  - component: {fileID: 4449745020603200015}
+  - component: {fileID: 1654905910129668461}
   m_Layer: 0
   m_Name: mixamorig:RightHandRing3
   m_TagString: Untagged
@@ -482,7 +612,7 @@ Transform:
   - {fileID: 7310569398952043660}
   m_Father: {fileID: 4464980682629568433}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8287902056310402976
+--- !u!114 &2978569686540957958
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -494,9 +624,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -512,6 +642,49 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &4449745020603200015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 405591417554376976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 7005
+  replayObject:
+    reference: {fileID: 1654905910129668461}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &1654905910129668461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 405591417554376976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 27658
+  prefabIdentity:
+    id: 40489
+  observedComponents:
+  - {fileID: 4449745020603200015}
+  - {fileID: 422539931970256618}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &412758008507366565
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,7 +694,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2102828511160179443}
-  - component: {fileID: 7414050488554917354}
+  - component: {fileID: 27627513786369943}
+  - component: {fileID: 1598114644325523151}
+  - component: {fileID: 7989504405563535617}
   m_Layer: 0
   m_Name: mixamorig:RightLeg
   m_TagString: Untagged
@@ -545,7 +720,7 @@ Transform:
   - {fileID: 8182703752105607925}
   m_Father: {fileID: 8923246370140104395}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7414050488554917354
+--- !u!114 &27627513786369943
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -557,9 +732,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -575,6 +750,51 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1598114644325523151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 412758008507366565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 36343
+  replayObject:
+    reference: {fileID: 7989504405563535617}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &7989504405563535617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 412758008507366565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 37439
+  prefabIdentity:
+    id: 63689
+  observedComponents:
+  - {fileID: 1598114644325523151}
+  - {fileID: 4789772963252418183}
+  - {fileID: 1206003473205067435}
+  - {fileID: 7867836360078848596}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &613376820581355776
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,7 +928,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1542936915850503804}
-  - component: {fileID: 7874268432585282285}
+  - component: {fileID: 7240038027304423579}
+  - component: {fileID: 6306033428997808842}
+  - component: {fileID: 6713715230104822215}
   m_Layer: 0
   m_Name: mixamorig:LeftLeg
   m_TagString: Untagged
@@ -732,7 +954,7 @@ Transform:
   - {fileID: 8810145343981100401}
   m_Father: {fileID: 838737726202313553}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7874268432585282285
+--- !u!114 &7240038027304423579
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -744,9 +966,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -762,6 +984,51 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6306033428997808842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626419021616744604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 35111
+  replayObject:
+    reference: {fileID: 6713715230104822215}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &6713715230104822215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626419021616744604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 57970
+  prefabIdentity:
+    id: 53678
+  observedComponents:
+  - {fileID: 6306033428997808842}
+  - {fileID: 2229529199403970712}
+  - {fileID: 594282961308401901}
+  - {fileID: 9021883886879245782}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &628984310452138370
 GameObject:
   m_ObjectHideFlags: 0
@@ -828,7 +1095,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 838737726202313553}
-  - component: {fileID: 7661381424206050588}
+  - component: {fileID: 420414597299755789}
+  - component: {fileID: 376171323033372965}
+  - component: {fileID: 6747987852502705914}
   m_Layer: 0
   m_Name: mixamorig:LeftUpLeg
   m_TagString: Untagged
@@ -852,7 +1121,7 @@ Transform:
   - {fileID: 1542936915850503804}
   m_Father: {fileID: 4085139614350693903}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7661381424206050588
+--- !u!114 &420414597299755789
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -864,9 +1133,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -882,6 +1151,48 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &376171323033372965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861504008136046493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 2318
+  replayObject:
+    reference: {fileID: 6747987852502705914}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &6747987852502705914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861504008136046493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 60772
+  prefabIdentity:
+    id: 55281
+  observedComponents:
+  - {fileID: 376171323033372965}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &953801770049032652
 GameObject:
   m_ObjectHideFlags: 0
@@ -891,7 +1202,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1048729729602959471}
-  - component: {fileID: 2482554082572454833}
+  - component: {fileID: 5437688944882144399}
+  - component: {fileID: 1206003473205067435}
   m_Layer: 0
   m_Name: mixamorig:RightToeBase
   m_TagString: Untagged
@@ -915,7 +1227,7 @@ Transform:
   - {fileID: 4350722125304445467}
   m_Father: {fileID: 8182703752105607925}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2482554082572454833
+--- !u!114 &5437688944882144399
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -927,9 +1239,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -945,6 +1257,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1206003473205067435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953801770049032652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 32222
+  replayObject:
+    reference: {fileID: 7989504405563535617}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &1022229157869469367
 GameObject:
   m_ObjectHideFlags: 0
@@ -1172,7 +1504,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2310232815864768233}
-  - component: {fileID: 4837101304912455753}
+  - component: {fileID: 8586411235962884063}
+  - component: {fileID: 7225459333629758352}
+  - component: {fileID: 2130011849537432617}
   m_Layer: 0
   m_Name: mixamorig:LeftArm
   m_TagString: Untagged
@@ -1196,7 +1530,7 @@ Transform:
   - {fileID: 7121368617622420251}
   m_Father: {fileID: 2128797646784933439}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4837101304912455753
+--- !u!114 &8586411235962884063
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1208,9 +1542,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -1226,6 +1560,49 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &7225459333629758352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097397137627442279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 61006
+  replayObject:
+    reference: {fileID: 2130011849537432617}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &2130011849537432617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097397137627442279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 1178
+  prefabIdentity:
+    id: 13908
+  observedComponents:
+  - {fileID: 7225459333629758352}
+  - {fileID: 2370221166203387088}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &1172823195216599095
 GameObject:
   m_ObjectHideFlags: 0
@@ -1359,7 +1736,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3230600543482024307}
-  - component: {fileID: 529752455942259038}
+  - component: {fileID: 6714590896863388795}
+  - component: {fileID: 1364452136095483266}
+  - component: {fileID: 3232996530195218319}
   m_Layer: 0
   m_Name: mixamorig:RightHandMiddle2
   m_TagString: Untagged
@@ -1383,7 +1762,7 @@ Transform:
   - {fileID: 8398201957989489220}
   m_Father: {fileID: 8037131920489683186}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &529752455942259038
+--- !u!114 &6714590896863388795
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1395,9 +1774,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -1413,6 +1792,50 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1364452136095483266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254631145077307818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 48464
+  replayObject:
+    reference: {fileID: 3232996530195218319}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &3232996530195218319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254631145077307818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 65337
+  prefabIdentity:
+    id: 20581
+  observedComponents:
+  - {fileID: 1364452136095483266}
+  - {fileID: 6977685303824219357}
+  - {fileID: 4841415396999352585}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &1284006526315730172
 GameObject:
   m_ObjectHideFlags: 0
@@ -1531,7 +1954,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7863359576851902995}
-  - component: {fileID: 4457175990499141977}
+  - component: {fileID: 6290227551083342510}
+  - component: {fileID: 1152507792283432263}
   m_Layer: 0
   m_Name: mixamorig:LeftHandIndex2
   m_TagString: Untagged
@@ -1555,7 +1979,7 @@ Transform:
   - {fileID: 8064484820593071411}
   m_Father: {fileID: 1953540045335511802}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4457175990499141977
+--- !u!114 &6290227551083342510
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1567,9 +1991,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -1585,6 +2009,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1152507792283432263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316833395593404885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 12688
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &1420171046033471052
 GameObject:
   m_ObjectHideFlags: 0
@@ -1594,7 +2038,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4464980682629568433}
-  - component: {fileID: 700477052748145766}
+  - component: {fileID: 532861035716467232}
+  - component: {fileID: 734593538882207778}
+  - component: {fileID: 6124763258589173477}
   m_Layer: 0
   m_Name: mixamorig:RightHandRing2
   m_TagString: Untagged
@@ -1618,7 +2064,7 @@ Transform:
   - {fileID: 4925223040207953703}
   m_Father: {fileID: 3014447392647153598}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &700477052748145766
+--- !u!114 &532861035716467232
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1630,9 +2076,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -1648,6 +2094,48 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &734593538882207778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420171046033471052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 50302
+  replayObject:
+    reference: {fileID: 6124763258589173477}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &6124763258589173477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1420171046033471052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 30432
+  prefabIdentity:
+    id: 45382
+  observedComponents:
+  - {fileID: 734593538882207778}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &1451682543388726365
 GameObject:
   m_ObjectHideFlags: 0
@@ -1657,7 +2145,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4205267138373799055}
-  - component: {fileID: 3530595291930784504}
+  - component: {fileID: 2863421759321699540}
+  - component: {fileID: 7271766438783616948}
   m_Layer: 0
   m_Name: mixamorig:LeftHandMiddle1
   m_TagString: Untagged
@@ -1681,7 +2170,7 @@ Transform:
   - {fileID: 1207157731643234732}
   m_Father: {fileID: 7308710008103406034}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3530595291930784504
+--- !u!114 &2863421759321699540
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1693,9 +2182,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -1711,6 +2200,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &7271766438783616948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451682543388726365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 47227
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &1511807064443854454
 GameObject:
   m_ObjectHideFlags: 0
@@ -1853,7 +2362,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7310569398952043660}
-  - component: {fileID: 155620170150520079}
+  - component: {fileID: 7358271825179067396}
+  - component: {fileID: 422539931970256618}
   m_Layer: 0
   m_Name: mixamorig:RightHandRing4
   m_TagString: Untagged
@@ -1876,7 +2386,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4925223040207953703}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &155620170150520079
+--- !u!114 &7358271825179067396
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1888,9 +2398,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -1906,6 +2416,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &422539931970256618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554084918783681092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 56638
+  replayObject:
+    reference: {fileID: 1654905910129668461}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &1680850351281779871
 GameObject:
   m_ObjectHideFlags: 0
@@ -2049,7 +2579,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1222329653486191280}
-  - component: {fileID: 4459470919924633058}
+  - component: {fileID: 8320876264059138732}
+  - component: {fileID: 1513289779082087972}
+  - component: {fileID: 2372657176026017082}
   m_Layer: 0
   m_Name: mixamorig:Spine
   m_TagString: Untagged
@@ -2073,7 +2605,7 @@ Transform:
   - {fileID: 1936432584935144388}
   m_Father: {fileID: 4085139614350693903}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4459470919924633058
+--- !u!114 &8320876264059138732
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2085,9 +2617,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -2103,6 +2635,72 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1513289779082087972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722133390059702458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 912
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &2372657176026017082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722133390059702458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 48359
+  prefabIdentity:
+    id: 57270
+  observedComponents:
+  - {fileID: 1513289779082087972}
+  - {fileID: 6994278151812629251}
+  - {fileID: 3589121612628132393}
+  - {fileID: 6648210509944023532}
+  - {fileID: 6119840583977292442}
+  - {fileID: 6408048790800254987}
+  - {fileID: 2565742026455295660}
+  - {fileID: 5710952815395421600}
+  - {fileID: 1985274152049562697}
+  - {fileID: 7107368739427653631}
+  - {fileID: 4238446937047988615}
+  - {fileID: 275993024906365787}
+  - {fileID: 1660451323198345865}
+  - {fileID: 8201744817459393350}
+  - {fileID: 2308327226658949427}
+  - {fileID: 1221898127277737924}
+  - {fileID: 6478022783985549715}
+  - {fileID: 2623313721203471602}
+  - {fileID: 6615102841717245455}
+  - {fileID: 7081963567373157064}
+  - {fileID: 1041509596236651274}
+  - {fileID: 8762503466185432701}
+  - {fileID: 7053628240099316027}
+  - {fileID: 1165629260454149804}
+  - {fileID: 331563881692457846}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &1913685911043072213
 GameObject:
   m_ObjectHideFlags: 0
@@ -2112,7 +2710,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9136966784193186797}
-  - component: {fileID: 8065204454000908047}
+  - component: {fileID: 6976112153216229648}
+  - component: {fileID: 2707475009523167884}
   m_Layer: 0
   m_Name: mixamorig:LeftHandMiddle3
   m_TagString: Untagged
@@ -2136,7 +2735,7 @@ Transform:
   - {fileID: 6520492575112881778}
   m_Father: {fileID: 1207157731643234732}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8065204454000908047
+--- !u!114 &6976112153216229648
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2148,9 +2747,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -2166,6 +2765,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &2707475009523167884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1913685911043072213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 34426
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &1972659135087768795
 GameObject:
   m_ObjectHideFlags: 0
@@ -2175,7 +2794,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3202424894417581489}
-  - component: {fileID: 7897085496634561859}
+  - component: {fileID: 894254428733048055}
+  - component: {fileID: 6734439491388924764}
   m_Layer: 0
   m_Name: mixamorig:LeftHandRing1
   m_TagString: Untagged
@@ -2199,7 +2819,7 @@ Transform:
   - {fileID: 6541569800708778182}
   m_Father: {fileID: 7308710008103406034}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7897085496634561859
+--- !u!114 &894254428733048055
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2211,9 +2831,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -2229,6 +2849,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6734439491388924764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972659135087768795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 36031
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &2095234166853917969
 GameObject:
   m_ObjectHideFlags: 0
@@ -2238,7 +2878,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1683425878803809355}
-  - component: {fileID: 4517500706287333912}
+  - component: {fileID: 6376631567977125815}
+  - component: {fileID: 2407177414743442168}
   m_Layer: 0
   m_Name: mixamorig:LeftHandThumb4
   m_TagString: Untagged
@@ -2261,7 +2902,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7632004235869906327}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4517500706287333912
+--- !u!114 &6376631567977125815
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2273,9 +2914,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -2291,6 +2932,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &2407177414743442168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2095234166853917969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 14910
+  replayObject:
+    reference: {fileID: 3777915034193953086}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &2276678320961365968
 GameObject:
   m_ObjectHideFlags: 0
@@ -2300,7 +2961,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4350722125304445467}
-  - component: {fileID: 8922636476903237969}
+  - component: {fileID: 4398657904196610287}
+  - component: {fileID: 7867836360078848596}
   m_Layer: 0
   m_Name: mixamorig:RightToe_End
   m_TagString: Untagged
@@ -2323,7 +2985,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1048729729602959471}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8922636476903237969
+--- !u!114 &4398657904196610287
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2335,9 +2997,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -2353,6 +3015,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &7867836360078848596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2276678320961365968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 62200
+  replayObject:
+    reference: {fileID: 7989504405563535617}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &2292106186476214511
 GameObject:
   m_ObjectHideFlags: 0
@@ -2362,7 +3044,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2772352247393011021}
-  - component: {fileID: 3975670698648984160}
+  - component: {fileID: 6180153797435987970}
+  - component: {fileID: 6408048790800254987}
   m_Layer: 0
   m_Name: mixamorig:Head
   m_TagString: Untagged
@@ -2386,7 +3069,7 @@ Transform:
   - {fileID: 2183513736774876933}
   m_Father: {fileID: 928406562475798098}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3975670698648984160
+--- !u!114 &6180153797435987970
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2398,9 +3081,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -2416,6 +3099,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6408048790800254987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2292106186476214511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 2467
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &2347977510812529459
 GameObject:
   m_ObjectHideFlags: 0
@@ -2425,7 +3128,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4020845984021209241}
-  - component: {fileID: 6711809339961820995}
+  - component: {fileID: 1209303692532785107}
+  - component: {fileID: 4841415396999352585}
   m_Layer: 0
   m_Name: mixamorig:RightHandMiddle4
   m_TagString: Untagged
@@ -2448,7 +3152,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8398201957989489220}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6711809339961820995
+--- !u!114 &1209303692532785107
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2460,9 +3164,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -2478,6 +3182,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &4841415396999352585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2347977510812529459}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 2873
+  replayObject:
+    reference: {fileID: 3232996530195218319}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &2610034303736523156
 GameObject:
   m_ObjectHideFlags: 0
@@ -2487,9 +3211,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5640421044722257196}
-  - component: {fileID: 3689883503810676356}
   - component: {fileID: 5432206816020828348}
-  - component: {fileID: 8763745153705102242}
   m_Layer: 0
   m_Name: BusinessPeopleForMocopi
   m_TagString: Untagged
@@ -2515,26 +3237,6 @@ Transform:
   - {fileID: 2050442354180833236}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3689883503810676356
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2610034303736523156}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4003385554
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &5432206816020828348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2608,36 +3310,6 @@ MonoBehaviour:
   - {fileID: 6653514470265838103}
   - {fileID: 7514281898231581075}
   - {fileID: 1022229157869469367}
---- !u!114 &8763745153705102242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2610034303736523156}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  Interpolate: 1
-  SlerpPosition: 0
 --- !u!1 &2618880589349847431
 GameObject:
   m_ObjectHideFlags: 0
@@ -2780,7 +3452,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1953540045335511802}
-  - component: {fileID: 5941938123441858962}
+  - component: {fileID: 4300462018102691325}
+  - component: {fileID: 6966797103289268635}
   m_Layer: 0
   m_Name: mixamorig:LeftHandIndex1
   m_TagString: Untagged
@@ -2804,7 +3477,7 @@ Transform:
   - {fileID: 7863359576851902995}
   m_Father: {fileID: 7308710008103406034}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5941938123441858962
+--- !u!114 &4300462018102691325
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2816,9 +3489,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -2834,6 +3507,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6966797103289268635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2698771925822525602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 10409
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &2823268584144369678
 GameObject:
   m_ObjectHideFlags: 0
@@ -2952,7 +3645,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 138948561265372437}
-  - component: {fileID: 8162387202026602107}
+  - component: {fileID: 2589569684981569439}
+  - component: {fileID: 5710952815395421600}
   m_Layer: 0
   m_Name: mixamorig:RightShoulder
   m_TagString: Untagged
@@ -2976,7 +3670,7 @@ Transform:
   - {fileID: 8199052174771312426}
   m_Father: {fileID: 6240124685838246811}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8162387202026602107
+--- !u!114 &2589569684981569439
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2988,9 +3682,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -3006,6 +3700,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &5710952815395421600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2882977480638255180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 8812
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &2898059622616712187
 GameObject:
   m_ObjectHideFlags: 0
@@ -3466,7 +4180,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6438670753479805817}
-  - component: {fileID: 7310234801921873435}
+  - component: {fileID: 5477932624140992584}
+  - component: {fileID: 9021883886879245782}
   m_Layer: 0
   m_Name: mixamorig:LeftToe_End
   m_TagString: Untagged
@@ -3489,7 +4204,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4580730618519286060}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7310234801921873435
+--- !u!114 &5477932624140992584
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3501,9 +4216,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -3519,6 +4234,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &9021883886879245782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3038355788827896777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 31864
+  replayObject:
+    reference: {fileID: 6713715230104822215}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &3232989995666048162
 GameObject:
   m_ObjectHideFlags: 0
@@ -3637,7 +4372,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2757748393521908268}
-  - component: {fileID: 1729263947708169038}
+  - component: {fileID: 1336790787291806431}
+  - component: {fileID: 7600792425279268126}
   m_Layer: 0
   m_Name: mixamorig:LeftHandPinky4
   m_TagString: Untagged
@@ -3660,7 +4396,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4307590693248671937}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1729263947708169038
+--- !u!114 &1336790787291806431
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3672,9 +4408,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -3690,6 +4426,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &7600792425279268126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3236123655378523020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 19055
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &3264042032009203938
 GameObject:
   m_ObjectHideFlags: 0
@@ -3808,7 +4564,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8570720937023226555}
-  - component: {fileID: 2987455385271484203}
+  - component: {fileID: 8104464413688244302}
+  - component: {fileID: 7107368739427653631}
   m_Layer: 0
   m_Name: mixamorig:RightForeArm
   m_TagString: Untagged
@@ -3832,7 +4589,7 @@ Transform:
   - {fileID: 3025246697859942985}
   m_Father: {fileID: 8199052174771312426}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2987455385271484203
+--- !u!114 &8104464413688244302
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3844,9 +4601,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -3862,6 +4619,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &7107368739427653631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3415758360977043234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 60918
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &3435453411330050884
 GameObject:
   m_ObjectHideFlags: 0
@@ -3871,7 +4648,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8064484820593071411}
-  - component: {fileID: 6702596970769603749}
+  - component: {fileID: 4264458614358192625}
+  - component: {fileID: 1086477840778386318}
   m_Layer: 0
   m_Name: mixamorig:LeftHandIndex3
   m_TagString: Untagged
@@ -3895,7 +4673,7 @@ Transform:
   - {fileID: 2773416440453868863}
   m_Father: {fileID: 7863359576851902995}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6702596970769603749
+--- !u!114 &4264458614358192625
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3907,9 +4685,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -3925,6 +4703,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1086477840778386318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3435453411330050884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 16183
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &3436948958829049737
 GameObject:
   m_ObjectHideFlags: 0
@@ -3934,7 +4732,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1207157731643234732}
-  - component: {fileID: 6581299540741499717}
+  - component: {fileID: 4238257619971304524}
+  - component: {fileID: 6625354061547893624}
   m_Layer: 0
   m_Name: mixamorig:LeftHandMiddle2
   m_TagString: Untagged
@@ -3958,7 +4757,7 @@ Transform:
   - {fileID: 9136966784193186797}
   m_Father: {fileID: 4205267138373799055}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6581299540741499717
+--- !u!114 &4238257619971304524
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3970,9 +4769,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -3988,6 +4787,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6625354061547893624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3436948958829049737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 9587
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &3573540705986896414
 GameObject:
   m_ObjectHideFlags: 0
@@ -4463,7 +5282,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8398201957989489220}
-  - component: {fileID: 1814388821036394280}
+  - component: {fileID: 883127708121601261}
+  - component: {fileID: 6977685303824219357}
   m_Layer: 0
   m_Name: mixamorig:RightHandMiddle3
   m_TagString: Untagged
@@ -4487,7 +5307,7 @@ Transform:
   - {fileID: 4020845984021209241}
   m_Father: {fileID: 3230600543482024307}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1814388821036394280
+--- !u!114 &883127708121601261
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4499,9 +5319,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -4517,6 +5337,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6977685303824219357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3936136107647729087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 29125
+  replayObject:
+    reference: {fileID: 3232996530195218319}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &3984765788958971548
 GameObject:
   m_ObjectHideFlags: 0
@@ -4526,7 +5366,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8923246370140104395}
-  - component: {fileID: 8723413564598151836}
+  - component: {fileID: 8606831271981751729}
+  - component: {fileID: 2884073267011332382}
+  - component: {fileID: 5106423509777344664}
   m_Layer: 0
   m_Name: mixamorig:RightUpLeg
   m_TagString: Untagged
@@ -4550,7 +5392,7 @@ Transform:
   - {fileID: 2102828511160179443}
   m_Father: {fileID: 4085139614350693903}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8723413564598151836
+--- !u!114 &8606831271981751729
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4562,9 +5404,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -4580,6 +5422,48 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &2884073267011332382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3984765788958971548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 38565
+  replayObject:
+    reference: {fileID: 5106423509777344664}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &5106423509777344664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3984765788958971548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 39126
+  prefabIdentity:
+    id: 29000
+  observedComponents:
+  - {fileID: 2884073267011332382}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &4044786530752821963
 GameObject:
   m_ObjectHideFlags: 0
@@ -4698,7 +5582,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9184280504240266256}
-  - component: {fileID: 513105149691698117}
+  - component: {fileID: 1316542248257874669}
+  - component: {fileID: 275993024906365787}
   m_Layer: 0
   m_Name: mixamorig:RightHandIndex1
   m_TagString: Untagged
@@ -4722,7 +5607,7 @@ Transform:
   - {fileID: 43423304886104219}
   m_Father: {fileID: 3025246697859942985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &513105149691698117
+--- !u!114 &1316542248257874669
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4734,9 +5619,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -4752,6 +5637,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &275993024906365787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4049396180144564165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 46037
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &4071519687805747577
 GameObject:
   m_ObjectHideFlags: 0
@@ -4761,7 +5666,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5316091354173528776}
-  - component: {fileID: 2101365213400240865}
+  - component: {fileID: 1475368279781698435}
+  - component: {fileID: 331563881692457846}
   m_Layer: 0
   m_Name: mixamorig:RightHandThumb4
   m_TagString: Untagged
@@ -4784,7 +5690,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6454774340251997925}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2101365213400240865
+--- !u!114 &1475368279781698435
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4796,9 +5702,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -4814,6 +5720,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &331563881692457846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4071519687805747577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 55409
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &4124695552716274138
 GameObject:
   m_ObjectHideFlags: 0
@@ -4947,7 +5873,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7535331039438436089}
-  - component: {fileID: 6837237472724219087}
+  - component: {fileID: 5603769986960739012}
+  - component: {fileID: 7053628240099316027}
   m_Layer: 0
   m_Name: mixamorig:RightHandThumb2
   m_TagString: Untagged
@@ -4971,7 +5898,7 @@ Transform:
   - {fileID: 6454774340251997925}
   m_Father: {fileID: 3656330533746402080}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6837237472724219087
+--- !u!114 &5603769986960739012
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4983,9 +5910,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -5001,6 +5928,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &7053628240099316027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4156819890723569713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 22149
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &4254749626360413491
 GameObject:
   m_ObjectHideFlags: 0
@@ -5134,7 +6081,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 614948555115877189}
-  - component: {fileID: 2338740006324972599}
+  - component: {fileID: 6806950637042907920}
+  - component: {fileID: 2623313721203471602}
   m_Layer: 0
   m_Name: mixamorig:RightHandPinky2
   m_TagString: Untagged
@@ -5158,7 +6106,7 @@ Transform:
   - {fileID: 6952610151203376425}
   m_Father: {fileID: 3630371344424088189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2338740006324972599
+--- !u!114 &6806950637042907920
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5170,9 +6118,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -5188,6 +6136,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &2623313721203471602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4333062993266490553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 35710
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &4410279856098944717
 GameObject:
   m_ObjectHideFlags: 0
@@ -5197,7 +6165,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7038647328404300318}
-  - component: {fileID: 55856065968068291}
+  - component: {fileID: 9059669760972160568}
+  - component: {fileID: 7340823678523794667}
   m_Layer: 0
   m_Name: mixamorig:LeftHandRing4
   m_TagString: Untagged
@@ -5220,7 +6189,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5257933955523761043}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &55856065968068291
+--- !u!114 &9059669760972160568
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5232,9 +6201,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -5250,6 +6219,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &7340823678523794667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4410279856098944717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 55054
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &4419367228657175909
 GameObject:
   m_ObjectHideFlags: 0
@@ -5259,7 +6248,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4307590693248671937}
-  - component: {fileID: 3285308402965338578}
+  - component: {fileID: 6703556318238468344}
+  - component: {fileID: 797077648759463254}
   m_Layer: 0
   m_Name: mixamorig:LeftHandPinky3
   m_TagString: Untagged
@@ -5283,7 +6273,7 @@ Transform:
   - {fileID: 2757748393521908268}
   m_Father: {fileID: 6372855885350797392}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3285308402965338578
+--- !u!114 &6703556318238468344
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5295,9 +6285,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -5313,6 +6303,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &797077648759463254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4419367228657175909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 14975
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &4526770670820860652
 GameObject:
   m_ObjectHideFlags: 0
@@ -5322,7 +6332,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3656330533746402080}
-  - component: {fileID: 3944852697184954040}
+  - component: {fileID: 2726320471866349235}
+  - component: {fileID: 8762503466185432701}
   m_Layer: 0
   m_Name: mixamorig:RightHandThumb1
   m_TagString: Untagged
@@ -5346,7 +6357,7 @@ Transform:
   - {fileID: 7535331039438436089}
   m_Father: {fileID: 3025246697859942985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3944852697184954040
+--- !u!114 &2726320471866349235
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5358,9 +6369,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -5376,6 +6387,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &8762503466185432701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4526770670820860652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 21300
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &4561946359243235862
 GameObject:
   m_ObjectHideFlags: 0
@@ -5385,7 +6416,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8810145343981100401}
-  - component: {fileID: 680801958999658209}
+  - component: {fileID: 5825028088348715403}
+  - component: {fileID: 2229529199403970712}
   m_Layer: 0
   m_Name: mixamorig:LeftFoot
   m_TagString: Untagged
@@ -5409,7 +6441,7 @@ Transform:
   - {fileID: 4580730618519286060}
   m_Father: {fileID: 1542936915850503804}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &680801958999658209
+--- !u!114 &5825028088348715403
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5421,9 +6453,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -5439,6 +6471,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &2229529199403970712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4561946359243235862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 7319
+  replayObject:
+    reference: {fileID: 6713715230104822215}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &4593782710671604938
 GameObject:
   m_ObjectHideFlags: 0
@@ -5448,7 +6500,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8037131920489683186}
-  - component: {fileID: 4981791873605371904}
+  - component: {fileID: 5843355183155494651}
+  - component: {fileID: 1221898127277737924}
   m_Layer: 0
   m_Name: mixamorig:RightHandMiddle1
   m_TagString: Untagged
@@ -5472,7 +6525,7 @@ Transform:
   - {fileID: 3230600543482024307}
   m_Father: {fileID: 3025246697859942985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4981791873605371904
+--- !u!114 &5843355183155494651
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5484,9 +6537,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -5502,6 +6555,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1221898127277737924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4593782710671604938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 4932
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &4652614858715833790
 GameObject:
   m_ObjectHideFlags: 0
@@ -5511,7 +6584,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4548403122831542149}
-  - component: {fileID: 1096482889725376421}
+  - component: {fileID: 5116322368151531741}
+  - component: {fileID: 7081963567373157064}
   m_Layer: 0
   m_Name: mixamorig:RightHandPinky4
   m_TagString: Untagged
@@ -5534,7 +6608,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6952610151203376425}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1096482889725376421
+--- !u!114 &5116322368151531741
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5546,9 +6620,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -5564,6 +6638,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &7081963567373157064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4652614858715833790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 40303
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &4717579107948872650
 GameObject:
   m_ObjectHideFlags: 0
@@ -5949,7 +7043,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2773416440453868863}
-  - component: {fileID: 4496020405123184392}
+  - component: {fileID: 643618636643089364}
+  - component: {fileID: 60051027808178951}
   m_Layer: 0
   m_Name: mixamorig:LeftHandIndex4
   m_TagString: Untagged
@@ -5972,7 +7067,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8064484820593071411}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4496020405123184392
+--- !u!114 &643618636643089364
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5984,9 +7079,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -6002,6 +7097,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &60051027808178951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5036251058806970676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 51343
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &5160272344310390143
 GameObject:
   m_ObjectHideFlags: 0
@@ -6254,7 +7369,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6454774340251997925}
-  - component: {fileID: 6322283494290106814}
+  - component: {fileID: 8657281182396619620}
+  - component: {fileID: 1165629260454149804}
   m_Layer: 0
   m_Name: mixamorig:RightHandThumb3
   m_TagString: Untagged
@@ -6278,7 +7394,7 @@ Transform:
   - {fileID: 5316091354173528776}
   m_Father: {fileID: 7535331039438436089}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6322283494290106814
+--- !u!114 &8657281182396619620
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6290,9 +7406,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -6308,6 +7424,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1165629260454149804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5239683252201063367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 15188
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &5335087902613274332
 GameObject:
   m_ObjectHideFlags: 0
@@ -6317,7 +7453,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5257933955523761043}
-  - component: {fileID: 6055089892962445090}
+  - component: {fileID: 4329949025758345595}
+  - component: {fileID: 530917145144144480}
   m_Layer: 0
   m_Name: mixamorig:LeftHandRing3
   m_TagString: Untagged
@@ -6341,7 +7478,7 @@ Transform:
   - {fileID: 7038647328404300318}
   m_Father: {fileID: 6541569800708778182}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6055089892962445090
+--- !u!114 &4329949025758345595
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6353,9 +7490,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -6371,6 +7508,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &530917145144144480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5335087902613274332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 39623
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &5364959847554605526
 GameObject:
   m_ObjectHideFlags: 0
@@ -6489,7 +7646,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6952610151203376425}
-  - component: {fileID: 3596037043906941461}
+  - component: {fileID: 1229994036144439022}
+  - component: {fileID: 6615102841717245455}
   m_Layer: 0
   m_Name: mixamorig:RightHandPinky3
   m_TagString: Untagged
@@ -6513,7 +7671,7 @@ Transform:
   - {fileID: 4548403122831542149}
   m_Father: {fileID: 614948555115877189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3596037043906941461
+--- !u!114 &1229994036144439022
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6525,9 +7683,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -6543,6 +7701,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6615102841717245455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5427940102059522276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 52525
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &5540230975416582368
 GameObject:
   m_ObjectHideFlags: 0
@@ -6795,7 +7973,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3025246697859942985}
-  - component: {fileID: 2402974667464264623}
+  - component: {fileID: 3127298774837281931}
+  - component: {fileID: 4238446937047988615}
   m_Layer: 0
   m_Name: mixamorig:RightHand
   m_TagString: Untagged
@@ -6823,7 +8002,7 @@ Transform:
   - {fileID: 3656330533746402080}
   m_Father: {fileID: 8570720937023226555}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2402974667464264623
+--- !u!114 &3127298774837281931
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6835,9 +8014,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -6853,6 +8032,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &4238446937047988615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5657965530913223969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 2869
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &5688479522328960877
 GameObject:
   m_ObjectHideFlags: 0
@@ -6986,7 +8185,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8199052174771312426}
-  - component: {fileID: 7358695674831565175}
+  - component: {fileID: 6292244642644917680}
+  - component: {fileID: 1985274152049562697}
   m_Layer: 0
   m_Name: mixamorig:RightArm
   m_TagString: Untagged
@@ -7010,7 +8210,7 @@ Transform:
   - {fileID: 8570720937023226555}
   m_Father: {fileID: 138948561265372437}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7358695674831565175
+--- !u!114 &6292244642644917680
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7022,9 +8222,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -7040,6 +8240,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1985274152049562697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5718024203008888736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 51168
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &5734159305545890002
 GameObject:
   m_ObjectHideFlags: 0
@@ -7214,7 +8434,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6372855885350797392}
-  - component: {fileID: 4938308394059778983}
+  - component: {fileID: 8198642194241431059}
+  - component: {fileID: 3578956500723153635}
   m_Layer: 0
   m_Name: mixamorig:LeftHandPinky2
   m_TagString: Untagged
@@ -7238,7 +8459,7 @@ Transform:
   - {fileID: 4307590693248671937}
   m_Father: {fileID: 1731743027749460254}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4938308394059778983
+--- !u!114 &8198642194241431059
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7250,9 +8471,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -7268,6 +8489,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &3578956500723153635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5867052055851128190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 62796
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &5930582197868432010
 GameObject:
   m_ObjectHideFlags: 0
@@ -7401,7 +8642,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7632004235869906327}
-  - component: {fileID: 1618862023805678750}
+  - component: {fileID: 4292638905991073959}
+  - component: {fileID: 459900283314687420}
   m_Layer: 0
   m_Name: mixamorig:LeftHandThumb3
   m_TagString: Untagged
@@ -7425,7 +8667,7 @@ Transform:
   - {fileID: 1683425878803809355}
   m_Father: {fileID: 7062058286310493758}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1618862023805678750
+--- !u!114 &4292638905991073959
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7437,9 +8679,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -7455,6 +8697,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &459900283314687420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6037834285648850514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 37643
+  replayObject:
+    reference: {fileID: 3777915034193953086}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &6100087360318718969
 GameObject:
   m_ObjectHideFlags: 0
@@ -7464,7 +8726,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2183513736774876933}
-  - component: {fileID: 6888498012874997561}
+  - component: {fileID: 485096609530898705}
+  - component: {fileID: 2565742026455295660}
   m_Layer: 0
   m_Name: mixamorig:HeadTop_End
   m_TagString: Untagged
@@ -7487,7 +8750,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2772352247393011021}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6888498012874997561
+--- !u!114 &485096609530898705
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7499,9 +8762,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -7517,6 +8780,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &2565742026455295660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6100087360318718969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 8900
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &6273524062182620273
 GameObject:
   m_ObjectHideFlags: 0
@@ -7650,7 +8933,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7121368617622420251}
-  - component: {fileID: 298159323197266424}
+  - component: {fileID: 647693299070817670}
+  - component: {fileID: 2370221166203387088}
   m_Layer: 0
   m_Name: mixamorig:LeftForeArm
   m_TagString: Untagged
@@ -7674,7 +8958,7 @@ Transform:
   - {fileID: 7308710008103406034}
   m_Father: {fileID: 2310232815864768233}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &298159323197266424
+--- !u!114 &647693299070817670
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7686,9 +8970,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -7704,6 +8988,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &2370221166203387088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6347436639148798927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 58223
+  replayObject:
+    reference: {fileID: 2130011849537432617}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &6544877709989826055
 GameObject:
   m_ObjectHideFlags: 0
@@ -7713,7 +9017,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4580730618519286060}
-  - component: {fileID: 408057103154104743}
+  - component: {fileID: 3900277961323431027}
+  - component: {fileID: 594282961308401901}
   m_Layer: 0
   m_Name: mixamorig:LeftToeBase
   m_TagString: Untagged
@@ -7737,7 +9042,7 @@ Transform:
   - {fileID: 6438670753479805817}
   m_Father: {fileID: 8810145343981100401}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &408057103154104743
+--- !u!114 &3900277961323431027
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7749,9 +9054,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -7767,6 +9072,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &594282961308401901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544877709989826055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 7729
+  replayObject:
+    reference: {fileID: 6713715230104822215}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &6595564084107952555
 GameObject:
   m_ObjectHideFlags: 0
@@ -8127,7 +9452,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1936432584935144388}
-  - component: {fileID: 4893966607916105150}
+  - component: {fileID: 4014474803396484249}
+  - component: {fileID: 6994278151812629251}
   m_Layer: 0
   m_Name: mixamorig:Spine1
   m_TagString: Untagged
@@ -8151,7 +9477,7 @@ Transform:
   - {fileID: 6240124685838246811}
   m_Father: {fileID: 1222329653486191280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4893966607916105150
+--- !u!114 &4014474803396484249
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8163,9 +9489,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -8181,6 +9507,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6994278151812629251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6683682116854610563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 64933
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &6704554495172513627
 GameObject:
   m_ObjectHideFlags: 0
@@ -8408,7 +9754,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3014447392647153598}
-  - component: {fileID: 8372511277507948172}
+  - component: {fileID: 110483029088323307}
+  - component: {fileID: 1041509596236651274}
   m_Layer: 0
   m_Name: mixamorig:RightHandRing1
   m_TagString: Untagged
@@ -8432,7 +9779,7 @@ Transform:
   - {fileID: 4464980682629568433}
   m_Father: {fileID: 3025246697859942985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8372511277507948172
+--- !u!114 &110483029088323307
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8444,9 +9791,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -8462,6 +9809,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1041509596236651274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7257813625457896949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 7996
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &7262889211781501558
 GameObject:
   m_ObjectHideFlags: 0
@@ -8604,7 +9971,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 928406562475798098}
-  - component: {fileID: 746956001063671575}
+  - component: {fileID: 9209317832256765232}
+  - component: {fileID: 6119840583977292442}
   m_Layer: 0
   m_Name: mixamorig:Neck
   m_TagString: Untagged
@@ -8628,7 +9996,7 @@ Transform:
   - {fileID: 2772352247393011021}
   m_Father: {fileID: 6240124685838246811}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &746956001063671575
+--- !u!114 &9209317832256765232
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8640,9 +10008,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -8658,6 +10026,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6119840583977292442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7277559514517938698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 43519
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &7355228624410865534
 GameObject:
   m_ObjectHideFlags: 0
@@ -8667,7 +10055,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 43423304886104219}
-  - component: {fileID: 3051518336526202901}
+  - component: {fileID: 1686340311775780719}
+  - component: {fileID: 1660451323198345865}
   m_Layer: 0
   m_Name: mixamorig:RightHandIndex2
   m_TagString: Untagged
@@ -8691,7 +10080,7 @@ Transform:
   - {fileID: 2751091106400148479}
   m_Father: {fileID: 9184280504240266256}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3051518336526202901
+--- !u!114 &1686340311775780719
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8703,9 +10092,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -8721,6 +10110,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1660451323198345865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7355228624410865534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 37203
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &7514281898231581075
 GameObject:
   m_ObjectHideFlags: 0
@@ -8839,7 +10248,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1731743027749460254}
-  - component: {fileID: 6872560396260359816}
+  - component: {fileID: 9151815413230263536}
+  - component: {fileID: 5791342575429343158}
   m_Layer: 0
   m_Name: mixamorig:LeftHandPinky1
   m_TagString: Untagged
@@ -8863,7 +10273,7 @@ Transform:
   - {fileID: 6372855885350797392}
   m_Father: {fileID: 7308710008103406034}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6872560396260359816
+--- !u!114 &9151815413230263536
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8875,9 +10285,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -8893,6 +10303,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &5791342575429343158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7601629172973140392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 32547
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &7629475494390643783
 GameObject:
   m_ObjectHideFlags: 0
@@ -8902,7 +10332,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8182703752105607925}
-  - component: {fileID: 5943425187248877550}
+  - component: {fileID: 3031534789740815282}
+  - component: {fileID: 4789772963252418183}
   m_Layer: 0
   m_Name: mixamorig:RightFoot
   m_TagString: Untagged
@@ -8926,7 +10357,7 @@ Transform:
   - {fileID: 1048729729602959471}
   m_Father: {fileID: 2102828511160179443}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5943425187248877550
+--- !u!114 &3031534789740815282
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8938,9 +10369,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -8956,6 +10387,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &4789772963252418183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7629475494390643783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 39555
+  replayObject:
+    reference: {fileID: 7989504405563535617}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &7759095739235391306
 GameObject:
   m_ObjectHideFlags: 0
@@ -9074,7 +10525,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2896497615252976550}
-  - component: {fileID: 6509069167329786916}
+  - component: {fileID: 1037766790105640865}
+  - component: {fileID: 2308327226658949427}
   m_Layer: 0
   m_Name: mixamorig:RightHandIndex4
   m_TagString: Untagged
@@ -9097,7 +10549,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2751091106400148479}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6509069167329786916
+--- !u!114 &1037766790105640865
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9109,9 +10561,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -9127,6 +10579,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &2308327226658949427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7802847588555777127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 55182
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &7887291676923995956
 GameObject:
   m_ObjectHideFlags: 0
@@ -9597,7 +11069,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6240124685838246811}
-  - component: {fileID: 8320404870703084149}
+  - component: {fileID: 6229709528535989183}
+  - component: {fileID: 3589121612628132393}
   m_Layer: 0
   m_Name: mixamorig:Spine2
   m_TagString: Untagged
@@ -9623,7 +11096,7 @@ Transform:
   - {fileID: 138948561265372437}
   m_Father: {fileID: 1936432584935144388}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8320404870703084149
+--- !u!114 &6229709528535989183
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9635,9 +11108,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -9653,6 +11126,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &3589121612628132393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8193007396929007494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 47198
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &8214134669751569216
 GameObject:
   m_ObjectHideFlags: 0
@@ -9796,7 +11289,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6541569800708778182}
-  - component: {fileID: 4646924144063443241}
+  - component: {fileID: 4639635185112390991}
+  - component: {fileID: 6904975282597445726}
   m_Layer: 0
   m_Name: mixamorig:LeftHandRing2
   m_TagString: Untagged
@@ -9820,7 +11314,7 @@ Transform:
   - {fileID: 5257933955523761043}
   m_Father: {fileID: 3202424894417581489}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4646924144063443241
+--- !u!114 &4639635185112390991
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9832,9 +11326,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -9850,6 +11344,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6904975282597445726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8251029679075285601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 7540
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &8273610114570839241
 GameObject:
   m_ObjectHideFlags: 0
@@ -9859,7 +11373,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4813494011797551001}
-  - component: {fileID: 6813575513326890640}
+  - component: {fileID: 4110082944247644370}
+  - component: {fileID: 8292739384491736760}
   m_Layer: 0
   m_Name: mixamorig:LeftHandThumb1
   m_TagString: Untagged
@@ -9883,7 +11398,7 @@ Transform:
   - {fileID: 7062058286310493758}
   m_Father: {fileID: 7308710008103406034}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6813575513326890640
+--- !u!114 &4110082944247644370
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9895,9 +11410,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -9913,6 +11428,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &8292739384491736760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8273610114570839241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 516
+  replayObject:
+    reference: {fileID: 6549010981815921146}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &8337177963005813185
 GameObject:
   m_ObjectHideFlags: 0
@@ -9922,7 +11457,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3630371344424088189}
-  - component: {fileID: 6763807395001764681}
+  - component: {fileID: 2145153555430355298}
+  - component: {fileID: 6478022783985549715}
   m_Layer: 0
   m_Name: mixamorig:RightHandPinky1
   m_TagString: Untagged
@@ -9946,7 +11482,7 @@ Transform:
   - {fileID: 614948555115877189}
   m_Father: {fileID: 3025246697859942985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6763807395001764681
+--- !u!114 &2145153555430355298
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9958,9 +11494,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -9976,6 +11512,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6478022783985549715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337177963005813185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 47218
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &8396260905521458044
 GameObject:
   m_ObjectHideFlags: 0
@@ -9985,7 +11541,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4085139614350693903}
-  - component: {fileID: 4270001384204967801}
+  - component: {fileID: 5047696563485848593}
+  - component: {fileID: 7353123629702976155}
+  - component: {fileID: 3919796152796341393}
   m_Layer: 0
   m_Name: mixamorig:Hips
   m_TagString: Untagged
@@ -10011,7 +11569,7 @@ Transform:
   - {fileID: 1222329653486191280}
   m_Father: {fileID: 5640421044722257196}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4270001384204967801
+--- !u!114 &5047696563485848593
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10041,6 +11599,48 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &7353123629702976155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8396260905521458044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 776
+  replayObject:
+    reference: {fileID: 3919796152796341393}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
+--- !u!114 &3919796152796341393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8396260905521458044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d4a23cc5cda434fbd19ba3e86cc094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isObservedComponentsExpanded: 0
+  replayIdentity:
+    id: 8665
+  prefabIdentity:
+    id: 35673
+  observedComponents:
+  - {fileID: 7353123629702976155}
+  runtimeComponents: []
+  isPrefab: 1
+  prefabType: 1
 --- !u!1 &8679348588919065953
 GameObject:
   m_ObjectHideFlags: 0
@@ -10050,7 +11650,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2751091106400148479}
-  - component: {fileID: 1910021583698718756}
+  - component: {fileID: 958678697219627380}
+  - component: {fileID: 8201744817459393350}
   m_Layer: 0
   m_Name: mixamorig:RightHandIndex3
   m_TagString: Untagged
@@ -10074,7 +11675,7 @@ Transform:
   - {fileID: 2896497615252976550}
   m_Father: {fileID: 43423304886104219}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1910021583698718756
+--- !u!114 &958678697219627380
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10086,9 +11687,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -10104,6 +11705,26 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &8201744817459393350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8679348588919065953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 28937
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
 --- !u!1 &9141009158587184335
 GameObject:
   m_ObjectHideFlags: 0
@@ -10361,7 +11982,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2128797646784933439}
-  - component: {fileID: 1492285456879627538}
+  - component: {fileID: 5462795019395510804}
+  - component: {fileID: 6648210509944023532}
   m_Layer: 0
   m_Name: mixamorig:LeftShoulder
   m_TagString: Untagged
@@ -10385,7 +12007,7 @@ Transform:
   - {fileID: 2310232815864768233}
   m_Father: {fileID: 6240124685838246811}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1492285456879627538
+--- !u!114 &5462795019395510804
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10397,9 +12019,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncPositionX: 0
-  SyncPositionY: 0
-  SyncPositionZ: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
   SyncRotAngleX: 1
   SyncRotAngleY: 1
   SyncRotAngleZ: 1
@@ -10415,3 +12037,23 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &6648210509944023532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9194085563258196400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44684b078c520c3448ab84ebe39316aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noManagingObject: 0
+  replayIdentity:
+    id: 22516
+  replayObject:
+    reference: {fileID: 2372657176026017082}
+  positionFlags: 263
+  rotationFlags: 263
+  scaleFlags: 0
